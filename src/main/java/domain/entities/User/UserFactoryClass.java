@@ -3,7 +3,7 @@ package domain.entities.User;
 /**
  * Factory for creating GuestUser and CommonUser objects.
  */
-public class UserFactoryClass implements UserFactory{
+public class UserFactoryClass implements UserFactory {
 
     @Override
     public GuestUser createGuestUser() {

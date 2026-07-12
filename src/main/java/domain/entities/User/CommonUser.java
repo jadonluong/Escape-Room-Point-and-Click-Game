@@ -3,7 +3,7 @@ package domain.entities.User;
 /**
  * The CommonUser class that extends the AbstractUser class.
  */
-public class CommonUser extends AbstractUser implements User{
+public class CommonUser extends AbstractUser {
     private String username;
     private String password;
 
