@@ -13,7 +13,8 @@ public class GuestUser extends AbstractUser {
         this.guestID = "GUEST_" + UUID.randomUUID().toString().substring(0, 8);
     }
 
-    public String getGuestID() {
+    @Override
+    public String getUsername() {
         return this.guestID;
     }
 

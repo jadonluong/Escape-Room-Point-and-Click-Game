@@ -33,8 +33,22 @@ public interface User {
     void unlockRoom(Room room);
 
     /**
+     * Removes the item in the user's item inventory.
+     * @param item the item to be removed.
+     * @return true if item found in item inventory and false if not found.
+     */
+    boolean removeItem(Item item);
+
+    /**
      * Returns the type of user this user belongs to.
      * @return true if the user is a common user, false if the user is a guest user.
      */
     boolean isRegistered();
+
+    /**
+     * Returns the username of the user.
+     * @return the registered username if the user is a common user, the guest id if the user is a guest user.
+     */
+    String getUsername();
+
 }

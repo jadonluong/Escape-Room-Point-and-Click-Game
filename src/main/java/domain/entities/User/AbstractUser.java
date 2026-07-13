@@ -43,5 +43,7 @@ public abstract class AbstractUser implements User {
         return this.itemInventory.remove(item);
     }
 
+    public abstract String getUsername();
+
     public abstract boolean isRegistered();
 }

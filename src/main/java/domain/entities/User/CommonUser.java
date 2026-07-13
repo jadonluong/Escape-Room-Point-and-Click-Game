@@ -1,9 +1,9 @@
 package domain.entities.User;
 
 /**
- * The CommonUser class that extends the AbstractUser class.
+ * The CommonUser class that extends the AbstractUser class and implements the CommonUserFunction interface.
  */
-public class CommonUser extends AbstractUser {
+public class CommonUser extends AbstractUser implements CommonUserFunction{
     private String username;
     private String password;
 
@@ -17,6 +17,7 @@ public class CommonUser extends AbstractUser {
         return this.username;
     }
 
+    @Override
     public String getPassword() {
         return this.password;
     }
