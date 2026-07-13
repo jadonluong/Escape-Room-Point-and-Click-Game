@@ -37,5 +37,11 @@ public abstract class AbstractUser implements User {
         return this.itemInventory;
     }
 
+    public boolean removeItem(Item item) {
+        // If item is in itemInventory, remove it and return true.
+        // If not found, leave the list alone and return false.
+        return this.itemInventory.remove(item);
+    }
+
     public abstract boolean isRegistered();
 }
