@@ -1,4 +1,24 @@
 package domain.entities.User;
 
-public class GuestUser {
+import java.util.UUID;
+
+/**
+ * The GuestUser class that extends the AbstractUser class.
+ */
+public class GuestUser extends AbstractUser {
+    private String guestID;
+
+    public GuestUser() {
+        super();
+        this.guestID = "GUEST_" + UUID.randomUUID().toString().substring(0, 8);
+    }
+
+    public String getGuestID() {
+        return this.guestID;
+    }
+
+    @Override
+    public boolean isRegistered() {
+        return false;
+    }
 }

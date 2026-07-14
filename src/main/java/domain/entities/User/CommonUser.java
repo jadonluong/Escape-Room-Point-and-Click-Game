@@ -1,28 +1,28 @@
 package domain.entities.User;
 
-import domain.entities.Item.Item;
-import domain.entities.Room.Room;
-
-import java.util.List;
-
-public class CommonUser implements User{
+/**
+ * The CommonUser class that extends the AbstractUser class.
+ */
+public class CommonUser extends AbstractUser {
     private String username;
     private String password;
-    private List<Item> inventory;
-    private List<Room> roomsUnlocked;
 
     public CommonUser(String username, String password) {
+        super();
         this.username = username;
         this.password = password;
     }
 
-    @Override
     public String getUsername() {
-        return username;
+        return this.username;
+    }
+
+    public String getPassword() {
+        return this.password;
     }
 
     @Override
-    public String getPassword() {
-        return password;
+    public boolean isRegistered() {
+        return true;
     }
 }
