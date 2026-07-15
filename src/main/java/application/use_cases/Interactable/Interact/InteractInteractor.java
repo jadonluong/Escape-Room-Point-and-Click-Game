@@ -70,7 +70,9 @@ public class InteractInteractor implements InteractInputBoundary{
     private void repeatedInteraction(User player, Interactable interactable) {
         String unlockedRoomId = interactable.getUnlockedRoomId();
         if (unlockedRoomId != null) {
-            movePlayerToRoom(player, unlockedRoomId);
+            player.unlockRoom(dataAccess.getRoomById(unlockedRoomId));
+            player.saveCurrentRoomID(unlockedRoomId);
+            outputBoundary.switchToRoomView(unlockedRoomId);
             return;
         }
 
@@ -89,11 +91,5 @@ public class InteractInteractor implements InteractInputBoundary{
         }
         InteractOutputData outputData = new InteractOutputData(successMessage, null);
         outputBoundary.prepareSuccessView(outputData);
-    }
-
-    private void movePlayerToRoom(User player, String unlockedRoomId) {
-        player.unlockRoom(dataAccess.getRoomById(unlockedRoomId));
-        player.saveCurrentRoomID(unlockedRoomId);
-        outputBoundary.switchToRoomView(unlockedRoomId);
     }
 }
