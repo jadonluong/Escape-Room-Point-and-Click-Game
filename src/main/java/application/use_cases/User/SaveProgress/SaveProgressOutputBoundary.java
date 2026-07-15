@@ -3,13 +3,13 @@ package application.use_cases.User.SaveProgress;
 /**
  * The Output Boundary for the Save Progress Use Case.
  */
-public interface SaveProgressOuputBoundary {
+public interface SaveProgressOutputBoundary {
 
     /**
      * Prepares the success view for the Save Progress Use Case.
-     * @param saveProgressOuputBoundary the output data of the save progress use case
+     * @param saveProgressOutputData the output data of the save progress use case
      */
-    void prepareSuccessView(SaveProgressOuputBoundary saveProgressOuputBoundary);
+    void prepareSuccessView(SaveProgressOutputData saveProgressOutputData);
 
     /**
      * Prepares the fail view for the Save Progress Use Case.
