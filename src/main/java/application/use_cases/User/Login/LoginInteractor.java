@@ -28,6 +28,14 @@ public class LoginInteractor implements LoginInputBoundary{
             userPresenter.prepareFailView("User does not exist");
         }
 
+        else if (username.isEmpty()) {
+            userPresenter.prepareFailView("Username cannot be empty.");
+        }
+
+        else if (password.isEmpty()) {
+            userPresenter.prepareFailView("Password cannot be empty.");
+        }
+
         else {
             String pwdRegistered = userDataAccessObject.getUserPassword(username).getPassword();
             if (!pwdRegistered.equals(password)) {
