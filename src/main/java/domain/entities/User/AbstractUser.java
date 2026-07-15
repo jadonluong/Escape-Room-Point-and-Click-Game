@@ -61,12 +61,12 @@ public abstract class AbstractUser implements User {
     }
 
     @Override
-    public void saveSelectedItem(String itemID) {
+    public void saveSelectedItemID(String itemID) {
         this.selectedItemID = itemID;
     }
 
     @Override
-    public String getSelectedItem() {
+    public String getSelectedItemID() {
         return this.selectedItemID;
     }
 

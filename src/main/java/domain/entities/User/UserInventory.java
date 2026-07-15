@@ -31,11 +31,11 @@ public interface UserInventory {
      * Saves the item the user has selected.
      * @param itemSelected
      */
-    void saveSelectedItem(String itemSelected);
+    void saveSelectedItemID(String itemSelected);
 
     /**
      * Returns the item the user has selected.
      * @return the item the user selected.
      */
-    String getSelectedItem();
+    String getSelectedItemID();
 }
