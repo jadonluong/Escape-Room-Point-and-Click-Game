@@ -1,9 +1,7 @@
 package domain.entities.Interactable;
 
-import java.util.UUID;
-
 public interface Interactable {
-    UUID getId();
+    String getId();
 
     String getName();
     String getDescription();
@@ -13,11 +11,12 @@ public interface Interactable {
     void setInteracted(boolean interacted);
 
     boolean isConsumed();
+    boolean isConsumesItem();
 
     boolean needsItem();
-    UUID getRequiredItemId();
-    UUID getRewardItemId();
-    UUID getLinkedPuzzleId();
-    UUID getUnlockedRoomId();
+    String getRequiredItemId();
+    String getRewardItemId();
+    String getLinkedPuzzleId();
+    String getUnlockedRoomId();
     String getSuccessMessage();
 }

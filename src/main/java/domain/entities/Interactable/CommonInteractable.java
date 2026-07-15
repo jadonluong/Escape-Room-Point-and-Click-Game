@@ -1,9 +1,7 @@
 package domain.entities.Interactable;
 
-import java.util.UUID;
-
 public class CommonInteractable implements Interactable {
-    private UUID id;
+    private String id;
 
     private String defaultName;
     private String defaultDescription;
@@ -14,19 +12,21 @@ public class CommonInteractable implements Interactable {
     private String interactedSprite;
 
     private boolean interacted;
-    private boolean isConsumed; // Will this item be consumed upon interaction?
+    private boolean isConsumed; // Will this Interactable disappear upon interaction?
+    private boolean consumesItem; // Will this Interactable consume the Item upon use?
 
     private boolean needsItem;
-    private UUID requiredItemId;
-    private UUID rewardItemId;
-    private UUID linkedPuzzleId;
-    private UUID unlockedRoomId; // Self-note: Doorway Interactable behind Door!
+    private String requiredItemId;
+    private String rewardItemId;
+    private String linkedPuzzleId;
+    private String unlockedRoomId;
     private String successMessage;
 
-    public CommonInteractable(UUID id, String defaultName, String defaultDescription, String defaultSprite,
+    public CommonInteractable(String id, String defaultName, String defaultDescription, String defaultSprite,
                               String interactedName, String interactedDescription, String interactedSprite,
-                              boolean isConsumed, boolean needsItem, UUID requiredItemId, UUID rewardItemId,
-                              UUID linkedPuzzleId, UUID unlockedRoomId, String successMessage) {
+                              boolean isConsumed, boolean consumesItem, boolean needsItem, String requiredItemId,
+                              String rewardItemId, String linkedPuzzleId, String unlockedRoomId,
+                              String successMessage) {
         this.id = id;
         this.defaultName = defaultName;
         this.defaultDescription = defaultDescription;
@@ -36,6 +36,7 @@ public class CommonInteractable implements Interactable {
         this.interactedSprite = interactedSprite;
         this.interacted = false;
         this.isConsumed = isConsumed;
+        this.consumesItem = consumesItem;
         this.needsItem = needsItem;
         this.requiredItemId = requiredItemId;
         this.rewardItemId = rewardItemId;
@@ -45,7 +46,7 @@ public class CommonInteractable implements Interactable {
     }
 
     @Override
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
@@ -89,27 +90,32 @@ public class CommonInteractable implements Interactable {
     }
 
     @Override
+    public boolean isConsumesItem() {
+        return consumesItem;
+    }
+
+    @Override
     public boolean needsItem() {
         return needsItem;
     }
 
     @Override
-    public UUID getRequiredItemId() {
+    public String getRequiredItemId() {
         return requiredItemId;
     }
 
     @Override
-    public UUID getRewardItemId() {
+    public String getRewardItemId() {
         return rewardItemId;
     }
 
     @Override
-    public UUID getLinkedPuzzleId() {
+    public String getLinkedPuzzleId() {
         return linkedPuzzleId;
     }
 
     @Override
-    public UUID getUnlockedRoomId() {
+    public String getUnlockedRoomId() {
         return unlockedRoomId;
     }
 
