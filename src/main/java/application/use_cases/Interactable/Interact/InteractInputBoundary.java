@@ -1,5 +1,5 @@
 package application.use_cases.Interactable.Interact;
 
 public interface InteractInputBoundary {
-    void interact(InteractInputData interactInputData);
+    void interact(InteractInputData inputData);
 }
