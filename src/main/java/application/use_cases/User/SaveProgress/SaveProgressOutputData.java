@@ -16,7 +16,7 @@ public class SaveProgressOutputData {
         return username;
     }
 
-    public boolean isLogoutFailed() {
+    public boolean isSaveFailed() {
         return isSaveFailed;
     }
 }
