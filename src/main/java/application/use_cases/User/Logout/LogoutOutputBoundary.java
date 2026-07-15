@@ -16,10 +16,4 @@ public interface LogoutOutputBoundary {
      * @param logoutOutputData the output data of the logout use case
      */
     void prepareSavedSuccessView(LogoutOutputData logoutOutputData);
-
-    /**
-     * Prepares the success view for the Logout Use Case.
-     * @param errorMessage the error message to be displayed
-     */
-    void prepareFailView(String errorMessage);
 }
