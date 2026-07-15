@@ -9,12 +9,6 @@ import domain.entities.User.User;
 public interface LoginUserDataAccessInterface {
 
     /**
-     * Saves the user.
-     * @param user the user to save
-     */
-    void save(User user);
-
-    /**
      * Returns the function interface that gets the password of the user with the given username
      * @return the function interface that gets the user's password
      */
