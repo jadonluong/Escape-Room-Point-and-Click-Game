@@ -1,5 +1,6 @@
 package domain.entities.Item;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class CommonItem implements Item {
