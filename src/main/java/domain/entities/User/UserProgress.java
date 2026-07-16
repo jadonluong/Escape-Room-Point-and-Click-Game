@@ -1,0 +1,35 @@
+package domain.entities.User;
+
+import domain.entities.Room.Room;
+
+import java.util.ArrayList;
+import java.util.UUID;
+
+/**
+ * The interface with methods that tracks and records the user's progress.
+ */
+public interface UserProgress {
+
+    /**
+     * Returns the rooms the user has unlocked.
+     */
+    ArrayList<Room> getRoomsUnlocked();
+
+    /**
+     * Saves the newly unclocked room to the user's unlocked room inventory.
+     * @param room the newly unlocked room.
+     */
+    void unlockRoom(Room room);
+
+    /**
+     * Saves the newly unclocked room to the user's unlocked room inventory.
+     * @param roomID the room to be set to current room.
+     */
+    void saveCurrentRoomID(String roomID);
+
+    /**
+     * Returns the ID of the current room the user is in.
+     * @return the ID of the current room the user is in.
+     */
+    String getCurrentRoomID();
+}
