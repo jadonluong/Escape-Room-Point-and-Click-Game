@@ -6,14 +6,14 @@ package domain.entities.Hint;
 public interface Hint {
 
     /**
-     * Returns the ID of the hint.
-     * @return the ID of the hint
+     * Returns the ID of the object the hint is related to.
+     * @return the ID of the object the hint is related to
      */
-    String getHintID();
+    String getObjectID();
 
     /**
      * Returns the message of the hint.
      * @return the hint message
      */
-    String getHintMessage();
+    String getHintMessageForRequestCount(int requestCount);
 }

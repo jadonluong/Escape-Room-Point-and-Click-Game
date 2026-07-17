@@ -1,6 +1,6 @@
 package domain.entities.Hint;
 
-import java.util.UUID;
+import java.util.List;
 
 /**
  * Factory for creating Hint objects.
@@ -8,7 +8,7 @@ import java.util.UUID;
 public class CommonHintFactory implements HintFactory{
 
     @Override
-    public Hint createHint(UUID ID, String message) {
-        return new CommonHint(ID, message);
+    public Hint createHint(String ID, List<String> messages) {
+        return null;
     }
 }
