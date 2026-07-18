@@ -1,10 +1,9 @@
 package domain.entities.Room;
 
-import domain.entities.Interactable.Interactable;
-import domain.entities.Item.Item;
-
-import java.util.List;
-
+/**
+ * Interface for creating rooms.
+ * The Use Cases will use this interface to load rooms by ID.
+ */
 public interface RoomFactory {
-    Room create(String id, List<Interactable> interactables, List<Item> items);
+    Room createRoom(String roomName);
 }

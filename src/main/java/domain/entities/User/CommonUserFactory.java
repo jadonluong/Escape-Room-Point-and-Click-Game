@@ -16,7 +16,7 @@ public interface CommonUserFactory {
      * @param password the password of the new common user.
      * @return the new common user.
      */
-    User createCommonUser(String username, String password);
+     User createCommonUser(String username, String password);
 
     /**
      * Restores a common user from database.
