@@ -50,6 +50,11 @@ public class CommonRoom implements Room{
     }
 
     @Override
+    public void removeInteractable(Interactable interactable) {
+        this.interactables.remove(interactable);
+    }
+
+    @Override
     public Interactable getInteractableById(String id) {
         return interactables.stream()
                 .filter(item -> item.getId().equals(id))
