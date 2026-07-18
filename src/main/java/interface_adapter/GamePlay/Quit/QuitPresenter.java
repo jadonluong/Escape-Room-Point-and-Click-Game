@@ -18,7 +18,7 @@ public class QuitPresenter implements QuitOutputBoundary {
         // 1. Switch the active view to the main menu
         viewManagerModel.setActiveView(mainMenuViewModel.getViewName());
 
-        // 2. Alert the ViewManager (which is observed by your main JFrame/View container)
+        // 2. Alert the ViewManager
         viewManagerModel.firePropertyChanged();
     }
 }

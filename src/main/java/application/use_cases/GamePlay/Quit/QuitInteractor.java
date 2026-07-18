@@ -1,10 +1,10 @@
 package application.use_cases.GamePlay.Quit;
 
-public class QuitInteracter implements QuitInputBoundary {
+public class QuitInteractor implements QuitInputBoundary {
     private final QuitOutputBoundary quitPresenter;
     //Can also inject a GameStateManager, SaveDataAccess.
 
-    public QuitInteracter(QuitOutputBoundary quitPresenter) {
+    public QuitInteractor(QuitOutputBoundary quitPresenter) {
         this.quitPresenter = quitPresenter;
     }
 
