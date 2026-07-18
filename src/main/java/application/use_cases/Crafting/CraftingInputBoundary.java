@@ -1,4 +1,4 @@
-package application.use_cases.Inventory.Crafting;
+package application.use_cases.Crafting;
 
 public interface CraftingInputBoundary {
 }
