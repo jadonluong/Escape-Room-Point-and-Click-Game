@@ -4,10 +4,10 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class CommonItem implements Item {
-    private UUID id;
-    private String name;
-    private String description;
-    private Boolean craftable;
+    private final UUID id;
+    private final String name;
+    private final String description;
+    private final Boolean craftable;
 
     public CommonItem(UUID id, String name, String description, Boolean craftable) {
         this.id = id;
@@ -42,12 +42,10 @@ public class CommonItem implements Item {
             return true;
         }
 
-        if (!(o instanceof Item)) {
-            return false;
+        if (o instanceof Item otherItem) {
+            return Objects.equals(this.getId(), otherItem.getId());
         }
-
-        Item otherItem = (Item) o;
-        return Objects.equals(this.getId(), otherItem.getId());
+        return false;
     }
 
     /**
