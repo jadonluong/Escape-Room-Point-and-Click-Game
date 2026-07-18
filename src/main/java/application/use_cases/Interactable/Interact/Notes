@@ -1,0 +1,26 @@
+Design Choices (Rules):
+- If an Interactable either transports the player to another room or shows the player a puzzle to solve, then its first
+    interaction must NOT transport the player to another room or open a puzzle. Once it has been interacted with, then
+    it becomes a portal or a puzzle. Basically we have to 'unlock' the Interactable first. The successMessage (if there
+    is one) will only be displayed in the first interaction.
+- If an Interactable has already been interacted with, then further interactions will not require a specific item.
+- If an Interactable gives an Item to the User, its successMessage should be "You have obtained a(n) __ ." so that in
+    repeat interactions, the string " already." can replace the period in the successMessage to be the new message.
+    That Interactable must give the Item in the first interaction, and not again in repeated interactions.
+- An Interactable cannot have both unlockedRoomId and linkedPuzzleId non-null at the same time. In other words those
+    two are mutually exclusive.
+
+Special Consideration:
+- If an Interactable has multiple states (requires multiple interactions, excludes the state where the object becomes
+    a portal or a puzzle), then an idea is to make multiple disappearing Interactable objects to represent those states,
+    and make it so that interacting with one will make it disappear to reveal the next state. This is done by writing a
+    special case in InteractInteractor.java.
+- If an Interactable spawns another Interactable or changes the room (e.g. lighting), write a special case!
+- If an Interactable does not follow the above design choices then write a special case!
+
+Notes:
+- In the UI layer, check to see if the Interactable can be interacted with or not (aside from the Zoom In). You can do
+    this by checking for null unlockedRoomId, linkedPuzzleId, and successMessage (and not rewardItemId since the reward
+    should only be given to the player once).
+- In the UI layer, make sure to refresh the current View (to update User and Room)! This is not necessary for repeated
+    interactions on a portal or puzzle, however, since there is nothing about the User and Room to update.

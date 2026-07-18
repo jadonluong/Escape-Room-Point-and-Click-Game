@@ -4,11 +4,13 @@ import domain.entities.Interactable.Interactable;
 import domain.entities.Item.Item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CommonRoom implements Room{
 
-    private List<Interactable> interactables;
+    private Map<String, Interactable> interactables;
     private List<Item> items;
     private Boolean status;
 
@@ -22,7 +24,7 @@ public class CommonRoom implements Room{
         this.Id = Id;
         this.description = description;
         this.isLocked = isLocked;
-        this.interactables = new ArrayList<>();
+        this.interactables = new HashMap<>();
     }
 
 
@@ -40,27 +42,22 @@ public class CommonRoom implements Room{
 
     @Override
     public List<Interactable> getInteractables() {
-        // Return a copy to protect the internal state from external modification
-        return new ArrayList<>(interactables);
+        // FIX: Extract and return a copy of the Map's values as a List
+        return new ArrayList<>(interactables.values());
     }
-
     @Override
     public void addInteractable(Interactable interactable) {
-        this.interactables.add(interactable);
+        this.interactables.put(interactable.getId(), interactable);
     }
 
     @Override
-    public void removeInteractable(Interactable interactable) {
-        this.interactables.remove(interactable);
+    public void removeInteractable(String id) {
+        this.interactables.remove(id);
     }
 
     @Override
     public Interactable getInteractableById(String id) {
-        return interactables.stream()
-                .filter(item -> item.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-        //TODO: waiting for the getter of interactable.
+        return this.interactables.get(id);
     }
 
 }
