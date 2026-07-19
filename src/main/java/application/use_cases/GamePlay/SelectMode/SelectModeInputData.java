@@ -1,15 +1,16 @@
 package application.use_cases.GamePlay.SelectMode;
 
+import application.use_cases.GamePlay.SelectMode.Navigation.ModeNavigation;
 import domain.entities.Config.GameModeConfig;
 
 public class SelectModeInputData {
-    private final String chosenModeConfig;
+    private final ModeNavigation mode;
 
-    public SelectModeInputData(String chosenModeConfig) {
-        this.chosenModeConfig = chosenModeConfig;
+    public SelectModeInputData(ModeNavigation mode) {
+        this.mode = mode;
     }
 
-    public String getChosenModeConfig() {
-        return chosenModeConfig;
+    public ModeNavigation getChosenMode() {
+        return mode;
     }
 }

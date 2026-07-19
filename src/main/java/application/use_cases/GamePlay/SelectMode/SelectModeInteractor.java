@@ -6,26 +6,17 @@ import domain.entities.Config.GameModeConfig;
 
 public class SelectModeInteractor implements SelectModeInputBoundary {
     private final SelectModeOutputBoundary selectModePresenter;
-    private final ConfigurationFactory configFactory;
 
-    public SelectModeInteractor(SelectModeOutputBoundary selectModePresenter, ConfigurationFactory configFactory) {
+    public SelectModeInteractor(SelectModeOutputBoundary selectModePresenter) {
         this.selectModePresenter = selectModePresenter;
-        this.configFactory = configFactory;
     }
 
 
     @Override
     public void execute(SelectModeInputData inputData) {
-        // Use the config Factory to generate the actual configuration object.
-        GameModeConfig chosenMode = configFactory.createConfig(inputData.getChosenModeConfig());
 
-        // 1. Process configuration
-        if (chosenMode != null) {
-
-            chosenMode.configure();
-
-            // 2. Alert the presenter, and pass back the room that user is starting at.
-            selectModePresenter.prepareGameStartView(chosenMode.getStartingRoomId());
-        }
+        //Since we need to start the game for some mode, and browse rooms for some other,
+        //so we apply Behavioral Strategy Pattern here.
+        inputData.getChosenMode().navigate(selectModePresenter);
     }
 }

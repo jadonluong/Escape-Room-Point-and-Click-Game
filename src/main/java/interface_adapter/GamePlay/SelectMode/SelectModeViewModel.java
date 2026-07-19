@@ -1,4 +1,4 @@
-package interface_adapter.GamePlay.SelectRoom;
+package interface_adapter.GamePlay.SelectMode;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
