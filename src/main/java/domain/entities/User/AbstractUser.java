@@ -75,4 +75,14 @@ public abstract class AbstractUser implements User {
 
     @Override
     public abstract boolean isRegistered();
+
+    @Override
+    public boolean hasItemID(String itemID) {
+       for (Item item : this.itemInventory) {
+           if (item.getId().equals(itemID)) {
+               return true;
+           }
+       }
+       return false;
+    }
 }
