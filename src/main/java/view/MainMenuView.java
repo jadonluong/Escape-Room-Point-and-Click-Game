@@ -29,8 +29,12 @@ public class MainMenuView extends StackPane {
         fixedRoot.getChildren().add(bg);
 
         fixedRoot.getChildren().addAll(
-                makeButton("/images/ui/buttons/LoginSigninButton.png", 715, 566, 2093, 40,
-                        () -> viewManager.show(new PlaceholderView("Login / Sign Up", viewManager, this))),
+//                makeButton("/images/ui/buttons/LoginSigninButton.png", 715, 566, 2093, 40,
+//                        this::onLoginSignUp),
+//                makeButton("/images/ui/buttons/LoginSigninButton.png", 715, 566, 2093, 40,
+//                        this::onLoginSignUp),
+                makeButton("/images/ui/buttons/LoginButton.png", 715, 272, 2093, 40, this::onLoginSignUp),
+                makeButton("/images/ui/buttons/LoginButton.png", 715, 272, 2093, 312, this::onLoginSignUp),
                 makeButton("/images/ui/buttons/StoryButton.png", 1271, 444, 145, 600,
                         () -> viewManager.show(new PlaceholderView("Story Line", viewManager, this))),
                 makeButton("/images/ui/buttons/TutorialButton.png", 1271, 444, 145, 1080,
@@ -63,11 +67,6 @@ public class MainMenuView extends StackPane {
         button.setOnMouseEntered(e -> { button.setScaleX(1.05); button.setScaleY(1.05); });
         button.setOnMouseExited(e -> { button.setScaleX(1.0); button.setScaleY(1.0); });
 
-//        javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow(0);
-//        button.setEffect(glow);
-//        button.setOnMouseEntered(e -> glow.setLevel(0.4));
-//        button.setOnMouseExited(e -> glow.setLevel(0));
-
         return button;
     }
 
@@ -80,4 +79,31 @@ public class MainMenuView extends StackPane {
         fixedRoot.setScaleX(scale);
         fixedRoot.setScaleY(scale);
     }
+
+    private ModalOverlay currentOverlay;
+
+    private void onLoginSignUp() {
+        showOverlay(new AuthChooserOverlay(
+                this::closeOverlay,
+                () -> showOverlay(new SignupOverlay(this::closeOverlay,
+                        (u, p) -> System.out.println("Sign up: " + u + " / " + p))),
+                () -> showOverlay(new LoginOverlay(this::closeOverlay,
+                        (u, p) -> System.out.println("Log in: " + u + " / " + p)))
+        ));
+    }
+
+    private void showOverlay(ModalOverlay overlay) {
+        if (currentOverlay != null) getChildren().remove(currentOverlay);
+        currentOverlay = overlay;
+        getChildren().add(currentOverlay);
+        currentOverlay.requestFocus();
+    }
+
+    private void closeOverlay() {
+        if (currentOverlay != null) {
+            getChildren().remove(currentOverlay);
+            currentOverlay = null;
+        }
+    }
+
 }
