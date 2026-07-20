@@ -20,6 +20,7 @@ public class StoryMode implements ModeNavigation {
         chosenMode.configure();
 
         //Call the presenter to prepare view
-        presenter.prepareGameStartView(initialRoomId);
+        presenter.prepareGameStartView(chosenMode.getStartingRoomId());
+        //TODO: also pass anything(like objects of Room) thats needed for view.
     }
 }

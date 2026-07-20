@@ -18,7 +18,7 @@ public class SelectModePresenter implements SelectModeOutputBoundary {
     }
 
     @Override
-    public void prepareSelectRoomView() {
+    public void prepareSelectRoomView(String initialRoomId) {
         viewModel.setErrorMessage("");
         //TODO: waiting to be fill out the detail.
     }
