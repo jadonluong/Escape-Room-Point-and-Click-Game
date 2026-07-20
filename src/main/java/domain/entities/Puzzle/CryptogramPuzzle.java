@@ -5,23 +5,30 @@ import java.util.Map;
 public class CryptogramPuzzle implements Puzzle{
     private String id;
     private boolean isSolved;
+    private String description;
 
     private String encrypted;
     private String answer;
     private String hint;
     private Map<String, String> cipher;
+    private String cipherKeyId;
 
+    private String successMessage;
     private String rewardItemId;
     private String unlockedRoomId;
 
-    public CryptogramPuzzle(String id, String encrypted, String answer, String hint, Map<String, String> cipher,
-                            String rewardItemId, String unlockedRoomId) {
+    public CryptogramPuzzle(String id, String description, String encrypted, String answer, String hint,
+                            Map<String, String> cipher, String cipherKeyId, String successMessage, String rewardItemId,
+                            String unlockedRoomId) {
         this.id = id;
         this.isSolved = false;
+        this.description = description;
         this.encrypted = encrypted;
         this.answer = answer;
         this.hint = hint;
         this.cipher = cipher;
+        this.cipherKeyId = cipherKeyId;
+        this.successMessage = successMessage;
         this.rewardItemId = rewardItemId;
         this.unlockedRoomId = unlockedRoomId;
     }
@@ -41,6 +48,11 @@ public class CryptogramPuzzle implements Puzzle{
         this.isSolved = solved;
     }
 
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
     public String getEncrypted() {
         return encrypted;
     }
@@ -57,6 +69,15 @@ public class CryptogramPuzzle implements Puzzle{
 
     public Map<String, String> getCipher() {
         return cipher;
+    }
+
+    public String getCipherKeyId() {
+        return cipherKeyId;
+    }
+
+    @Override
+    public String getSuccessMessage() {
+        return successMessage;
     }
 
     @Override
