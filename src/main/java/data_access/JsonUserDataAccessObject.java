@@ -1,4 +1,4 @@
-package interface_adapter.User;
+package data_access;
 
 public class JsonUserDataAccessObject {
 }

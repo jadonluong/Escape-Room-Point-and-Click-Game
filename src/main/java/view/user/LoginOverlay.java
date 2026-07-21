@@ -76,14 +76,14 @@ public class LoginOverlay extends ModalOverlay {
     }
 
     public void updateView() {
-        String error = loginViewModel
-                .getState()
-                .getErrorMessage();
-
+        String error = loginViewModel.getState().getErrorMessage();
         if (!error.isEmpty()) {
             errorLabel.setText(error);
             errorLabel.setVisible(true);
             errorLabel.setManaged(true);
+        } else {
+            errorLabel.setVisible(false);
+            errorLabel.setManaged(false);
         }
     }
 }
