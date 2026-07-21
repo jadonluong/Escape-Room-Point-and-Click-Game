@@ -1,6 +1,6 @@
 - Maybe we can have the CryptogramPuzzle key be a piece of paper the player receives from an Interactable, and if the
     player has this in their inventory, then when the player interacts with the CryptogramPuzzle the key will be
     displayed in the puzzle UI (add a successMessage when giving the player the key so that they know how to use it).
-- Interact will handle the case where the player tries to Enter a Puzzle that is already solved! This is because the
-    Interact use case already has the SuccessView to display the Puzzle's successMessage and also the RoomView if the
-    solved Puzzle becomes a portal.
+- Interact will handle the case where the player tries to Enter a Puzzle that is already solved! This is because every
+    Puzzle is accessed through an Interactable, and the Interact use case already has the SuccessView to display the
+    Puzzle's successMessage and also the RoomView if the solved Puzzle becomes a portal.
