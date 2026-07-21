@@ -1,10 +1,11 @@
 package application.use_cases.Interactable.Interact;
 
 import domain.entities.Interactable.Interactable;
+import domain.entities.Puzzle.Puzzle;
 import domain.entities.Room.Room;
 import domain.entities.User.User;
 
-public class InteractInteractor implements InteractInputBoundary{
+public class InteractInteractor implements InteractInputBoundary {
     private InteractDataAccessInterface dataAccess;
     private InteractOutputBoundary outputBoundary;
 
@@ -72,13 +73,26 @@ public class InteractInteractor implements InteractInputBoundary{
         if (unlockedRoomId != null) {
             player.unlockRoom(dataAccess.getRoomById(unlockedRoomId));
             player.saveCurrentRoomID(unlockedRoomId);
-            outputBoundary.switchToRoomView(unlockedRoomId);
+            outputBoundary.prepareRoomView(unlockedRoomId);
             return;
         }
 
         String linkedPuzzleId = interactable.getLinkedPuzzleId();
         if (linkedPuzzleId != null) {
-            outputBoundary.switchToPuzzleView(linkedPuzzleId);
+            Puzzle puzzle = dataAccess.getPuzzleById(linkedPuzzleId);
+            String puzzleUnlockedRoomId = puzzle.getUnlockedRoomId();
+            String puzzleSuccessMessage = puzzle.getSuccessMessage();
+
+            if (puzzle.isSolved() && puzzleUnlockedRoomId != null) {
+                player.saveCurrentRoomID(puzzleUnlockedRoomId);
+                outputBoundary.prepareRoomView(puzzleUnlockedRoomId);
+                return;
+            } else if (puzzle.isSolved()) {
+                outputBoundary.prepareSuccessView(new InteractOutputData(puzzleSuccessMessage, null));
+                return;
+            }
+
+            outputBoundary.preparePuzzleView(linkedPuzzleId);
             return;
         }
 
@@ -89,7 +103,6 @@ public class InteractInteractor implements InteractInputBoundary{
             }
             successMessage = successMessage.concat(" already!"); // "You have obtained a(n) __ already!"
         }
-        InteractOutputData outputData = new InteractOutputData(successMessage, null);
-        outputBoundary.prepareSuccessView(outputData);
+        outputBoundary.prepareSuccessView(new InteractOutputData(successMessage, null));
     }
 }

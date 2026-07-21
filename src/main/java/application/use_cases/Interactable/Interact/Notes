@@ -24,3 +24,6 @@ Notes:
     should only be given to the player once).
 - In the UI layer, make sure to refresh the current View (to update User and Room)! This is not necessary for repeated
     interactions on a portal or puzzle, however, since there is nothing about the User and Room to update.
+- Make sure to create the unlocked Room (if not already done at the very start), linked Puzzle, and reward Item
+    entities at the same time (at latest) as the creation of the corresponding Interactable! This will avoid the
+    NullPointerException.

@@ -44,7 +44,8 @@ public class LoginInteractor implements LoginInputBoundary{
 
             User commonUser = commonUserFactory.restoreCommonUser(username, password,
                     userDataAccessObject.getUser(username).getItemInventory(),
-                    userDataAccessObject.getUser(username).getRoomsUnlocked());
+                    userDataAccessObject.getUser(username).getRoomsUnlocked(),
+                    userDataAccessObject.getUser(username).getHintsWatched());
 
             final LoginOutputData outputData = new LoginOutputData(commonUser, false);
             userPresenter.prepareSuccessView(outputData);

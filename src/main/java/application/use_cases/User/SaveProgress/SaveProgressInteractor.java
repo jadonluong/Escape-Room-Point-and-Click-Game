@@ -26,7 +26,8 @@ public class SaveProgressInteractor implements SaveProgressInputBoundary{
         else {
             saveProgressUserDataAccessObject.saveProgress(saveProgressInputData.getUsername(),
                     getRoomIDs(saveProgressInputData),
-                    getItemIDs(saveProgressInputData));
+                    getItemIDs(saveProgressInputData),
+                    saveProgressInputData.getHintsWatched());
 
             final SaveProgressOutputData saveProgressOutputData = new SaveProgressOutputData(
                     saveProgressInputData.getUsername(),

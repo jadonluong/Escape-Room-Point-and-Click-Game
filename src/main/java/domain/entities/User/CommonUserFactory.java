@@ -4,6 +4,7 @@ import domain.entities.Item.Item;
 import domain.entities.Room.Room;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Factory for creating and restoring common users.
@@ -24,7 +25,12 @@ public interface CommonUserFactory {
      * @param password the password of the existing common user.
      * @param itemInventory the items the existing common user already collected.
      * @param rooms the rooms the existing common user already unlocked.
+     * @param hints the hints the existing common user has watched.
      * @return the restored common user.
      */
-    User restoreCommonUser(String username, String password, ArrayList<Item> itemInventory, ArrayList<Room> rooms);
+    User restoreCommonUser(String username,
+                           String password,
+                           ArrayList<Item> itemInventory,
+                           ArrayList<Room> rooms,
+                           HashMap<String, Integer> hints);
 }
