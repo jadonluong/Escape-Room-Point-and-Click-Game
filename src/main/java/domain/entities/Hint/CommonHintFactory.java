@@ -9,6 +9,6 @@ public class CommonHintFactory implements HintFactory{
 
     @Override
     public Hint createHint(String ID, List<String> messages) {
-        return null;
+        return new CommonHint(ID, messages);
     }
 }
