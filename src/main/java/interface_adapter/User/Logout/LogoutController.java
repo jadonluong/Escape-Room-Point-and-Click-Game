@@ -32,6 +32,14 @@ public class LogoutController {
         logoutInteractor.execute(inputData);
     }
 
+    /**
+     * Executes the save and logout use case.
+     * @param username the username of the user saving their progress and logging out
+     * @param roomsUnlocked the rooms the user has unlocked
+     * @param itemInventory the items the user has collected
+     * @param hintsWatched the hints the user has watched
+     * @param isRegistered the status of the user, true if the user is a common user, false if the user is a guest user
+     */
     public void executeLogoutWithSave(String username,
                                       ArrayList<Room> roomsUnlocked,
                                       ArrayList<Item> itemInventory,
