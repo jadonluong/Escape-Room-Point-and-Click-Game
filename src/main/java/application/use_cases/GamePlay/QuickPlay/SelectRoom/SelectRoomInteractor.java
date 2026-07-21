@@ -29,7 +29,6 @@ public class SelectRoomInteractor implements SelectRoomInputBoundary {
         ConfigurationFactory configFactory = new ConfigurationFactory();
 
         GameModeConfig chosenMode = configFactory.createConfig("quick", inputData.getTargetRoom());
-        chosenMode.configure();
 
         SelectRoomOutputData outputData = new SelectRoomOutputData(chosenMode.getStartingRoomId(),
                 chosenMode.getInteractableObjects(),false);

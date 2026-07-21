@@ -17,7 +17,6 @@ public class StoryMode implements ModeNavigation {
         //Since there is no room selection for story mode, we configure directly
         ConfigurationFactory configFactory = new ConfigurationFactory();
         GameModeConfig chosenMode = configFactory.createConfig("story", "default");
-        chosenMode.configure();
 
         //Call the presenter to prepare view
         presenter.prepareGameStartView(chosenMode.getStartingRoomId());

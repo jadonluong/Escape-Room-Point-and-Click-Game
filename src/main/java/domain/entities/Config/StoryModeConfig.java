@@ -11,10 +11,7 @@ public class StoryModeConfig implements GameModeConfig {
     List<String> interactableObjects = new ArrayList<>();
     //TODO: Set the starting room after the rooms are implemented.
 
-    @Override
-    public void configure() {
-        //TODO: Setup this after the premade rooms are done.
-    }
+    //TODO: Setup this after the premade rooms are done.
 
     @Override
     public String getStartingRoomId() {
