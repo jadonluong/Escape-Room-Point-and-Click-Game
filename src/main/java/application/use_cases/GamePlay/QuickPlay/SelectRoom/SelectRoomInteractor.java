@@ -1,5 +1,7 @@
 package application.use_cases.GamePlay.QuickPlay.SelectRoom;
 
+import domain.entities.Config.ConfigurationFactory;
+import domain.entities.Config.GameModeConfig;
 import domain.entities.Config.QuickModeConfig;
 import domain.entities.Config.StoryModeConfig;
 
@@ -24,10 +26,13 @@ public class SelectRoomInteractor implements SelectRoomInputBoundary {
         //This targertRoom should somehow represent which room we are going to.
 
         //TODO: Write separate quick Room config after they are done.
-        QuickModeConfig quickModeConfig = new QuickModeConfig(targetRoom);
+        ConfigurationFactory configFactory = new ConfigurationFactory();
 
-        SelectRoomOutputData outputData = new SelectRoomOutputData(quickModeConfig.getStartingRoomId(),
-                quickModeConfig.getInteractableObjects(),false);
+        GameModeConfig chosenMode = configFactory.createConfig("quick", inputData.getTargetRoom());
+        chosenMode.configure();
+
+        SelectRoomOutputData outputData = new SelectRoomOutputData(chosenMode.getStartingRoomId(),
+                chosenMode.getInteractableObjects(),false);
 
         presenter.prepareSuccessView(outputData);
     }
