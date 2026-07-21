@@ -1,5 +1,7 @@
-package view;
+package view.user;
 
+import interface_adapter.User.Login.LoginController;
+import interface_adapter.User.Login.LoginViewModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -9,24 +11,26 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import view.common.ModalOverlay;
 
-import java.util.function.BiConsumer;
-
-public class SignupOverlay extends ModalOverlay {
+public class LoginOverlay extends ModalOverlay {
 
     private final TextField usernameField = new TextField();
     private final PasswordField passwordField = new PasswordField();
     private final Label errorLabel = new Label();
-    private final BiConsumer<String, String> onConfirm;
 
-    public SignupOverlay(Runnable onClose, BiConsumer<String, String> onConfirm) {
+    private final LoginController controller;
+    LoginViewModel loginViewModel;
+
+    public LoginOverlay(Runnable onClose, LoginController controller, LoginViewModel loginViewModel) {
         super(onClose);
-        this.onConfirm = onConfirm;
+        this.controller = controller;
+        this.loginViewModel = loginViewModel;
     }
 
     @Override
     protected VBox buildModalBox() {
-        Label title = new Label("SIGN-UP");
+        Label title = new Label("LOG-IN");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;");
 
         Button closeButton = new Button("\u00D7");
@@ -49,7 +53,14 @@ public class SignupOverlay extends ModalOverlay {
         cancelButton.setOnAction(e -> onClose.run());
 
         Button confirmButton = new Button("CONFIRM");
-        confirmButton.setOnAction(e -> onConfirm.accept(usernameField.getText(), passwordField.getText()));
+        confirmButton.setOnAction(e -> {
+            controller.execute(
+                    usernameField.getText(),
+                    passwordField.getText()
+            );
+
+            updateView();
+        });
 
         HBox buttonRow = new HBox(20, cancelButton, confirmButton);
         buttonRow.setAlignment(Pos.CENTER);
@@ -64,9 +75,15 @@ public class SignupOverlay extends ModalOverlay {
         return box;
     }
 
-    public void showError(String message) {
-        errorLabel.setText(message);
-        errorLabel.setVisible(true);
-        errorLabel.setManaged(true);
+    public void updateView() {
+        String error = loginViewModel
+                .getState()
+                .getErrorMessage();
+
+        if (!error.isEmpty()) {
+            errorLabel.setText(error);
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
+        }
     }
 }

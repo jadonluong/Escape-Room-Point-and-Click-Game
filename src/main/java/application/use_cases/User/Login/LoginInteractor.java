@@ -40,6 +40,7 @@ public class LoginInteractor implements LoginInputBoundary{
             String pwdRegistered = userDataAccessObject.getUserPassword(username).getPassword();
             if (!pwdRegistered.equals(password)) {
                 userPresenter.prepareFailView("Password incorrect");
+                return;
             }
 
             User commonUser = commonUserFactory.restoreCommonUser(username, password,
