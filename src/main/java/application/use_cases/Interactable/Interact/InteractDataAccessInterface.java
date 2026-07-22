@@ -17,8 +17,6 @@ public interface InteractDataAccessInterface {
     void saveInteractable(Interactable interactable);
 
     Item getItemById(String itemId);
-    void saveItem(Item item);
 
     Puzzle getPuzzleById(String puzzleId);
-    void savePuzzle(Puzzle puzzle);
 }

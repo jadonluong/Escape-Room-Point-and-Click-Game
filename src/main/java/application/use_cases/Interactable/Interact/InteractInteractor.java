@@ -52,8 +52,7 @@ public class InteractInteractor implements InteractInputBoundary {
             dataAccess.saveRoom(currentRoom);
         }
 
-        InteractOutputData outputData = new InteractOutputData(interactable.getSuccessMessage(), rewardItemId);
-        outputBoundary.prepareSuccessView(outputData);
+        outputBoundary.prepareSuccessView(new InteractOutputData(interactable.getSuccessMessage()));
     }
 
     private void itemRequiredFirstInteraction(User player, Interactable interactable) {
@@ -71,9 +70,7 @@ public class InteractInteractor implements InteractInputBoundary {
     private void repeatedInteraction(User player, Interactable interactable) {
         String unlockedRoomId = interactable.getUnlockedRoomId();
         if (unlockedRoomId != null) {
-            player.unlockRoom(dataAccess.getRoomById(unlockedRoomId));
-            player.saveCurrentRoomID(unlockedRoomId);
-            outputBoundary.prepareRoomView(unlockedRoomId);
+            moveToRoom(player, unlockedRoomId);
             return;
         }
 
@@ -81,14 +78,12 @@ public class InteractInteractor implements InteractInputBoundary {
         if (linkedPuzzleId != null) {
             Puzzle puzzle = dataAccess.getPuzzleById(linkedPuzzleId);
             String puzzleUnlockedRoomId = puzzle.getUnlockedRoomId();
-            String puzzleSuccessMessage = puzzle.getSuccessMessage();
 
             if (puzzle.isSolved() && puzzleUnlockedRoomId != null) {
-                player.saveCurrentRoomID(puzzleUnlockedRoomId);
-                outputBoundary.prepareRoomView(puzzleUnlockedRoomId);
+                moveToRoom(player, puzzleUnlockedRoomId);
                 return;
             } else if (puzzle.isSolved()) {
-                outputBoundary.prepareSuccessView(new InteractOutputData(puzzleSuccessMessage, null));
+                outputBoundary.prepareSuccessView(new InteractOutputData(puzzle.getSuccessMessage()));
                 return;
             }
 
@@ -103,6 +98,13 @@ public class InteractInteractor implements InteractInputBoundary {
             }
             successMessage = successMessage.concat(" already!"); // "You have obtained a(n) __ already!"
         }
-        outputBoundary.prepareSuccessView(new InteractOutputData(successMessage, null));
+        outputBoundary.prepareSuccessView(new InteractOutputData(successMessage));
+    }
+
+    private void moveToRoom(User player, String unlockedRoomId) {
+        player.unlockRoom(dataAccess.getRoomById(unlockedRoomId));
+        player.saveCurrentRoomID(unlockedRoomId);
+        dataAccess.saveUser(player);
+        outputBoundary.prepareRoomView(unlockedRoomId);
     }
 }
