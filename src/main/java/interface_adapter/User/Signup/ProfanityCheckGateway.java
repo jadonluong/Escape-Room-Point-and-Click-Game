@@ -44,9 +44,9 @@ public class ProfanityCheckGateway implements ProfanityCheck {
             // 4. Parse the response body if the server returns 200 OK
             if (response.statusCode() == 200) {
                 String body = response.body();
-                // profanity.dev returns {"isProfane": true/false, ...}
+                // profanity.dev returns {"isProfanity": true/false, ...}
                 // A quick string check keeps this implementation clean of JSON library dependencies
-                return body.contains("\"isProfane\":true");
+                return body.contains("\"isProfanity\":true");
             }
             // Fallback safety: Log or handle unexpected status codes (e.g., 500, 429)
             System.err.println("Profanity API returned unexpected status code: " + response.statusCode());

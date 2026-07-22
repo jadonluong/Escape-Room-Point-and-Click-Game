@@ -24,31 +24,45 @@ public class SignupInteractor implements SignUpInputBoundary{
 
     @Override
     public void executeSignup(SignupInputData signupInputData) {
+
+        System.out.println("Signup called with: " + signupInputData.getUsername());
+
         if (signupInputData.getUsername().isEmpty()) {
+            System.out.println("EMPTY USERNAME");
             userPresenter.prepareFailView("Username cannot be empty.");
         }
 
         else if (signupInputData.getPassword().isEmpty()) {
+            System.out.println("EMPTY PASSWORD");
             userPresenter.prepareFailView("Password cannot be empty.");
         }
 
         else if (!signupInputData.getPassword().equals(signupInputData.getRepeatedPassword())) {
+            System.out.println("PASSWORD MISMATCH");
             userPresenter.prepareFailView("Passwords don't match.");
         }
 
         else if (userDataAccessObject.existsByName(signupInputData.getUsername())) {
+            System.out.println("USER EXISTS");
             userPresenter.prepareFailView("User already exists.");
         }
 
         else if (profanityCheckInterface.hasProfanity(signupInputData.getUsername())) {
+            System.out.println("PROFANITY DETECTED");
             userPresenter.prepareFailView("Username contains inappropriate language.");
         }
 
         else {
-            final User user = commonUserFactory.createCommonUser(signupInputData.getUsername(), signupInputData.getPassword());
+            System.out.println("SIGNUP SUCCESS");
+            final User user = commonUserFactory.createCommonUser(
+                    signupInputData.getUsername(),
+                    signupInputData.getPassword()
+            );
             userDataAccessObject.save(user);
 
-            final SignupOutputData signupOutputData = new SignupOutputData(user.getUsername(), false);
+            final SignupOutputData signupOutputData =
+                    new SignupOutputData(user.getUsername(), false);
+
             userPresenter.prepareSuccessView(signupOutputData);
         }
     }
