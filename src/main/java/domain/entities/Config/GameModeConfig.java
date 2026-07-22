@@ -4,5 +4,4 @@ import java.util.List;
 
 public interface GameModeConfig {
     String getStartingRoomId();
-    List<String> getInteractableObjects();
 }

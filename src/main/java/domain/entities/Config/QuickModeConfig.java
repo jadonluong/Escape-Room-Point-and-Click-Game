@@ -5,7 +5,6 @@ import java.util.List;
 public class QuickModeConfig implements GameModeConfig {
 
     public String StartingRoom;
-    public List<String> interactableObjects;
 
     public QuickModeConfig(String StartingRoom) {
         this.StartingRoom = StartingRoom;
@@ -17,8 +16,4 @@ public class QuickModeConfig implements GameModeConfig {
         return StartingRoom;
     }
 
-    @Override
-    public List<String> getInteractableObjects() {
-        return interactableObjects;
-    }
 }
