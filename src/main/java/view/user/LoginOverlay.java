@@ -26,6 +26,7 @@ public class LoginOverlay extends ModalOverlay {
         super(onClose);
         this.controller = controller;
         this.loginViewModel = loginViewModel;
+        initialize();
     }
 
     @Override
@@ -71,6 +72,7 @@ public class LoginOverlay extends ModalOverlay {
                 errorLabel, buttonRow);
         box.setPadding(new Insets(24));
         box.setMaxWidth(400);
+        box.setMaxHeight(300);
         box.setStyle("-fx-background-color: #a6389e; -fx-background-radius: 16;");
         return box;
     }

@@ -27,6 +27,7 @@ public class SignupOverlay extends ModalOverlay {
         super(onClose);
         this.signupController = signupController;
         this.signupViewModel = signupViewModel;
+        initialize();
     }
 
     @Override
@@ -78,6 +79,7 @@ public class SignupOverlay extends ModalOverlay {
                 errorLabel, buttonRow);
         box.setPadding(new Insets(24));
         box.setMaxWidth(400);
+        box.setMaxHeight(300);
         box.setStyle("-fx-background-color: #a6389e; -fx-background-radius: 16;");
         return box;
     }

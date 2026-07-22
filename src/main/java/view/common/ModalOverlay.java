@@ -14,6 +14,13 @@ public abstract class ModalOverlay extends StackPane {
     protected ModalOverlay(Runnable onClose) {
         this.onClose = onClose;
 
+    }
+
+    /**
+     * Must be called by each subclass constructor, as its very last statement,
+     * once all of that subclass's own fields have been initialized.
+     */
+    protected void initialize() {
         Region backdrop = new Region();
         backdrop.setBackground(new Background(new BackgroundFill(
                 Color.rgb(0, 0, 0, 0.5), CornerRadii.EMPTY, Insets.EMPTY)));
