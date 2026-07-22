@@ -5,18 +5,12 @@ package application.use_cases.User.Logout;
  */
 public class LogoutInputData {
     private String username;
-    private boolean toSave;
 
-    public LogoutInputData(String username, boolean toSave) {
+    public LogoutInputData(String username) {
         this.username = username;
-        this.toSave = toSave;
     }
 
     String getUsername() {
         return this.username;
-    }
-
-    boolean getSaveProgress() {
-        return this.toSave;
     }
 }

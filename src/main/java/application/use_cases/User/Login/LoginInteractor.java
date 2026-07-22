@@ -24,7 +24,7 @@ public class LoginInteractor implements LoginInputBoundary{
         final String username = loginInputData.getUsername();
         final String password = loginInputData.getPassword();
 
-        if (!userDataAccessObject.existByName(username)) {
+        if (!userDataAccessObject.existsByName(username)) {
             userPresenter.prepareFailView("User does not exist");
         }
 
@@ -40,11 +40,13 @@ public class LoginInteractor implements LoginInputBoundary{
             String pwdRegistered = userDataAccessObject.getUserPassword(username).getPassword();
             if (!pwdRegistered.equals(password)) {
                 userPresenter.prepareFailView("Password incorrect");
+                return;
             }
 
             User commonUser = commonUserFactory.restoreCommonUser(username, password,
                     userDataAccessObject.getUser(username).getItemInventory(),
-                    userDataAccessObject.getUser(username).getRoomsUnlocked());
+                    userDataAccessObject.getUser(username).getRoomsUnlocked(),
+                    userDataAccessObject.getUser(username).getHintsWatched());
 
             final LoginOutputData outputData = new LoginOutputData(commonUser, false);
             userPresenter.prepareSuccessView(outputData);

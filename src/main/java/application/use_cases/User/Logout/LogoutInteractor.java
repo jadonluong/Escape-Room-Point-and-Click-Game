@@ -16,16 +16,10 @@ public class LogoutInteractor implements LogoutInputBoundary{
     @Override
     public void execute(LogoutInputData logoutInputData) {
         final String username = logoutInputData.getUsername();
-        final boolean toSave = logoutInputData.getSaveProgress();
 
         userDataAccessObject.setCurrentUsername(null);
         final LogoutOutputData logoutOutputData = new LogoutOutputData(username, false);
 
-        if (!toSave) {
-            logoutPresenter.prepareUnsavedSuccessView(logoutOutputData);
-        }
-        else {
-            logoutPresenter.prepareSavedSuccessView(logoutOutputData);
-        }
+        logoutPresenter.prepareUnsavedSuccessView(logoutOutputData);
     }
 }

@@ -4,6 +4,7 @@ import domain.entities.Item.Item;
 import domain.entities.Room.Room;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * An abstract class that implements the User interface.
@@ -13,10 +14,12 @@ public abstract class AbstractUser implements User {
     protected ArrayList<Room> roomsUnlocked;
     protected String currentRoomID;
     protected String selectedItemID;
+    protected HashMap<String, Integer> hintsWatched;
 
     public AbstractUser() {
         this.itemInventory = new ArrayList<>();
         this.roomsUnlocked = new ArrayList<>();
+        this.hintsWatched = new HashMap<>();
     }
 
     @Override
@@ -75,4 +78,42 @@ public abstract class AbstractUser implements User {
 
     @Override
     public abstract boolean isRegistered();
+
+    @Override
+    public boolean hasItemID(String itemID) {
+       for (Item item : this.itemInventory) {
+           if (item.getId().equals(itemID)) {
+               return true;
+           }
+       }
+       return false;
+    }
+
+    @Override
+    public void saveHint(String objectID, int maxHintsAvailable) {
+        if (!this.hintsWatched.containsKey(objectID)) {
+            this.hintsWatched.put(objectID, 0);
+            return;
+        }
+
+        int currentHintIndex = this.hintsWatched.get(objectID);
+
+        // maxHintsAvailable is the length of the list containing the hints written for the object with objectID,
+        // so we need to cap at maxHintsAvailable - 1 instead of maxHintsAvailable.
+        if (currentHintIndex < maxHintsAvailable - 1) {
+            this.hintsWatched.put(objectID, currentHintIndex + 1);
+        }
+    }
+
+    @Override
+    public HashMap<String, Integer> getHintsWatched() {
+        return this.hintsWatched;
+    }
+
+    @Override
+    public void setHintProgress(HashMap<String, Integer> loadedHints) {
+        if (loadedHints != null) {
+            this.hintsWatched = new HashMap<>(loadedHints);
+        }
+    }
 }
