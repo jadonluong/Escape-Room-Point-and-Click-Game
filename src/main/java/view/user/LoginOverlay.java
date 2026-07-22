@@ -84,6 +84,7 @@ public class LoginOverlay extends ModalOverlay {
         } else {
             errorLabel.setVisible(false);
             errorLabel.setManaged(false);
+            onClose.run(); // success - close the modal
         }
     }
 }

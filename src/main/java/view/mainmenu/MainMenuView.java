@@ -1,8 +1,5 @@
 package view.mainmenu;
 
-import interface_adapter.User.Login.LoginController;
-import interface_adapter.User.Login.LoginViewModel;
-import interface_adapter.User.Signup.SignupController;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -10,10 +7,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import view.user.LoginOverlay;
-import view.user.SignupOverlay;
 import view.ViewManager;
 import view.common.ModalOverlay;
+import view.common.OverlayFactory;
 import view.common.PlaceholderView;
 
 public class MainMenuView extends StackPane {
@@ -24,21 +20,16 @@ public class MainMenuView extends StackPane {
     private final Pane fixedRoot = new Pane();
 
     private final ViewManager viewManager;
+    private final OverlayFactory loginOverlayFactory;
+    private final OverlayFactory signupOverlayFactory;
 
-    private final LoginController loginController;
-    private final LoginViewModel loginViewModel;
-
-    private final SignupController signupController;
-
-    public MainMenuView(ViewManager viewManager, LoginController loginController, LoginViewModel loginViewModel,
-                        SignupController signupController) {
+    public MainMenuView(ViewManager viewManager,
+                        OverlayFactory loginOverlayFactory,
+                        OverlayFactory signupOverlayFactory) {
 
         this.viewManager = viewManager;
-
-        this.loginController = loginController;
-        this.loginViewModel = loginViewModel;
-
-        this.signupController = signupController;
+        this.loginOverlayFactory = loginOverlayFactory;
+        this.signupOverlayFactory = signupOverlayFactory;
 
         fixedRoot.setPrefSize(DESIGN_WIDTH, DESIGN_HEIGHT);
         fixedRoot.setMinSize(DESIGN_WIDTH, DESIGN_HEIGHT);
@@ -113,11 +104,11 @@ public class MainMenuView extends StackPane {
     private ModalOverlay currentOverlay;
 
     private void onSignUp() {
-        showOverlay(new SignupOverlay(this::closeOverlay, signupController));
+        showOverlay(signupOverlayFactory.create(this::closeOverlay));
     }
 
     private void onLogin() {
-        showOverlay(new LoginOverlay(this::closeOverlay, loginController, loginViewModel));
+        showOverlay(loginOverlayFactory.create(this::closeOverlay));
     }
 
     private void showOverlay(ModalOverlay overlay) {
@@ -133,4 +124,10 @@ public class MainMenuView extends StackPane {
             currentOverlay = null;
         }
     }
+
+    public void switchFromSignupToLogin() {
+        closeOverlay();
+        showOverlay(loginOverlayFactory.create(this::closeOverlay));
+    }
+
 }

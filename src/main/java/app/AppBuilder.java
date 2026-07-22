@@ -1,17 +1,27 @@
 package app;
 
 import application.use_cases.User.Login.LoginInteractor;
-import application.use_cases.User.Login.LoginUserDataAccessInterface;
+import application.use_cases.User.SignUp.ProfanityCheck;
+import application.use_cases.User.SignUp.SignupInteractor;
+import data_access.JsonUserDataAccessObject;
 import domain.entities.User.CommonUserFactory;
 import domain.entities.User.CommonUserFactoryClass;
 import interface_adapter.User.Login.LoginController;
 import interface_adapter.User.Login.LoginPresenter;
 import interface_adapter.User.Login.LoginViewModel;
+import interface_adapter.User.Signup.ProfanityCheckGateway;
 import interface_adapter.User.Signup.SignupController;
+import interface_adapter.User.Signup.SignupPresenter;
+import interface_adapter.User.Signup.SignupViewModel;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import view.ViewManager;
+import view.common.OverlayFactory;
 import view.mainmenu.MainMenuView;
+import view.user.LoginOverlay;
+import view.user.SignupOverlay;
+
+import java.net.http.HttpClient;
 
 public class AppBuilder extends Application {
 
@@ -20,63 +30,34 @@ public class AppBuilder extends Application {
 
         ViewManager viewManager = new ViewManager(primaryStage);
 
-        /*
-         * Login ViewModel
-         * Stores UI state (errors, login status, etc.)
-         */
-        LoginViewModel loginViewModel = new LoginViewModel();
-
-
-        /*
-         * Login Presenter
-         * Updates the ViewModel after the use case finishes
-         */
-        LoginPresenter loginPresenter =
-                new LoginPresenter(loginViewModel);
-
-
-        /*
-         * Login Interactor
-         * TODO:
-         * Replace null with your team's actual DAO implementation.
-         */
-        LoginUserDataAccessInterface loginDAO = null;
-
-
+        JsonUserDataAccessObject userDAO = new JsonUserDataAccessObject();
         CommonUserFactory userFactory = new CommonUserFactoryClass();
 
+        // --- Login chain ---
+        LoginViewModel loginViewModel = new LoginViewModel();
+        LoginPresenter loginPresenter = new LoginPresenter(loginViewModel);
+        LoginInteractor loginInteractor = new LoginInteractor(userDAO, loginPresenter, userFactory);
+        LoginController loginController = new LoginController(loginInteractor);
 
-        LoginInteractor loginInteractor =
-                new LoginInteractor(
-                        loginDAO,
-                        loginPresenter,
-                        userFactory
-                );
+        // --- Signup chain ---
+        ProfanityCheck profanityCheck = new ProfanityCheckGateway(HttpClient.newHttpClient());
+        SignupViewModel signupViewModel = new SignupViewModel();
+        SignupPresenter signupPresenter = new SignupPresenter(signupViewModel);
+        SignupInteractor signupInteractor =
+                new SignupInteractor(userDAO, signupPresenter, userFactory, profanityCheck);
+        SignupController signupController = new SignupController(signupInteractor);
 
+        OverlayFactory loginOverlayFactory =
+                onClose -> new LoginOverlay(onClose, loginController, loginViewModel);
 
-        /*
-         * Login Controller
-         * Passed into the View layer.
-         */
-        LoginController loginController =
-                new LoginController(loginInteractor);
+        OverlayFactory signupOverlayFactory =
+                onClose -> new SignupOverlay(onClose, signupController, signupViewModel);
 
+        MainMenuView mainMenu = new MainMenuView(viewManager, loginOverlayFactory, signupOverlayFactory);
 
-        /*
-         * Main Menu View
-         * Receives controllers/viewmodels, NOT interactors.
-         */
-        MainMenuView mainMenu =
-                new MainMenuView(
-                        viewManager,
-                        loginController,
-                        loginViewModel,
-                        //signup controller
-                );
-
+        signupPresenter.setSwitchToLoginCallback(mainMenu::switchFromSignupToLogin);
 
         primaryStage.setTitle("Escapists");
-
         viewManager.show(mainMenu);
     }
 }

@@ -1,6 +1,7 @@
 package view.user;
 
 import interface_adapter.User.Signup.SignupController;
+import interface_adapter.User.Signup.SignupViewModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,20 +13,20 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import view.common.ModalOverlay;
 
-
-
 public class SignupOverlay extends ModalOverlay {
 
     private final TextField usernameField = new TextField();
     private final PasswordField passwordField = new PasswordField();
     private final PasswordField repeatedPasswordField = new PasswordField();
-
     private final Label errorLabel = new Label();
-    private final SignupController signupController;
 
-    public SignupOverlay(Runnable onClose, SignupController signupController) {
+    private final SignupController signupController;
+    private final SignupViewModel signupViewModel;
+
+    public SignupOverlay(Runnable onClose, SignupController signupController, SignupViewModel signupViewModel) {
         super(onClose);
         this.signupController = signupController;
+        this.signupViewModel = signupViewModel;
     }
 
     @Override
@@ -43,7 +44,7 @@ public class SignupOverlay extends ModalOverlay {
 
         usernameField.setPromptText("Username");
         passwordField.setPromptText("Password");
-        passwordField.setPromptText("Confirm Password");
+        repeatedPasswordField.setPromptText("Confirm Password");
 
         errorLabel.setStyle("-fx-text-fill: #ffb3b3; -fx-font-size: 12px;");
         errorLabel.setWrapText(true);
@@ -54,16 +55,26 @@ public class SignupOverlay extends ModalOverlay {
         cancelButton.setOnAction(e -> onClose.run());
 
         Button confirmButton = new Button("CONFIRM");
-        confirmButton.setOnAction(e ->
-                signupController.execute(usernameField.getText(), passwordField.getText()), repeatedPasswordField.getText());
+        confirmButton.setOnAction(e -> {
+            signupController.execute(
+                    usernameField.getText(),
+                    passwordField.getText(),
+                    repeatedPasswordField.getText()
+            );
+            updateView();
+        });
 
         HBox buttonRow = new HBox(20, cancelButton, confirmButton);
         buttonRow.setAlignment(Pos.CENTER);
 
+        Button switchToLoginLink = new Button("Already have an account? Log in");
+        switchToLoginLink.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-underline: true; -fx-cursor: hand;");
+        switchToLoginLink.setOnAction(e -> signupController.switchToLoginView());
+
         VBox box = new VBox(16, header,
                 new Label("Username:"), usernameField,
                 new Label("Password:"), passwordField,
-                new Label("Confirm Password:", repeatedPasswordField),
+                new Label("Confirm Password:"), repeatedPasswordField,
                 errorLabel, buttonRow);
         box.setPadding(new Insets(24));
         box.setMaxWidth(400);
@@ -71,9 +82,16 @@ public class SignupOverlay extends ModalOverlay {
         return box;
     }
 
-    public void showError(String message) {
-        errorLabel.setText(message);
-        errorLabel.setVisible(true);
-        errorLabel.setManaged(true);
+    public void updateView() {
+        String error = signupViewModel.getState().getErrorMessage();
+        if (!error.isEmpty()) {
+            errorLabel.setText(error);
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
+        } else {
+            errorLabel.setVisible(false);
+            errorLabel.setManaged(false);
+            onClose.run(); // success — close the modal
+        }
     }
 }
