@@ -1,9 +1,11 @@
 package interface_adapter.User.Signup;
 
-public class SignupViewModel {
-    private final SignupState state = new SignupState();
+import interface_adapter.ViewModel;
 
-    public SignupState getState() {
-        return state;
+public class SignupViewModel extends ViewModel<SignupState> {
+
+    public SignupViewModel() {
+        super("signup");
+        setState(new SignupState());
     }
 }

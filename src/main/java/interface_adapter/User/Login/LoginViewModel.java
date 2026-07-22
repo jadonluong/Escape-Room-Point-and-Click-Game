@@ -1,14 +1,11 @@
 package interface_adapter.User.Login;
 
-public class LoginViewModel {
+import interface_adapter.ViewModel;
 
-    private final LoginState state = new LoginState();
+public class LoginViewModel extends ViewModel<LoginState> {
 
-    public LoginState getState() {
-        return state;
-    }
-
-    public void setError(String errorMessage) {
-        state.setErrorMessage(errorMessage);
+    public LoginViewModel() {
+        super("login");
+        setState(new LoginState());
     }
 }

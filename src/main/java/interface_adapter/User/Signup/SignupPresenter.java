@@ -17,13 +17,15 @@ public class SignupPresenter implements SignupOutputBoundary {
     }
 
     @Override
-    public void prepareSuccessView(SignupOutputData outputData) {
-        signupViewModel.getState().setErrorMessage("");
+    public void prepareFailView(String errorMessage) {
+        signupViewModel.getState().setErrorMessage(errorMessage);
+        signupViewModel.firePropertyChanged();
     }
 
     @Override
-    public void prepareFailView(String errorMessage) {
-        signupViewModel.getState().setErrorMessage(errorMessage);
+    public void prepareSuccessView(SignupOutputData outputData) {
+        signupViewModel.getState().setErrorMessage("");
+        signupViewModel.firePropertyChanged();
     }
 
     @Override

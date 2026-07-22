@@ -13,11 +13,13 @@ public class LoginPresenter implements LoginOutputBoundary {
 
     @Override
     public void prepareFailView(String errorMessage) {
-        loginViewModel.setError(errorMessage);
+        loginViewModel.getState().setErrorMessage(errorMessage);
+        loginViewModel.firePropertyChanged();
     }
 
     @Override
     public void prepareSuccessView(LoginOutputData outputData) {
         loginViewModel.getState().setErrorMessage("");
+        loginViewModel.firePropertyChanged();
     }
 }
