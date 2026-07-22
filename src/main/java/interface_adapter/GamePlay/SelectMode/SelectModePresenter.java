@@ -1,5 +1,6 @@
 package interface_adapter.GamePlay.SelectMode;
 
+import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsOutputData;
 import application.use_cases.GamePlay.SelectMode.SelectModeOutputBoundary;
 
 public class SelectModePresenter implements SelectModeOutputBoundary {
@@ -18,8 +19,13 @@ public class SelectModePresenter implements SelectModeOutputBoundary {
     }
 
     @Override
-    public void prepareSelectRoomView() {
-        viewModel.setErrorMessage("");
+    public void prepareFailView(String message) {
+
+    }
+
+    @Override
+    public void prepareRoomsView(BrowseRoomsOutputData OutputData) {
         //TODO: waiting to be fill out the detail.
     }
+
 }

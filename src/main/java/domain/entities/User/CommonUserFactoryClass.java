@@ -4,6 +4,7 @@ import domain.entities.Item.Item;
 import domain.entities.Room.Room;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Factory for creating CommonUser objects.
@@ -16,7 +17,7 @@ public class CommonUserFactoryClass implements CommonUserFactory{
     }
 
     @Override
-    public User restoreCommonUser(String username, String password, ArrayList<Item> itemInventory, ArrayList<Room> rooms) {
+    public User restoreCommonUser(String username, String password, ArrayList<Item> itemInventory, ArrayList<Room> rooms, HashMap<String, Integer> hints) {
         CommonUser user = new CommonUser(username, password);
 
         if (rooms != null) {
@@ -30,6 +31,8 @@ public class CommonUserFactoryClass implements CommonUserFactory{
                 user.saveItem(item);
             }
         }
+
+        user.setHintProgress(hints);
 
         return user;
     }

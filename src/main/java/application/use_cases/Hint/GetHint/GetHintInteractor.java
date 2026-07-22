@@ -1,5 +1,9 @@
 package application.use_cases.Hint.GetHint;
 
+import domain.entities.User.User;
+
+import java.util.List;
+
 /**
  * The interactor for the Get Hint use case, implementing the Get Hint input boundary.
  */
@@ -19,11 +23,20 @@ public class GetHintInteractor implements GetHintInputBoundary {
 
         if (!getHintDataAccessObject.existByObjectID(objectID)) {
             getHintPresenter.prepareFailView("No hints available");
+            return;
         }
 
-        int requestCount = getHintInputData.getRequestCount();
-        String message = getHintDataAccessObject.getHintMessageForRequestCount(objectID, requestCount);
-        GetHintOutputData outputData = new GetHintOutputData(message);
+        User user = getHintInputData.getCurrentUser();
+
+        int maxHintsAvailable = getHintDataAccessObject.getMaxHintsAvailable(objectID);
+        user.saveHint(objectID, maxHintsAvailable); // saves the hint request in-memory.
+
+        int calculatedIndex = user.getHintsWatched().get(objectID);
+
+        List<String> allHints = getHintDataAccessObject.getAllHintsForObject(objectID);
+        String finalHintMessage = allHints.get(calculatedIndex);
+
+        GetHintOutputData outputData = new GetHintOutputData(finalHintMessage);
         getHintPresenter.prepareSuccessView(outputData);
     }
 }

@@ -3,18 +3,23 @@ package domain.entities.Puzzle;
 public class CodeLockPuzzle implements Puzzle {
     private String id;
     private boolean isSolved;
+    private String description;
 
     private String answer;
     private String hint;
 
+    private String successMessage;
     private String rewardItemId;
     private String unlockedRoomId;
 
-    public CodeLockPuzzle(String id, String answer, String hint, String rewardItemId, String unlockedRoomId) {
+    public CodeLockPuzzle(String id, String description, String answer, String hint, String successMessage,
+                          String rewardItemId, String unlockedRoomId) {
         this.id = id;
         this.isSolved = false;
+        this.description = description;
         this.answer = answer;
         this.hint = hint;
+        this.successMessage = successMessage;
         this.rewardItemId = rewardItemId;
         this.unlockedRoomId = unlockedRoomId;
     }
@@ -35,6 +40,11 @@ public class CodeLockPuzzle implements Puzzle {
     }
 
     @Override
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
     public String getAnswer() {
         return answer;
     }
@@ -42,6 +52,11 @@ public class CodeLockPuzzle implements Puzzle {
     @Override
     public String getHint() {
         return hint;
+    }
+
+    @Override
+    public String getSuccessMessage() {
+        return successMessage;
     }
 
     @Override

@@ -11,6 +11,6 @@ public class OpenMenuInteractor implements OpenMenuInputBoundary {
     @Override
     public void execute() {
         // 1. Pause the timer
-        openMenuPresenter.prepareMenuView();
+//        openMenuPresenter.prepareMenuView();
     }
 }

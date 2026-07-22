@@ -10,10 +10,4 @@ public interface LogoutOutputBoundary {
      * @param logoutOutputData the output data of the logout use case
      */
     void prepareUnsavedSuccessView(LogoutOutputData logoutOutputData);
-
-    /**
-     * Prepares the success view for the Logout Use Case when the user progress is saved.
-     * @param logoutOutputData the output data of the logout use case
-     */
-    void prepareSavedSuccessView(LogoutOutputData logoutOutputData);
 }
