@@ -5,5 +5,5 @@ package domain.entities.Room;
  * The Use Cases will use this interface to load rooms by ID.
  */
 public interface RoomFactory {
-    Room createRoom(String roomName);
+    Room createRoom(String roomId, String description, String path, Boolean isLocked);
 }

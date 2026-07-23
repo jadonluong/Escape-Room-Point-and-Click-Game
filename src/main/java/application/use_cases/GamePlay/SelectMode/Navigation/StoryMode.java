@@ -5,10 +5,11 @@ import domain.entities.Config.ConfigurationFactory;
 import domain.entities.Config.GameModeConfig;
 
 public class StoryMode implements ModeNavigation {
-    private final String initialRoomId;
+    private final StoryModeDataAccessInterface DataAccess;
 
-    public StoryMode(String initialRoomId) {
-        this.initialRoomId = initialRoomId;
+    public StoryMode(StoryModeDataAccessInterface DataAccess) {
+
+        this.DataAccess = DataAccess;
     }
 
     @Override
@@ -16,7 +17,7 @@ public class StoryMode implements ModeNavigation {
 
         //Since there is no room selection for story mode, we configure directly
         ConfigurationFactory configFactory = new ConfigurationFactory();
-        GameModeConfig chosenMode = configFactory.createConfig("story", "default");
+        GameModeConfig chosenMode = configFactory.createConfig("story", DataAccess.findStartingRoom());
 
         //Call the presenter to prepare view
         presenter.prepareGameStartView(chosenMode.getStartingRoomId());

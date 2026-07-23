@@ -3,7 +3,15 @@ package app;
 import application.use_cases.User.Login.LoginInteractor;
 import application.use_cases.User.SignUp.ProfanityCheck;
 import application.use_cases.User.SignUp.SignupInteractor;
+import data_access.GameAssetManager;
 import data_access.JsonUserDataAccessObject;
+import domain.entities.Interactable.CommonInteractableFactory;
+import domain.entities.Interactable.InteractableFactory;
+import domain.entities.Item.CommonItemFactory;
+import domain.entities.Item.Item;
+import domain.entities.Item.ItemFactory;
+import domain.entities.Room.CommonRoomFactory;
+import domain.entities.Room.RoomFactory;
 import domain.entities.User.CommonUserFactory;
 import domain.entities.User.CommonUserFactoryClass;
 import interface_adapter.User.Login.LoginController;
@@ -30,7 +38,14 @@ public class AppBuilder extends Application {
 
         ViewManager viewManager = new ViewManager(primaryStage);
 
-        JsonUserDataAccessObject userDAO = new JsonUserDataAccessObject();
+        // --- JSON information chain ---
+        ItemFactory itemFactory = new CommonItemFactory();
+        InteractableFactory interactableFactory = new CommonInteractableFactory();
+        RoomFactory roomFactory = new CommonRoomFactory();
+
+        GameAssetManager gameAssetManager = new GameAssetManager(itemFactory, interactableFactory, roomFactory);
+
+        JsonUserDataAccessObject userDAO = new JsonUserDataAccessObject(gameAssetManager,gameAssetManager);
         CommonUserFactory userFactory = new CommonUserFactoryClass();
 
         // --- Login chain ---
