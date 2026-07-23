@@ -1,33 +1,18 @@
 package interface_adapter.inventory;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import interface_adapter.ViewModel;
 
-public class InventoryViewModel {
-    public static final String STATE_PROPERTY = "inventoryState";
+/**
+ * The ViewModel for the Inventory & Crafting overlay.
+ * Inherits state management and PropertyChangeSupport from ViewModel<T>.
+ */
+public class InventoryViewModel extends ViewModel<InventoryState> {
 
-    private InventoryState state = new InventoryState();
-    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+    public static final String VIEW_NAME = "inventory";
 
-    public InventoryState getState() {
-        return state;
-    }
-
-    public void setState(InventoryState state) {
-        this.state = state;
-    }
-
-    /**
-     * Notifies all registered listeners (like InventoryOverlay) that the state has changed.
-     */
-    public void firePropertyChanged() {
-        support.firePropertyChange(STATE_PROPERTY, null, this.state);
-    }
-
-    /**
-     * Allows JavaFX views or overlays to subscribe to state updates.
-     */
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        support.addPropertyChangeListener(listener);
+    public InventoryViewModel() {
+        super(VIEW_NAME);
+        // Initialize with a fresh, default state
+        this.setState(new InventoryState());
     }
 }
