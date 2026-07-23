@@ -26,7 +26,8 @@ import java.util.Map;
  * for all static, read-only game assets.
  */
 public class GameAssetManager implements RoomRegistry, ItemRegistry {
-    // TODO: make the manager implement GetHintDataAccessInterface
+    // TODO: can implement GetHintDataAccessInterface, BrowseRoomsDataAccessInterface
+    // TODO: can add a InteractableRegistry with getInteractableById(String Id).
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final ItemFactory itemFactory;
     private final InteractableFactory interactableFactory;
@@ -69,8 +70,6 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry {
                 JsonItemData data = entry.getValue();
 
                 // Pass the string ID directly to restoreItem
-                // TODO: add the imagePath parameter in itemFactory for image loading
-                // TODO: change restoreItem UUID type to String type for itemId.
                 Item item = itemFactory.restoreItem(stringId, data.name, data.description, data.craftable, data.imagePath);
                 masterItems.put(stringId, item);
             }

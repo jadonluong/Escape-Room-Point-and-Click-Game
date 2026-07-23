@@ -42,6 +42,7 @@ This file explains what the databases could potentially look like.
 ## Room DB
 - Note: only serves as the room inventory for the game, isUnlocked is not saved in DB since it's user-specific
 - TODO: find a way to store rooms in a sort of tree structure
+- TODO: how are rooms connected to mode? see Mode DB.
 - format: JSON file
 - sample DB:
   - {"roomID_1/roomName_1": {
@@ -52,6 +53,16 @@ This file explains what the databases could potentially look like.
         },
 
      "roomID_2/roomName_2": {...}
+     }
+
+
+## Mode DB (tentative)
+- Note: this format could be useful to BrowseRoomsDataAccessInterface
+- format: JSON file
+- sample DB:
+  - {"QuickMode": ["roomID_1", ...],
+     "StoryMode": ["roomID_#", ...],
+     "TutorialMode": ["roomID_#", ...]
      }
 
 
