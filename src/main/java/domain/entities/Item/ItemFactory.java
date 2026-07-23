@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public interface ItemFactory {
 
-        Item createItem(String name, String description, Boolean craftable);
+        Item createItem(String name, String description, Boolean craftable, String imagePath);
 
-        Item restoreItem(UUID id, String name, String description, Boolean craftable);
+        Item restoreItem(String id, String name, String description, Boolean craftable, String imagePath);
 }

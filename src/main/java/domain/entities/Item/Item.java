@@ -6,4 +6,5 @@ public interface Item {
     String getName();
     String getDescription();
     Boolean getCraftable();
+    String getImagePath();
 }

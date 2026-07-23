@@ -1,4 +1,4 @@
-package interface_adapter.GamePlay.Quit;
+package interface_adapter.GamePlay.InGameMenu.Quit;
 
 import application.use_cases.GamePlay.Quit.QuitInputBoundary;
 

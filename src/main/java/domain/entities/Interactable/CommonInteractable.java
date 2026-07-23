@@ -2,6 +2,7 @@ package domain.entities.Interactable;
 
 public class CommonInteractable implements Interactable {
     private String id;
+    private String imagePath;
 
     private String defaultName;
     private String defaultDescription;
@@ -22,12 +23,13 @@ public class CommonInteractable implements Interactable {
     private String unlockedRoomId;
     private String successMessage;
 
-    public CommonInteractable(String id, String defaultName, String defaultDescription, String defaultSprite,
-                              String interactedName, String interactedDescription, String interactedSprite,
-                              boolean isConsumed, boolean consumesItem, boolean needsItem, String requiredItemId,
-                              String rewardItemId, String linkedPuzzleId, String unlockedRoomId,
+    public CommonInteractable(String id, String imagePath, String defaultName, String defaultDescription,
+                              String defaultSprite, String interactedName, String interactedDescription,
+                              String interactedSprite, boolean isConsumed, boolean consumesItem, boolean needsItem,
+                              String requiredItemId, String rewardItemId, String linkedPuzzleId, String unlockedRoomId,
                               String successMessage) {
         this.id = id;
+        this.imagePath = imagePath;
         this.defaultName = defaultName;
         this.defaultDescription = defaultDescription;
         this.defaultSprite = defaultSprite;
@@ -48,6 +50,16 @@ public class CommonInteractable implements Interactable {
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    @Override
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @Override

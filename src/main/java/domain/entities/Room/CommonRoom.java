@@ -16,15 +16,18 @@ public class CommonRoom implements Room{
 
     private final String Id;
     private final String description;
+    private final String imagePath;
 
     private Boolean isLocked;
 
 
-    public CommonRoom(String Id, String description, boolean isLocked) {
+    public CommonRoom(String Id, String description, String imagePath, boolean isLocked) {
         this.Id = Id;
         this.description = description;
+        this.imagePath = imagePath;
         this.isLocked = isLocked;
         this.interactables = new HashMap<>();
+
     }
 
 
