@@ -1,0 +1,86 @@
+This file explains what the databases could potentially look like.
+
+## User DB
+- format: JSON file
+- sample DB:
+  - {"username_1": {
+      "password": "string password",
+      "roomsUnlocked": ["roomID_1", "roomID_2", ...],
+      "itemInventory": ["itemID_1", "itemID_2", ...],
+      "hintsWatched": {
+          "objectID_1": request_count(int),
+          "objectID_2": request_count(int),
+          ...},
+
+      "username_2": {...}
+     }
+
+
+## Hints DB
+- format: JSON file
+- sample DB:
+  - {"objectID_1": ["hintMessage_1", "hintMessage_2", ...],
+     "objectID_2": [...]
+     }
+- TODO: if we choose to use data-driven hint system, then there is no need for the Hint entity to exist? It's not used anywhere in the current code.
+
+
+## Item DB
+- format: JSON file
+- sample DB:
+  - {"itemID_1": {
+        "name": "itemName",
+        "description": "description of item",
+        "craftable": true/false,
+        "imagePath": "the file path of the image of the item"
+        },
+
+     "itemID_2": {...}
+    }
+
+
+## Room DB
+- Note: only serves as the room inventory for the game, isUnlocked is not saved in DB since it's user-specific
+- TODO: find a way to store rooms in a sort of tree structure
+- format: JSON file
+- sample DB:
+  - {"roomID_1/roomName_1": {
+        "description": "description of the room",
+        "interactables": ["interactableID", ...],
+        "items": ["itemID", ...],
+        "imagePath": "string of the file path of the room image",
+        },
+
+     "roomID_2/roomName_2": {...}
+     }
+
+
+## Interactable DB
+- Note: sample DB may need to change (still not sure what should be saved)
+- format: JSON file
+- sample DB:
+  - {"interactableID_1": {
+        "defaultName": "interactableName",
+        "defaultDescription": "description",
+        "defaultSprite": "...",
+        "interactedName": "...",
+        "interactedDescription": "...",
+        "interactedSprite": "...",
+        "isConsumed": true/false
+        "consumesItem": true/false
+        "needsItem": true/false
+        "requiredItemId": "...",
+        "rewardItemId": "...",
+        "linkedPuzzleId": "...",
+        "unlockedRoomId": "...",
+        "successMessage": "...",
+        "imagePath": "file path of the interactable image"
+        },
+
+      "interactableID_2": {...}
+     }
+
+
+
+## Puzzle DB
+- Do we need one? Since we're calling the puzzle API and puzzles are connected to interactables...
