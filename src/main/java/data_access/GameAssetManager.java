@@ -1,7 +1,9 @@
 package data_access;
 
+import application.game_registry.InteractableRegistry;
 import application.game_registry.ItemRegistry;
 import application.game_registry.RoomRegistry;
+import application.use_cases.Hint.GetHint.GetHintDataAccessInterface;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -25,9 +27,8 @@ import java.util.Map;
  * Manages game flow as the centralized data initialization engine and in-memory vault
  * for all static, read-only game assets.
  */
-public class GameAssetManager implements RoomRegistry, ItemRegistry {
-    // TODO: can implement GetHintDataAccessInterface, BrowseRoomsDataAccessInterface
-    // TODO: can add a InteractableRegistry with getInteractableById(String Id).
+public class GameAssetManager implements RoomRegistry, ItemRegistry, InteractableRegistry, GetHintDataAccessInterface {
+    // TODO: can implement BrowseRoomsDataAccessInterface after mode DB finalized
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final ItemFactory itemFactory;
     private final InteractableFactory interactableFactory;
@@ -92,6 +93,7 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry {
                 // Construct using the factory contract
                 Interactable interactable = interactableFactory.create(
                         id,
+                        data.imagePath,
                         data.defaultName,
                         data.defaultDescription,
                         data.defaultSprite,
@@ -106,7 +108,6 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry {
                         data.linkedPuzzleId,
                         data.unlockedRoomId,
                         data.successMessage
-                        // TODO: add imagePath to interactableFactory method
                 );
                 masterInteractables.put(id, interactable);
             }
@@ -126,9 +127,15 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry {
                 String roomId = entry.getKey();
                 JsonRoomData data = entry.getValue();
 
-                // TODO: may need to change (may need a restoreRoom method from Room.
-                //  Sample: restoreRoom(String roomName, List<String> interactableIDs, List<String> itemIDs, String imagePath)
-                Room room = roomFactory.createRoom(roomId);
+                // TODO: may need a restoreRoom(String roomName, List<String> interactableIDs, List<String> itemIDs, String imagePath)
+
+                // TODO: may need createRoom to remove the isUnlocked parameter because that is user-specific.
+                //  To check if a room is unlocked, loop through the user's unlocked Rooms like this:
+                //      public boolean canPlayerEnter(User user, Room targetRoom) {
+                //          // If the room is in the user's unlocked list, they can enter!
+                //          return user.getRoomsUnlocked().contains(targetRoom);
+                //      }
+                Room room = roomFactory.createRoom(roomId, data.description, data.imagePath);
 
                 // Nest instantiated objects into rooms
                 if (data.interactables != null) {
@@ -164,17 +171,43 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry {
         }
     }
 
-    // Used to restore Room objects when logging a user in. User DB only saves roomIDs.
+    // =========================================================================
+    // Registry implementations (DBs only saves text IDs)
+    // =========================================================================
+
     @Override
     public Room getRoomByID(String id) {
         return masterRooms.get(id);
     }
 
-    // Used to restore Item objects when logging a user in. User DB only saves itemIDs.
     @Override
     public Item getItemByID(String id) {
         return masterItems.get(id);
     }
+
+    @Override
+    public Interactable getInteractableByID(String ID) {
+        return masterInteractables.get(ID);
+    }
+
+    // =========================================================================
+    // GetHintDataAccessInterface implementation
+    // =========================================================================
+    @Override
+    public List<String> getAllHintsForObject(String objectID) {
+        return masterHints.get(objectID);
+    }
+
+    @Override
+    public int getMaxHintsAvailable(String objectID) {
+        return masterHints.get(objectID).size();
+    }
+
+    @Override
+    public Boolean existByObjectID(String objectID) {
+        return masterHints.containsKey(objectID);
+    }
+
 
     // =========================================================================
     // Private Schema Mapping DTO Classes (Kept Isolated from Business Rules)
@@ -193,8 +226,8 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry {
         String imagePath;
     }
 
-    // TODO: need imagePath in InteractableFactory
     private static class JsonInteractableData {
+        String imagePath;
         String defaultName;
         String defaultDescription;
         String defaultSprite;
@@ -209,6 +242,5 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry {
         String linkedPuzzleId;
         String unlockedRoomId;
         String successMessage;
-        String imagePath;
     }
 }

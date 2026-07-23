@@ -3,7 +3,7 @@ package application.game_registry;
 import domain.entities.Item.Item;
 
 /**
- * The registry for populating itemInventory with Item objects when restoring a user.
+ * The registry for getting Item objects with their itemIDs.
  */
 public interface ItemRegistry {
 

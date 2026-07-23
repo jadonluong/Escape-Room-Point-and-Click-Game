@@ -3,7 +3,7 @@ package application.game_registry;
 import domain.entities.Room.Room;
 
 /**
- * The registry for rooms.
+ * The registry for getting Room objects with their roomIDs.
  */
 public interface RoomRegistry {
 
