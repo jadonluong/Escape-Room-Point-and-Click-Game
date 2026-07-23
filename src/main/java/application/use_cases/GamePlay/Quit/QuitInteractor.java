@@ -10,7 +10,7 @@ public class QuitInteractor implements QuitInputBoundary {
 
     @Override
     public void execute() {
-        // 1. Run any clean-up here if necessary
+        // 1. Run any clean-up here
         // 2. Alert the presenter that it is safe to tear down the UI
         quitPresenter.prepareMenuView();;
     }
