@@ -2,6 +2,8 @@ package domain.entities.Interactable;
 
 public interface Interactable {
     String getId();
+    String getImagePath();
+    void setImagePath(String imagePath);
 
     String getName();
     String getDescription();
