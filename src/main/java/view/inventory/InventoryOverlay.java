@@ -29,9 +29,6 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
         this.viewModel.addPropertyChangeListener(this);
     }
 
-    /**
-     * Satisfies Error #1: Implements the abstract method required by ModalOverlay.
-     */
     @Override
     protected VBox buildModalBox() {
         VBox contentContainer = new VBox(15);
