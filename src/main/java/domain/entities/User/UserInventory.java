@@ -38,4 +38,11 @@ public interface UserInventory {
      * @return the item the user selected.
      */
     String getSelectedItemID();
+
+    /**
+     * Checks whether the user has an item with the given ID.
+     * @param itemID the ID of the item to be looked for
+     * @return true if the user has an item with itemID, false otherwise
+     */
+    boolean hasItemID(String itemID);
 }

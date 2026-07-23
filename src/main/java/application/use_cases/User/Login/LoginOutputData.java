@@ -7,11 +7,11 @@ import domain.entities.User.User;
  */
 public class LoginOutputData {
     private final User commonUser;
-    private final boolean isloginFailed;
+    private final boolean isLoginFailed;
 
-    public LoginOutputData(User user, boolean isloginFailed) {
+    public LoginOutputData(User user, boolean isLoginFailed) {
         this.commonUser = user;
-        this.isloginFailed = isloginFailed;
+        this.isLoginFailed = isLoginFailed;
     }
 
     public User getUser() {

@@ -18,6 +18,6 @@ public interface Room {
     // Content management
     List<Interactable> getInteractables();
     void addInteractable(Interactable interactable);
-    void  removeInteractable(Interactable interactable);
+    void  removeInteractable(String id);
     Interactable getInteractableById(String id);
 }

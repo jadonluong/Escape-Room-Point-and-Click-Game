@@ -1,4 +1,5 @@
-package application.use_cases.MainMenu.SelectMode;
+package application.use_cases.GamePlay.SelectMode;
 
 public interface SelectModeInputBoundary {
+    void execute(SelectModeInputData inputData);
 }

@@ -1,5 +1,10 @@
 package application.use_cases.User.SaveProgress;
 
+import domain.entities.Item.Item;
+import domain.entities.Room.Room;
+
+import java.util.ArrayList;
+
 /**
  * The interactor for the Save Progress Use Case.
  */
@@ -20,12 +25,35 @@ public class SaveProgressInteractor implements SaveProgressInputBoundary{
         }
         else {
             saveProgressUserDataAccessObject.saveProgress(saveProgressInputData.getUsername(),
-                    saveProgressInputData.getRoomsUnlocked(),
-                    saveProgressInputData.getItemInventory());
+                    getRoomIDs(saveProgressInputData),
+                    getItemIDs(saveProgressInputData),
+                    saveProgressInputData.getHintsWatched());
+
             final SaveProgressOutputData saveProgressOutputData = new SaveProgressOutputData(
                     saveProgressInputData.getUsername(),
                     false);
+
             saveProgressPresenter.prepareSuccessView(saveProgressOutputData);
         }
+    }
+
+    private static ArrayList<String> getItemIDs(SaveProgressInputData saveProgressInputData) {
+        ArrayList<String> itemIDs = new ArrayList<>();
+        for (Item item : saveProgressInputData.getItemInventory()) {
+            if (!itemIDs.contains(item.getId())) {
+                itemIDs.add(item.getId());
+            }
+        }
+        return itemIDs;
+    }
+
+    private static ArrayList<String> getRoomIDs(SaveProgressInputData saveProgressInputData) {
+        ArrayList<String> roomIDs = new ArrayList<>();
+        for (Room room : saveProgressInputData.getRoomsUnlocked()) {
+            if (!roomIDs.contains(room.getId())) {
+                roomIDs.add(room.getId());
+            }
+        }
+        return roomIDs;
     }
 }
