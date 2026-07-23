@@ -38,6 +38,7 @@ public class AppBuilder extends Application {
 
         ViewManager viewManager = new ViewManager(primaryStage);
 
+        // --- JSON information chain ---
         ItemFactory itemFactory = new CommonItemFactory();
         InteractableFactory interactableFactory = new CommonInteractableFactory();
         RoomFactory roomFactory = new CommonRoomFactory();
