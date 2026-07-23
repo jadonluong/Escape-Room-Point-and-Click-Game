@@ -2,6 +2,7 @@ package application.use_cases.GamePlay.SelectMode.Navigation;
 
 import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsInputBoundary;
 import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsInputData;
+import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsOutputBoundary;
 import application.use_cases.GamePlay.SelectMode.SelectModeOutputBoundary;
 
 public class QuickMode implements ModeNavigation {
@@ -12,7 +13,7 @@ public class QuickMode implements ModeNavigation {
         this.browseRoomsUseCase = browseRoomUseCase;
     }
     @Override
-    public void navigate(SelectModeOutputBoundary presenter) {
+    public void navigate(BrowseRoomsOutputBoundary presenter) {
         //Wrap the data
         BrowseRoomsInputData inputData = new BrowseRoomsInputData("quick");
 
