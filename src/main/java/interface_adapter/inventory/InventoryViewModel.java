@@ -8,7 +8,7 @@ import interface_adapter.ViewModel;
  */
 public class InventoryViewModel extends ViewModel<InventoryState> {
 
-    public static final String VIEW_NAME = "inventory";
+    public static final String VIEW_NAME = "Inventory";
 
     public InventoryViewModel() {
         super(VIEW_NAME);
