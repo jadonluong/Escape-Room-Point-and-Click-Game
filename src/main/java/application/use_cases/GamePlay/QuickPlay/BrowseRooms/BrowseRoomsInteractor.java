@@ -14,7 +14,7 @@ public class BrowseRoomsInteractor implements BrowseRoomsInputBoundary {
     }
 
     @Override
-    public void execute(BrowseRoomsInputData inputData, SelectModeOutputBoundary presenter) {
+    public void execute(BrowseRoomsInputData inputData, BrowseRoomsOutputBoundary presenter) {
         try {
             // 1. Fetch domain entities via abstract interface
             List<Room> domainRooms = dataAccess.findRoomsByMode(inputData.getMode());
@@ -33,7 +33,7 @@ public class BrowseRoomsInteractor implements BrowseRoomsInputBoundary {
             BrowseRoomsOutputData outputData = new BrowseRoomsOutputData(roomIds);
 
             // 5. Send the data back to the presenter
-            presenter.prepareRoomsView(outputData);
+            presenter.prepareSuccessView(outputData);
 
         } catch (Exception e) {
             presenter.prepareFailView("An error occurred while fetching rooms: " + e.getMessage());

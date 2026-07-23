@@ -23,9 +23,4 @@ public class SelectModePresenter implements SelectModeOutputBoundary {
 
     }
 
-    @Override
-    public void prepareRoomsView(BrowseRoomsOutputData OutputData) {
-        //TODO: waiting to be fill out the detail.
-    }
-
 }
