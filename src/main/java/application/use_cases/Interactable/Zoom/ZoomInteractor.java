@@ -39,8 +39,7 @@ public class ZoomInteractor implements ZoomInputBoundary {
     }
 
     @Override
-    public void zoomOut(ZoomInputData inputData) {
-        User player = dataAccess.getUserById(inputData.getUserId());
-        outputBoundary.prepareZoomOutView(player.getCurrentRoomID()); // Zoom out to the current Room!
+    public void zoomOut() {
+        outputBoundary.prepareZoomOutView(); // Zoom out to the current Room!
     }
 }

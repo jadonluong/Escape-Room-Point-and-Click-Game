@@ -8,5 +8,4 @@ import java.util.List;
 public interface SelectModeOutputBoundary {
     void prepareGameStartView(String RoomId);
     void prepareFailView(String message);
-    void prepareRoomsView(BrowseRoomsOutputData OutputData);
 }
