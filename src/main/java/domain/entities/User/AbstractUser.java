@@ -10,10 +10,10 @@ import java.util.HashMap;
  * An abstract class that implements the User interface.
  */
 public abstract class AbstractUser implements User {
-    protected ArrayList<Item> itemInventory;
-    protected ArrayList<Room> roomsUnlocked;
-    protected String currentRoomID;
-    protected String selectedItemID;
+    protected transient ArrayList<Item> itemInventory;
+    protected transient ArrayList<Room> roomsUnlocked;
+    protected transient String currentRoomID;
+    protected transient String selectedItemID;
     protected HashMap<String, Integer> hintsWatched;
 
     public AbstractUser() {

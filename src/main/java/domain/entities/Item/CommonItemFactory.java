@@ -5,13 +5,13 @@ import java.util.UUID;
 public class CommonItemFactory implements ItemFactory {
 
     @Override
-    public Item createItem(String name, String description, Boolean craftable) {
-        UUID newId = UUID.randomUUID();
-        return new CommonItem(newId, name, description, craftable);
+    public Item createItem(String name, String description, Boolean craftable, String imagePath) {
+        String newId = UUID.randomUUID().toString();
+        return new CommonItem(newId, name, description, craftable, imagePath);
     }
 
     @Override
-    public Item restoreItem(UUID id, String name, String description, Boolean craftable) {
-        return new CommonItem(id, name, description, craftable);
+    public Item restoreItem(String id, String name, String description, Boolean craftable, String imagePath) {
+        return new CommonItem(id, name, description, craftable, imagePath);
     }
 }

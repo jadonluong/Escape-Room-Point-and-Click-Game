@@ -1,24 +1,25 @@
 package domain.entities.Item;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class CommonItem implements Item {
-    private final UUID id;
+    private final String id;
     private final String name;
     private final String description;
     private final Boolean craftable;
+    private final String imagePath;
 
-    public CommonItem(UUID id, String name, String description, Boolean craftable) {
+    public CommonItem(String id, String name, String description, Boolean craftable, String imagePath) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.craftable = craftable;
+        this.imagePath = imagePath;
     }
 
     @Override
     public String getId() {
-        return this.id.toString();
+        return this.id;
     }
 
     @Override
@@ -37,6 +38,11 @@ public class CommonItem implements Item {
     }
 
     @Override
+    public String getImagePath() {
+        return this.imagePath;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -45,13 +51,10 @@ public class CommonItem implements Item {
         if (o instanceof Item otherItem) {
             return Objects.equals(this.getId(), otherItem.getId());
         }
+
         return false;
     }
 
-    /**
-     * Overriding hashCode ensures that collections like HashMaps or HashSets
-     * locate this item correctly based on its ID.
-     */
     @Override
     public int hashCode() {
         return Objects.hash(id);
