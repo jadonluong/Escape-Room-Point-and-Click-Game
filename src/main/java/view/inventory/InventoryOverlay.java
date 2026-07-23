@@ -42,7 +42,7 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
 
         for (int i = 0; i < 9; i++) {
             itemButtons[i] = new Button("Empty"); // Changed from JButton to Button
-            itemButtons[i].setPrefSize(90, 90);
+            itemButtons[i].setPrefSize(30, 30);
             int slotIndex = i;
             itemButtons[i].setOnAction(e -> handleSlotClick(slotIndex));
 
