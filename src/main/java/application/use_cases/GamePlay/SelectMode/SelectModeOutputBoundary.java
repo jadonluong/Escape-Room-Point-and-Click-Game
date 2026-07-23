@@ -6,6 +6,6 @@ import domain.entities.Room.Room;
 import java.util.List;
 
 public interface SelectModeOutputBoundary {
-    void prepareGameStartView(String RoomId);
+    void prepareGameStartView(SelectModeOutPutData selectModeOutPutData);
     void prepareFailView(String message);
 }
