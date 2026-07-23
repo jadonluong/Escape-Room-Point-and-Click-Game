@@ -5,16 +5,16 @@ import application.use_cases.GamePlay.SelectMode.SelectModeOutputBoundary;
 import domain.entities.Config.ConfigurationFactory;
 import domain.entities.Config.GameModeConfig;
 
-public class StoryMode implements ModeNavigation {
-    private final StoryModeDataAccessInterface dataAccess;
+public class TutorialMode implements ModeNavigation{
 
-    public StoryMode(StoryModeDataAccessInterface DataAccess) {
+    private final TutorialModeDataAccessInterface dataAccess;
 
-        this.dataAccess = DataAccess;
+    public TutorialMode(TutorialModeDataAccessInterface dataAccess) {
+        this.dataAccess = dataAccess;
     }
 
     @Override
-    public void navigate(SelectModeOutputBoundary presenter) {
+    public void navigate(SelectModeOutputBoundary presenter){
 
         //Since there is no room selection for story mode, we configure directly
         ConfigurationFactory configFactory = new ConfigurationFactory();
