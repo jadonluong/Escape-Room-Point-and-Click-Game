@@ -5,10 +5,11 @@ import application.use_cases.User.SignUp.ProfanityCheck;
 import application.use_cases.User.SignUp.SignupInteractor;
 import data_access.GameAssetManager;
 import data_access.JsonUserDataAccessObject;
+import domain.entities.Hint.CommonHintFactory;
+import domain.entities.Hint.HintFactory;
 import domain.entities.Interactable.CommonInteractableFactory;
 import domain.entities.Interactable.InteractableFactory;
 import domain.entities.Item.CommonItemFactory;
-import domain.entities.Item.Item;
 import domain.entities.Item.ItemFactory;
 import domain.entities.Room.CommonRoomFactory;
 import domain.entities.Room.RoomFactory;
@@ -42,8 +43,9 @@ public class AppBuilder extends Application {
         ItemFactory itemFactory = new CommonItemFactory();
         InteractableFactory interactableFactory = new CommonInteractableFactory();
         RoomFactory roomFactory = new CommonRoomFactory();
+        HintFactory hintFactory = new CommonHintFactory();
 
-        GameAssetManager gameAssetManager = new GameAssetManager(itemFactory, interactableFactory, roomFactory);
+        GameAssetManager gameAssetManager = new GameAssetManager(itemFactory, interactableFactory, roomFactory, hintFactory);
 
         JsonUserDataAccessObject userDAO = new JsonUserDataAccessObject(gameAssetManager,gameAssetManager);
         CommonUserFactory userFactory = new CommonUserFactoryClass();

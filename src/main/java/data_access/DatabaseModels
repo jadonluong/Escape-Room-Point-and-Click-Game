@@ -19,10 +19,14 @@ This file explains what the databases could potentially look like.
 ## Hints DB
 - format: JSON file
 - sample DB:
-  - {"objectID_1": ["hintMessage_1", "hintMessage_2", ...],
-     "objectID_2": [...]
+  - {"objectID_1": {
+        "imagePath": "path",
+        "hintMessages": ["hintMessage_1", "hintMessage_2", ...]
+        },
+
+     "objectID_2": {...}
      }
-- TODO: if we choose to use data-driven hint system, then there is no need for the Hint entity to exist? It's not used anywhere in the current code.
+- TODO: add hint objects to room.
 - update: may be used somewhere in HintOverlay for view.
 
 ## Item DB

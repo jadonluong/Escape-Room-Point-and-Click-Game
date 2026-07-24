@@ -8,6 +8,8 @@ import application.use_cases.Hint.GetHint.GetHintDataAccessInterface;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import domain.entities.Hint.Hint;
+import domain.entities.Hint.HintFactory;
 import domain.entities.Interactable.Interactable;
 import domain.entities.Interactable.InteractableFactory;
 import domain.entities.Item.Item;
@@ -36,21 +38,24 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
     private final ItemFactory itemFactory;
     private final InteractableFactory interactableFactory;
     private final RoomFactory roomFactory;
+    private final HintFactory hintFactory;
 
     // Master in-memory static template lookups
     private final Map<String, Room> masterRooms = new HashMap<>();
     private final Map<String, Item> masterItems = new HashMap<>();
     private final Map<String, Interactable> masterInteractables = new HashMap<>();
-    private Map<String, List<String>> masterHints = new HashMap<>();
+    private final Map<String, Hint> masterHints = new HashMap<>();
     private final Map<String,List<Room>> masterModes = new HashMap<>();
 
     public GameAssetManager(ItemFactory itemFactory,
                             InteractableFactory interactableFactory,
-                            RoomFactory roomFactory) {
+                            RoomFactory roomFactory,
+                            HintFactory hintFactory) {
 
         this.itemFactory = itemFactory;
         this.interactableFactory = interactableFactory;
         this.roomFactory = roomFactory;
+        this.hintFactory = hintFactory;
         try {
             loadItems();
             loadInteractables(); // Must run before rooms to populate dependencies
@@ -137,7 +142,7 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
                 // Nest instantiated objects into rooms
                 if (data.interactables != null) {
                     for (String interactableId : data.interactables) {
-                        Interactable interactable = masterInteractables.get(interactableId);
+                        Interactable interactable = getInteractableByID(interactableId);
                         if (interactable != null) {
                             room.addInteractable(interactable);
                         }
@@ -181,11 +186,18 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
         if (!Files.exists(path)) return;
 
         String json = Files.readString(path);
-        Type type = new TypeToken<Map<String, List<String>>>() {}.getType();
-        Map<String, List<String>> result = gson.fromJson(json, type);
+        Type type = new TypeToken<Map<String, JsonHintData>>() {}.getType();
+        Map<String, JsonHintData> rawData = gson.fromJson(json, type);
 
-        if (result != null) {
-            this.masterHints = result;
+        if (rawData != null) {
+            for (Map.Entry<String, JsonHintData> entry : rawData.entrySet()) {
+                String hintId = entry.getKey();
+                JsonHintData data = entry.getValue();
+
+                Hint hintObject = hintFactory.createHint(hintId, data.imagePath, data.hintMessages);
+
+                masterHints.put(hintId, hintObject);
+            }
         }
     }
 
@@ -214,13 +226,8 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
     // GetHintDataAccessInterface implementation
     // =========================================================================
     @Override
-    public List<String> getAllHintsForObject(String objectID) {
+    public Hint getHintForObjectID(String objectID) {
         return masterHints.get(objectID);
-    }
-
-    @Override
-    public int getMaxHintsAvailable(String objectID) {
-        return masterHints.get(objectID).size();
     }
 
     @Override
@@ -270,5 +277,10 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
         String linkedPuzzleId;
         String unlockedRoomId;
         String successMessage;
+    }
+
+    private static class JsonHintData {
+        String imagePath;
+        List<String> hintMessages;
     }
 }
