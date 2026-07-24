@@ -12,8 +12,6 @@ public interface Room {
     String getDescription();
 
     // Navigation & State
-    boolean isLocked();
-    void unlock();
 
     // Content management
     List<Interactable> getInteractables();

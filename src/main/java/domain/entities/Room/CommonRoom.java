@@ -25,7 +25,6 @@ public class CommonRoom implements Room{
         this.description = description;
         this.imagePath = imagePath;
         this.interactables = new HashMap<>();
-        this.
 
     }
 
