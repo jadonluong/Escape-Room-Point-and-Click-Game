@@ -23,7 +23,7 @@ This file explains what the databases could potentially look like.
      "objectID_2": [...]
      }
 - TODO: if we choose to use data-driven hint system, then there is no need for the Hint entity to exist? It's not used anywhere in the current code.
-
+- update: may be used somewhere in HintOverlay for view.
 
 ## Item DB
 - format: JSON file
@@ -42,7 +42,6 @@ This file explains what the databases could potentially look like.
 ## Room DB
 - Note: only serves as the room inventory for the game, isUnlocked is not saved in DB since it's user-specific
 - TODO: find a way to store rooms in a sort of tree structure
-- TODO: how are rooms connected to mode? see Mode DB.
 - format: JSON file
 - sample DB:
   - {"roomID_1/roomName_1": {
@@ -56,7 +55,7 @@ This file explains what the databases could potentially look like.
      }
 
 
-## Mode DB (tentative)
+## Mode DB
 - Note: this format could be useful to BrowseRoomsDataAccessInterface
 - format: JSON file
 - sample DB:
