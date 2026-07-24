@@ -4,7 +4,7 @@ import application.use_cases.Hint.GetHint.GetHintOutputBoundary;
 import application.use_cases.Hint.GetHint.GetHintOutputData;
 
 public class GetHintPresenter implements GetHintOutputBoundary {
-    private GetHintViewModel getHintViewModel;
+    private final GetHintViewModel getHintViewModel;
 
     public GetHintPresenter(GetHintViewModel getHintViewModel) {
         this.getHintViewModel = getHintViewModel;
@@ -12,7 +12,11 @@ public class GetHintPresenter implements GetHintOutputBoundary {
 
     @Override
     public void prepareSuccessView(GetHintOutputData getHintOutputData) {
-        // TODO: hint appears in an overlay form at the top of the screen
+        String message = getHintOutputData.getMessage();
+        GetHintState state = getHintViewModel.getState();
+        state.setSuccessMessage(message);
+        getHintViewModel.setState(state);
+        getHintViewModel.firePropertyChanged();
     }
 
     @Override
