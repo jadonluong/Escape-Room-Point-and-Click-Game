@@ -11,6 +11,6 @@ import java.util.List;
  * The Use Cases will use this interface to load rooms by ID.
  */
 public interface RoomFactory {
-    Room createRoom(String roomId, String description, String path, List<Interactable> Interactable
+    Room createRoom(String roomId, String description,String imagePath, List<Interactable> Interactable
             , List<Item> items, List<Hint> hint);
 }

@@ -21,11 +21,11 @@ public class TutorialAndStoryModeStartUpInteractor implements TutorialAndStoryMo
     @Override
     public void execute(TutorialAndStoryModeStartUpInputData inputData) {
 
-        String startingRoomId;
+        Room startingRoom;
 
         switch (inputData.getMode()) {
-            case "TUTORIAL" -> startingRoomId = dataAccess.findStartingRoomForTut();
-            case "STORY"    -> startingRoomId = dataAccess.findStartingRoomForStory();
+            case "TUTORIAL" -> startingRoom = dataAccess.findStartingRoomForTut();
+            case "STORY"    -> startingRoom = dataAccess.findStartingRoomForStory();
             default -> {
                 presenter.prepareFailView("Invalid mode selected: " + inputData.getMode());
                 return;
@@ -33,17 +33,16 @@ public class TutorialAndStoryModeStartUpInteractor implements TutorialAndStoryMo
         };
 
 
-        Room room = dataAccess.findRoom(startingRoomId);
         Map<String,String> ObjectsToDisplay = new HashMap<>();
 
         //fetch all data that is needed for rendering
-        room.getInteractables().forEach(interactable -> {
+        startingRoom.getInteractables().forEach(interactable -> {
             ObjectsToDisplay.put(interactable.getId(), interactable.getImagePath());
         });
-        room.getItems().forEach(item -> {
+        startingRoom.getItems().forEach(item -> {
             ObjectsToDisplay.put(item.getId(), item.getImagePath());
         });
-        room.getHints().forEach(hint -> {
+        startingRoom.getHints().forEach(hint -> {
             ObjectsToDisplay.put(hint.getObjectID(),  hint.getImagePath());
         });
 

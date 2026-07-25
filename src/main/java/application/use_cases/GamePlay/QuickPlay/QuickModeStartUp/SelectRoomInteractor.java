@@ -1,4 +1,4 @@
-package application.use_cases.GamePlay.QuickPlay.SelectRoom;
+package application.use_cases.GamePlay.QuickPlay.QuickModeStartUp;
 
 import domain.entities.Config.ConfigurationFactory;
 import domain.entities.Config.GameModeConfig;

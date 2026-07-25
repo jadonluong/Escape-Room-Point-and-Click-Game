@@ -25,4 +25,6 @@ public interface Room {
 
     List<Hint> getHints();
     void setHint(Hint hint);
+
+    String getImagePath();
 }

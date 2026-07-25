@@ -10,9 +10,9 @@ import java.util.List;
 public class CommonRoomFactory implements RoomFactory {
 
     @Override
-    public Room createRoom(String roomId, String description, String path, List<Interactable> Interactable
+    public Room createRoom(String roomId, String description,String imagePath, List<Interactable> Interactable
     , List<Item> items, List<Hint> hint) {
 
-        return new CommonRoom(roomId,description,path, Interactable, items, hint);
+        return new CommonRoom(roomId,description,imagePath, Interactable, items, hint);
     }
 }

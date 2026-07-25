@@ -1,6 +1,4 @@
-package application.use_cases.GamePlay.QuickPlay.SelectRoom;
-
-import java.util.List;
+package application.use_cases.GamePlay.QuickPlay.QuickModeStartUp;
 
 public class SelectRoomOutputData {
     private final String roomId;

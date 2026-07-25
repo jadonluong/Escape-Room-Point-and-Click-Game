@@ -2,7 +2,10 @@ package application.use_cases.GamePlay.QuickPlay.BrowseRooms;
 
 import domain.entities.Room.Room;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BrowseRoomsInteractor implements BrowseRoomsInputBoundary {
     private final BrowseRoomsDataAccessInterface dataAccess;
@@ -15,29 +18,29 @@ public class BrowseRoomsInteractor implements BrowseRoomsInputBoundary {
     }
 
     @Override
-    public void execute(BrowseRoomsInputData inputData) {
-        try {
-            // 1. Fetch domain entities via abstract interface
-            List<Room> domainRooms = dataAccess.findRoomsByMode(inputData.getMode());
+    public void execute() {
+            //Fetch domain entities via abstract interface
+            List<Room> rooms = dataAccess.getRoomsForQuickMode();
 
-            if (domainRooms.isEmpty()) {
-                presenter.prepareFailView("No open matches found for " + inputData.getMode());
+            if (rooms.isEmpty()) {
+                presenter.prepareFailView("No rooms found");
                 return;
             }
 
-            // 3. CONVERT: Extract he IDs into a List of Strings
-            List<String> roomIds = domainRooms.stream()
-                    .map(Room::getId)
-                    .toList();
+            //Put RoomId as key, description and img path as value.
+            Map<String,RoomInfo> data = new HashMap<>();
+            rooms.forEach(room -> {
+                data.put(room.getId(), new RoomInfo(room.getDescription(),room.getImagePath()));
+            });
 
-            // 4. Instantiate Output Data class using the String IDs
-            BrowseRoomsOutputData outputData = new BrowseRoomsOutputData(roomIds);
 
-            // 5. Send the data back to the presenter
+            //Instantiate Output Data class using the String IDs
+            BrowseRoomsOutputData outputData = new BrowseRoomsOutputData(data);
+
+            //Send the data back to the presenter
             presenter.prepareSuccessView(outputData);
 
-        } catch (Exception e) {
-            presenter.prepareFailView("An error occurred while fetching rooms: " + e.getMessage());
         }
     }
-}
+
+

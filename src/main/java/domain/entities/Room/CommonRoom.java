@@ -19,6 +19,8 @@ public class CommonRoom implements Room{
     private final String Id;
     private final String description;
 
+    private final String imagePath;
+
 
 
 
@@ -29,6 +31,7 @@ public class CommonRoom implements Room{
         this.interactables = Interactable;
         this.items = item;
         this.hints = hint;
+        this.imagePath = imagePath;
     }
 
 
@@ -89,6 +92,8 @@ public class CommonRoom implements Room{
     public void setHint(Hint hint) {
         hints.add(hint);
     }
+
+    public String getImagePath() { return imagePath; }
 
 }
 

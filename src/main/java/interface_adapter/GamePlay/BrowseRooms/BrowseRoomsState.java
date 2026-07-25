@@ -1,26 +1,28 @@
 package interface_adapter.GamePlay.BrowseRooms;
 
-import java.util.ArrayList;
-import java.util.List;
+import application.use_cases.GamePlay.QuickPlay.BrowseRooms.RoomInfo;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BrowseRoomsState {
+    private Map<String, RoomInfo> roomInfoMap = new HashMap<>();
+    private String errorMessage = null;
 
-    private List<String> roomIds = new ArrayList<>();
-    private String error = null;
+    public BrowseRoomsState() {}
 
-    public List<String> getRoomIds() {
-        return roomIds;
+    public Map<String, RoomInfo> getRoomInfo() {
+        return roomInfoMap;
     }
 
-    public void setRoomIds(List<String> roomIds) {
-        this.roomIds = roomIds;
+    public void setRoomInfo(Map<String, RoomInfo> roomInfoMap) {
+        this.roomInfoMap = roomInfoMap;
     }
 
-    public String getError() {
-        return error;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public void setError(String error) {
-        this.error = error;
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }
