@@ -12,7 +12,8 @@ public class CommonRoom implements Room{
 
     private Map<String, Interactable> interactables;
     private List<Item> items;
-    private Boolean status;
+
+    private List<String> hints;
 
     private final String Id;
     private final String description;
@@ -20,7 +21,9 @@ public class CommonRoom implements Room{
 
 
 
-    public CommonRoom(String Id, String description, String imagePath, List<String> Interactable) {
+
+    public CommonRoom(String Id, String description, String imagePath, List<String> Interactable, List<String> item
+    , List<String> hint) {
         this.Id = Id;
         this.description = description;
         this.imagePath = imagePath;
