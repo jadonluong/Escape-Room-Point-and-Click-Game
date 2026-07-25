@@ -5,18 +5,19 @@ import application.use_cases.GamePlay.SelectMode.SelectModeOutputBoundary;
 import domain.entities.Config.ConfigurationFactory;
 import domain.entities.Config.GameModeConfig;
 
-public class StoryMode implements ModeNavigation {
-    private final StoryModeDataAccessInterface dataAccess;
+public class TutorialMode implements ModeNavigation{
 
-    public StoryMode(StoryModeDataAccessInterface DataAccess) {
+    private final TutorialModeDataAccessInterface dataAccess;
 
-        this.dataAccess = DataAccess;
+    public TutorialMode(TutorialModeDataAccessInterface dataAccess) {
+        this.dataAccess = dataAccess;
     }
 
     @Override
-    public void navigate(SelectModeOutputBoundary presenter) {
-        //TODO: set up story mode(like put the user in their starting room, clean the inventory)
+    public void navigate(SelectModeOutputBoundary presenter){
+
         //Since there is no room selection for story mode, we configure directly
+        //TODO: set up tut mode(like put the user in their starting room, clean the inventory)
         ConfigurationFactory configFactory = new ConfigurationFactory();
         GameModeConfig chosenMode = configFactory.createConfig("story", dataAccess.findStartingRoom());
 

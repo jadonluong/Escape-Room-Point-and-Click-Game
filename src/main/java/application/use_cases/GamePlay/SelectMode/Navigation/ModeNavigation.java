@@ -7,10 +7,8 @@ import domain.entities.Room.Room;
 
 public interface ModeNavigation {
     default void navigate(SelectModeOutputBoundary presenter) {
-
     }
 
     default void navigate(BrowseRoomsOutputBoundary presenter) {
-        return;
     }
 }

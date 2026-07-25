@@ -16,4 +16,16 @@ public interface Hint {
      * @return the hint message
      */
     String getHintMessageForRequestCount(int requestCount);
+
+    /**
+     * Returns the directory path of the image of the object with hint.
+     * @return the directory path of the image of the object with hint
+     */
+    String getImagePath();
+
+    /**
+     * Returns the number of hint messages this hint object has.
+     * @return the number of hint messages this hint object has
+     */
+    int getHintMessageCount();
 }

@@ -12,20 +12,21 @@ public class CommonRoom implements Room{
 
     private Map<String, Interactable> interactables;
     private List<Item> items;
-    private Boolean status;
+
+    private List<String> hints;
 
     private final String Id;
     private final String description;
     private final String imagePath;
 
-    private Boolean isLocked;
 
 
-    public CommonRoom(String Id, String description, String imagePath, boolean isLocked) {
+
+    public CommonRoom(String Id, String description, String imagePath, List<String> Interactable, List<String> item
+    , List<String> hint) {
         this.Id = Id;
         this.description = description;
         this.imagePath = imagePath;
-        this.isLocked = isLocked;
         this.interactables = new HashMap<>();
 
     }
@@ -38,14 +39,7 @@ public class CommonRoom implements Room{
     public String getDescription() { return description; }
 
     @Override
-    public boolean isLocked() { return isLocked; }
-
-    @Override
-    public void unlock() { this.isLocked = false; }
-
-    @Override
     public List<Interactable> getInteractables() {
-        // FIX: Extract and return a copy of the Map's values as a List
         return new ArrayList<>(interactables.values());
     }
     @Override

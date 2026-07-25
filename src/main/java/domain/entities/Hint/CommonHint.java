@@ -6,11 +6,13 @@ import java.util.List;
  * The CommonHint class that implements the Hint interface.
  */
 public class CommonHint implements Hint{
-    private String objectID;
-    private List<String> hintMessages;
+    private final String objectID;
+    private final List<String> hintMessages;
+    private final String imagePath;
 
-    public CommonHint(String ID, List<String> hintMessages) {
+    public CommonHint(String ID, String imagePath, List<String> hintMessages) {
         this.objectID = ID;
+        this.imagePath = imagePath;
         this.hintMessages = hintMessages;
     }
 
@@ -21,11 +23,16 @@ public class CommonHint implements Hint{
 
     @Override
     public String getHintMessageForRequestCount(int requestCount) {
-        if (this.hintMessages == null || hintMessages.isEmpty()) {
-            return "No hints available.";
-        }
+        return this.hintMessages.get(requestCount);
+    }
 
-        int index = Math.min(requestCount, hintMessages.size() - 1);
-        return this.hintMessages.get(index);
+    @Override
+    public int getHintMessageCount() {
+        return this.hintMessages.size();
+    }
+
+    @Override
+    public String getImagePath() {
+        return this.imagePath;
     }
 }

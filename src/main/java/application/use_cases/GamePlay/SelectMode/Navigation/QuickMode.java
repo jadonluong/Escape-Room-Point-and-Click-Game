@@ -12,6 +12,7 @@ public class QuickMode implements ModeNavigation {
     public QuickMode(BrowseRoomsInputBoundary browseRoomUseCase) {
         this.browseRoomsUseCase = browseRoomUseCase;
     }
+
     @Override
     public void navigate(BrowseRoomsOutputBoundary presenter) {
         //Wrap the data
@@ -19,6 +20,6 @@ public class QuickMode implements ModeNavigation {
 
         // 2. Delegate execution to the use case, handing it the select mode presenter
         // to handle the output when it's done!
-        browseRoomsUseCase.execute(inputData, presenter);
+        browseRoomsUseCase.execute(inputData);
     }
 }

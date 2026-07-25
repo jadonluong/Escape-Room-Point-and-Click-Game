@@ -3,10 +3,13 @@ package data_access;
 import application.game_registry.InteractableRegistry;
 import application.game_registry.ItemRegistry;
 import application.game_registry.RoomRegistry;
+import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsDataAccessInterface;
 import application.use_cases.Hint.GetHint.GetHintDataAccessInterface;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import domain.entities.Hint.Hint;
+import domain.entities.Hint.HintFactory;
 import domain.entities.Interactable.Interactable;
 import domain.entities.Interactable.InteractableFactory;
 import domain.entities.Item.Item;
@@ -19,6 +22,7 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,30 +31,36 @@ import java.util.Map;
  * Manages game flow as the centralized data initialization engine and in-memory vault
  * for all static, read-only game assets.
  */
-public class GameAssetManager implements RoomRegistry, ItemRegistry, InteractableRegistry, GetHintDataAccessInterface {
-    // TODO: can implement BrowseRoomsDataAccessInterface after mode DB finalized
+public class GameAssetManager implements RoomRegistry, ItemRegistry, InteractableRegistry,
+        GetHintDataAccessInterface, BrowseRoomsDataAccessInterface {
+
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final ItemFactory itemFactory;
     private final InteractableFactory interactableFactory;
     private final RoomFactory roomFactory;
+    private final HintFactory hintFactory;
 
     // Master in-memory static template lookups
     private final Map<String, Room> masterRooms = new HashMap<>();
     private final Map<String, Item> masterItems = new HashMap<>();
     private final Map<String, Interactable> masterInteractables = new HashMap<>();
-    private Map<String, List<String>> masterHints = new HashMap<>();
+    private final Map<String, Hint> masterHints = new HashMap<>();
+    private final Map<String,List<Room>> masterModes = new HashMap<>();
 
     public GameAssetManager(ItemFactory itemFactory,
                             InteractableFactory interactableFactory,
-                            RoomFactory roomFactory) {
+                            RoomFactory roomFactory,
+                            HintFactory hintFactory) {
 
         this.itemFactory = itemFactory;
         this.interactableFactory = interactableFactory;
         this.roomFactory = roomFactory;
+        this.hintFactory = hintFactory;
         try {
             loadItems();
             loadInteractables(); // Must run before rooms to populate dependencies
             loadRooms();         // Instantiates rooms and links child interactables
+            loadModes();         // Must run after rooms to populate Room lists for each mode
             loadHints();
         } catch (IOException e) {
             throw new RuntimeException("Static game assets initialization crashed: ", e);
@@ -127,35 +137,48 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
                 String roomId = entry.getKey();
                 JsonRoomData data = entry.getValue();
 
-                // TODO: may need a restoreRoom(String roomName, List<String> interactableIDs, List<String> itemIDs, String imagePath)
-
-                // TODO: may need createRoom to remove the isUnlocked parameter because that is user-specific.
-                //  To check if a room is unlocked, loop through the user's unlocked Rooms like this:
-                //      public boolean canPlayerEnter(User user, Room targetRoom) {
-                //          // If the room is in the user's unlocked list, they can enter!
-                //          return user.getRoomsUnlocked().contains(targetRoom);
-                //      }
-                Room room = roomFactory.createRoom(roomId, data.description, data.imagePath);
+                Room room = roomFactory.createRoom(roomId, data.description, data.imagePath, data.interactables);
 
                 // Nest instantiated objects into rooms
                 if (data.interactables != null) {
                     for (String interactableId : data.interactables) {
-                        Interactable interactable = masterInteractables.get(interactableId);
+                        Interactable interactable = getInteractableByID(interactableId);
                         if (interactable != null) {
                             room.addInteractable(interactable);
                         }
                     }
                 }
-
-                // Sample code with restoreRoom:
-                // Room room = roomFactory.restoreRoom(roomID,
-                //                                     data.description,
-                //                                     data.interactables,
-                //                                     data.items,
-                //                                     data.imagePath)
                 masterRooms.put(roomId, room);
             }
         }
+    }
+
+    private void loadModes() throws IOException {
+        Path path = Paths.get("data/modes.json");
+        if (!Files.exists(path)) return;
+
+        String json = Files.readString(path);
+        Type type = new TypeToken<Map<String, List<String>>>() {}.getType();
+        Map<String, List<String>> result = gson.fromJson(json, type);
+
+        if (result != null){
+            for (Map.Entry<String, List<String>> entry : result.entrySet()) {
+                String mode = entry.getKey();
+                List<String> roomIDs = entry.getValue();
+                // For each mode, create a new list to populate with Room objects
+                List<Room> roomList = new ArrayList<>();
+
+                // For each roomID saved in database, get a Room object with that ID and add it to the Room object list.
+                for (String roomID : roomIDs) {
+                    Room roomObject = getRoomByID(roomID);
+                    roomList.add(roomObject);
+                }
+
+                // Put the mode and its Rooms to masterModes variable
+                masterModes.put(mode, roomList);
+            }
+        }
+
     }
 
     private void loadHints() throws IOException {
@@ -163,13 +186,21 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
         if (!Files.exists(path)) return;
 
         String json = Files.readString(path);
-        Type type = new TypeToken<Map<String, List<String>>>() {}.getType();
-        Map<String, List<String>> result = gson.fromJson(json, type);
+        Type type = new TypeToken<Map<String, JsonHintData>>() {}.getType();
+        Map<String, JsonHintData> rawData = gson.fromJson(json, type);
 
-        if (result != null) {
-            this.masterHints = result;
+        if (rawData != null) {
+            for (Map.Entry<String, JsonHintData> entry : rawData.entrySet()) {
+                String hintId = entry.getKey();
+                JsonHintData data = entry.getValue();
+
+                Hint hintObject = hintFactory.createHint(hintId, data.imagePath, data.hintMessages);
+
+                masterHints.put(hintId, hintObject);
+            }
         }
     }
+
 
     // =========================================================================
     // Registry implementations (DBs only saves text IDs)
@@ -190,22 +221,27 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
         return masterInteractables.get(ID);
     }
 
+
     // =========================================================================
     // GetHintDataAccessInterface implementation
     // =========================================================================
     @Override
-    public List<String> getAllHintsForObject(String objectID) {
+    public Hint getHintForObjectID(String objectID) {
         return masterHints.get(objectID);
-    }
-
-    @Override
-    public int getMaxHintsAvailable(String objectID) {
-        return masterHints.get(objectID).size();
     }
 
     @Override
     public Boolean existByObjectID(String objectID) {
         return masterHints.containsKey(objectID);
+    }
+
+
+    // =========================================================================
+    // BrowseRoomsDataAccessInterface implementation
+    // =========================================================================
+    @Override
+    public List<Room> findRoomsByMode(String mode) {
+        return masterModes.get(mode);
     }
 
 
@@ -221,9 +257,8 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
 
     private static class JsonRoomData {
         String description;
-        List<String> interactables;
-        List<String> items;
         String imagePath;
+        List<String> interactables;
     }
 
     private static class JsonInteractableData {
@@ -242,5 +277,10 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
         String linkedPuzzleId;
         String unlockedRoomId;
         String successMessage;
+    }
+
+    private static class JsonHintData {
+        String imagePath;
+        List<String> hintMessages;
     }
 }

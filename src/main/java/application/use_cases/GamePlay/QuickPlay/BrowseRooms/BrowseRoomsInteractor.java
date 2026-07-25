@@ -5,16 +5,18 @@ import domain.entities.Room.Room;
 
 import java.util.List;
 
-//TODO: Modify after room repo is implemented.
 public class BrowseRoomsInteractor implements BrowseRoomsInputBoundary {
     private final BrowseRoomsDataAccessInterface dataAccess;
+    private final BrowseRoomsOutputBoundary presenter;
 
-    public BrowseRoomsInteractor(BrowseRoomsDataAccessInterface dataAccess) {
+    public BrowseRoomsInteractor(BrowseRoomsDataAccessInterface dataAccess, BrowseRoomsOutputBoundary presenter) {
         this.dataAccess = dataAccess;
+        this.presenter = presenter;
+
     }
 
     @Override
-    public void execute(BrowseRoomsInputData inputData, BrowseRoomsOutputBoundary presenter) {
+    public void execute(BrowseRoomsInputData inputData) {
         try {
             // 1. Fetch domain entities via abstract interface
             List<Room> domainRooms = dataAccess.findRoomsByMode(inputData.getMode());

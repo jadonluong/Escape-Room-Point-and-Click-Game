@@ -1,4 +1,4 @@
-package interface_adapter.GamePlay.QuickPlay.BrowseRooms;
+package interface_adapter.GamePlay.BrowseRooms;
 
 import java.util.ArrayList;
 import java.util.List;
