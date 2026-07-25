@@ -16,12 +16,12 @@ public class PickUpInteractor implements PickUpInputBoundary{
     public void execute(PickUpInputData inputData) {
         Item item = inputData.getItem();
 
-        // 1. Check if item is pickable — silently return if false or null
-        if (item == null || Boolean.FALSE.equals(item.getPickable())) {
-            return; // Do nothing
+        // Ensure the item passed in isn't null
+        if (item == null) {
+            return;
         }
 
-        // 2. Save item directly to the user's inventory (ArrayList)
+        // 2. All Items are pickable! Add directly to user's inventory
         user.saveItem(item);
 
         // 3. Notify presenter across the Output Boundary to refresh UI
