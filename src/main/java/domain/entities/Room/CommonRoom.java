@@ -18,7 +18,6 @@ public class CommonRoom implements Room{
 
     private final String Id;
     private final String description;
-    private final String imagePath;
 
 
 
@@ -27,7 +26,6 @@ public class CommonRoom implements Room{
     , List<Hint> hint) {
         this.Id = Id;
         this.description = description;
-        this.imagePath = imagePath;
         this.interactables = Interactable;
         this.items = item;
         this.hints = hint;
@@ -71,8 +69,25 @@ public class CommonRoom implements Room{
     public List<Item> getItems() {
         return new ArrayList<>(items);
     }
+
+    @Override
+    public void addItem(Item item) {
+        items.add(item);
+    }
+
+    @Override
+    public void removeItem(Item item) {
+        items.remove(item);
+    }
+
+    @Override
     public List<Hint> getHints() {
-        return new ArrayList<>(hints);
+        return hints;
+    }
+
+    @Override
+    public void setHint(Hint hint) {
+        hints.add(hint);
     }
 
 }

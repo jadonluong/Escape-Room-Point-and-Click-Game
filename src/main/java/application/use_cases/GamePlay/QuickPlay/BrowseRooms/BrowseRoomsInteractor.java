@@ -1,6 +1,5 @@
 package application.use_cases.GamePlay.QuickPlay.BrowseRooms;
 
-import application.use_cases.GamePlay.SelectMode.SelectModeOutputBoundary;
 import domain.entities.Room.Room;
 
 import java.util.List;
