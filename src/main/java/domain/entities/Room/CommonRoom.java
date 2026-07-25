@@ -1,5 +1,6 @@
 package domain.entities.Room;
 
+import domain.entities.Hint.Hint;
 import domain.entities.Interactable.Interactable;
 import domain.entities.Item.Item;
 
@@ -10,10 +11,10 @@ import java.util.Map;
 
 public class CommonRoom implements Room{
 
-    private Map<String, Interactable> interactables;
+    private List<Interactable> interactables;
     private List<Item> items;
 
-    private List<String> hints;
+    private List<Hint> hints;
 
     private final String Id;
     private final String description;
@@ -22,13 +23,14 @@ public class CommonRoom implements Room{
 
 
 
-    public CommonRoom(String Id, String description, String imagePath, List<String> Interactable, List<String> item
-    , List<String> hint) {
+    public CommonRoom(String Id, String description, String imagePath, List<Interactable> Interactable, List<Item> item
+    , List<Hint> hint) {
         this.Id = Id;
         this.description = description;
         this.imagePath = imagePath;
-        this.interactables = new HashMap<>();
-
+        this.interactables = Interactable;
+        this.items = item;
+        this.hints = hint;
     }
 
 
@@ -40,21 +42,33 @@ public class CommonRoom implements Room{
 
     @Override
     public List<Interactable> getInteractables() {
-        return new ArrayList<>(interactables.values());
+        return interactables;
     }
     @Override
     public void addInteractable(Interactable interactable) {
-        this.interactables.put(interactable.getId(), interactable);
+        this.interactables.add(interactable);
     }
 
     @Override
-    public void removeInteractable(String id) {
-        this.interactables.remove(id);
+    public void removeInteractable(Interactable interactable) {
+        this.interactables.remove(interactable);
     }
 
     @Override
     public Interactable getInteractableById(String id) {
-        return this.interactables.get(id);
+        for  (Interactable interactable : interactables) {
+            if(interactable.getId().equals(id)) {
+                return interactable;
+            }
+        }
+        return null;
+    }
+
+    public List<Item> getItems() {
+        return new ArrayList<>(items);
+    }
+    public List<Hint> getHints() {
+        return new ArrayList<>(hints);
     }
 
 }
