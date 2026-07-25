@@ -1,37 +1,31 @@
 package interface_adapter.inventory;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InventoryState {
-    private String[] items = new String[9]; // 9 slots for inventory items
-    private boolean isInventoryOpen = false;
-    private int selectedSlotA = -1; // Index of first item selected for crafting
-    private int selectedSlotB = -1; // Index of second item selected for crafting
+    private List<String> items = new ArrayList<>();
+    private int selectedIndexA = -1;
+    private int selectedIndexB = -1;
     private String statusMessage = "";
 
     public InventoryState() {}
 
     // Copy constructor (used by Presenters to create new updated state instances)
     public InventoryState(InventoryState copy) {
-        this.items = Arrays.copyOf(copy.items, copy.items.length);
-        this.isInventoryOpen = copy.isInventoryOpen;
-        this.selectedSlotA = copy.selectedSlotA;
-        this.selectedSlotB = copy.selectedSlotB;
+        this.items = new ArrayList<>(copy.items);
+        this.selectedIndexA = copy.selectedIndexA;
+        this.selectedIndexB = copy.selectedIndexB;
         this.statusMessage = copy.statusMessage;
     }
+    public List<String> getItems() { return items; }
+    public void setItems(List<String> items) { this.items = items; }
 
-    // --- Getters & Setters ---
-    public boolean isInventoryOpen() { return isInventoryOpen; }
-    public void setInventoryOpen(boolean open) { this.isInventoryOpen = open; }
+    public int getSelectedIndexA() { return selectedIndexA; }
+    public void setSelectedIndexA(int index) { this.selectedIndexA = index; }
 
-    public String[] getItems() { return items; }
-    public void setItems(String[] items) { this.items = items; }
-
-    public int getSelectedSlotA() { return selectedSlotA; }
-    public void setSelectedSlotA(int index) { this.selectedSlotA = index; }
-
-    public int getSelectedSlotB() { return selectedSlotB; }
-    public void setSelectedSlotB(int index) { this.selectedSlotB = index; }
+    public int getSelectedIndexB() { return selectedIndexB; }
+    public void setSelectedIndexB(int index) { this.selectedIndexB = index; }
 
     public String getStatusMessage() { return statusMessage; }
     public void setStatusMessage(String statusMessage) { this.statusMessage = statusMessage; }
