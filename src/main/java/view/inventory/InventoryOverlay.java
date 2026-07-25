@@ -32,7 +32,7 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
     protected VBox buildModalBox() {
         VBox mainLayout = new VBox(15);
         mainLayout.setAlignment(Pos.CENTER);
-        mainLayout.setStyle("-fx-background-color: rgba(20, 20, 20, 0.9); -fx-padding: 20; -fx-background-radius: 12;");
+        mainLayout.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9); -fx-padding: 20; -fx-background-radius: 12;");
 
         hotbarContainer.setAlignment(Pos.CENTER);
         hotbarContainer.setStyle("-fx-padding: 10;");
