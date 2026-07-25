@@ -2,85 +2,63 @@ package view.inventory;
 
 import interface_adapter.inventory.InventoryState;
 import interface_adapter.inventory.InventoryViewModel;
-
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Color;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.event.MouseWheelEvent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import javafx.scene.Parent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import view.common.ModalOverlay;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 public class InventoryOverlay extends ModalOverlay implements PropertyChangeListener {
 
     private final InventoryViewModel viewModel;
-    private final Button[] itemButtons = new Button[9];
+    private final HBox hotbarContainer = new HBox(10);
     private final Label statusLabel = new Label();
     private final Button craftButton = new Button("Craft Selected");
     private final Button dropButton = new Button("Drop Selected");
 
     public InventoryOverlay(Runnable onClose, InventoryViewModel viewModel) {
-        super(onClose); // Satisfies Error #2 (passes onClose to parent constructor)
+        super(onClose);
         this.viewModel = viewModel;
         this.viewModel.addPropertyChangeListener(this);
     }
 
     @Override
     protected VBox buildModalBox() {
-        VBox contentContainer = new VBox(15);
-        contentContainer.setAlignment(Pos.CENTER);
-        contentContainer.setStyle("-fx-background-color: rgba(30, 30, 30, 0.95); -fx-padding: 20; -fx-background-radius: 10;");
+        VBox mainLayout = new VBox(15);
+        mainLayout.setAlignment(Pos.CENTER);
+        mainLayout.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9); -fx-padding: 20; -fx-background-radius: 12;");
 
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setAlignment(Pos.CENTER);
+        hotbarContainer.setAlignment(Pos.CENTER);
+        hotbarContainer.setStyle("-fx-padding: 10;");
 
-        for (int i = 0; i < 9; i++) {
-            itemButtons[i] = new Button("Empty"); // Changed from JButton to Button
-            itemButtons[i].setPrefSize(30, 30);
-            int slotIndex = i;
-            itemButtons[i].setOnAction(e -> handleSlotClick(slotIndex));
+        // For horizontal scrolling
+        ScrollPane scrollPane = new ScrollPane(hotbarContainer);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setPrefHeight(110);
+        scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
-            int row = i / 3;
-            int col = i % 3;
-            grid.add(itemButtons[i], col, row);
-        }
+        HBox actionBox = new HBox(10, craftButton, dropButton);
+        actionBox.setAlignment(Pos.CENTER);
 
-        contentContainer.getChildren().addAll(
-                statusLabel,
-                grid,
-                craftButton,
-                dropButton
-        );
-
-        return contentContainer;
+        mainLayout.getChildren().addAll(statusLabel, scrollPane, actionBox);
+        return mainLayout;
     }
 
-    private void handleSlotClick(int slotIndex) {
+    private void handleSlotClick(int index) {
         InventoryState state = viewModel.getState();
-        if (state.getSelectedSlotA() == -1) {
-            state.setSelectedSlotA(slotIndex);
-        } else if (state.getSelectedSlotB() == -1 && slotIndex != state.getSelectedSlotA()) {
-            state.setSelectedSlotB(slotIndex);
+        if (state.getSelectedIndexA() == -1) {
+            state.setSelectedIndexA(index);
+        } else if (state.getSelectedIndexB() == -1 && index != state.getSelectedIndexA()) {
+            state.setSelectedIndexB(index);
         } else {
-            state.setSelectedSlotA(slotIndex);
-            state.setSelectedSlotB(-1);
+            state.setSelectedIndexA(index);
+            state.setSelectedIndexB(-1);
         }
         viewModel.firePropertyChanged();
     }
@@ -89,15 +67,19 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
     public void propertyChange(PropertyChangeEvent evt) {
         InventoryState state = (InventoryState) evt.getNewValue();
 
-        // Refresh UI buttons with item names
-        String[] items = state.getItems();
-        for (int i = 0; i < 9; i++) {
-            String name = (items != null && items[i] != null) ? items[i] : "Empty";
-            if (i == state.getSelectedSlotA() || i == state.getSelectedSlotB()) {
-                itemButtons[i].setText("[" + name + "]");
-            } else {
-                itemButtons[i].setText(name);
-            }
+        // 1. Clear previous hotbar buttons
+        hotbarContainer.getChildren().clear();
+
+        // 2. Dynamically rebuild hotbar buttons for every item in the ArrayList
+        List<String> items = state.getItems();
+        for (int i = 0; i < items.size(); i++) {
+            String itemName = items.get(i);
+            Button slotButton = new Button(itemName);
+            slotButton.setPrefSize(80, 80);
+            int slotIndex = i;
+            slotButton.setOnAction(e -> handleSlotClick(slotIndex));
+
+            hotbarContainer.getChildren().add(slotButton);
         }
 
         statusLabel.setText(state.getStatusMessage());
