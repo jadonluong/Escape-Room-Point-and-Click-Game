@@ -2,6 +2,17 @@ package view.inventory;
 
 import interface_adapter.inventory.InventoryState;
 import interface_adapter.inventory.InventoryViewModel;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.MouseWheelEvent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 import javafx.scene.Parent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

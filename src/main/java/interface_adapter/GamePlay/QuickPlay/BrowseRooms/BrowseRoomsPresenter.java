@@ -2,6 +2,7 @@ package interface_adapter.GamePlay.QuickPlay.BrowseRooms;
 
 import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsOutputBoundary;
 import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsOutputData;
+import interface_adapter.ViewManagerModel;
 
 /**
  * The Presenter for the Browse Rooms Use Case.
@@ -9,9 +10,11 @@ import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsOutputDat
 public class BrowseRoomsPresenter implements BrowseRoomsOutputBoundary {
 
     private final BrowseRoomsViewModel browseRoomsViewModel;
+    private final ViewManagerModel viewManagerModel;
 
-    public BrowseRoomsPresenter(BrowseRoomsViewModel browseRoomsViewModel) {
+    public BrowseRoomsPresenter(BrowseRoomsViewModel browseRoomsViewModel, ViewManagerModel viewManagerModel) {
         this.browseRoomsViewModel = browseRoomsViewModel;
+        this.viewManagerModel = viewManagerModel;
     }
 
     @Override
@@ -26,6 +29,10 @@ public class BrowseRoomsPresenter implements BrowseRoomsOutputBoundary {
         // 3. Notify the View of the updated state
         this.browseRoomsViewModel.setState(state);
         this.browseRoomsViewModel.firePropertyChanged();
+
+        // 4. Switch the view using ViewManagerModel
+        this.viewManagerModel.setState(this.browseRoomsViewModel.getViewName());
+        this.viewManagerModel.firePropertyChanged();
     }
 
     @Override
