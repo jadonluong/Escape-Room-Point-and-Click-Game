@@ -15,7 +15,7 @@ public class StoryMode implements ModeNavigation {
 
     @Override
     public void navigate(SelectModeOutputBoundary presenter) {
-
+        //TODO: set up story mode(like put the user in their starting room, clean the inventory)
         //Since there is no room selection for story mode, we configure directly
         ConfigurationFactory configFactory = new ConfigurationFactory();
         GameModeConfig chosenMode = configFactory.createConfig("story", dataAccess.findStartingRoom());

@@ -1,4 +1,4 @@
-package interface_adapter.GamePlay.QuickPlay.BrowseRooms;
+package interface_adapter.GamePlay.BrowseRooms;
 
 import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsOutputBoundary;
 import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsOutputData;

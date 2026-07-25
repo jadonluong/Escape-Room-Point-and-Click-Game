@@ -37,7 +37,6 @@ public class CommonRoom implements Room{
 
     @Override
     public List<Interactable> getInteractables() {
-        // FIX: Extract and return a copy of the Map's values as a List
         return new ArrayList<>(interactables.values());
     }
     @Override

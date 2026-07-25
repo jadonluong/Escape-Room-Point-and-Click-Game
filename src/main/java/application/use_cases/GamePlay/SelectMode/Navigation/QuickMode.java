@@ -20,6 +20,6 @@ public class QuickMode implements ModeNavigation {
 
         // 2. Delegate execution to the use case, handing it the select mode presenter
         // to handle the output when it's done!
-        browseRoomsUseCase.execute(inputData, presenter);
+        browseRoomsUseCase.execute(inputData);
     }
 }

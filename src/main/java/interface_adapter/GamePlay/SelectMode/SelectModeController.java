@@ -5,10 +5,10 @@ import application.use_cases.GamePlay.SelectMode.SelectModeInputBoundary;
 import application.use_cases.GamePlay.SelectMode.SelectModeInputData;
 
 public class SelectModeController {
-    private final SelectModeInputBoundary selectRoomUseCaseInteractor;
+    private final SelectModeInputBoundary selectModeInteractor;
 
-    public SelectModeController(SelectModeInputBoundary selectRoomUseCaseInteractor) {
-        this.selectRoomUseCaseInteractor = selectRoomUseCaseInteractor;
+    public SelectModeController(SelectModeInputBoundary selectModeInteractor) {
+        this.selectModeInteractor = selectModeInteractor;
     }
 
     /**
@@ -17,6 +17,6 @@ public class SelectModeController {
      */
     public void execute(ModeNavigation mode) {
         SelectModeInputData inputData = new SelectModeInputData(mode);
-        selectRoomUseCaseInteractor.execute(inputData);
+        selectModeInteractor.execute(inputData);
     }
 }

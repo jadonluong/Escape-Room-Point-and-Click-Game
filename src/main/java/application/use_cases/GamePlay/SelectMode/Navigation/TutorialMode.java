@@ -17,6 +17,7 @@ public class TutorialMode implements ModeNavigation{
     public void navigate(SelectModeOutputBoundary presenter){
 
         //Since there is no room selection for story mode, we configure directly
+        //TODO: set up tut mode(like put the user in their starting room, clean the inventory)
         ConfigurationFactory configFactory = new ConfigurationFactory();
         GameModeConfig chosenMode = configFactory.createConfig("story", dataAccess.findStartingRoom());
 
