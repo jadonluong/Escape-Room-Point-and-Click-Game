@@ -59,9 +59,9 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
         try {
             loadItems();
             loadInteractables(); // Must run before rooms to populate dependencies
+            loadHints();
             loadRooms();         // Instantiates rooms and links child interactables
             loadModes();         // Must run after rooms to populate Room lists for each mode
-            loadHints();
         } catch (IOException e) {
             throw new RuntimeException("Static game assets initialization crashed: ", e);
         }
@@ -137,17 +137,30 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
                 String roomId = entry.getKey();
                 JsonRoomData data = entry.getValue();
 
-                Room room = roomFactory.createRoom(roomId, data.description, data.imagePath, data.interactables);
-
-                // Nest instantiated objects into rooms
-                if (data.interactables != null) {
-                    for (String interactableId : data.interactables) {
-                        Interactable interactable = getInteractableByID(interactableId);
-                        if (interactable != null) {
-                            room.addInteractable(interactable);
-                        }
-                    }
+                // Create a list of Interactable objects to add to Room object
+                List<Interactable> interactableList = new ArrayList<>();
+                for (String interactableId : data.interactables) {
+                    Interactable interactable = getInteractableByID(interactableId);
+                    interactableList.add(interactable);
                 }
+
+                // Create a list of Item objects to add to Room object
+                List<Item> itemList = new ArrayList<>();
+                for (String itemId : data.items) {
+                    Item item = getItemByID(itemId);
+                    itemList.add(item);
+                }
+
+                // Create a list of Hint objects to add to Room object
+                List<Hint> hintList = new ArrayList<>();
+                for (String objectId : data.hints) {
+                    Hint hint = getHintForObjectID(objectId);
+                    hintList.add(hint);
+                }
+
+                Room room = roomFactory.createRoom(roomId, data.description, data.imagePath,
+                        interactableList, itemList, hintList);
+
                 masterRooms.put(roomId, room);
             }
         }
@@ -240,8 +253,8 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
     // BrowseRoomsDataAccessInterface implementation
     // =========================================================================
     @Override
-    public List<Room> findRoomsByMode(String mode) {
-        return masterModes.get(mode);
+    public List<Room> getRoomsForQuickMode() {
+        return masterModes.get("QuickMode");
     }
 
 
@@ -259,6 +272,8 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
         String description;
         String imagePath;
         List<String> interactables;
+        List<String> items;
+        List<String> hints;
     }
 
     private static class JsonInteractableData {
