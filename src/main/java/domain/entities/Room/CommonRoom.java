@@ -107,8 +107,8 @@ public class CommonRoom implements Room{
     public String getImagePath() { return imagePath; }
 
     @Override
-    public void setPosition(String Id, String x, String y) {
-        this.positions.put(Id, new Position(x, y));
+    public void setPosition(String Id, Position position) {
+        this.positions.put(Id, position);
     }
 
     @Override
