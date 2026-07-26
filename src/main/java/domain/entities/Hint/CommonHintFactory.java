@@ -10,7 +10,7 @@ import java.util.List;
 public class CommonHintFactory implements HintFactory{
 
     @Override
-    public Hint createHint(String ID, String imagePath, List<String> messages, Position position) {
+    public Hint createHint(String ID, String imagePath, List<String> messages, List<Integer> position) {
         return new CommonHint(ID, imagePath, messages, position);
     }
 }

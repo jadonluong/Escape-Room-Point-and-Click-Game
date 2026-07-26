@@ -11,9 +11,9 @@ public class CommonHint implements Hint{
     private final String objectID;
     private final List<String> hintMessages;
     private final String imagePath;
-    private Position position;
+    private List<Integer> position;
 
-    public CommonHint(String ID, String imagePath, List<String> hintMessages, Position position) {
+    public CommonHint(String ID, String imagePath, List<String> hintMessages, List<Integer> position) {
         this.objectID = ID;
         this.imagePath = imagePath;
         this.hintMessages = hintMessages;
@@ -36,7 +36,7 @@ public class CommonHint implements Hint{
     }
 
     @Override
-    public Position getHintObjectPosition() {
+    public List<Integer> getHintObjectPosition() {
         return this.position;
     }
 

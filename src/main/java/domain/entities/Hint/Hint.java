@@ -1,6 +1,6 @@
 package domain.entities.Hint;
 
-import domain.entities.Room.Position;
+import java.util.List;
 
 /**
  * The representation of a hint in the program.
@@ -36,5 +36,5 @@ public interface Hint {
      *
      * @return the coordinates of the hint object image position in a room as a list, the first number is the x coordinate and the second is the y coordinate
      */
-    Position getHintObjectPosition();
+    List<Integer> getHintObjectPosition();
 }

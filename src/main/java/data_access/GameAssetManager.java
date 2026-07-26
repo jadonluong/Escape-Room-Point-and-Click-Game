@@ -163,7 +163,11 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
                         interactableList, itemList, hintList);
 
                 for (Hint hint : room.getHints()) {
-                    room.setPosition(hint.getObjectID(), hint.getHintObjectPosition());
+                    List<Integer> positionList = hint.getHintObjectPosition();
+                    if (positionList != null && positionList.size() >= 2) {
+                        Position position = new Position(positionList.get(0), positionList.get(1));
+                        room.setPosition(hint.getObjectID(), position);
+                    }
                 }
 
                 // TODO: add positions of interactables and items to room
@@ -304,6 +308,6 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
     private static class JsonHintData {
         String imagePath;
         List<String> hintMessages;
-        Position position;
+        List<Integer> position;
     }
 }

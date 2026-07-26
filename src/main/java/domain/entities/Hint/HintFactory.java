@@ -16,5 +16,5 @@ public interface HintFactory {
      * @param messages the hint message to be displayed
      * @return the Hint object
      */
-    Hint createHint(String ID, String imagePath, List<String> messages, Position position);
+    Hint createHint(String ID, String imagePath, List<String> messages, List<Integer> position);
 }
