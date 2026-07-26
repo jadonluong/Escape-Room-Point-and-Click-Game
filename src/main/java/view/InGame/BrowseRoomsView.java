@@ -100,8 +100,8 @@ public class BrowseRoomsView extends StackPane implements PropertyChangeListener
         errorLabel.setText("");
 
         // Handle Error State
-        if (state.getError() != null && !state.getError().isEmpty()) {
-            errorLabel.setText(state.getError());
+        if (state.getErrorMessage() != null && !state.getErrorMessage().isEmpty()) {
+            errorLabel.setText(state.getErrorMessage());
             return;
         }
 

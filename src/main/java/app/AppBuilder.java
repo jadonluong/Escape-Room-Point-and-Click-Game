@@ -3,6 +3,7 @@ package app;
 import application.use_cases.Audio.ToggleMusic.ToggleMusicInteractor;
 import application.use_cases.Audio.ToggleSfx.ToggleSfxInteractor;
 import application.use_cases.User.Login.LoginInteractor;
+import application.use_cases.User.Logout.LogoutInteractor;
 import application.use_cases.User.SignUp.ProfanityCheck;
 import application.use_cases.User.SignUp.SignupInteractor;
 import data_access.GameAssetManager;
@@ -18,10 +19,14 @@ import domain.entities.Room.RoomFactory;
 import domain.entities.User.CommonUserFactory;
 import domain.entities.User.CommonUserFactoryClass;
 import interface_adapter.Audio.*;
+import interface_adapter.User.LoggedIn.LoggedInViewModel;
 import interface_adapter.User.Login.LoginController;
 import interface_adapter.User.Login.LoginPresenter;
 import interface_adapter.User.Login.LoginViewModel;
+import interface_adapter.User.Logout.LogoutController;
+import interface_adapter.User.Logout.LogoutPresenter;
 import interface_adapter.User.MainMenu.MainMenuViewModel;
+import interface_adapter.User.SaveProgress.SaveProgressViewModel;
 import interface_adapter.User.Signup.ProfanityCheckGateway;
 import interface_adapter.User.Signup.SignupController;
 import interface_adapter.User.Signup.SignupPresenter;
@@ -75,9 +80,17 @@ public class AppBuilder extends Application {
 
         // --- Login chain ---
         LoginViewModel loginViewModel = new LoginViewModel();
-        LoginPresenter loginPresenter = new LoginPresenter(loginViewModel);
+        LoggedInViewModel  loggedInViewModel = new LoggedInViewModel();
+        LoginPresenter loginPresenter = new LoginPresenter(loginViewModel, loggedInViewModel);
         LoginInteractor loginInteractor = new LoginInteractor(userDAO, loginPresenter, userFactory);
         LoginController loginController = new LoginController(loginInteractor);
+
+        // --- Logout chain ---
+        MainMenuViewModel mainMenuViewModel = new MainMenuViewModel();
+        SaveProgressViewModel saveProgressViewModel = new SaveProgressViewModel();
+        LogoutPresenter logoutPresenter = new LogoutPresenter(viewManagerModel, mainMenuViewModel, loggedInViewModel, saveProgressViewModel);
+        LogoutInteractor logoutInteractor = new LogoutInteractor(userDAO, logoutPresenter);
+        LogoutController logoutController = new LogoutController(logoutInteractor, null /* saveAndLogoutInteractor — not wired yet */);
 
         // --- Signup chain ---
         ProfanityCheck profanityCheck = new ProfanityCheckGateway(HttpClient.newHttpClient());
@@ -93,10 +106,11 @@ public class AppBuilder extends Application {
                 onClose -> new SignupOverlay(onClose, signupController, signupViewModel);
 
         // --- Main menu ---
-        MainMenuViewModel mainMenuViewModel = new MainMenuViewModel();
         MainMenuView mainMenu = new MainMenuView(
-                viewManagerModel, mainMenuViewModel,
-                loginOverlayFactory, signupOverlayFactory, audioControlView);
+                viewManagerModel, mainMenuViewModel, loggedInViewModel,
+                loginOverlayFactory, signupOverlayFactory,
+                () -> logoutController.executeLogoutWithoutSave(loggedInViewModel.getState().getUsername()),
+                audioControlView);
 
         signupPresenter.setSwitchToLoginCallback(mainMenu::switchFromSignupToLogin);
 

@@ -82,7 +82,7 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
                 JsonItemData data = entry.getValue();
 
                 // Pass the string ID directly to restoreItem
-                Item item = itemFactory.restoreItem(stringId, data.name, data.description, data.craftable, data.imagePath);
+                Item item = itemFactory.restoreItem(stringId, data.name, data.description, data.craftable, data.imagePath, data.pickable);
                 masterItems.put(stringId, item);
             }
         }
@@ -272,6 +272,7 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
         String description;
         boolean craftable = false;
         String imagePath;
+        boolean pickable = false; // TODO: double check the base state, just added it here to ensure the code compiles and runs
     }
 
     private static class JsonRoomData {
