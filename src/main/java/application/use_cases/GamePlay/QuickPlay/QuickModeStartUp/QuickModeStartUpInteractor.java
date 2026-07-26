@@ -6,12 +6,13 @@ import domain.entities.Room.Room;
 import java.util.HashMap;
 import java.util.Map;
 
+import application.game_registry.RoomRegistry;
 
 public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary {
     private final QuickModeStartUpOutputBoundary presenter;
-    private final StartUpDataAccessInterface dataAccess;
+    private final RoomRegistry dataAccess;
 
-    public QuickModeStartUpInteractor(QuickModeStartUpOutputBoundary presenter, StartUpDataAccessInterface dataAccess) {
+    public QuickModeStartUpInteractor(QuickModeStartUpOutputBoundary presenter, RoomRegistry dataAccess) {
         this.presenter = presenter;
         this.dataAccess = dataAccess;
     }
@@ -26,7 +27,7 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
                 return;
             }
 
-            Room targetRoom = dataAccess.getRoomForQuickMode(roomId);
+            Room targetRoom = dataAccess.getRoomByID(roomId);
 
             if (targetRoom == null) {
                 presenter.prepareFailView("Could not load room with ID: " + roomId);
