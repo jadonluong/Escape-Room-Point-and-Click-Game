@@ -11,15 +11,15 @@ import java.util.Map;
 
 public class CommonRoom implements Room{
 
-    private List<Interactable> interactables;
-    private List<Item> items;
-
-    private List<Hint> hints;
-
     private final String Id;
     private final String description;
 
+    private List<Interactable> interactables;
+    private List<Item> items;
+    private List<Hint> hints;
+
     private final String imagePath;
+    private final Map<String,Position> positions;
 
 
 
@@ -32,14 +32,18 @@ public class CommonRoom implements Room{
         this.items = item;
         this.hints = hint;
         this.imagePath = imagePath;
+        this.positions = new HashMap<>();
     }
 
+    //Room Info
 
     @Override
     public String getId() { return Id; }
 
     @Override
     public String getDescription() { return description; }
+
+    //Interactable
 
     @Override
     public List<Interactable> getInteractables() {
@@ -69,6 +73,8 @@ public class CommonRoom implements Room{
         return null;
     }
 
+    //Item
+
     public List<Item> getItems() {
         return new ArrayList<>(items);
     }
@@ -83,6 +89,8 @@ public class CommonRoom implements Room{
         items.remove(item);
     }
 
+    //Hint
+
     @Override
     public List<Hint> getHints() {
         return hints;
@@ -93,7 +101,20 @@ public class CommonRoom implements Room{
         hints.add(hint);
     }
 
+    //Image
+
+    @Override
     public String getImagePath() { return imagePath; }
+
+    @Override
+    public void setPosition(String Id, String x, String y) {
+        this.positions.put(Id, new Position(x, y));
+    }
+
+    @Override
+    public Position getPosition(String Id) {
+        return positions.get(Id);
+    }
 
 }
 

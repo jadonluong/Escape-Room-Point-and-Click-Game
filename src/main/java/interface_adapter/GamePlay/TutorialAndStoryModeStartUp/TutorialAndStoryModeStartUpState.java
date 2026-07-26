@@ -1,20 +1,22 @@
 package interface_adapter.GamePlay.TutorialAndStoryModeStartUp;
 
+import application.use_cases.GamePlay.ObjectsInfo;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class TutorialAndStoryModeStartUpState {
-    private Map<String, String> objectsToDisplay = new HashMap<>();
+    private Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
     private String errorMessage = null;
 
 
     public TutorialAndStoryModeStartUpState() {}
 
-    public Map<String, String> getObjectsToDisplay() {
+    public Map<String, ObjectsInfo> getObjectsToDisplay() {
         return objectsToDisplay;
     }
 
-    public void setObjectsToDisplay(Map<String, String> objectsToDisplay) {
+    public void setObjectsToDisplay(Map<String, ObjectsInfo> objectsToDisplay) {
         this.objectsToDisplay = objectsToDisplay;
     }
 

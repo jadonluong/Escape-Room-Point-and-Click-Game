@@ -1,5 +1,6 @@
 package application.use_cases.GamePlay.QuickPlay.QuickModeStartUp;
 
+import application.use_cases.GamePlay.ObjectsInfo;
 import domain.entities.Room.Room;
 
 import java.util.HashMap;
@@ -32,17 +33,23 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
                 return;
             }
 
-            Map<String, String> objectsToDisplay = new HashMap<>();
+            Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
 
             // Fetch all data that is needed for rendering
             targetRoom.getInteractables().forEach(interactable -> {
-                objectsToDisplay.put(interactable.getId(), interactable.getImagePath());
+                objectsToDisplay.put(interactable.getId(),
+                        new ObjectsInfo(interactable.getImagePath(),
+                                targetRoom.getPosition(interactable.getId())));
             });
             targetRoom.getItems().forEach(item -> {
-                objectsToDisplay.put(item.getId(), item.getImagePath());
+                objectsToDisplay.put(item.getId(),
+                        new ObjectsInfo(item.getImagePath(),
+                                targetRoom.getPosition(item.getId())));
             });
             targetRoom.getHints().forEach(hint -> {
-                objectsToDisplay.put(hint.getObjectID(), hint.getImagePath());
+                objectsToDisplay.put(hint.getObjectID(),
+                        new ObjectsInfo(hint.getImagePath()
+                                ,targetRoom.getPosition(hint.getObjectID())));
             });
 
             QuickModeStartUpOutputData outputData = new QuickModeStartUpOutputData(objectsToDisplay);

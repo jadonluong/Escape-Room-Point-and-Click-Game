@@ -5,6 +5,7 @@ import domain.entities.Interactable.Interactable;
 import domain.entities.Item.Item;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Core domain interface representing a Room entity.
@@ -27,4 +28,6 @@ public interface Room {
     void setHint(Hint hint);
 
     String getImagePath();
+    void setPosition(String Id, String x, String y);
+    Position getPosition(String Id);
 }
