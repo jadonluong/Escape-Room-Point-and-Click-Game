@@ -12,7 +12,7 @@ import java.util.HashMap;
 public abstract class AbstractUser implements User {
     protected transient ArrayList<Item> itemInventory;
     protected transient ArrayList<Room> roomsUnlocked;
-    protected transient String currentRoomID;
+    protected String currentRoomID;
     protected transient String selectedItemID;
     protected HashMap<String, Integer> hintsWatched;
 

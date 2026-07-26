@@ -14,6 +14,7 @@ import domain.entities.Interactable.Interactable;
 import domain.entities.Interactable.InteractableFactory;
 import domain.entities.Item.Item;
 import domain.entities.Item.ItemFactory;
+import domain.entities.Room.Position;
 import domain.entities.Room.Room;
 import domain.entities.Room.RoomFactory;
 
@@ -161,6 +162,11 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
                 Room room = roomFactory.createRoom(roomId, data.description, data.imagePath,
                         interactableList, itemList, hintList);
 
+                for (Hint hint : room.getHints()) {
+                    room.setPosition(hint.getObjectID(), hint.getHintObjectPosition());
+                }
+
+                // TODO: add positions of interactables and items to room
                 masterRooms.put(roomId, room);
             }
         }
@@ -207,7 +213,7 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
                 String hintId = entry.getKey();
                 JsonHintData data = entry.getValue();
 
-                Hint hintObject = hintFactory.createHint(hintId, data.imagePath, data.hintMessages);
+                Hint hintObject = hintFactory.createHint(hintId, data.imagePath, data.hintMessages, data.position);
 
                 masterHints.put(hintId, hintObject);
             }
@@ -297,5 +303,6 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
     private static class JsonHintData {
         String imagePath;
         List<String> hintMessages;
+        Position position;
     }
 }

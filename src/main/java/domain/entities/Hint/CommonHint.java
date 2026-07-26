@@ -1,5 +1,7 @@
 package domain.entities.Hint;
 
+import domain.entities.Room.Position;
+
 import java.util.List;
 
 /**
@@ -9,11 +11,13 @@ public class CommonHint implements Hint{
     private final String objectID;
     private final List<String> hintMessages;
     private final String imagePath;
+    private Position position;
 
-    public CommonHint(String ID, String imagePath, List<String> hintMessages) {
+    public CommonHint(String ID, String imagePath, List<String> hintMessages, Position position) {
         this.objectID = ID;
         this.imagePath = imagePath;
         this.hintMessages = hintMessages;
+        this.position = position;
     }
 
     @Override
@@ -29,6 +33,11 @@ public class CommonHint implements Hint{
     @Override
     public int getHintMessageCount() {
         return this.hintMessages.size();
+    }
+
+    @Override
+    public Position getHintObjectPosition() {
+        return this.position;
     }
 
     @Override

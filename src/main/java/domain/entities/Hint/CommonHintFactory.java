@@ -1,5 +1,7 @@
 package domain.entities.Hint;
 
+import domain.entities.Room.Position;
+
 import java.util.List;
 
 /**
@@ -8,7 +10,7 @@ import java.util.List;
 public class CommonHintFactory implements HintFactory{
 
     @Override
-    public Hint createHint(String ID, String imagePath, List<String> messages) {
-        return new CommonHint(ID, imagePath, messages);
+    public Hint createHint(String ID, String imagePath, List<String> messages, Position position) {
+        return new CommonHint(ID, imagePath, messages, position);
     }
 }
