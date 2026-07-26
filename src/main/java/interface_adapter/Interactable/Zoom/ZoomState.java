@@ -4,8 +4,6 @@ public class ZoomState {
     private String name;
     private String description;
     private String sprite;
-
-    private boolean canInteract;
     private String interactLabel;
 
     public String getName() {
@@ -30,14 +28,6 @@ public class ZoomState {
 
     public void setSprite(String sprite) {
         this.sprite = sprite;
-    }
-
-    public boolean canInteract() {
-        return canInteract;
-    }
-
-    public void setCanInteract(boolean canInteract) {
-        this.canInteract = canInteract;
     }
 
     public String getInteractLabel() {
