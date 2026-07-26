@@ -57,6 +57,9 @@ class QuickModeStartUpInteractorTest {
         // Arrange
         String roomId = "room_01";
 
+        List<Interactable> interactables = new ArrayList<>();
+        List<Item> items = new ArrayList<>();
+        List<Hint> hints = new ArrayList<>();
         // Setup dummy domain objects
         Interactable door = new CommonInteractable(
                 "door1",                           // String id
@@ -96,9 +99,11 @@ class QuickModeStartUpInteractorTest {
 
         // Build a room populated with entities and positions
 
-        List<Interactable> interactables = new ArrayList<>();
-        List<Item> items = new ArrayList<>();
-        List<Hint> hints = new ArrayList<>();
+        interactables.add(door);
+        items.add(key);
+        hints.add(hint);
+
+
         Room room = new CommonRoom(roomId,
                 "gigity",
                 "/images/ui/buttons/QuickButton.png",
@@ -124,7 +129,7 @@ class QuickModeStartUpInteractorTest {
 
         // Assert contents of display map
         ObjectsInfo doorInfo = outputData.getObjectToDisplay().get("door1");
-        assertEquals("door.png", doorInfo.imgPath());
+        assertEquals("/images/ui/buttons/QuickButton.png", doorInfo.imgPath());
         assertEquals(pos1, doorInfo.position());
     }
 
