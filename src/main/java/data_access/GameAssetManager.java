@@ -104,7 +104,6 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
                 // Construct using the factory contract
                 Interactable interactable = interactableFactory.create(
                         id,
-                        data.imagePath,
                         data.defaultName,
                         data.defaultDescription,
                         data.defaultSprite,
@@ -290,7 +289,6 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
     }
 
     private static class JsonInteractableData {
-        String imagePath;
         String defaultName;
         String defaultDescription;
         String defaultSprite;

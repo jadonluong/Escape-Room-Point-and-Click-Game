@@ -89,7 +89,7 @@ This file explains what the databases could potentially look like.
 
 
 ## Interactable DB
-- Note: sample DB may need to change (still not sure what should be saved)
+- Note: sprite already stores image path
 - format: JSON file
 - sample DB:
   - {"interactableID_1": {
@@ -107,7 +107,6 @@ This file explains what the databases could potentially look like.
         "linkedPuzzleId": "...",
         "unlockedRoomId": "...",
         "successMessage": "...",
-        "imagePath": "file path of the interactable image"
         },
 
       "interactableID_2": {...}
