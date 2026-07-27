@@ -112,6 +112,11 @@ public class CommonRoom implements Room{
     }
 
     @Override
+    public void setPositions(Map<String,Position> positions) {
+        this.positions.putAll(positions);
+    }
+
+    @Override
     public Position getPosition(String Id) {
         return positions.get(Id);
     }

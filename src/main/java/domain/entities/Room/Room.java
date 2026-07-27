@@ -29,5 +29,6 @@ public interface Room {
 
     String getImagePath();
     void setPosition(String Id, Position position);
+    void setPositions(Map<String,Position> positions);
     Position getPosition(String Id);
 }
