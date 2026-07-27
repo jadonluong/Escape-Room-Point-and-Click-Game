@@ -162,15 +162,17 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
                 Room room = roomFactory.createRoom(roomId, data.description, data.imagePath,
                         interactableList, itemList, hintList);
 
-                for (Hint hint : room.getHints()) {
-                    List<Integer> positionList = hint.getHintObjectPosition();
-                    if (positionList != null && positionList.size() >= 2) {
-                        Position position = new Position(positionList.get(0), positionList.get(1));
-                        room.setPosition(hint.getObjectID(), position);
+                if (data.position != null) {
+                    for (Map.Entry<String, List<Integer>> positionEntry : data.position.entrySet()){
+                        String objectID = positionEntry.getKey();
+                        List<Integer> coordinates = positionEntry.getValue();
+
+                        if (coordinates != null && coordinates.size() >= 2) {
+                            Position pos = new Position(coordinates.get(0), coordinates.get(1));
+                            room.setPosition(objectID, pos);
+                        }
                     }
                 }
-
-                // TODO: add positions of interactables and items to room
                 masterRooms.put(roomId, room);
             }
         }
@@ -217,7 +219,7 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
                 String hintId = entry.getKey();
                 JsonHintData data = entry.getValue();
 
-                Hint hintObject = hintFactory.createHint(hintId, data.imagePath, data.hintMessages, data.position);
+                Hint hintObject = hintFactory.createHint(hintId, data.imagePath, data.hintMessages);
 
                 masterHints.put(hintId, hintObject);
             }
@@ -284,6 +286,7 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
         List<String> interactables;
         List<String> items;
         List<String> hints;
+        Map<String, List<Integer>> position;
     }
 
     private static class JsonInteractableData {
@@ -307,6 +310,5 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
     private static class JsonHintData {
         String imagePath;
         List<String> hintMessages;
-        List<Integer> position;
     }
 }
