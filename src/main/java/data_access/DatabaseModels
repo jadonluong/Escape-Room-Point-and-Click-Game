@@ -1,21 +1,31 @@
 This file explains what the databases could potentially look like.
+- TODO: take positions out of objects other than Room.
 
 ## User DB
 - format: JSON file
+- note: tutorial mode is not saved to db.
+- TODO: match db names with User attributes exactly
 - sample DB:
   - {"username_1": {
       "password": "string password",
       "ModeProgress": {
         "QuickMode": {
-            "roomsUnlocked": ["roomID_1", "roomID_2", ...],
-            "itemInventory": ["itemID_1", "itemID_2", ...],
-            "hintsWatched": {
-                "objectID_1": request_count(int),
-                "objectID_2": request_count(int),
-                ...}
+            "quickModeRoomsUnlocked": ["roomID_1", "roomID_2", ...],
+            "quickModeItemInventory": {
+                "roomID_1": ["itemID", ...],
+                "roomID_2": [...]
+            }
+            "quickModeHintsWatched": {
+                "roomID_1": {
+                    "objectID_1": request_count(int),
+                    "objectID_2": request_count(int),
+                ...},
+                "roomID_2": {...}
+            }
         }
         "StoryMode": {
             "currentRoomID": "roomID",
+            ""
             ...}
         }
       }
@@ -30,7 +40,6 @@ This file explains what the databases could potentially look like.
   - {"objectID_1": {
         "imagePath": "path",
         "hintMessages": ["hintMessage_1", "hintMessage_2", ...],
-        "position": [x, y]
         },
 
      "objectID_2": {...}
@@ -62,6 +71,7 @@ This file explains what the databases could potentially look like.
         "interactables": ["interactableID", ...],
         "items": ["itemID", ...],
         "imagePath": "string of the file path of the room image",
+        "position": ...the positions of each object in this room
         },
 
      "roomID_2/roomName_2": {...}

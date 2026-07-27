@@ -37,6 +37,7 @@ public class JsonUserDataAccessObject implements
 
     private final RoomRegistry roomRegistry;
     private final ItemRegistry itemRegistry;
+    private String currentUsername;
 
     public JsonUserDataAccessObject(RoomRegistry roomRegistry, ItemRegistry itemRegistry) {
         this.roomRegistry = roomRegistry;
@@ -82,12 +83,11 @@ public class JsonUserDataAccessObject implements
         if (!(user instanceof CommonUserFunction)) {
             throw new IllegalArgumentException("Cannot save a user with no password.");
         }
-        if (!(user instanceof CommonUser)) {
+        if (!(user instanceof CommonUser incomingUser)) {
             throw new IllegalArgumentException("Unsupported User implementation type.");
         }
 
         String username = user.getUsername();
-        CommonUser incomingUser = (CommonUser) user;
 
         users.put(username, incomingUser);
         persist();
@@ -102,39 +102,85 @@ public class JsonUserDataAccessObject implements
         return user;
     }
 
+    /**
+     * Retrieves the user and converts all JSON String IDs into live Room and Item domain objects
+     * for both Story Mode and Quick Mode.
+     */
     @Override
-    public User getUser(String username) {
+    public CommonUser getUser(String username) {
         CommonUser user = users.get(username);
 
-        user.getRoomsUnlocked().clear();
-        user.getItemInventory().clear();
+        if (user == null) {
+            throw new IllegalArgumentException("No such user: " + username);
+        }
+
+        // Safety check: ensure runtime memory fields are never null
+        user.initializeRuntimeState();
+
+        hydrateStoryModeLiveObjects(user);
+        hydrateQuickModeLiveObjects(user);
+
+        return user;
+    }
+
+    private void hydrateQuickModeLiveObjects(CommonUser user) {
+        user.setActiveGameMode("QuickMode");
 
         // Translate Room text IDs from the JSON file into active game Room objects
-        if (user.getRoomsUnlockedIDs() != null) {
-            for (String roomId : user.getRoomsUnlockedIDs()) {
+        if (user.getQuickModeRoomsUnlockedIDs() != null) {
+            for (String roomId : user.getQuickModeRoomsUnlockedIDs()) {
                 Room room = roomRegistry.getRoomByID(roomId);
                 if (room != null) {
-                    // Leverages the built-in unlockRoom method inside AbstractUser to fill lists cleanly
                     user.unlockRoom(room);
                 }
             }
         }
 
         // Translate Item text IDs from the JSON file into active game Item objects
-        if (user.getItemInventoryIDs() != null) {
-            for (String itemId : user.getItemInventoryIDs()) {
-                Item item = itemRegistry.getItemByID(itemId);
-                if (item != null) {
-                    // Leverages the built-in saveItem method inside AbstractUser to fill lists cleanly
-                    user.saveItem(item);
+        if (user.getQuickModeItemInventoryIDs() != null) {
+            for (Map.Entry<String, ArrayList<String>> entry : user.getQuickModeItemInventoryIDs().entrySet()) {
+                String roomID = entry.getKey();
+                user.saveCurrentRoomID(roomID);
+
+                // Instantiate every item collected in the room with roomID
+                for (String itemID : entry.getValue()) {
+                    Item item = itemRegistry.getItemByID(itemID);
+                    if (item != null) {
+                        user.saveItem(item);
+                    }
+                }
+            }
+        }
+        // Hints require no work here; Gson has already restored the hintsWatched map safely
+        user.saveCurrentRoomID(null);
+        user.setActiveGameMode(null);
+    }
+
+    private void hydrateStoryModeLiveObjects(CommonUser user) {
+        user.setActiveGameMode("StoryMode");
+        if (user.getStoryModeRoomsUnlockedIDs() != null) {
+            for (String roomId : user.getStoryModeRoomsUnlockedIDs()) {
+                Room room = roomRegistry.getRoomByID(roomId);
+                if (room != null) {
+                    user.unlockRoom(room);
                 }
             }
         }
 
-        // Hints require no work here; Gson has already restored the hintsWatched map safely
-        return user;
+        if (user.getStoryModeItemInventoryIDs() != null) {
+            for (String itemId : user.getStoryModeItemInventoryIDs()) {
+                Item item = itemRegistry.getItemByID(itemId);
+                if (item != null) {
+                    user.saveItem(item);
+                }
+            }
+        }
+        // No hint hydration needed.
+        // Gson already populated storyModeHintsWatched and quickModeHintsWatched directly into the user object.
+        user.setActiveGameMode(null);
     }
 
+    // TODO: update saveProgress with new user structure
     @Override
     public void saveProgress(String username,
                              ArrayList<String> roomIDs,
@@ -146,13 +192,13 @@ public class JsonUserDataAccessObject implements
             throw new IllegalArgumentException("Cannot save progress. No such user: " + username);
         }
 
-        user.setRoomsUnlockedIDs(roomIDs);
-        user.setItemInventoryIDs(itemIDs);
-        user.setHintsWatched(hints);
+        user.setQuickModeRoomsUnlockedIDs(roomIDs);
+        user.setStoryModeItemInventoryIDs(itemIDs);
+        user.setStoryModeHintsWatched(hints);
         persist();
     }
 
-    private String currentUsername;
+
 
     @Override
     public String getCurrentUsername() {

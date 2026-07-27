@@ -1,7 +1,7 @@
 package application.use_cases.User.Login;
 
+import domain.entities.User.CommonUser;
 import domain.entities.User.CommonUserFunction;
-import domain.entities.User.User;
 
 /**
  * DAO for the Login Use Case.
@@ -19,7 +19,7 @@ public interface LoginUserDataAccessInterface {
      * @param username the username to look up
      * @return the user with the given username
      */
-    User getUser(String username);
+    CommonUser getUser(String username);
 
     /**
      * Checks if the given username exists.

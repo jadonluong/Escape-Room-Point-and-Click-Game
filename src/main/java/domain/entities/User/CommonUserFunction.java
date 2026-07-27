@@ -2,6 +2,8 @@ package domain.entities.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Interface for getting the password of common user.
@@ -15,38 +17,63 @@ public interface CommonUserFunction {
     String getPassword();
 
     /**
-     * Sets the list of room IDs for data saving.
+     * Sets the list of rooms (as their IDs) the user unlocked in quick mode.
      * @param roomIDs the IDs of the rooms the user unlocked
      */
-    void setRoomsUnlockedIDs(ArrayList<String> roomIDs);
+    void setQuickModeRoomsUnlockedIDs(ArrayList<String> roomIDs);
 
     /**
-     * Sets the list of item IDs for data saving.
+     * Sets the list of items (as their IDs) the user collected in each unlocked room in quick mode.
+     * @param itemIDs the list of items (as their IDs) the user collected in each unlocked room in quick mode
+     */
+    void setQuickModeItemInventoryIDs(HashMap<String, ArrayList<String>> itemIDs);
+
+    /**
+     * Sets the hints the user watched in each room in quick mode.
+     * @param hints the hints the user watched in each room in quick mode
+     */
+    void setQuickModeHintsWatched(Map<String, HashMap<String, Integer>> hints);
+
+    /**
+     * Sets the list  of rooms (as their IDs) the user unlocked in story mode.
+     * @param roomIDs the list  of rooms (as their IDs) the user unlocked in story mode
+     */
+    void setStoryModeRoomsUnlockedIDs(ArrayList<String> roomIDs);
+
+    /**
+     * Sets the list of items (as their IDs) the user collected in story mode.
      * @param itemIDs the IDs of the items the user collected
      */
-    void setItemInventoryIDs(ArrayList<String> itemIDs);
+    void setStoryModeItemInventoryIDs(ArrayList<String> itemIDs);
 
     /**
-     * Sets the hints the user has watched.
+     * Sets the hints the user has watched in story mode.
      * @param hints the hints the user has watched (objectID -> request count)
      */
-    void setHintsWatched(HashMap<String, Integer> hints);
+    void setStoryModeHintsWatched(HashMap<String, Integer> hints);
 
     /**
-     * Returns the list of unlocked room IDs.
+     * Returns the list of unlocked room IDs in quick mode.
      * @return the list of unlocked room IDs
      */
-    ArrayList<String> getRoomsUnlockedIDs();
+    List<String> getQuickModeRoomsUnlockedIDs();
 
     /**
-     * Returns the list of collected item IDs.
-     * @return the list of collected item IDs
+     * Returns the list of collected item IDs of each unlocked room in quick mode.
+     * @return the map of collected item IDs of each unlocked room
      */
-    ArrayList<String> getItemInventoryIDs();
+    Map<String, ArrayList<String>> getQuickModeItemInventoryIDs();
 
     /**
-     * Returns the hints the user has watched.
-     * @return the hints the user has watched (objectID -> request count)
+     * Returns the list of unlocked room IDs in story mode.
+     * @return the list of unlocked room IDs
      */
-    HashMap<String, Integer> getHintsWatched();
+    List<String> getStoryModeRoomsUnlockedIDs();
+
+    /**
+     * Returns the list of item IDs in story mode.
+     * @return the list of item IDs
+     */
+    List<String> getStoryModeItemInventoryIDs();
+
 }

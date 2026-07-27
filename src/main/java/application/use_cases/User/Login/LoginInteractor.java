@@ -1,22 +1,20 @@
 package application.use_cases.User.Login;
 
-import domain.entities.User.CommonUserFactory;
-import domain.entities.User.User;
+import domain.entities.User.CommonUser;
 
 /**
  * The Login interactor.
  */
+
+// TODO: take commonUserFactory out of app builder
 public class LoginInteractor implements LoginInputBoundary{
     private final LoginUserDataAccessInterface userDataAccessObject;
     private final LoginOutputBoundary userPresenter;
-    private final CommonUserFactory commonUserFactory;
 
     public LoginInteractor(LoginUserDataAccessInterface loginUserDataAccessInterface,
-                           LoginOutputBoundary loginPresenter,
-                           CommonUserFactory userFactory) {
+                           LoginOutputBoundary loginPresenter) {
         this.userDataAccessObject = loginUserDataAccessInterface;
         this.userPresenter = loginPresenter;
-        this.commonUserFactory = userFactory;
     }
 
     @Override
@@ -43,12 +41,9 @@ public class LoginInteractor implements LoginInputBoundary{
                 return;
             }
 
-            User commonUser = commonUserFactory.restoreCommonUser(username, password,
-                    userDataAccessObject.getUser(username).getItemInventory(),
-                    userDataAccessObject.getUser(username).getRoomsUnlocked(),
-                    userDataAccessObject.getUser(username).getHintsWatched());
+            CommonUser loadedUser = userDataAccessObject.getUser(username);
 
-            final LoginOutputData outputData = new LoginOutputData(commonUser, false);
+            final LoginOutputData outputData = new LoginOutputData(loadedUser, false);
             userPresenter.prepareSuccessView(outputData);
         }
     }
