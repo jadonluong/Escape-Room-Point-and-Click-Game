@@ -1,4 +1,4 @@
-package view.InGame;
+package view.Game;
 
 import application.use_cases.GamePlay.QuickPlay.BrowseRooms.RoomInfo;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsState;
@@ -19,7 +19,6 @@ import view.ViewManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 
 public class BrowseRoomsView extends StackPane implements PropertyChangeListener {
