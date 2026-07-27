@@ -162,8 +162,8 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
                 Room room = roomFactory.createRoom(roomId, data.description, data.imagePath,
                         interactableList, itemList, hintList);
 
-                if (data.position != null) {
-                    for (Map.Entry<String, List<Integer>> positionEntry : data.position.entrySet()){
+                if (data.positions != null) {
+                    for (Map.Entry<String, List<Integer>> positionEntry : data.positions.entrySet()){
                         String objectID = positionEntry.getKey();
                         List<Integer> coordinates = positionEntry.getValue();
 
@@ -286,7 +286,7 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
         List<String> interactables;
         List<String> items;
         List<String> hints;
-        Map<String, List<Integer>> position;
+        Map<String, List<Integer>> positions;
     }
 
     private static class JsonInteractableData {

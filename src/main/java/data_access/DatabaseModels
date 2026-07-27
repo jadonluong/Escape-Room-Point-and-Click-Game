@@ -1,10 +1,8 @@
 This file explains what the databases could potentially look like.
-- TODO: take positions out of objects other than Room.
 
 ## User DB
 - format: JSON file
 - note: tutorial mode is not saved to db.
-- TODO: match db names with User attributes exactly
 - sample DB:
   - {"username_1": {
       "password": "string password",
@@ -24,11 +22,13 @@ This file explains what the databases could potentially look like.
             }
         }
         "StoryMode": {
-            "currentRoomID": "roomID",
-            ""
-            ...}
+            "storyModeRoomsUnlocked": [...],
+            "storyModeItemInventory": [...],
+            "storyModeHintsWatched": [...],
+            "storyModeCurrentRoomID": "roomID",
         }
       }
+  }
 
       "username_2": {...}
   }
@@ -53,8 +53,7 @@ This file explains what the databases could potentially look like.
         "name": "itemName",
         "description": "description of item",
         "craftable": true/false,
-        "imagePath": "the file path of the image of the item",
-        "position": [x, y]
+        "imagePath": "the file path of the image of the item"
         },
 
      "itemID_2": {...}
@@ -70,8 +69,9 @@ This file explains what the databases could potentially look like.
         "description": "description of the room",
         "interactables": ["interactableID", ...],
         "items": ["itemID", ...],
+        "hints": ["objectID", ...],
         "imagePath": "string of the file path of the room image",
-        "position": ...the positions of each object in this room
+        "positions": ...the positions of each object in this room
         },
 
      "roomID_2/roomName_2": {...}
@@ -107,8 +107,7 @@ This file explains what the databases could potentially look like.
         "linkedPuzzleId": "...",
         "unlockedRoomId": "...",
         "successMessage": "...",
-        "imagePath": "file path of the interactable image",
-        "position": [x, y]
+        "imagePath": "file path of the interactable image"
         },
 
       "interactableID_2": {...}
