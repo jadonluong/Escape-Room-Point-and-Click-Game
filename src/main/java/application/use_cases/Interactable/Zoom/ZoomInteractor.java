@@ -16,14 +16,9 @@ public class ZoomInteractor implements ZoomInputBoundary {
     public void zoomIn(ZoomInputData inputData) {
         Interactable interactable = dataAccess.getInteractableById(inputData.getInteractableId());
 
-        boolean canInteract = true;
+        String interactLabel = "Interact";
         if (interactable.getRewardItemId() == null && interactable.getSuccessMessage() == null
                 && interactable.getUnlockedRoomId() == null && interactable.getLinkedPuzzleId() == null) {
-            canInteract = false;
-        }
-
-        String interactLabel = "Interact";
-        if (!canInteract) {
             interactLabel = null;
         } else if (interactable.needsItem() && !interactable.isInteracted()) {
             interactLabel = "Use Item";
@@ -34,7 +29,7 @@ public class ZoomInteractor implements ZoomInputBoundary {
         }
 
         ZoomOutputData outputData = new ZoomOutputData(interactable.getName(), interactable.getDescription(),
-                interactable.getSprite(), canInteract, interactLabel);
+                interactable.getSprite(), interactLabel);
         outputBoundary.prepareZoomInView(outputData);
     }
 
