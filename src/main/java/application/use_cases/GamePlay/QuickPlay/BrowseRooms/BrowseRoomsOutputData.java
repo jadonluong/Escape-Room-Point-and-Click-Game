@@ -1,16 +1,17 @@
 package application.use_cases.GamePlay.QuickPlay.BrowseRooms;
 
 import java.util.List;
+import java.util.Map;
 
 public class BrowseRoomsOutputData {
 
-    public List<String> Ids;
+    public Map<String,RoomInfo> Info;
 
-    public BrowseRoomsOutputData(List<String> Ids) {
-        this.Ids = Ids;
+    public BrowseRoomsOutputData(Map<String,RoomInfo> Info) {
+        this.Info = Info;
     }
 
-    public List<String> getIds() {
-        return Ids;
+    public Map<String,RoomInfo> getInfo() {
+        return Info;
     }
 }

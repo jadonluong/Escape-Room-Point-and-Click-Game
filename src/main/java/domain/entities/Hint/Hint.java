@@ -1,5 +1,7 @@
 package domain.entities.Hint;
 
+import java.util.List;
+
 /**
  * The representation of a hint in the program.
  */
@@ -28,4 +30,11 @@ public interface Hint {
      * @return the number of hint messages this hint object has
      */
     int getHintMessageCount();
+
+    /**
+     * Returns the coordinates of the hint object image position in a room.
+     *
+     * @return the coordinates of the hint object image position in a room as a list, the first number is the x coordinate and the second is the y coordinate
+     */
+    List<Integer> getHintObjectPosition();
 }

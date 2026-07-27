@@ -1,5 +1,6 @@
 package view.InGame;
 
+import application.use_cases.GamePlay.QuickPlay.BrowseRooms.RoomInfo;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsState;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsViewModel;
 import javafx.geometry.Pos;
@@ -19,6 +20,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 public class BrowseRoomsView extends StackPane implements PropertyChangeListener {
 
@@ -100,13 +102,13 @@ public class BrowseRoomsView extends StackPane implements PropertyChangeListener
         errorLabel.setText("");
 
         // Handle Error State
-        if (state.getError() != null && !state.getError().isEmpty()) {
-            errorLabel.setText(state.getError());
+        if (state.getErrorMessage() != null && !state.getErrorMessage().isEmpty()) {
+            errorLabel.setText(state.getErrorMessage());
             return;
         }
 
-        List<String> roomIds = state.getRoomIds();
-        if (roomIds == null || roomIds.isEmpty()) {
+        Map<String, RoomInfo> roomInfos = state.getRoomInfo();
+        if (roomInfos == null || roomInfos.isEmpty()) {
             return;
         }
 
@@ -117,16 +119,21 @@ public class BrowseRoomsView extends StackPane implements PropertyChangeListener
         double cardHeight = 280;
         double spacingY = 40;
 
-        for (int i = 0; i < roomIds.size(); i++) {
-            String roomId = roomIds.get(i);
+        int i = 0;
+        for (Map.Entry<String, RoomInfo> entry : roomInfos.entrySet()) {
+            String roomId = entry.getKey();
+            RoomInfo roomInfo = entry.getValue();
             double currentY = startY + (i * (cardHeight + spacingY));
 
-            Pane roomCard = createRoomCard(roomId, startX, currentY, cardWidth, cardHeight);
+            Pane roomCard = createRoomCard(roomId, roomInfo, startX, currentY, cardWidth, cardHeight);
             roomCardsContainer.getChildren().add(roomCard);
+
+            i++;
         }
     }
 
-    private Pane createRoomCard(String roomId, double x, double y, double width, double height) {
+    //TODO: Some value here might need to be adjust.
+    private Pane createRoomCard(String roomId, RoomInfo info, double x, double y, double width, double height) {
         Pane card = new Pane();
         card.setLayoutX(x);
         card.setLayoutY(y);
@@ -145,12 +152,17 @@ public class BrowseRoomsView extends StackPane implements PropertyChangeListener
         nameLabel.setLayoutX(50);
         nameLabel.setLayoutY(40);
 
-        //TODO: This might need to change if we want to display different img for each choice.
-        ImageView playButton = makeButton("Button", 500, 180, 2030, 50, () -> {
+        Label descriptionLabel = new Label("Description:" + info.description());
+        nameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 48));
+        nameLabel.setTextFill(Color.WHITE);
+        nameLabel.setLayoutX(100);
+        nameLabel.setLayoutY(80);
+
+        ImageView playButton = makeButton(info.imagePath(), 500, 180, 2030, 50, () -> {
             onRoomSelected(roomId);
         });
 
-        card.getChildren().addAll(cardBg, nameLabel, playButton);
+        card.getChildren().addAll(cardBg, nameLabel, descriptionLabel, playButton);
         return card;
     }
 

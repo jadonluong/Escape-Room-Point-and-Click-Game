@@ -5,15 +5,23 @@ This file explains what the databases could potentially look like.
 - sample DB:
   - {"username_1": {
       "password": "string password",
-      "roomsUnlocked": ["roomID_1", "roomID_2", ...],
-      "itemInventory": ["itemID_1", "itemID_2", ...],
-      "hintsWatched": {
-          "objectID_1": request_count(int),
-          "objectID_2": request_count(int),
-          ...},
+      "ModeProgress": {
+        "QuickMode": {
+            "roomsUnlocked": ["roomID_1", "roomID_2", ...],
+            "itemInventory": ["itemID_1", "itemID_2", ...],
+            "hintsWatched": {
+                "objectID_1": request_count(int),
+                "objectID_2": request_count(int),
+                ...}
+        }
+        "StoryMode": {
+            "currentRoomID": "roomID",
+            ...}
+        }
+      }
 
       "username_2": {...}
-     }
+  }
 
 
 ## Hints DB
@@ -21,12 +29,12 @@ This file explains what the databases could potentially look like.
 - sample DB:
   - {"objectID_1": {
         "imagePath": "path",
-        "hintMessages": ["hintMessage_1", "hintMessage_2", ...]
+        "hintMessages": ["hintMessage_1", "hintMessage_2", ...],
+        "position": [x, y]
         },
 
      "objectID_2": {...}
      }
-- TODO: add hint objects to room.
 - update: may be used somewhere in HintOverlay for view.
 
 ## Item DB
@@ -36,7 +44,8 @@ This file explains what the databases could potentially look like.
         "name": "itemName",
         "description": "description of item",
         "craftable": true/false,
-        "imagePath": "the file path of the image of the item"
+        "imagePath": "the file path of the image of the item",
+        "position": [x, y]
         },
 
      "itemID_2": {...}
@@ -88,7 +97,8 @@ This file explains what the databases could potentially look like.
         "linkedPuzzleId": "...",
         "unlockedRoomId": "...",
         "successMessage": "...",
-        "imagePath": "file path of the interactable image"
+        "imagePath": "file path of the interactable image",
+        "position": [x, y]
         },
 
       "interactableID_2": {...}

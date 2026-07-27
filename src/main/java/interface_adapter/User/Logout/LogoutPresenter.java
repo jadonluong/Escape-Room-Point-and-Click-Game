@@ -4,6 +4,10 @@ import application.use_cases.User.Logout.LogoutOutputBoundary;
 import application.use_cases.User.Logout.LogoutOutputData;
 import application.use_cases.User.SaveAndLogout.SaveAndLogoutOutputBoundary;
 import application.use_cases.User.SaveAndLogout.SaveAndLogoutOutputData;
+import interface_adapter.User.LoggedIn.LoggedInState;
+import interface_adapter.User.LoggedIn.LoggedInViewModel;
+import interface_adapter.User.MainMenu.MainMenuState;
+import interface_adapter.User.MainMenu.MainMenuViewModel;
 import interface_adapter.User.SaveProgress.SaveProgressViewModel;
 import interface_adapter.ViewManagerModel;
 

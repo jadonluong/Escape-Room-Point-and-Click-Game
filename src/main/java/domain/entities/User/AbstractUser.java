@@ -12,7 +12,7 @@ import java.util.HashMap;
 public abstract class AbstractUser implements User {
     protected transient ArrayList<Item> itemInventory;
     protected transient ArrayList<Room> roomsUnlocked;
-    protected transient String currentRoomID;
+    protected String currentRoomID;
     protected transient String selectedItemID;
     protected HashMap<String, Integer> hintsWatched;
 
@@ -31,6 +31,9 @@ public abstract class AbstractUser implements User {
 
     @Override
     public ArrayList<Room> getRoomsUnlocked() {
+        if (this.roomsUnlocked == null) {
+            this.roomsUnlocked = new ArrayList<>();
+        }
         return this.roomsUnlocked;
     }
 
@@ -43,6 +46,9 @@ public abstract class AbstractUser implements User {
 
     @Override
     public ArrayList<Item> getItemInventory() {
+        if (this.itemInventory == null) {
+            this.itemInventory = new ArrayList<>();
+        }
         return this.itemInventory;
     }
 

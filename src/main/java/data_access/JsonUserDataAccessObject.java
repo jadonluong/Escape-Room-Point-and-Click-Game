@@ -5,6 +5,8 @@ import application.game_registry.RoomRegistry;
 import application.use_cases.User.Login.LoginUserDataAccessInterface;
 import application.use_cases.User.SaveProgress.SaveProgressUserDataAccessInterface;
 import application.use_cases.User.SignUp.SignupUserDataAccessInterface;
+import application.use_cases.User.Logout.LogoutUserDataAccessInterface;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -26,6 +28,7 @@ import java.util.Map;
 public class JsonUserDataAccessObject implements
         LoginUserDataAccessInterface,
         SignupUserDataAccessInterface,
+        LogoutUserDataAccessInterface,
         SaveProgressUserDataAccessInterface {
 
     private static final String FILE_PATH = "data/users.json";
@@ -148,4 +151,17 @@ public class JsonUserDataAccessObject implements
         user.setHintsWatched(hints);
         persist();
     }
+
+    private String currentUsername;
+
+    @Override
+    public String getCurrentUsername() {
+        return currentUsername;
+    }
+
+    @Override
+    public void setCurrentUsername(String username) {
+        this.currentUsername = username;
+    }
+
 }

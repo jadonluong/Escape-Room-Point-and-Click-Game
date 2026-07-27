@@ -10,8 +10,8 @@ import java.util.HashMap;
  * The CommonUser class that extends the AbstractUser class and implements the CommonUserFunction interface.
  */
 public class CommonUser extends AbstractUser implements CommonUserFunction{
-    private final String username;
-    private final String password;
+    private String username;
+    private String password;
     private ArrayList<String> jsonItemInventory = new ArrayList<>();
     private ArrayList<String> jsonRoomsUnlocked = new ArrayList<>();
 

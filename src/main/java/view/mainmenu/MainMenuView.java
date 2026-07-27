@@ -1,35 +1,63 @@
 package view.mainmenu;
 
+import interface_adapter.User.LoggedIn.LoggedInViewModel;
+import interface_adapter.User.MainMenu.MainMenuViewModel;
+import interface_adapter.ViewManagerModel;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import view.ViewManager;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+import view.common.AudioControlView;
 import view.common.ModalOverlay;
 import view.common.OverlayFactory;
-import view.common.PlaceholderView;
 
-public class MainMenuView extends StackPane {
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+public class MainMenuView extends StackPane implements PropertyChangeListener {
 
     private static final double DESIGN_WIDTH = 2907;
     private static final double DESIGN_HEIGHT = 2040;
 
     private final Pane fixedRoot = new Pane();
 
-    private final ViewManager viewManager;
+    private final ViewManagerModel viewManagerModel;
+    private final MainMenuViewModel mainMenuViewModel;
+    private final LoggedInViewModel loggedInViewModel;
     private final OverlayFactory loginOverlayFactory;
     private final OverlayFactory signupOverlayFactory;
+    private final Runnable onLogout;
 
-    public MainMenuView(ViewManager viewManager,
+    private final Label statusLabel = new Label();
+    private final PauseTransition statusBannerTimer = new PauseTransition(Duration.seconds(15));
+    private final Label usernameLabel = new Label();
+    private final ImageView signupButton;
+    private final ImageView loginButton;
+    private final ImageView logoutButton;
+
+    public MainMenuView(ViewManagerModel viewManagerModel,
+                        MainMenuViewModel mainMenuViewModel,
+                        LoggedInViewModel loggedInViewModel,
                         OverlayFactory loginOverlayFactory,
-                        OverlayFactory signupOverlayFactory) {
+                        OverlayFactory signupOverlayFactory,
+                        Runnable onLogout,
+                        AudioControlView audioControlView) {
 
-        this.viewManager = viewManager;
+        this.viewManagerModel = viewManagerModel;
+        this.mainMenuViewModel = mainMenuViewModel;
+        this.loggedInViewModel = loggedInViewModel;
         this.loginOverlayFactory = loginOverlayFactory;
         this.signupOverlayFactory = signupOverlayFactory;
+        this.onLogout = onLogout;
+
+        mainMenuViewModel.addPropertyChangeListener(this);
+        loggedInViewModel.addPropertyChangeListener(this);
 
         fixedRoot.setPrefSize(DESIGN_WIDTH, DESIGN_HEIGHT);
         fixedRoot.setMinSize(DESIGN_WIDTH, DESIGN_HEIGHT);
@@ -38,22 +66,47 @@ public class MainMenuView extends StackPane {
         ImageView bg = new ImageView(loadImage("/images/ui/backgrounds/MainMenuUnloggedBG.png"));
         bg.setFitWidth(DESIGN_WIDTH);
         bg.setFitHeight(DESIGN_HEIGHT);
-
         fixedRoot.getChildren().add(bg);
 
+        statusLabel.setStyle(
+                "-fx-font-size: 64px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;" +
+                        "-fx-background-color: white; -fx-background-radius: 16; -fx-padding: 24 48;"
+        );
+        statusLabel.setLayoutY(60);
+        statusLabel.setCursor(Cursor.HAND);
+        statusLabel.setVisible(false);
+        statusLabel.setManaged(false);
+
+        // Keeps it horizontally centered regardless of message length, since width
+        // isn't known until the label actually renders its text.
+        statusLabel.layoutXProperty().bind(
+                statusLabel.widthProperty().negate().divide(2).add(DESIGN_WIDTH / 2)
+        );
+
+        statusLabel.setOnMouseClicked(e -> dismissStatusBanner());
+        statusBannerTimer.setOnFinished(e -> dismissStatusBanner());
+
+        usernameLabel.setStyle("-fx-font-size: 60px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;");
+        usernameLabel.setLayoutX(2093);
+        usernameLabel.setLayoutY(20);
+        usernameLabel.setMinWidth(715);
+        usernameLabel.setAlignment(Pos.CENTER_RIGHT);
+
+        signupButton = makeButton("/images/ui/buttons/SignupButton.png", 715, 272, 2093, 40, this::onSignUp);
+        loginButton = makeButton("/images/ui/buttons/LoginButton.png", 715, 272, 2093, 340, this::onLogin);
+        logoutButton = makeButton("/images/ui/buttons/LogoutButton.png", 715, 235, 2093, 130, this.onLogout);
+
+        audioControlView.setLayoutX(2280);
+        audioControlView.setLayoutY(1850);
+
         fixedRoot.getChildren().addAll(
-                makeButton("/images/ui/buttons/SignupButton.png", 715, 272, 2093,
-                        40, this::onSignUp),
-                makeButton("/images/ui/buttons/LoginButton.png", 715, 272, 2093,
-                        340, this::onLogin),
-                makeButton("/images/ui/buttons/StoryButton.png", 1271, 444, 145, 600,
-                        () -> this.viewManager.show(new PlaceholderView("Story Line", this.viewManager, this))),
-                makeButton("/images/ui/buttons/TutorialButton.png", 1271, 444, 145, 1080,
-                        () -> this.viewManager.show(new PlaceholderView("Tutorial", this.viewManager, this))),
-                makeButton("/images/ui/buttons/QuickButton.png", 1271, 444, 145, 1560,
-                        () -> this.viewManager.show(new PlaceholderView("Quick Game", this.viewManager, this))),
-                makeButton("/images/ui/buttons/QuitButton.png", 717, 272, 2093, 1775,
-                        Platform::exit)
+                statusLabel, usernameLabel,
+                signupButton, loginButton, logoutButton,
+                makeButton("/images/ui/buttons/StoryButton.png", 1271, 444, 145, 600, () -> navigateTo("story")),
+                makeButton("/images/ui/buttons/TutorialButton.png", 1271, 444, 145, 1080, () -> navigateTo("tutorial")),
+                makeButton("/images/ui/buttons/QuickButton.png", 1271, 444, 145, 1560, () -> navigateTo("quick game")),
+                makeButton("/images/ui/buttons/QuitButton.png", 717, 272, 2093, 1775, Platform::exit),
+                audioControlView
         );
 
         getChildren().add(fixedRoot);
@@ -61,6 +114,55 @@ public class MainMenuView extends StackPane {
 
         widthProperty().addListener((o, ov, nv) -> rescale());
         heightProperty().addListener((o, ov, nv) -> rescale());
+
+        updateAuthSection(); // set correct initial visibility before first paint
+    }
+
+    private void navigateTo(String viewName) {
+        viewManagerModel.setState(viewName);
+        viewManagerModel.firePropertyChanged();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        updateStatusBanner();
+        updateAuthSection();
+    }
+
+    private void updateStatusBanner() {
+        String message = mainMenuViewModel.getState().getStatusMessage();
+        boolean show = message != null && !message.isEmpty();
+
+        if (show) {
+            statusLabel.setText(message);
+            statusLabel.setVisible(true);
+            statusLabel.setManaged(true);
+            statusBannerTimer.stop();
+            statusBannerTimer.playFromStart();
+        } else {
+            dismissStatusBanner();
+        }
+    }
+
+    private void dismissStatusBanner() {
+        statusLabel.setVisible(false);
+        statusLabel.setManaged(false);
+        statusBannerTimer.stop();
+    }
+
+    private void updateAuthSection() {
+        boolean loggedIn = loggedInViewModel.getState().isLoggedIn();
+
+        signupButton.setVisible(!loggedIn);
+        signupButton.setManaged(!loggedIn);
+        loginButton.setVisible(!loggedIn);
+        loginButton.setManaged(!loggedIn);
+
+        logoutButton.setVisible(loggedIn);
+        logoutButton.setManaged(loggedIn);
+        usernameLabel.setVisible(loggedIn);
+        usernameLabel.setManaged(loggedIn);
+        usernameLabel.setText("Username: " + loggedInViewModel.getState().getUsername());
     }
 
     private ImageView makeButton(String resourcePath, double imgWidth, double imgHeight,
@@ -111,6 +213,11 @@ public class MainMenuView extends StackPane {
         showOverlay(loginOverlayFactory.create(this::closeOverlay));
     }
 
+    public void switchFromSignupToLogin() {
+        closeOverlay();
+        showOverlay(loginOverlayFactory.create(this::closeOverlay));
+    }
+
     private void showOverlay(ModalOverlay overlay) {
         if (currentOverlay != null) getChildren().remove(currentOverlay);
         currentOverlay = overlay;
@@ -124,10 +231,4 @@ public class MainMenuView extends StackPane {
             currentOverlay = null;
         }
     }
-
-    public void switchFromSignupToLogin() {
-        closeOverlay();
-        showOverlay(loginOverlayFactory.create(this::closeOverlay));
-    }
-
 }
