@@ -17,15 +17,15 @@ public abstract class AbstractUser implements User {
     // The live game storage for quick mode
     protected transient ArrayList<Room> quickModeLiveRoomsUnlocked = new ArrayList<>();
     protected transient Map<String, ArrayList<Item>> quickModeLiveItemInventory = new HashMap<>();
-    protected Map<String, HashMap<String, Integer>> quickModeHintsWatched = new HashMap<>();
+    protected transient Map<String, HashMap<String, Integer>> quickModeHintsWatched = new HashMap<>();
 
     // The live game storage for story mode
     protected transient ArrayList<Room> storyModeLiveRoomsUnlocked = new ArrayList<>();
     protected transient ArrayList<Item> storyModeLiveItemInventory = new ArrayList<>();
-    protected HashMap<String, Integer> storyModeHintsWatched = new HashMap<>();
+    protected transient HashMap<String, Integer> storyModeHintsWatched = new HashMap<>();
 
     protected transient String currentRoomID;
-    protected String storyModeCurrentRoomID; // this is saved to db for common users
+    protected transient String storyModeCurrentRoomID; // A copy of this is in common user which is saved in db.
     protected transient String selectedItemID;
 
     public AbstractUser() {
@@ -190,7 +190,10 @@ public abstract class AbstractUser implements User {
         }
     }
 
-    // TODO: add comment
+    /*This method returns the hints the user watched.
+    If they are in story mode: all the hints they've watched;
+    If they are in quick mode, the hints they've watched in the room they are currently in.
+     */
     @Override
     public HashMap<String, Integer> getHintsWatched() {
         if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {

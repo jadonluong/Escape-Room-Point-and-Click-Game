@@ -20,13 +20,13 @@ public interface CommonUserFunction {
      * Sets the list of rooms (as their IDs) the user unlocked in quick mode.
      * @param roomIDs the IDs of the rooms the user unlocked
      */
-    void setQuickModeRoomsUnlockedIDs(ArrayList<String> roomIDs);
+    void setQuickModeRoomsUnlockedIDs(List<String> roomIDs);
 
     /**
      * Sets the list of items (as their IDs) the user collected in each unlocked room in quick mode.
      * @param itemIDs the list of items (as their IDs) the user collected in each unlocked room in quick mode
      */
-    void setQuickModeItemInventoryIDs(HashMap<String, ArrayList<String>> itemIDs);
+    void setQuickModeItemInventoryIDs(Map<String, ArrayList<String>> itemIDs);
 
     /**
      * Sets the hints the user watched in each room in quick mode.
@@ -38,13 +38,13 @@ public interface CommonUserFunction {
      * Sets the list  of rooms (as their IDs) the user unlocked in story mode.
      * @param roomIDs the list  of rooms (as their IDs) the user unlocked in story mode
      */
-    void setStoryModeRoomsUnlockedIDs(ArrayList<String> roomIDs);
+    void setStoryModeRoomsUnlockedIDs(List<String> roomIDs);
 
     /**
      * Sets the list of items (as their IDs) the user collected in story mode.
      * @param itemIDs the IDs of the items the user collected
      */
-    void setStoryModeItemInventoryIDs(ArrayList<String> itemIDs);
+    void setStoryModeItemInventoryIDs(List<String> itemIDs);
 
     /**
      * Sets the hints the user has watched in story mode.
@@ -75,5 +75,17 @@ public interface CommonUserFunction {
      * @return the list of item IDs
      */
     List<String> getStoryModeItemInventoryIDs();
+
+    /**
+     * Saves the ID of the room the user is currently in as they play in story mode.
+     * @param roomID the ID of the room
+     */
+    void setStoryModeCurrentRoomID(String roomID);
+
+    /**
+     * Returns the ID of the room the user is currently in as they play in story mode.
+     * @return the ID of the room
+     */
+    String getStoryModeCurrentRoomID();
 
 }

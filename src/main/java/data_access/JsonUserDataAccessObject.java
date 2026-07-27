@@ -117,10 +117,39 @@ public class JsonUserDataAccessObject implements
         // Safety check: ensure runtime memory fields are never null
         user.initializeRuntimeState();
 
+        syncRuntimeFromJSON(user); // Copy transient hint maps & room IDs from ModeProgress into AbstractUser
         hydrateStoryModeLiveObjects(user);
         hydrateQuickModeLiveObjects(user);
 
         return user;
+    }
+
+    /**
+     * Syncs deserialized JSON data from ModeProgress into AbstractUser's transient fields.
+     */
+    private void syncRuntimeFromJSON(CommonUser user) {
+        if (user.getModeProgress() != null) {
+            // Sync Quick Mode Hints
+            if (user.getModeProgress().getQuickMode() != null) {
+                Map<String, HashMap<String, Integer>> qmHints = user.getQuickModeHintsWatched();
+                if (qmHints != null) {
+                    user.setQuickModeHintsWatched(qmHints);
+                }
+            }
+
+            // Sync Story Mode Hints & Saved Room ID
+            if (user.getModeProgress().getStoryMode() != null) {
+                HashMap<String, Integer> smHints = user.getStoryModeHintsWatched();
+                if (smHints != null) {
+                    user.setStoryModeHintsWatched(smHints);
+                }
+
+                String savedStoryRoomID = user.getStoryModeCurrentRoomID();
+                if (savedStoryRoomID != null) {
+                    user.setStoryModeCurrentRoomID(savedStoryRoomID);
+                }
+            }
+        }
     }
 
     private void hydrateQuickModeLiveObjects(CommonUser user) {
@@ -180,25 +209,13 @@ public class JsonUserDataAccessObject implements
         user.setActiveGameMode(null);
     }
 
-    // TODO: update saveProgress with new user structure
     @Override
-    public void saveProgress(String username,
-                             ArrayList<String> roomIDs,
-                             ArrayList<String> itemIDs,
-                             HashMap<String, Integer> hints) {
-        CommonUser user = users.get(username);
-
+    public void saveProgress(CommonUser user) {
         if (user == null) {
-            throw new IllegalArgumentException("Cannot save progress. No such user: " + username);
+            throw new IllegalArgumentException("Cannot save progress. No such user.");
         }
-
-        user.setQuickModeRoomsUnlockedIDs(roomIDs);
-        user.setStoryModeItemInventoryIDs(itemIDs);
-        user.setStoryModeHintsWatched(hints);
         persist();
     }
-
-
 
     @Override
     public String getCurrentUsername() {

@@ -15,18 +15,133 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
     private final String username;
     private final String password;
 
-    // Quick Mode game state storage for JSON db (item and hint do not persist across rooms)
-    private List<String> quickModeRoomsUnlocked = new ArrayList<>();
-    private Map<String, ArrayList<String>> quickModeItemInventory = new HashMap<>();
-
-    // Story Mode game state storage for JSON db(item and hints persist across rooms)
-    private List<String> storyModeItemInventory = new ArrayList<>();
-    private List<String> storyModeRoomsUnlocked = new ArrayList<>();
+    private final ModeProgress ModeProgress;
 
     public CommonUser(String username, String password) {
         super();
         this.username = username;
         this.password = password;
+        this.ModeProgress = new ModeProgress(this);
+    }
+
+    // Default constructor for Gson reflection
+    public CommonUser() {
+        super();
+        this.username = "";
+        this.password = "";
+        this.ModeProgress = new ModeProgress(this);
+    }
+
+    // ==========================================
+    // NESTED CLASSES FOR GSON JSON FORMATTING
+    // ==========================================
+
+    public static class ModeProgress {
+        private QuickModeData QuickMode;
+        private StoryModeData StoryMode;
+
+        public ModeProgress(CommonUser user) {
+            this.QuickMode = new QuickModeData(user);
+            this.StoryMode = new StoryModeData(user);
+        }
+
+        public QuickModeData getQuickMode() { return QuickMode; }
+        public StoryModeData getStoryMode() { return StoryMode; }
+    }
+
+    public static class QuickModeData {
+        private  transient CommonUser user;
+        private List<String> quickModeRoomsUnlocked = new ArrayList<>();
+        private Map<String, ArrayList<String>> quickModeItemInventory = new HashMap<>();
+        private Map<String, HashMap<String, Integer>> quickModeHintsWatched;
+
+        public QuickModeData(CommonUser user) {
+            this.user = user;
+            if (user != null) {
+                this.quickModeHintsWatched = user.quickModeHintsWatched;
+            }
+            else {
+                this.quickModeHintsWatched = new HashMap<>();
+            }
+        }
+
+        public QuickModeData() {
+            this.quickModeHintsWatched = new HashMap<>();
+        }
+
+        public List<String> getQuickModeRoomsUnlocked() { return quickModeRoomsUnlocked; }
+
+        public void setQuickModeRoomsUnlocked(List<String> quickModeRoomsUnlocked) {
+            this.quickModeRoomsUnlocked = quickModeRoomsUnlocked;
+        }
+
+        public Map<String, ArrayList<String>> getQuickModeItemInventory() { return quickModeItemInventory; }
+
+        public void setQuickModeItemInventory(Map<String, ArrayList<String>> quickModeItemInventory) {
+            this.quickModeItemInventory = quickModeItemInventory;
+        }
+
+        public Map<String, HashMap<String, Integer>> getQuickModeHintsWatched() {
+            return quickModeHintsWatched;
+        }
+
+        public void setQuickModeHintsWatched(Map<String, HashMap<String, Integer>> hints) {
+            quickModeHintsWatched = hints;
+        }
+    }
+
+    public static class StoryModeData {
+        private transient CommonUser user;
+        private String storyModeCurrentRoomID;
+        private List<String> storyModeRoomsUnlocked = new ArrayList<>();
+        private List<String> storyModeItemInventory = new ArrayList<>();
+        private HashMap<String, Integer> storyModeHintsWatched;
+
+        public StoryModeData(CommonUser user) {
+            this.user = user;
+            if (user != null) {
+                this.storyModeHintsWatched = user.storyModeHintsWatched;
+            }
+            else {
+                this.storyModeHintsWatched = new HashMap<>();
+            }
+        }
+
+        public StoryModeData() {
+            this.storyModeHintsWatched = new HashMap<>();
+        }
+
+        public List<String> getStoryModeRoomsUnlocked() {
+            return storyModeRoomsUnlocked;
+        }
+
+        public void setStoryModeRoomsUnlocked(List<String> storyModeRoomsUnlocked) {
+            this.storyModeRoomsUnlocked = storyModeRoomsUnlocked;
+        }
+
+        public List<String> getStoryModeItemInventory() {
+            return storyModeItemInventory;
+        }
+
+        public void setStoryModeItemInventory(List<String> storyModeItemInventory) {
+            this.storyModeItemInventory = storyModeItemInventory;
+        }
+
+        public HashMap<String, Integer> getStoryModeHintsWatched() {
+            return storyModeHintsWatched;
+        }
+
+        public void setStoryModeHintsWatched(HashMap<String, Integer> hints) {
+            this.storyModeHintsWatched = hints;
+        }
+
+        public String getStoryModeCurrentRoomID() {
+            return storyModeCurrentRoomID;
+        }
+
+        public void setStoryModeCurrentRoomID(String roomID) {
+            this.storyModeCurrentRoomID = roomID;
+        }
     }
 
     public String getUsername() {
@@ -39,42 +154,36 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
     }
 
     @Override
+    public boolean isRegistered() {
+        return true;
+    }
+
+    @Override
     public void unlockRoom(Room room) {
+        super.unlockRoom(room);
 
         if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (!this.storyModeRoomsUnlocked.contains(room.getId())) {
-                this.storyModeRoomsUnlocked.add(room.getId());
+            if (!getStoryModeRoomsUnlockedIDs().contains(room.getId())) {
+                getStoryModeRoomsUnlockedIDs().add(room.getId());
             }
-            if (!this.storyModeLiveRoomsUnlocked.contains(room)) {
-                storyModeLiveRoomsUnlocked.add(room);
-            }
-        }
-        else {
-            if (!quickModeRoomsUnlocked.contains(room.getId())) {
-                quickModeRoomsUnlocked.add(room.getId());
-            }
-            if (!quickModeLiveRoomsUnlocked.contains(room)) {
-                quickModeLiveRoomsUnlocked.add(room);
+        } else {
+            if (!getQuickModeRoomsUnlockedIDs().contains(room.getId())) {
+                getQuickModeRoomsUnlockedIDs().add(room.getId());
             }
         }
     }
 
     @Override
     public void saveItem(Item item) {
-        if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (!this.storyModeLiveItemInventory.contains(item)) {
-                this.storyModeLiveItemInventory.add(item);
-            }
-            if (!this.storyModeItemInventory.contains(item.getId())) {
-                this.storyModeItemInventory.add(item.getId());
-            }
-        } else if (this.currentRoomID != null){
-            ArrayList<Item> items = this.quickModeLiveItemInventory.get(this.currentRoomID);
-            if (!items.contains(item)) {
-                items.add(item);
-            }
+        super.saveItem(item);
 
-            ArrayList<String> itemIDs = this.quickModeItemInventory.get(this.currentRoomID);
+        if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
+            if (!getStoryModeItemInventoryIDs().contains(item.getId())) {
+                getStoryModeItemInventoryIDs().add(item.getId());
+            }
+        } else if (this.currentRoomID != null) {
+            ArrayList<String> itemIDs = getQuickModeItemInventoryIDs()
+                    .computeIfAbsent(this.currentRoomID, k -> new ArrayList<>());
             if (!itemIDs.contains(item.getId())) {
                 itemIDs.add(item.getId());
             }
@@ -83,17 +192,20 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
 
     @Override
     public boolean removeItem(Item item) {
-        // If item is in itemInventory, remove it and return true.
-        // If not found, leave the list alone and return false.
-        if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
-            return this.storyModeLiveItemInventory.remove(item) &&
-                    this.storyModeItemInventory.remove(item.getId());
+        boolean removed = super.removeItem(item);
+
+        if (removed) {
+            // Sync String ID removal for Database persistence
+            if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
+                getStoryModeItemInventoryIDs().remove(item.getId());
+            } else if ("QuickMode".equalsIgnoreCase(this.activeGameMode) && this.currentRoomID != null) {
+                ArrayList<String> itemIDs = getQuickModeItemInventoryIDs().get(this.currentRoomID);
+                if (itemIDs != null) {
+                    itemIDs.remove(item.getId());
+                }
+            }
         }
-        else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
-            return this.quickModeLiveItemInventory.get(this.currentRoomID).remove(item) &&
-                    this.quickModeItemInventory.get(this.currentRoomID).remove(item.getId());
-        }
-        return false;
+        return removed;
     }
 
     /**
@@ -102,84 +214,78 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
      */
     @Override
     public void switchRoom(Room newRoom) {
+        super.switchRoom(newRoom);
         if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
-            // Check if the room has been unlocked before switching. If the room is locked, the user cannot switch.
-            if (this.quickModeLiveRoomsUnlocked.contains(newRoom)) {
-
-                saveCurrentRoomID(newRoom.getId());
-
-                // Handel item inventory and hint
-                // If this room hasn't been visited in memory yet, initialize its item inventory and hintsWatched
-                if (!this.quickModeLiveItemInventory.containsKey(newRoom.getId())) {
-                    this.quickModeLiveItemInventory.put(newRoom.getId(), new ArrayList<>());
-                    this.quickModeItemInventory.put(newRoom.getId(), new ArrayList<>());
-                    this.quickModeHintsWatched.put(newRoom.getId(), new HashMap<>());
-                }
-                // else newRoom has been visited and has item inventory and hints watched saved
-                // so they can be accessed by getItemInventory and getHintsWatched
-            }
-        }
-
-        // Check if the user can enter a room before switching. If the room is locked, the user cannot switch.
-        if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (this.storyModeLiveRoomsUnlocked.contains(newRoom)) {
-                saveCurrentRoomID(newRoom.getId());
+            // Ensure QuickMode JSON structures exist for the newly switched room
+            if ("QuickMode".equalsIgnoreCase(this.activeGameMode) && this.currentRoomID != null) {
+                getQuickModeItemInventoryIDs().putIfAbsent(this.currentRoomID, new ArrayList<>());
             }
         }
     }
 
-    @Override
-    public void setQuickModeRoomsUnlockedIDs(ArrayList<String> roomIDs) {
-        this.quickModeRoomsUnlocked = roomIDs;
+    public ModeProgress getModeProgress() {
+        return ModeProgress;
     }
 
     @Override
-    public void setQuickModeItemInventoryIDs(HashMap<String, ArrayList<String>> itemIDs) {
-        this.quickModeItemInventory = itemIDs;
+    public void setQuickModeRoomsUnlockedIDs(List<String> roomIDs) {
+            ModeProgress.getQuickMode().setQuickModeRoomsUnlocked(roomIDs);
+    }
+
+    @Override
+    public void setQuickModeItemInventoryIDs(Map<String, ArrayList<String>> itemIDs) {
+        ModeProgress.getQuickMode().setQuickModeItemInventory(itemIDs);
     }
 
     @Override
     public void setQuickModeHintsWatched(Map<String, HashMap<String, Integer>> hints) {
-        this.quickModeHintsWatched = hints;
+        quickModeHintsWatched = hints; // Updates AbstractUser live runtime field
+        ModeProgress.getQuickMode().setQuickModeHintsWatched(hints);
     }
 
     @Override
-    public void setStoryModeRoomsUnlockedIDs(ArrayList<String> roomIDs) {
-        this.storyModeRoomsUnlocked = roomIDs;
+    public void setStoryModeRoomsUnlockedIDs(List<String> roomIDs) {
+        ModeProgress.getStoryMode().setStoryModeRoomsUnlocked(roomIDs);
     }
 
     @Override
-    public void setStoryModeItemInventoryIDs(ArrayList<String> itemIDs) {
-        this.storyModeItemInventory = itemIDs;
+    public void setStoryModeItemInventoryIDs(List<String> itemIDs) {
+        ModeProgress.getStoryMode().setStoryModeItemInventory(itemIDs);
     }
 
     @Override
     public void setStoryModeHintsWatched(HashMap<String, Integer> hints) {
-        this.storyModeHintsWatched = hints;
+        storyModeHintsWatched = hints; // Updates AbstractUser live runtime field
+        ModeProgress.getStoryMode().setStoryModeHintsWatched(hints);
     }
 
     @Override
     public List<String> getQuickModeRoomsUnlockedIDs() {
-        return this.quickModeRoomsUnlocked;
+        return ModeProgress.getQuickMode().getQuickModeRoomsUnlocked();
     }
 
     @Override
     public Map<String, ArrayList<String>> getQuickModeItemInventoryIDs() {
-        return this.quickModeItemInventory;
+        return ModeProgress.getQuickMode().getQuickModeItemInventory();
     }
 
     @Override
     public List<String> getStoryModeRoomsUnlockedIDs() {
-        return storyModeRoomsUnlocked;
+        return ModeProgress.getStoryMode().getStoryModeRoomsUnlocked();
     }
 
     @Override
     public List<String> getStoryModeItemInventoryIDs() {
-        return storyModeItemInventory;
+        return ModeProgress.getStoryMode().getStoryModeItemInventory();
     }
 
     @Override
-    public boolean isRegistered() {
-        return true;
+    public void setStoryModeCurrentRoomID(String roomID) {
+        ModeProgress.getStoryMode().setStoryModeCurrentRoomID(roomID);
+    }
+
+    @Override
+    public String getStoryModeCurrentRoomID() {
+        return ModeProgress.getStoryMode().getStoryModeCurrentRoomID();
     }
 }
