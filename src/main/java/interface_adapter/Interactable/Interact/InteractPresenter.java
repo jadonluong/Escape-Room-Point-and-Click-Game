@@ -37,12 +37,14 @@ public class InteractPresenter implements InteractOutputBoundary {
 
     @Override
     public void prepareRoomView(String roomId) {
+        // Set roomId in RoomViewModel once it's implemented.
         viewManagerModel.setState("Room");
         viewManagerModel.firePropertyChanged();
     }
 
     @Override
     public void preparePuzzleView(String puzzleId) {
+        // TODO: Figure this out...
         viewManagerModel.setState("Puzzle");
         viewManagerModel.firePropertyChanged();
     }

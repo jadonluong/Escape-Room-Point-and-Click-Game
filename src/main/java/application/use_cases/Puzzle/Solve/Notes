@@ -1,4 +1,3 @@
 - After the player solves the Puzzle, if the Puzzle becomes a portal then the Puzzle View will close (returning the
     player back to the ZoomInView) and the player will have to Interact with the Interactable linked to the Puzzle
     to go through the portal.
-- Call ExitView after SuccessView to bring the player back into ZoomInView.
