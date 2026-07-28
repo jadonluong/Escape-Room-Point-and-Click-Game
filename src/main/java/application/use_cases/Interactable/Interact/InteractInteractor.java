@@ -94,8 +94,7 @@ public class InteractInteractor implements InteractInputBoundary {
     }
 
     private void moveToRoom(User player, String unlockedRoomId) {
-        player.unlockRoom(dataAccess.getRoomById(unlockedRoomId));
-        player.saveCurrentRoomID(unlockedRoomId);
+        player.switchRoom(dataAccess.getRoomById(unlockedRoomId));
         outputBoundary.prepareRoomView(unlockedRoomId);
     }
 }
