@@ -231,7 +231,7 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // I don't really know what to put here
+        // Not used.
     }
 
     @Override

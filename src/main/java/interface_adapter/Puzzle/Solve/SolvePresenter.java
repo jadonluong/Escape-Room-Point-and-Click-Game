@@ -20,6 +20,7 @@ public class SolvePresenter implements SolveOutputBoundary {
         InteractState state = interactViewModel.getState();
         state.setSuccessMessage(outputData.getSuccessMessage());
         state.setErrorMessage(null);
+        state.setReturnToView("Zoom");
 
         viewManagerModel.setState("Interact");
         viewManagerModel.firePropertyChanged();
@@ -30,6 +31,7 @@ public class SolvePresenter implements SolveOutputBoundary {
         InteractState state = interactViewModel.getState();
         state.setSuccessMessage(null);
         state.setErrorMessage(errorMessage);
+        state.setReturnToView("Puzzle");
 
         viewManagerModel.setState("Interact");
         viewManagerModel.firePropertyChanged();
