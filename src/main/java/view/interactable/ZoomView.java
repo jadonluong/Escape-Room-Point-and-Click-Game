@@ -23,8 +23,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class ZoomView extends StackPane implements ActionListener, PropertyChangeListener {
-    private static final double DESIGN_WIDTH = 2907;
-    private static final double DESIGN_HEIGHT = 2040;
+    private static final double DESIGN_WIDTH = 959; // Roughly same scale as dimensions in MainMenuView
+    private static final double DESIGN_HEIGHT = 673;
 
     private ZoomViewModel zoomViewModel;
 
@@ -94,9 +94,12 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         fixedRoot.getChildren().add(inventoryBox);
 
         // TODO: Make sure to update the text below with the right keybind.
-        Label inventoryLabel = new Label("Inventory. A possible feature for extensions to this project. For now, " +
-                "please use the inventory hotbar (by pressing E) to switch the currently selected item if the player " +
-                "wishes to use a specific item to interact with this object.");
+        Label inventoryLabel = new Label("""
+                Inventory. A possible feature for extensions to this project.
+                
+                For now, please use the inventory hotbar (by pressing E) to switch the currently selected item if " +
+                the player wishes to use a specific item to interact with this object.
+                """);
         inventoryLabel.setTextFill(Color.web("#ffffff"));
         inventoryLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
         inventoryLabel.setWrapText(true);
