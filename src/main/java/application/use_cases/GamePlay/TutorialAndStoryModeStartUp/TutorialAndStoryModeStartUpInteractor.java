@@ -41,7 +41,7 @@ public class TutorialAndStoryModeStartUpInteractor implements TutorialAndStoryMo
         //of ImagePath and Position) as value.
         startingRoom.getInteractables().forEach(interactable -> {
             ObjectsToDisplay.put(interactable.getId(),
-                    new ObjectsInfo(interactable.getImagePath(),
+                    new ObjectsInfo(interactable.getSprite(),
                             startingRoom.getPosition(interactable.getId())));
         });
         startingRoom.getItems().forEach(item -> {

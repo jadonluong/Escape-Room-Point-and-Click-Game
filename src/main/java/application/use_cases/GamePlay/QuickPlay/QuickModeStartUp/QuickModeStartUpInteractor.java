@@ -41,7 +41,7 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
             // Put Interactable
             targetRoom.getInteractables().forEach(interactable -> {
                 objectsToDisplay.put(interactable.getId(),
-                        new ObjectsInfo(interactable.getImagePath(),
+                        new ObjectsInfo(interactable.getSprite(),
                                 targetRoom.getPosition(interactable.getId())));
             });
 
