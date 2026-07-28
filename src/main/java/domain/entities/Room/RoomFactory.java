@@ -13,5 +13,5 @@ import java.util.Map;
  */
 public interface RoomFactory {
     Room createRoom(String roomId, String description, String imagePath, List<Interactable> Interactable
-            , List<Item> items, List<Hint> hint, Map<String, Integer> positions);
+            , List<Item> items, List<Hint> hint, Map<String, Position> positions);
 }
