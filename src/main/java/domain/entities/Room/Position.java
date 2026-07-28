@@ -1,4 +1,4 @@
 package domain.entities.Room;
 
-public record Position(int x, int y) {
+public record Position(Number x, Number y) {
 }
