@@ -1,5 +1,6 @@
 package view.interactable;
 
+import interface_adapter.Interactable.Interact.InteractController;
 import interface_adapter.Interactable.Zoom.ZoomController;
 import interface_adapter.Interactable.Zoom.ZoomState;
 import interface_adapter.Interactable.Zoom.ZoomViewModel;
@@ -25,9 +26,6 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
     private static final double DESIGN_WIDTH = 2907;
     private static final double DESIGN_HEIGHT = 2040;
 
-    private final String viewName = "Zoom";
-
-    private ZoomController zoomController;
     private ZoomViewModel zoomViewModel;
 
     private final Pane fixedRoot = new Pane();
@@ -38,8 +36,7 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
     private Rectangle interactBox = new Rectangle();
     private Label interactBoxLabel = new Label();
 
-    public ZoomView(ZoomController zoomController, ZoomViewModel zoomViewModel) {
-        this.zoomController = zoomController;
+    public ZoomView(ZoomController zoomController, ZoomViewModel zoomViewModel, InteractController interactController) {
         this.zoomViewModel = zoomViewModel;
         ZoomState zoomState = zoomViewModel.getState();
 
@@ -112,9 +109,8 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
                 "-fx-border-color: #ffffff; " + "-fx-border-width: 3;"
         );
 
-        interactButton.setOnAction(e -> {
-            // TODO: Call the interact method in the InteractController once you've implemented it.
-        });
+        interactButton.setOnAction(e -> interactController.interact(zoomState.getUserId(),
+                zoomState.getInteractableId()));
 
         interactBox.setWidth(rightSideBoxesWidth);
         interactBox.setHeight(interactButtonHeight);
@@ -207,9 +203,7 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         zoomOutButton.setLayoutX(DESIGN_WIDTH - (gap + nameBoxHeight));
         zoomOutButton.setLayoutY(gap);
 
-        zoomOutButton.setOnAction(e -> {
-            zoomController.zoomOut();
-        });
+        zoomOutButton.setOnAction(e -> zoomController.zoomOut());
 
         fixedRoot.getChildren().add(zoomOutButton);
         // --------------
