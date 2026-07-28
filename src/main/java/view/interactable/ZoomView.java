@@ -97,8 +97,8 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         Label inventoryLabel = new Label("""
                 Inventory. A possible feature for extensions to this project.
                 
-                For now, please use the inventory hotbar (by pressing E) to switch the currently selected item if " +
-                the player wishes to use a specific item to interact with this object.
+                For now, please use the inventory hotbar (by pressing E) to switch the currently selected item if the \
+                player wishes to use a specific item to interact with this object.
                 """);
         inventoryLabel.setTextFill(Color.web("#ffffff"));
         inventoryLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
