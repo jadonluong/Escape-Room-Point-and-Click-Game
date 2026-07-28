@@ -2,6 +2,9 @@ package app;
 
 import application.use_cases.Audio.ToggleMusic.ToggleMusicInteractor;
 import application.use_cases.Audio.ToggleSfx.ToggleSfxInteractor;
+import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsInteractor;
+import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpInteractor;
+import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInteractor;
 import application.use_cases.User.Login.LoginInteractor;
 import application.use_cases.User.Logout.LogoutInteractor;
 import application.use_cases.User.SignUp.ProfanityCheck;
@@ -19,6 +22,13 @@ import domain.entities.Room.RoomFactory;
 import domain.entities.User.CommonUserFactory;
 import domain.entities.User.CommonUserFactoryClass;
 import interface_adapter.Audio.*;
+import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsController;
+import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsPresenter;
+import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsViewModel;
+import interface_adapter.GamePlay.InGameViewModel;
+import interface_adapter.GamePlay.QuickModeStartUp.QuickModeStartUpController;
+import interface_adapter.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpController;
+import interface_adapter.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpPresenter;
 import interface_adapter.User.LoggedIn.LoggedInViewModel;
 import interface_adapter.User.Login.LoginController;
 import interface_adapter.User.Login.LoginPresenter;
@@ -34,6 +44,7 @@ import interface_adapter.User.Signup.SignupViewModel;
 import interface_adapter.ViewManagerModel;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import view.Game.BrowseRoomsView;
 import view.ViewManager;
 import view.common.AudioControlView;
 import view.common.OverlayFactory;
@@ -82,7 +93,7 @@ public class AppBuilder extends Application {
         LoginViewModel loginViewModel = new LoginViewModel();
         LoggedInViewModel  loggedInViewModel = new LoggedInViewModel();
         LoginPresenter loginPresenter = new LoginPresenter(loginViewModel, loggedInViewModel);
-        LoginInteractor loginInteractor = new LoginInteractor(userDAO, loginPresenter, userFactory);
+        LoginInteractor loginInteractor = new LoginInteractor(userDAO, loginPresenter);
         LoginController loginController = new LoginController(loginInteractor);
 
         // --- Logout chain ---
@@ -105,12 +116,28 @@ public class AppBuilder extends Application {
         OverlayFactory signupOverlayFactory =
                 onClose -> new SignupOverlay(onClose, signupController, signupViewModel);
 
+        //--- Tutorial Mode & Story Mode start up chain ---
+        InGameViewModel inGameViewModel = new InGameViewModel();
+        TutorialAndStoryModeStartUpPresenter tutorialAndStoryModeStartUpPresenter
+                = new TutorialAndStoryModeStartUpPresenter(inGameViewModel, viewManagerModel);
+        TutorialAndStoryModeStartUpInteractor tutorialAndStoryModeStartUpInteractor
+                = new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter, gameAssetManager);
+        TutorialAndStoryModeStartUpController tutorialAndStoryModeStartUpController
+                = new TutorialAndStoryModeStartUpController(tutorialAndStoryModeStartUpInteractor);
+
+        //--- Browse rooms chain ---
+        BrowseRoomsViewModel browseRoomsViewModel = new BrowseRoomsViewModel();
+        BrowseRoomsPresenter browseRoomsPresenter = new BrowseRoomsPresenter(browseRoomsViewModel, viewManagerModel);
+        BrowseRoomsInteractor browseRoomsInteractor = new BrowseRoomsInteractor(gameAssetManager, browseRoomsPresenter);
+        BrowseRoomsController browseRoomsController = new BrowseRoomsController(browseRoomsInteractor);
+
         // --- Main menu ---
         MainMenuView mainMenu = new MainMenuView(
                 viewManagerModel, mainMenuViewModel, loggedInViewModel,
                 loginOverlayFactory, signupOverlayFactory,
                 () -> logoutController.executeLogoutWithoutSave(loggedInViewModel.getState().getUsername()),
-                audioControlView);
+                audioControlView,
+                tutorialAndStoryModeStartUpController, browseRoomsController);
 
         signupPresenter.setSwitchToLoginCallback(mainMenu::switchFromSignupToLogin);
 

@@ -11,10 +11,11 @@ public class TutorialAndStoryModeStartUpInteractor implements TutorialAndStoryMo
     private final StartUpDataAccessInterface dataAccess;
     private final TutorialAndStoryModeStartUpOutputBoundary presenter;
 
-    public TutorialAndStoryModeStartUpInteractor(TutorialAndStoryModeStartUpOutputBoundary selectModePresenter
+    public TutorialAndStoryModeStartUpInteractor(TutorialAndStoryModeStartUpOutputBoundary
+                                                         TutorialAndStoryModeStartUpPresenter
             , StartUpDataAccessInterface dataAccess) {
         this.dataAccess = dataAccess;
-        this.presenter = selectModePresenter;
+        this.presenter = TutorialAndStoryModeStartUpPresenter;
 
     }
 
