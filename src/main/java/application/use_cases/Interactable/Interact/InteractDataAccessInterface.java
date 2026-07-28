@@ -8,15 +8,8 @@ import domain.entities.User.User;
 
 public interface InteractDataAccessInterface {
     User getUserById(String userId);
-    void saveUser(User user);
-
     Room getRoomById(String roomId);
-    void saveRoom(Room room);
-
     Interactable getInteractableById(String interactableId);
-    void saveInteractable(Interactable interactable);
-
     Item getItemById(String itemId);
-
     Puzzle getPuzzleById(String puzzleId);
 }
