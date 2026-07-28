@@ -99,6 +99,7 @@ public class MainMenuView extends StackPane implements PropertyChangeListener {
         audioControlView.setLayoutX(2280);
         audioControlView.setLayoutY(1850);
 
+        //TODO: Consider to change these to trigger controller, since it is not pure navigation.
         fixedRoot.getChildren().addAll(
                 statusLabel, usernameLabel,
                 signupButton, loginButton, logoutButton,
