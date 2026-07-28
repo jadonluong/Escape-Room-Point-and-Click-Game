@@ -24,9 +24,7 @@ public class SolveInteractor implements SolveInputBoundary {
                 player.saveItem(dataAccess.getItemById(rewardItemId));
             }
 
-            SolveOutputData outputData = new SolveOutputData(inputData.getUserId(), inputData.getInteractableId(),
-                    puzzle.getSuccessMessage());
-            outputBoundary.prepareSuccessView(outputData);
+            outputBoundary.prepareSuccessView(new SolveOutputData(puzzle.getSuccessMessage()));
         } else {
             outputBoundary.prepareFailureView("Your input was incorrect.");
         }
