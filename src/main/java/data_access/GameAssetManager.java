@@ -158,23 +158,31 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
                     hintList.add(hint);
                 }
 
+                Map<String, Position> posMap = getPositionMap(data);
+
                 Room room = roomFactory.createRoom(roomId, data.description, data.imagePath,
-                        interactableList, itemList, hintList);
+                        interactableList, itemList, hintList, posMap);
 
-                if (data.positions != null) {
-                    for (Map.Entry<String, List<Integer>> positionEntry : data.positions.entrySet()){
-                        String objectID = positionEntry.getKey();
-                        List<Integer> coordinates = positionEntry.getValue();
 
-                        if (coordinates != null && coordinates.size() >= 2) {
-                            Position pos = new Position(coordinates.get(0), coordinates.get(1));
-                            room.setPosition(objectID, pos);
-                        }
-                    }
-                }
                 masterRooms.put(roomId, room);
             }
         }
+    }
+
+    private static Map<String, Position> getPositionMap(JsonRoomData data) {
+        Map<String, Position> posMap = new HashMap<>();
+        if (data.positions != null) {
+            for (Map.Entry<String, List<Integer>> positionEntry : data.positions.entrySet()){
+                String objectID = positionEntry.getKey();
+                List<Integer> coordinates = positionEntry.getValue();
+
+                if (coordinates != null && coordinates.size() >= 2) {
+                    Position pos = new Position(coordinates.get(0), coordinates.get(1));
+                    posMap.put(objectID, pos);
+                }
+            }
+        }
+        return posMap;
     }
 
     private void loadModes() throws IOException {
