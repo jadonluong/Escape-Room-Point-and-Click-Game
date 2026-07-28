@@ -27,6 +27,7 @@ import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsPresenter;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsViewModel;
 import interface_adapter.GamePlay.InGameViewModel;
 import interface_adapter.GamePlay.QuickModeStartUp.QuickModeStartUpController;
+import interface_adapter.GamePlay.QuickModeStartUp.QuickModeStartUpPresenter;
 import interface_adapter.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpController;
 import interface_adapter.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpPresenter;
 import interface_adapter.User.LoggedIn.LoggedInViewModel;
@@ -45,6 +46,7 @@ import interface_adapter.ViewManagerModel;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import view.Game.BrowseRoomsView;
+import view.Game.InGameView;
 import view.ViewManager;
 import view.common.AudioControlView;
 import view.common.OverlayFactory;
@@ -116,8 +118,10 @@ public class AppBuilder extends Application {
         OverlayFactory signupOverlayFactory =
                 onClose -> new SignupOverlay(onClose, signupController, signupViewModel);
 
-        //--- Tutorial Mode & Story Mode start up chain ---
+        //--- View Model for starting game ---
         InGameViewModel inGameViewModel = new InGameViewModel();
+
+        //--- Tutorial Mode & Story Mode start up chain ---
         TutorialAndStoryModeStartUpPresenter tutorialAndStoryModeStartUpPresenter
                 = new TutorialAndStoryModeStartUpPresenter(inGameViewModel, viewManagerModel);
         TutorialAndStoryModeStartUpInteractor tutorialAndStoryModeStartUpInteractor
@@ -131,15 +135,31 @@ public class AppBuilder extends Application {
         BrowseRoomsInteractor browseRoomsInteractor = new BrowseRoomsInteractor(gameAssetManager, browseRoomsPresenter);
         BrowseRoomsController browseRoomsController = new BrowseRoomsController(browseRoomsInteractor);
 
+        //--- Quick Mode chain ---
+        QuickModeStartUpPresenter quickModeStartUpPresenter
+                = new QuickModeStartUpPresenter(inGameViewModel, viewManagerModel);
+        QuickModeStartUpInteractor quickModeStartUpInteractor
+                = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager);
+        QuickModeStartUpController quickModeStartUpController
+                = new QuickModeStartUpController(quickModeStartUpInteractor);
+
         // --- Main menu ---
         MainMenuView mainMenu = new MainMenuView(
                 viewManagerModel, mainMenuViewModel, loggedInViewModel,
                 loginOverlayFactory, signupOverlayFactory,
                 () -> logoutController.executeLogoutWithoutSave(loggedInViewModel.getState().getUsername()),
                 audioControlView,
-                tutorialAndStoryModeStartUpController, browseRoomsController);
+                tutorialAndStoryModeStartUpController,
+                browseRoomsController);
 
         signupPresenter.setSwitchToLoginCallback(mainMenu::switchFromSignupToLogin);
+
+        // --- Browse Rooms ---
+        BrowseRoomsView browseRoomsView = new BrowseRoomsView(viewManager,
+                mainMenu, browseRoomsViewModel, browseRoomsController, quickModeStartUpController);
+
+        // --- In-game ---
+        InGameView inGameView = new InGameView(inGameViewModel);
 
         // --- Placeholder screens ---
         PlaceholderView storyPlaceholder = new PlaceholderView("Story Line", viewManagerModel);
@@ -148,9 +168,8 @@ public class AppBuilder extends Application {
 
         // --- Register every top-level screen by name ---
         viewManager.registerView("main menu", mainMenu);
-        viewManager.registerView("story", storyPlaceholder);
-        viewManager.registerView("tutorial", tutorialPlaceholder);
-        viewManager.registerView("quick game", quickGamePlaceholder);
+        viewManager.registerView("in-game", inGameView);
+        viewManager.registerView("browse rooms", browseRoomsView);
 
         // --- Trigger the first screen ---
         viewManagerModel.firePropertyChanged();

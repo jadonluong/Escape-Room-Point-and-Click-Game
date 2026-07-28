@@ -63,7 +63,6 @@ class QuickModeStartUpInteractorTest {
         // Setup dummy domain objects
         Interactable door = new CommonInteractable(
                 "door1",                           // String id
-                "/images/ui/buttons/QuickButton.png",                 // String imagePath
                 "Wooden Door",                     // String defaultName
                 "A sturdy wooden door.",           // String defaultDescription
                 "/images/ui/buttons/QuickButton.png",          // String defaultSprite
@@ -81,11 +80,11 @@ class QuickModeStartUpInteractorTest {
         );
 
         List<String> messages = new ArrayList<>();
-        messages.add("gigty");
-        messages.add("gigty, gigty");
+        messages.add("message");
+        messages.add("message, message");
         Item key = new CommonItem("key1",
                 "/images/ui/buttons/QuickButton.png",
-                "gigity",
+                "description",
                 true,
                 "/images/ui/buttons/QuickButton.png");
         Hint hint = new CommonHint("hint1",
@@ -102,16 +101,19 @@ class QuickModeStartUpInteractorTest {
         items.add(key);
         hints.add(hint);
 
+        Map<String, Position> positions = new HashMap<>();
+        positions.put(door.getId(),pos1);
+        positions.put(key.getId(),pos2);
+        positions.put(hint.getObjectID(), pos3);
 
         Room room = new CommonRoom(roomId,
-                "gigity",
+                "description",
                 "/images/ui/buttons/QuickButton.png",
                 interactables,
                 items,
-                hints);
-        room.setPosition(door.getId(),pos1);
-        room.setPosition(key.getId(),pos2);
-        room.setPosition(hint.getObjectID(), pos3);
+                hints,
+                positions);
+
         testRegistry.addRoom(roomId, room);
 
         QuickModeStartUpInputData inputData = new QuickModeStartUpInputData(roomId);
