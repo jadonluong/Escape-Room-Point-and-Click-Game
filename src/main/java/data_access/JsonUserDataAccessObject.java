@@ -31,7 +31,7 @@ public class JsonUserDataAccessObject implements
         LogoutUserDataAccessInterface,
         SaveProgressUserDataAccessInterface {
 
-    private static final String FILE_PATH = "data/users.json";
+    private static final String FILE_PATH = "user_data/users.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<String, CommonUser> users;
 
