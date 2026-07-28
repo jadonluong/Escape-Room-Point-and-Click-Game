@@ -82,7 +82,7 @@ public class AppBuilder extends Application {
         LoginViewModel loginViewModel = new LoginViewModel();
         LoggedInViewModel  loggedInViewModel = new LoggedInViewModel();
         LoginPresenter loginPresenter = new LoginPresenter(loginViewModel, loggedInViewModel);
-        LoginInteractor loginInteractor = new LoginInteractor(userDAO, loginPresenter, userFactory);
+        LoginInteractor loginInteractor = new LoginInteractor(userDAO, loginPresenter);
         LoginController loginController = new LoginController(loginInteractor);
 
         // --- Logout chain ---
