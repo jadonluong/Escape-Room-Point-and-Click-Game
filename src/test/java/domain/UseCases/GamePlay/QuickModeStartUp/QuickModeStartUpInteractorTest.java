@@ -31,7 +31,7 @@ class QuickModeStartUpInteractorTest {
     private TestRoomRegistry testRegistry;
     private QuickModeStartUpInteractor interactor;
 
-    // Fake RoomRegistry to control what getRoomByID returns without Mockito
+    // Fake RoomRegistry
     private static class TestRoomRegistry implements RoomRegistry {
         private final Map<String, Room> rooms = new HashMap<>();
 
@@ -62,21 +62,21 @@ class QuickModeStartUpInteractorTest {
         List<Hint> hints = new ArrayList<>();
         // Setup dummy domain objects
         Interactable door = new CommonInteractable(
-                "door1",                           // String id
-                "Wooden Door",                     // String defaultName
-                "A sturdy wooden door.",           // String defaultDescription
-                "/images/ui/buttons/QuickButton.png",          // String defaultSprite
-                "Unlocked Door",                   // String interactedName
-                "The door is now wide open.",      // String interactedDescription
-                "/images/ui/buttons/TutorialButton.png",            // String interactedSprite
-                false,                             // boolean isConsumed
-                true,                              // boolean consumesItem
-                true,                              // boolean needsItem
-                "brass_key",                       // String requiredItemId
-                "reward_coin",                     // String rewardItemId
-                "puzzle_01",                       // String linkedPuzzleId
-                "room_02",                         // String unlockedRoomId
-                "You used the key and unlocked the door!" // String successMessage
+                "door1",
+                "Wooden Door",
+                "A sturdy wooden door.",
+                "/images/ui/buttons/QuickButton.png",
+                "Unlocked Door",
+                "The door is now wide open.",
+                "/images/ui/buttons/TutorialButton.png",
+                false,
+                true,
+                true,
+                "brass_key",
+                "reward_coin",
+                "puzzle_01",
+                "room_02",
+                "You used the key and unlocked the door!"
         );
 
         List<String> messages = new ArrayList<>();
@@ -116,6 +116,7 @@ class QuickModeStartUpInteractorTest {
 
         testRegistry.addRoom(roomId, room);
 
+        //Mock the input data
         QuickModeStartUpInputData inputData = new QuickModeStartUpInputData(roomId);
 
         // Act
