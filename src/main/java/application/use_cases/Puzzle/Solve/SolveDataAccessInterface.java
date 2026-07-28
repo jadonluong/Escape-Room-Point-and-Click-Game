@@ -6,10 +6,6 @@ import domain.entities.User.User;
 
 public interface SolveDataAccessInterface {
     User getUserById(String userId);
-    void saveUser(User user);
-
     Puzzle getPuzzleById(String puzzleId);
-    void savePuzzle(Puzzle puzzle);
-
     Item getItemById(String itemId);
 }

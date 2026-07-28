@@ -17,13 +17,11 @@ public class SolveInteractor implements SolveInputBoundary {
         Puzzle puzzle = dataAccess.getPuzzleById(inputData.getPuzzleId());
         if (puzzle.solve(inputData.getPlayerAnswer())) {
             puzzle.setSolved(true);
-            dataAccess.savePuzzle(puzzle);
 
             User player = dataAccess.getUserById(inputData.getUserId());
             String rewardItemId = puzzle.getRewardItemId();
             if (rewardItemId != null) {
                 player.saveItem(dataAccess.getItemById(rewardItemId));
-                dataAccess.saveUser(player);
             }
 
             SolveOutputData outputData = new SolveOutputData(inputData.getUserId(), inputData.getInteractableId(),
