@@ -8,15 +8,17 @@ public class ZoomOutputData {
 
     private String userId;
     private String interactableId;
+    private String puzzleId;
 
     public ZoomOutputData(String name, String description, String sprite, String interactLabel, String userId,
-                          String interactableId) {
+                          String interactableId, String puzzleId) {
         this.name = name;
         this.description = description;
         this.sprite = sprite;
         this.interactLabel = interactLabel;
         this.userId = userId;
         this.interactableId = interactableId;
+        this.puzzleId = puzzleId;
     }
 
     public String getName() {
@@ -41,5 +43,9 @@ public class ZoomOutputData {
 
     public String getInteractableId() {
         return interactableId;
+    }
+
+    public String getPuzzleId() {
+        return puzzleId;
     }
 }

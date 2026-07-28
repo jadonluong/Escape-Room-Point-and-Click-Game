@@ -77,13 +77,9 @@ public class InteractInteractor implements InteractInputBoundary {
 
             if (puzzle.isSolved() && puzzleUnlockedRoomId != null) {
                 moveToRoom(player, puzzleUnlockedRoomId);
-                return;
             } else if (puzzle.isSolved()) {
                 outputBoundary.prepareSuccessView(new InteractOutputData(puzzle.getSuccessMessage()));
-                return;
             }
-
-            outputBoundary.preparePuzzleView(linkedPuzzleId);
             return;
         }
 

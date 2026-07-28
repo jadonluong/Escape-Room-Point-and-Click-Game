@@ -5,6 +5,7 @@ import interface_adapter.Interactable.Zoom.ZoomController;
 import interface_adapter.Interactable.Zoom.ZoomState;
 import interface_adapter.Interactable.Zoom.ZoomViewModel;
 
+import interface_adapter.Puzzle.EnterExit.EnterExitController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -36,7 +37,8 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
     private Rectangle interactBox = new Rectangle();
     private Label interactBoxLabel = new Label();
 
-    public ZoomView(ZoomController zoomController, ZoomViewModel zoomViewModel, InteractController interactController) {
+    public ZoomView(ZoomController zoomController, ZoomViewModel zoomViewModel, InteractController interactController,
+                    EnterExitController enterExitController) {
         this.zoomViewModel = zoomViewModel;
         ZoomState zoomState = zoomViewModel.getState();
 
@@ -130,8 +132,13 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
                 "-fx-border-color: #ffffff; " + "-fx-border-width: 3;"
         );
 
-        interactButton.setOnAction(e -> interactController.interact(zoomState.getUserId(),
-                zoomState.getInteractableId()));
+        interactButton.setOnAction(e -> {
+            if (interactLabel.equals("Enter Puzzle")) {
+                enterExitController.enter(zoomState.getUserId(), zoomState.getPuzzleId());
+            } else {
+                interactController.interact(zoomState.getUserId(), zoomState.getInteractableId());
+            }
+        });
 
         interactBox.setWidth(rightSideBoxesWidth);
         interactBox.setHeight(interactButtonHeight);

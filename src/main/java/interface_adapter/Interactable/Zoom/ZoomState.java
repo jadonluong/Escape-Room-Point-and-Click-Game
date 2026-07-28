@@ -8,6 +8,7 @@ public class ZoomState {
 
     private String userId;
     private String interactableId;
+    private String puzzleId;
 
     public String getName() {
         return name;
@@ -55,5 +56,13 @@ public class ZoomState {
 
     public void setInteractableId(String interactableId) {
         this.interactableId = interactableId;
+    }
+
+    public String getPuzzleId() {
+        return puzzleId;
+    }
+
+    public void setPuzzleId(String puzzleId) {
+        this.puzzleId = puzzleId;
     }
 }
