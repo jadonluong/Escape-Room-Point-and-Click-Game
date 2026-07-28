@@ -6,13 +6,14 @@ import domain.entities.Item.Item;
 import domain.entities.Puzzle.Puzzle;
 
 import java.util.List;
+import java.util.Map;
 
 public class CommonRoomFactory implements RoomFactory {
 
     @Override
-    public Room createRoom(String roomId, String description,String imagePath, List<Interactable> Interactable
-    , List<Item> items, List<Hint> hint) {
+    public Room createRoom(String roomId, String description, String imagePath, List<Interactable> Interactable
+    , List<Item> items, List<Hint> hint, Map<String, Position> positions) {
 
-        return new CommonRoom(roomId,description,imagePath, Interactable, items, hint);
+        return new CommonRoom(roomId,description,imagePath, Interactable, items, hint,positions);
     }
 }
