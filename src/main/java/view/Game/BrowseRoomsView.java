@@ -1,8 +1,10 @@
-package view.InGame;
+package view.Game;
 
 import application.use_cases.GamePlay.QuickPlay.BrowseRooms.RoomInfo;
+import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsController;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsState;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsViewModel;
+import interface_adapter.GamePlay.QuickModeStartUp.QuickModeStartUpController;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
@@ -19,7 +21,6 @@ import view.ViewManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 
 public class BrowseRoomsView extends StackPane implements PropertyChangeListener {
@@ -28,17 +29,21 @@ public class BrowseRoomsView extends StackPane implements PropertyChangeListener
     private static final double DESIGN_HEIGHT = 2040;
 
     private final Pane fixedRoot = new Pane();
-    private final ViewManager viewManager;
     private final StackPane previousView;
+
+    private final ViewManager viewManager;
     private final BrowseRoomsViewModel viewModel;
+    private final QuickModeStartUpController quickModeStartUpController;
 
     private final Pane roomCardsContainer = new Pane();
     private final Label errorLabel = new Label();
 
-    public BrowseRoomsView(ViewManager viewManager, StackPane previousView, BrowseRoomsViewModel viewModel) {
+    public BrowseRoomsView(ViewManager viewManager, StackPane previousView, BrowseRoomsViewModel viewModel,
+                           BrowseRoomsController browseRoomsController, QuickModeStartUpController quickModeStartUpController) {
         this.viewManager = viewManager;
         this.previousView = previousView;
         this.viewModel = viewModel;
+        this.quickModeStartUpController = quickModeStartUpController;
 
         // Register view as listener to ViewModel changes
         this.viewModel.addPropertyChangeListener(this);
@@ -98,7 +103,10 @@ public class BrowseRoomsView extends StackPane implements PropertyChangeListener
     }
 
     private void updateRooms(BrowseRoomsState state) {
-        // Clear previous errors
+
+        // Clear the old cards and error.
+        roomCardsContainer.getChildren().clear();
+
         errorLabel.setText("");
 
         // Handle Error State
@@ -153,10 +161,10 @@ public class BrowseRoomsView extends StackPane implements PropertyChangeListener
         nameLabel.setLayoutY(40);
 
         Label descriptionLabel = new Label("Description:" + info.description());
-        nameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 48));
-        nameLabel.setTextFill(Color.WHITE);
-        nameLabel.setLayoutX(100);
-        nameLabel.setLayoutY(80);
+        descriptionLabel.setFont(Font.font("Arial", FontWeight.BOLD, 48));
+        descriptionLabel.setTextFill(Color.WHITE);
+        descriptionLabel.setLayoutX(100);
+        descriptionLabel.setLayoutY(80);
 
         ImageView playButton = makeButton(info.imagePath(), 500, 180, 2030, 50, () -> {
             onRoomSelected(roomId);
@@ -167,7 +175,7 @@ public class BrowseRoomsView extends StackPane implements PropertyChangeListener
     }
 
     private void onRoomSelected(String roomId) {
-        //TODO: Change to game view
+        quickModeStartUpController.execute(roomId);
     }
 
     private ImageView makeButton(String resourcePath, double imgWidth, double imgHeight,

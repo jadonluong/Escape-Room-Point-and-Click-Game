@@ -1,5 +1,8 @@
 package view.mainmenu;
 
+import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsController;
+import interface_adapter.GamePlay.QuickModeStartUp.QuickModeStartUpController;
+import interface_adapter.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpController;
 import interface_adapter.User.LoggedIn.LoggedInViewModel;
 import interface_adapter.User.MainMenu.MainMenuViewModel;
 import interface_adapter.ViewManagerModel;
@@ -41,13 +44,18 @@ public class MainMenuView extends StackPane implements PropertyChangeListener {
     private final ImageView loginButton;
     private final ImageView logoutButton;
 
+    private final TutorialAndStoryModeStartUpController tutorialAndStoryModeStartUpController;
+    private final BrowseRoomsController browseRoomsController;
+
     public MainMenuView(ViewManagerModel viewManagerModel,
                         MainMenuViewModel mainMenuViewModel,
                         LoggedInViewModel loggedInViewModel,
                         OverlayFactory loginOverlayFactory,
                         OverlayFactory signupOverlayFactory,
                         Runnable onLogout,
-                        AudioControlView audioControlView) {
+                        AudioControlView audioControlView,
+                        TutorialAndStoryModeStartUpController tutorialAndStoryModeStartUpController,
+                        BrowseRoomsController browseRoomsController) {
 
         this.viewManagerModel = viewManagerModel;
         this.mainMenuViewModel = mainMenuViewModel;
@@ -55,6 +63,8 @@ public class MainMenuView extends StackPane implements PropertyChangeListener {
         this.loginOverlayFactory = loginOverlayFactory;
         this.signupOverlayFactory = signupOverlayFactory;
         this.onLogout = onLogout;
+        this.tutorialAndStoryModeStartUpController = tutorialAndStoryModeStartUpController;
+        this.browseRoomsController = browseRoomsController;
 
         mainMenuViewModel.addPropertyChangeListener(this);
         loggedInViewModel.addPropertyChangeListener(this);
@@ -102,9 +112,9 @@ public class MainMenuView extends StackPane implements PropertyChangeListener {
         fixedRoot.getChildren().addAll(
                 statusLabel, usernameLabel,
                 signupButton, loginButton, logoutButton,
-                makeButton("/images/ui/buttons/StoryButton.png", 1271, 444, 145, 600, () -> navigateTo("story")),
-                makeButton("/images/ui/buttons/TutorialButton.png", 1271, 444, 145, 1080, () -> navigateTo("tutorial")),
-                makeButton("/images/ui/buttons/QuickButton.png", 1271, 444, 145, 1560, () -> navigateTo("quick game")),
+                makeButton("/images/ui/buttons/StoryButton.png", 1271, 444, 145, 600, () -> tutorialAndStoryModeStartUpController.execute("STORY")),
+                makeButton("/images/ui/buttons/TutorialButton.png", 1271, 444, 145, 1080, () -> tutorialAndStoryModeStartUpController.execute("STORY")),
+                makeButton("/images/ui/buttons/QuickButton.png", 1271, 444, 145, 1560, browseRoomsController::execute),
                 makeButton("/images/ui/buttons/QuitButton.png", 717, 272, 2093, 1775, Platform::exit),
                 audioControlView
         );

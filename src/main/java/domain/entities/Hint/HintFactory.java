@@ -1,7 +1,5 @@
 package domain.entities.Hint;
 
-import domain.entities.Room.Position;
-
 import java.util.List;
 
 /**
@@ -16,5 +14,5 @@ public interface HintFactory {
      * @param messages the hint message to be displayed
      * @return the Hint object
      */
-    Hint createHint(String ID, String imagePath, List<String> messages, List<Integer> position);
+    Hint createHint(String ID, String imagePath, List<String> messages);
 }

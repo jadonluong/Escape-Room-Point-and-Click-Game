@@ -1,50 +1,18 @@
 package application.use_cases.User.SaveProgress;
 
-import domain.entities.Item.Item;
-import domain.entities.Room.Room;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import domain.entities.User.User;
 
 /**
  * The Input Data for the Save Progress Use Case.
  */
 public class SaveProgressInputData {
-    private String username;
-    private ArrayList<Room> roomsUnlocked;
-    private ArrayList<Item> itemInventory;
-    private HashMap<String, Integer> hintsWatched;
-    private Boolean isRegistered;
+    private User user;
 
-    public SaveProgressInputData(String username,
-                                 ArrayList<Room> rooms,
-                                 ArrayList<Item> items,
-                                 HashMap<String, Integer> hintsWatched,
-                                 boolean isRegistered){
-        this.username = username;
-        this.roomsUnlocked = rooms;
-        this.itemInventory = items;
-        this.hintsWatched = hintsWatched;
-        this.isRegistered = isRegistered;
+    public SaveProgressInputData(User user){
+        this.user = user;
     }
 
-    public String getUsername() {
-        return this.username;
-    }
-
-    public ArrayList<Room> getRoomsUnlocked() {
-        return roomsUnlocked;
-    }
-
-    public ArrayList<Item> getItemInventory() {
-        return itemInventory;
-    }
-
-    public HashMap<String, Integer> getHintsWatched() {
-        return hintsWatched;
-    }
-
-    public Boolean getRegisteredStatus() {
-        return isRegistered;
+    public User getUser() {
+        return this.user;
     }
 }

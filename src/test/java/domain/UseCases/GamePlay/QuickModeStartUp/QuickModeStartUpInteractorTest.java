@@ -87,8 +87,7 @@ class QuickModeStartUpInteractorTest {
                 "/images/ui/buttons/QuickButton.png",
                 "gigity",
                 true,
-                "/images/ui/buttons/QuickButton.png",
-                true);
+                "/images/ui/buttons/QuickButton.png");
         Hint hint = new CommonHint("hint1",
                 "/images/ui/buttons/QuickButton.png",
                 messages);

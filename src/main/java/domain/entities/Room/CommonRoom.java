@@ -25,14 +25,14 @@ public class CommonRoom implements Room{
 
 
     public CommonRoom(String Id, String description, String imagePath, List<Interactable> Interactable, List<Item> item
-    , List<Hint> hint) {
+    , List<Hint> hint, Map<String,Position> positions) {
         this.Id = Id;
         this.description = description;
         this.interactables = Interactable;
         this.items = item;
         this.hints = hint;
         this.imagePath = imagePath;
-        this.positions = new HashMap<>();
+        this.positions = positions;
     }
 
     //Room Info
@@ -109,6 +109,11 @@ public class CommonRoom implements Room{
     @Override
     public void setPosition(String Id, Position position) {
         this.positions.put(Id, position);
+    }
+
+    @Override
+    public void setPositions(Map<String,Position> positions) {
+        this.positions.putAll(positions);
     }
 
     @Override

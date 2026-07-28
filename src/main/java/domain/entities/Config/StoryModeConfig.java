@@ -6,7 +6,7 @@ import java.util.List;
 
 public class StoryModeConfig implements GameModeConfig {
 
-    //Set the starting room using room Id.
+    //Set the starting room using roomId.
     String StartingRoom = "";
 
     @Override

@@ -1,6 +1,7 @@
 package application.use_cases.Interactable.Zoom;
 
 import domain.entities.Interactable.Interactable;
+import domain.entities.Puzzle.Puzzle;
 import domain.entities.User.User;
 
 public class ZoomInteractor implements ZoomInputBoundary {
@@ -14,27 +15,26 @@ public class ZoomInteractor implements ZoomInputBoundary {
 
     @Override
     public void zoomIn(ZoomInputData inputData) {
-        Interactable interactable = dataAccess.getInteractableById(inputData.getInteractableId());
+        String interactableId = inputData.getInteractableId();
+        Interactable interactable = dataAccess.getInteractableById(interactableId);
 
-        boolean canInteract = true;
-        if (interactable.getRewardItemId() == null && interactable.getSuccessMessage() == null
-                && interactable.getUnlockedRoomId() == null && interactable.getLinkedPuzzleId() == null) {
-            canInteract = false;
-        }
+        String puzzleId = interactable.getLinkedPuzzleId();
+        Puzzle puzzle = dataAccess.getPuzzleById(puzzleId);
 
         String interactLabel = "Interact";
-        if (!canInteract) {
+        if (interactable.getRewardItemId() == null && interactable.getSuccessMessage() == null
+                && interactable.getUnlockedRoomId() == null && interactable.getLinkedPuzzleId() == null) {
             interactLabel = null;
         } else if (interactable.needsItem() && !interactable.isInteracted()) {
             interactLabel = "Use Item";
         } else if (interactable.getUnlockedRoomId() != null && interactable.isInteracted()) {
             interactLabel = "Go Through";
-        } else if (interactable.getLinkedPuzzleId() != null && interactable.isInteracted()) {
+        } else if (puzzleId != null && interactable.isInteracted() && !puzzle.isSolved()) {
             interactLabel = "Enter Puzzle";
         }
 
         ZoomOutputData outputData = new ZoomOutputData(interactable.getName(), interactable.getDescription(),
-                interactable.getSprite(), canInteract, interactLabel);
+                interactable.getSprite(), interactLabel, inputData.getUserId(), interactableId, puzzleId);
         outputBoundary.prepareZoomInView(outputData);
     }
 

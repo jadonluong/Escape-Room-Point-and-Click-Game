@@ -1,4 +1,4 @@
-package view.InGame;
+package view.Game;
 
 import interface_adapter.Audio.AudioViewModel;
 import interface_adapter.Audio.ToggleMusicController;
@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 import view.common.AudioControlView;
 import view.common.ModalOverlay;
 
-public class InGameMenuView extends ModalOverlay {
+public class GameMenuView extends ModalOverlay {
 
     private final LoggedInViewModel loggedInViewModel;
     private final AudioControlView audioControlView;
@@ -20,14 +20,14 @@ public class InGameMenuView extends ModalOverlay {
     private final Runnable onSaveAndQuit;
     private final Runnable onQuit;
 
-    public InGameMenuView(Runnable onClose,
-                          LoggedInViewModel loggedInViewModel,
-                          ToggleSfxController sfxController,
-                          ToggleMusicController musicController,
-                          AudioViewModel audioViewModel,
-                          Runnable onSave,
-                          Runnable onSaveAndQuit,
-                          Runnable onQuit) {
+    public GameMenuView(Runnable onClose,
+                        LoggedInViewModel loggedInViewModel,
+                        ToggleSfxController sfxController,
+                        ToggleMusicController musicController,
+                        AudioViewModel audioViewModel,
+                        Runnable onSave,
+                        Runnable onSaveAndQuit,
+                        Runnable onQuit) {
         super(onClose);
         this.loggedInViewModel = loggedInViewModel;
         this.audioControlView = new AudioControlView(sfxController, musicController, audioViewModel);

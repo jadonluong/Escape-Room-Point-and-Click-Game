@@ -33,7 +33,6 @@ public class InteractInteractor implements InteractInputBoundary {
 
     private void successfulFirstInteraction(User player, Interactable interactable, String selectedItemId) {
         interactable.setInteracted(true);
-        dataAccess.saveInteractable(interactable);
 
         String rewardItemId = interactable.getRewardItemId();
         if (rewardItemId != null) {
@@ -44,12 +43,9 @@ public class InteractInteractor implements InteractInputBoundary {
             player.removeItem(dataAccess.getItemById(selectedItemId));
         }
 
-        dataAccess.saveUser(player);
-
         Room currentRoom = dataAccess.getRoomById(player.getCurrentRoomID());
         if (interactable.isConsumed()) {
             currentRoom.removeInteractable(interactable.getId());
-            dataAccess.saveRoom(currentRoom);
         }
 
         outputBoundary.prepareSuccessView(new InteractOutputData(interactable.getSuccessMessage()));
@@ -81,13 +77,9 @@ public class InteractInteractor implements InteractInputBoundary {
 
             if (puzzle.isSolved() && puzzleUnlockedRoomId != null) {
                 moveToRoom(player, puzzleUnlockedRoomId);
-                return;
             } else if (puzzle.isSolved()) {
                 outputBoundary.prepareSuccessView(new InteractOutputData(puzzle.getSuccessMessage()));
-                return;
             }
-
-            outputBoundary.preparePuzzleView(linkedPuzzleId);
             return;
         }
 
@@ -102,9 +94,7 @@ public class InteractInteractor implements InteractInputBoundary {
     }
 
     private void moveToRoom(User player, String unlockedRoomId) {
-        player.unlockRoom(dataAccess.getRoomById(unlockedRoomId));
-        player.saveCurrentRoomID(unlockedRoomId);
-        dataAccess.saveUser(player);
+        player.switchRoom(dataAccess.getRoomById(unlockedRoomId));
         outputBoundary.prepareRoomView(unlockedRoomId);
     }
 }

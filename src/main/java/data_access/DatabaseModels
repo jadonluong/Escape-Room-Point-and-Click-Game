@@ -2,23 +2,33 @@ This file explains what the databases could potentially look like.
 
 ## User DB
 - format: JSON file
+- note: tutorial mode is not saved to db.
 - sample DB:
   - {"username_1": {
       "password": "string password",
       "ModeProgress": {
         "QuickMode": {
-            "roomsUnlocked": ["roomID_1", "roomID_2", ...],
-            "itemInventory": ["itemID_1", "itemID_2", ...],
-            "hintsWatched": {
-                "objectID_1": request_count(int),
-                "objectID_2": request_count(int),
-                ...}
+            "quickModeRoomsUnlocked": ["roomID_1", "roomID_2", ...],
+            "quickModeItemInventory": {
+                "roomID_1": ["itemID", ...],
+                "roomID_2": [...]
+            }
+            "quickModeHintsWatched": {
+                "roomID_1": {
+                    "objectID_1": request_count(int),
+                    "objectID_2": request_count(int),
+                ...},
+                "roomID_2": {...}
+            }
         }
         "StoryMode": {
-            "currentRoomID": "roomID",
-            ...}
+            "storyModeRoomsUnlocked": [...],
+            "storyModeItemInventory": [...],
+            "storyModeHintsWatched": [...],
+            "storyModeCurrentRoomID": "roomID",
         }
       }
+  }
 
       "username_2": {...}
   }
@@ -30,7 +40,6 @@ This file explains what the databases could potentially look like.
   - {"objectID_1": {
         "imagePath": "path",
         "hintMessages": ["hintMessage_1", "hintMessage_2", ...],
-        "position": [x, y]
         },
 
      "objectID_2": {...}
@@ -44,8 +53,7 @@ This file explains what the databases could potentially look like.
         "name": "itemName",
         "description": "description of item",
         "craftable": true/false,
-        "imagePath": "the file path of the image of the item",
-        "position": [x, y]
+        "imagePath": "the file path of the image of the item"
         },
 
      "itemID_2": {...}
@@ -61,7 +69,9 @@ This file explains what the databases could potentially look like.
         "description": "description of the room",
         "interactables": ["interactableID", ...],
         "items": ["itemID", ...],
+        "hints": ["objectID", ...],
         "imagePath": "string of the file path of the room image",
+        "positions": ...the positions of each object in this room
         },
 
      "roomID_2/roomName_2": {...}
@@ -79,7 +89,7 @@ This file explains what the databases could potentially look like.
 
 
 ## Interactable DB
-- Note: sample DB may need to change (still not sure what should be saved)
+- Note: sprite already stores image path
 - format: JSON file
 - sample DB:
   - {"interactableID_1": {
@@ -97,8 +107,6 @@ This file explains what the databases could potentially look like.
         "linkedPuzzleId": "...",
         "unlockedRoomId": "...",
         "successMessage": "...",
-        "imagePath": "file path of the interactable image",
-        "position": [x, y]
         },
 
       "interactableID_2": {...}

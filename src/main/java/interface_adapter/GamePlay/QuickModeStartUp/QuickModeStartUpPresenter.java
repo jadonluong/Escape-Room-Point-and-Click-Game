@@ -3,13 +3,15 @@ package interface_adapter.GamePlay.QuickModeStartUp;
 import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputBoundary;
 import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputData;
 
+import interface_adapter.GamePlay.InGameState;
+import interface_adapter.GamePlay.InGameViewModel;
 import interface_adapter.ViewManagerModel;
 
 public class QuickModeStartUpPresenter implements QuickModeStartUpOutputBoundary {
-    private final QuickModeStartUpViewModel viewModel;
+    private final InGameViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
 
-    public QuickModeStartUpPresenter(QuickModeStartUpViewModel viewModel,
+    public QuickModeStartUpPresenter(InGameViewModel viewModel,
                                      ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
@@ -18,12 +20,11 @@ public class QuickModeStartUpPresenter implements QuickModeStartUpOutputBoundary
     @Override
     public void prepareGameStartView(QuickModeStartUpOutputData outputData) {
         // 1. Get current state and update it
-        QuickModeStartUpState currentState = viewModel.getState();
+        InGameState currentState = viewModel.getState();
         currentState.setObjectsToDisplay(outputData.getObjectToDisplay());
         currentState.setErrorMessage(null); // Clear error on success
 
         // 2. Notify ViewModel listeners
-        viewModel.setState(currentState);
         viewModel.firePropertyChanged();
 
         // 3. Switch to the game view if a view manager is used
@@ -36,10 +37,9 @@ public class QuickModeStartUpPresenter implements QuickModeStartUpOutputBoundary
     @Override
     public void prepareFailView(String message) {
         // Update state with error details
-        QuickModeStartUpState currentState = viewModel.getState();
+        InGameState currentState = viewModel.getState();
         currentState.setErrorMessage(message);
 
-        viewModel.setState(currentState);
         viewModel.firePropertyChanged();
     }
 }

@@ -5,6 +5,7 @@ import domain.entities.Room.Room;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Factory for creating and restoring common users.
@@ -23,14 +24,22 @@ public interface CommonUserFactory {
      * Restores a common user from database.
      * @param username the username of the existing common user.
      * @param password the password of the existing common user.
-     * @param itemInventory the items the existing common user already collected.
-     * @param rooms the rooms the existing common user already unlocked.
-     * @param hints the hints the existing common user has watched.
+     * @param storyItemInventory the items the existing common user already collected in story mode
+     * @param storyRooms the rooms the existing common user already unlocked in story mode
+     * @param storyHints the hints the existing common user has watched in story mode
+     * @param quickItemInventory the items the existing common user already collected in each room in quick mode
+     * @param quickRooms the rooms the existing common user already unlocked in quick mode
+     * @param quickHintsMap the hints the existing common user has watched in each room in quick mode
      * @return the restored common user.
      */
     User restoreCommonUser(String username,
                            String password,
-                           ArrayList<Item> itemInventory,
-                           ArrayList<Room> rooms,
-                           HashMap<String, Integer> hints);
+                           // Story mode persistence
+                           ArrayList<Item> storyItemInventory,
+                           ArrayList<Room> storyRooms,
+                           HashMap<String, Integer> storyHints,
+                           // Quick mode persistence
+                           Map<String, ArrayList<Item>> quickItemInventory,
+                           ArrayList<Room> quickRooms,
+                           Map<String, HashMap<String, Integer>> quickHintsMap);
 }
