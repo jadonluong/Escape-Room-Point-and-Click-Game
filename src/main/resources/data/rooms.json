@@ -1,0 +1,13 @@
+{
+  "roomID_1/roomName_1": {
+    "description": "description of the room",
+    "interactables": ["interactableID"],
+    "items": ["itemID"],
+    "hints": ["objectID"],
+    "imagePath": "string of the file path of the room image",
+    "positions": {
+      "itemID": [1, 2],
+      "interactableID": [2.5, 3]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "interactableID_1": {
+    "defaultName": "interactableName",
+    "defaultDescription": "description",
+    "defaultSprite": "...",
+    "interactedName": "...",
+    "interactedDescription": "...",
+    "interactedSprite": "...",
+    "isConsumed": false,
+    "consumesItem": true,
+    "needsItem": true,
+    "requiredItemId": "...",
+    "rewardItemId": "...",
+    "linkedPuzzleId": "...",
+    "unlockedRoomId": "...",
+    "successMessage": "..."
+  }
+}
+

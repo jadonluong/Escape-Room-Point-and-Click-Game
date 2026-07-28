@@ -1,0 +1,8 @@
+{
+  "itemID_1": {
+    "name": "itemName",
+    "description": "description of item",
+    "craftable": true,
+    "imagePath": "the file path of the image of the item"
+  }
+}

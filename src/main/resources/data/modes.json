@@ -1,0 +1,5 @@
+{
+  "QuickMode": ["roomID_1"],
+  "StoryMode": ["roomID_#"],
+  "TutorialMode": ["roomID_#"]
+}
