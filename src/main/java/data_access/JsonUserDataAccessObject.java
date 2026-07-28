@@ -158,7 +158,7 @@ public class JsonUserDataAccessObject implements
         // Translate Room text IDs from the JSON file into active game Room objects
         if (user.getQuickModeRoomsUnlockedIDs() != null) {
             for (String roomId : user.getQuickModeRoomsUnlockedIDs()) {
-                Room room = roomRegistry.getRoomByID(roomId);
+                Room room = roomRegistry.getRoomById(roomId);
                 if (room != null) {
                     user.unlockRoom(room);
                 }
@@ -173,7 +173,7 @@ public class JsonUserDataAccessObject implements
 
                 // Instantiate every item collected in the room with roomID
                 for (String itemID : entry.getValue()) {
-                    Item item = itemRegistry.getItemByID(itemID);
+                    Item item = itemRegistry.getItemById(itemID);
                     if (item != null) {
                         user.saveItem(item);
                     }
@@ -189,7 +189,7 @@ public class JsonUserDataAccessObject implements
         user.setActiveGameMode("StoryMode");
         if (user.getStoryModeRoomsUnlockedIDs() != null) {
             for (String roomId : user.getStoryModeRoomsUnlockedIDs()) {
-                Room room = roomRegistry.getRoomByID(roomId);
+                Room room = roomRegistry.getRoomById(roomId);
                 if (room != null) {
                     user.unlockRoom(room);
                 }
@@ -198,7 +198,7 @@ public class JsonUserDataAccessObject implements
 
         if (user.getStoryModeItemInventoryIDs() != null) {
             for (String itemId : user.getStoryModeItemInventoryIDs()) {
-                Item item = itemRegistry.getItemByID(itemId);
+                Item item = itemRegistry.getItemById(itemId);
                 if (item != null) {
                     user.saveItem(item);
                 }

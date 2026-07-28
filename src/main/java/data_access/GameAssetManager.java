@@ -4,7 +4,12 @@ import application.game_registry.InteractableRegistry;
 import application.game_registry.ItemRegistry;
 import application.game_registry.RoomRegistry;
 import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsDataAccessInterface;
+import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.StartUpDataAccessInterface;
 import application.use_cases.Hint.GetHint.GetHintDataAccessInterface;
+import application.use_cases.Interactable.Interact.InteractDataAccessInterface;
+import application.use_cases.Interactable.Zoom.ZoomDataAccessInterface;
+import application.use_cases.Puzzle.EnterExit.EnterExitDataAccessInterface;
+import application.use_cases.Puzzle.Solve.SolveDataAccessInterface;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -14,6 +19,7 @@ import domain.entities.Interactable.Interactable;
 import domain.entities.Interactable.InteractableFactory;
 import domain.entities.Item.Item;
 import domain.entities.Item.ItemFactory;
+import domain.entities.Puzzle.Puzzle;
 import domain.entities.Room.Position;
 import domain.entities.Room.Room;
 import domain.entities.Room.RoomFactory;
@@ -32,8 +38,12 @@ import java.util.Map;
  * Manages game flow as the centralized data initialization engine and in-memory vault
  * for all static, read-only game assets.
  */
-public class GameAssetManager implements RoomRegistry, ItemRegistry, InteractableRegistry,
-        GetHintDataAccessInterface, BrowseRoomsDataAccessInterface {
+// TODO: add masterPuzzle from temporary puzzle db for demo and update getPuzzleById method
+public class GameAssetManager implements
+        RoomRegistry, ItemRegistry, InteractableRegistry,
+        GetHintDataAccessInterface,
+        BrowseRoomsDataAccessInterface, StartUpDataAccessInterface,
+        InteractDataAccessInterface, EnterExitDataAccessInterface, SolveDataAccessInterface, ZoomDataAccessInterface {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final ItemFactory itemFactory;
@@ -140,14 +150,14 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
                 // Create a list of Interactable objects to add to Room object
                 List<Interactable> interactableList = new ArrayList<>();
                 for (String interactableId : data.interactables) {
-                    Interactable interactable = getInteractableByID(interactableId);
+                    Interactable interactable = getInteractableById(interactableId);
                     interactableList.add(interactable);
                 }
 
                 // Create a list of Item objects to add to Room object
                 List<Item> itemList = new ArrayList<>();
                 for (String itemId : data.items) {
-                    Item item = getItemByID(itemId);
+                    Item item = getItemById(itemId);
                     itemList.add(item);
                 }
 
@@ -202,7 +212,7 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
 
                 // For each roomID saved in database, get a Room object with that ID and add it to the Room object list.
                 for (String roomID : roomIDs) {
-                    Room roomObject = getRoomByID(roomID);
+                    Room roomObject = getRoomById(roomID);
                     roomList.add(roomObject);
                 }
 
@@ -239,18 +249,23 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
     // =========================================================================
 
     @Override
-    public Room getRoomByID(String id) {
+    public Room getRoomById(String id) {
         return masterRooms.get(id);
     }
 
     @Override
-    public Item getItemByID(String id) {
+    public Item getItemById(String id) {
         return masterItems.get(id);
     }
 
     @Override
-    public Interactable getInteractableByID(String ID) {
+    public Interactable getInteractableById(String ID) {
         return masterInteractables.get(ID);
+    }
+
+    @Override
+    public Puzzle getPuzzleById(String puzzleId) {
+        return null;
     }
 
 
@@ -274,6 +289,20 @@ public class GameAssetManager implements RoomRegistry, ItemRegistry, Interactabl
     @Override
     public List<Room> getRoomsForQuickMode() {
         return masterModes.get("QuickMode");
+    }
+
+    // =========================================================================
+    // StartUpDataAccessInterface implementation
+    // =========================================================================
+
+    @Override
+    public Room findStartingRoomForTut() {
+        return masterModes.get("TutorialMode").get(0);
+    }
+
+    @Override
+    public Room findStartingRoomForStory() {
+        return masterModes.get("StoryMode").get(0);
     }
 
 

@@ -27,7 +27,7 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
                 return;
             }
 
-            Room targetRoom = dataAccess.getRoomByID(roomId);
+            Room targetRoom = dataAccess.getRoomById(roomId);
 
             if (targetRoom == null) {
                 presenter.prepareFailView("Could not load room with ID: " + roomId);

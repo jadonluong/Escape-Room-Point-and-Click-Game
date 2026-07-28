@@ -12,5 +12,5 @@ public interface RoomRegistry {
      * @param roomID the room ID
      * @return the Room object with roomID
      */
-    Room getRoomByID(String roomID);
+    Room getRoomById(String roomID);
 }
