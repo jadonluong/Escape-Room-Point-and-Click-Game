@@ -6,6 +6,8 @@ import interface_adapter.ViewManagerModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -60,9 +62,9 @@ public class InteractOverlay extends ModalOverlay implements ActionListener, Pro
     protected VBox buildModalBox() {
         InteractState interactState = interactViewModel.getState();
 
-        VBox modalBox = new VBox(15);
+        VBox modalBox = new VBox(10);
         modalBox.setAlignment(Pos.CENTER);
-        modalBox.setPadding(new Insets(40, 50, 40, 50));
+        modalBox.setPadding(new Insets(40, 40, 30, 40));
         modalBox.setStyle(
                 "-fx-background-color: #2a2a2a; " +
                         "-fx-border-color: #ffffff; " +
@@ -70,8 +72,8 @@ public class InteractOverlay extends ModalOverlay implements ActionListener, Pro
                         "-fx-background-radius: 12; " +
                         "-fx-border-radius: 12;"
         );
-        modalBox.setPrefSize(343, 343); // I just like this number...
-        modalBox.setMaxSize(343, 343);
+        modalBox.setPrefSize(450, 450);
+        modalBox.setMaxSize(450, 450);
 
         // Message Label
         if (interactState.getSuccessMessage() != null) { // Recall: exactly one of successMessage & errorMessage !null
@@ -81,19 +83,21 @@ public class InteractOverlay extends ModalOverlay implements ActionListener, Pro
             messageLabel.setText(interactState.getErrorMessage());
             messageLabel.setTextFill(Color.web("#E54C38"));
         }
-        messageLabel.setFont(Font.font("Arial", FontWeight.BOLD, 15));
+        messageLabel.setFont(Font.font("Arial", FontWeight.BOLD, 30));
         messageLabel.setWrapText(true);
         messageLabel.setAlignment(Pos.CENTER);
         // -------------
 
+        Region spacer = new Region(); // So that Subtitle Label is at the bottom of the overlay
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+
         // Subtitle Label
-        subtitleLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 10));
+        subtitleLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
         subtitleLabel.setTextFill(Color.WHITE);
-        subtitleLabel.setWrapText(true);
         subtitleLabel.setAlignment(Pos.CENTER);
         // --------------
 
-        modalBox.getChildren().addAll(messageLabel, subtitleLabel);
+        modalBox.getChildren().addAll(messageLabel, spacer, subtitleLabel);
         return modalBox;
     }
 }
