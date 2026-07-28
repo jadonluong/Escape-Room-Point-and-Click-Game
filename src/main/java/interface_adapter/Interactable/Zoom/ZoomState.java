@@ -6,6 +6,9 @@ public class ZoomState {
     private String sprite;
     private String interactLabel;
 
+    private String userId;
+    private String interactableId;
+
     public String getName() {
         return name;
     }
@@ -36,5 +39,21 @@ public class ZoomState {
 
     public void setInteractLabel(String interactLabel) {
         this.interactLabel = interactLabel;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getInteractableId() {
+        return interactableId;
+    }
+
+    public void setInteractableId(String interactableId) {
+        this.interactableId = interactableId;
     }
 }
