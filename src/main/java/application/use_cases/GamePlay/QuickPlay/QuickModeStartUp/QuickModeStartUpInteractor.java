@@ -37,16 +37,22 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
             Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
 
             // Fetch all data that is needed for rendering
+
+            // Put Interactable
             targetRoom.getInteractables().forEach(interactable -> {
                 objectsToDisplay.put(interactable.getId(),
                         new ObjectsInfo(interactable.getImagePath(),
                                 targetRoom.getPosition(interactable.getId())));
             });
+
+            // Put Items
             targetRoom.getItems().forEach(item -> {
                 objectsToDisplay.put(item.getId(),
                         new ObjectsInfo(item.getImagePath(),
                                 targetRoom.getPosition(item.getId())));
             });
+
+            // Put Hints
             targetRoom.getHints().forEach(hint -> {
                 objectsToDisplay.put(hint.getObjectID(),
                         new ObjectsInfo(hint.getImagePath()

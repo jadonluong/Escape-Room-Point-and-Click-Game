@@ -19,7 +19,6 @@ public class BrowseRoomsPresenter implements BrowseRoomsOutputBoundary {
         currentState.setRoomInfo(outputData.getInfo());
         currentState.setErrorMessage(null);
 
-        viewModel.setState(currentState);
         viewModel.firePropertyChanged();
 
         viewManagerModel.setState(viewModel.getViewName());
@@ -32,7 +31,6 @@ public class BrowseRoomsPresenter implements BrowseRoomsOutputBoundary {
         BrowseRoomsState currentState = viewModel.getState();
         currentState.setErrorMessage(message);
 
-        viewModel.setState(currentState);
         viewModel.firePropertyChanged();
     }
 }
