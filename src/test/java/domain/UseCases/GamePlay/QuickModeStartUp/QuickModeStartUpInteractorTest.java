@@ -40,7 +40,7 @@ class QuickModeStartUpInteractorTest {
         }
 
         @Override
-        public Room getRoomByID(String id) {
+        public Room getRoomById(String id) {
             return rooms.get(id);
         }
     }
