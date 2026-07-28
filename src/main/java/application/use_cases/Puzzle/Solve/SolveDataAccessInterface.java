@@ -5,7 +5,6 @@ import domain.entities.Puzzle.Puzzle;
 import domain.entities.User.User;
 
 public interface SolveDataAccessInterface {
-    User getUserById(String userId);
     Puzzle getPuzzleById(String puzzleId);
     Item getItemById(String itemId);
 }

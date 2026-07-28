@@ -1,16 +1,18 @@
 package application.use_cases.Puzzle.EnterExit;
 
+import domain.entities.User.User;
+
 public class EnterExitInputData {
-    private String userId;
+    private User user;
     private String puzzleId;
 
-    public EnterExitInputData(String userId, String puzzleId) {
-        this.userId = userId;
+    public EnterExitInputData(User user, String puzzleId) {
+        this.user = user;
         this.puzzleId = puzzleId;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
     public String getPuzzleId() {

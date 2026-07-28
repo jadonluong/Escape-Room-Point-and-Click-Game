@@ -34,7 +34,7 @@ public class ZoomInteractor implements ZoomInputBoundary {
         }
 
         ZoomOutputData outputData = new ZoomOutputData(interactable.getName(), interactable.getDescription(),
-                interactable.getSprite(), interactLabel, inputData.getUserId(), interactableId, puzzleId);
+                interactable.getSprite(), interactLabel, inputData.getUser(), interactableId, puzzleId);
         outputBoundary.prepareZoomInView(outputData);
     }
 

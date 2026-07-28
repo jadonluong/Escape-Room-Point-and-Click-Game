@@ -1,16 +1,18 @@
 package application.use_cases.Interactable.Zoom;
 
+import domain.entities.User.User;
+
 public class ZoomInputData {
-    private String userId;
+    private User user;
     private String interactableId;
 
-    public ZoomInputData(String userId, String interactableId) {
-        this.userId = userId;
+    public ZoomInputData(User user, String interactableId) {
+        this.user = user;
         this.interactableId = interactableId;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
     public String getInteractableId() {

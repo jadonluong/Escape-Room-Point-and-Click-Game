@@ -134,9 +134,9 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
 
         interactButton.setOnAction(e -> {
             if (interactLabel.equals("Enter Puzzle")) {
-                enterExitController.enter(zoomState.getUserId(), zoomState.getPuzzleId());
+                enterExitController.enter(zoomState.getUser(), zoomState.getPuzzleId());
             } else {
-                interactController.interact(zoomState.getUserId(), zoomState.getInteractableId());
+                interactController.interact(zoomState.getUser(), zoomState.getInteractableId());
             }
         });
 

@@ -1,12 +1,14 @@
 package interface_adapter.Interactable.Zoom;
 
+import domain.entities.User.User;
+
 public class ZoomState {
     private String name;
     private String description;
     private String sprite;
     private String interactLabel;
 
-    private String userId;
+    private User user;
     private String interactableId;
     private String puzzleId;
 
@@ -42,12 +44,12 @@ public class ZoomState {
         this.interactLabel = interactLabel;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getInteractableId() {

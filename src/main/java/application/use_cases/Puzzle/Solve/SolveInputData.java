@@ -1,18 +1,20 @@
 package application.use_cases.Puzzle.Solve;
 
+import domain.entities.User.User;
+
 public class SolveInputData {
-    private String userId;
+    private User user;
     private String puzzleId;
     private String playerAnswer;
 
-    public SolveInputData(String userId, String puzzleId, String playerAnswer) {
-        this.userId = userId;
+    public SolveInputData(User user, String puzzleId, String playerAnswer) {
+        this.user = user;
         this.puzzleId = puzzleId;
         this.playerAnswer = playerAnswer;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
     public String getPuzzleId() {
