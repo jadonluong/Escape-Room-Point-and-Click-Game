@@ -6,7 +6,7 @@ import application.use_cases.Interactable.Interact.InteractInputData;
 public class InteractController {
     private final InteractInputBoundary inputBoundary;
 
-    public  InteractController(InteractInputBoundary inputBoundary) {
+    public InteractController(InteractInputBoundary inputBoundary) {
         this.inputBoundary = inputBoundary;
     }
 
