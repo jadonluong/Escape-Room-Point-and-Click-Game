@@ -8,13 +8,20 @@ public class CommonItem implements Item {
     private final String description;
     private final Boolean craftable;
     private final String imagePath;
+    private final Boolean pickable;
 
-    public CommonItem(String id, String name, String description, Boolean craftable, String imagePath) {
+    public CommonItem(String id, String name, String description, Boolean craftable, String imagePath, Boolean pickable) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.craftable = craftable;
         this.imagePath = imagePath;
+        this.pickable = null;
+    }
+
+    public CommonItem(String id, String name, String description,
+                      Boolean craftable, String imagePath) {
+        this(id, name, description, craftable, imagePath, true);
     }
 
     @Override
@@ -40,6 +47,11 @@ public class CommonItem implements Item {
     @Override
     public String getImagePath() {
         return this.imagePath;
+    }
+
+    @Override
+    public Boolean getPickable() {
+        return this.pickable;
     }
 
     @Override

@@ -7,4 +7,5 @@ public interface Item {
     String getDescription();
     Boolean getCraftable();
     String getImagePath();
+    Boolean getPickable();
 }
