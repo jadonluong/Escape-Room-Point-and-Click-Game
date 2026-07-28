@@ -1,6 +1,7 @@
 package application.use_cases.Interactable.Zoom;
 
 import domain.entities.Interactable.Interactable;
+import domain.entities.Puzzle.Puzzle;
 import domain.entities.User.User;
 
 public class ZoomInteractor implements ZoomInputBoundary {
@@ -17,6 +18,9 @@ public class ZoomInteractor implements ZoomInputBoundary {
         String interactableId = inputData.getInteractableId();
         Interactable interactable = dataAccess.getInteractableById(interactableId);
 
+        String puzzleId = interactable.getLinkedPuzzleId();
+        Puzzle puzzle = dataAccess.getPuzzleById(puzzleId);
+
         String interactLabel = "Interact";
         if (interactable.getRewardItemId() == null && interactable.getSuccessMessage() == null
                 && interactable.getUnlockedRoomId() == null && interactable.getLinkedPuzzleId() == null) {
@@ -25,12 +29,12 @@ public class ZoomInteractor implements ZoomInputBoundary {
             interactLabel = "Use Item";
         } else if (interactable.getUnlockedRoomId() != null && interactable.isInteracted()) {
             interactLabel = "Go Through";
-        } else if (interactable.getLinkedPuzzleId() != null && interactable.isInteracted()) {
+        } else if (puzzleId != null && interactable.isInteracted() && !puzzle.isSolved()) {
             interactLabel = "Enter Puzzle";
         }
 
         ZoomOutputData outputData = new ZoomOutputData(interactable.getName(), interactable.getDescription(),
-                interactable.getSprite(), interactLabel, inputData.getUserId(), interactableId);
+                interactable.getSprite(), interactLabel, inputData.getUserId(), interactableId, puzzleId);
         outputBoundary.prepareZoomInView(outputData);
     }
 

@@ -43,6 +43,7 @@ public class EnterExitPresenter implements EnterExitOutputBoundary {
         InteractState state = interactViewModel.getState(); // Reuse the InteractOverlay for this :)
         state.setSuccessMessage(null);
         state.setErrorMessage(errorMessage);
+        state.setReturnToView("Zoom");
 
         viewManagerModel.setState("Interact");
         viewManagerModel.firePropertyChanged();

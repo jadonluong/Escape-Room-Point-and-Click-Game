@@ -18,6 +18,7 @@ public class InteractPresenter implements InteractOutputBoundary {
         InteractState state = interactViewModel.getState();
         state.setSuccessMessage(outputData.getSuccessMessage());
         state.setErrorMessage(null);
+        state.setReturnToView("Zoom");
 
         viewManagerModel.setState("Interact");
         viewManagerModel.firePropertyChanged();
@@ -28,6 +29,7 @@ public class InteractPresenter implements InteractOutputBoundary {
         InteractState state = interactViewModel.getState();
         state.setErrorMessage(errorMessage);
         state.setSuccessMessage(null);
+        state.setReturnToView("Zoom");
 
         viewManagerModel.setState("Interact");
         viewManagerModel.firePropertyChanged();
@@ -36,12 +38,6 @@ public class InteractPresenter implements InteractOutputBoundary {
     @Override
     public void prepareRoomView(String roomId) {
         viewManagerModel.setState("Room");
-        viewManagerModel.firePropertyChanged();
-    }
-
-    @Override
-    public void preparePuzzleView(String puzzleId) {
-        viewManagerModel.setState("Puzzle");
         viewManagerModel.firePropertyChanged();
     }
 }

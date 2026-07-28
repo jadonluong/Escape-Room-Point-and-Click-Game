@@ -77,13 +77,9 @@ public class InteractInteractor implements InteractInputBoundary {
 
             if (puzzle.isSolved() && puzzleUnlockedRoomId != null) {
                 moveToRoom(player, puzzleUnlockedRoomId);
-                return;
             } else if (puzzle.isSolved()) {
                 outputBoundary.prepareSuccessView(new InteractOutputData(puzzle.getSuccessMessage()));
-                return;
             }
-
-            outputBoundary.preparePuzzleView(linkedPuzzleId);
             return;
         }
 
@@ -98,8 +94,7 @@ public class InteractInteractor implements InteractInputBoundary {
     }
 
     private void moveToRoom(User player, String unlockedRoomId) {
-        player.unlockRoom(dataAccess.getRoomById(unlockedRoomId));
-        player.saveCurrentRoomID(unlockedRoomId);
+        player.switchRoom(dataAccess.getRoomById(unlockedRoomId));
         outputBoundary.prepareRoomView(unlockedRoomId);
     }
 }
