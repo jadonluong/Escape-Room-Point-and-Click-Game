@@ -95,11 +95,10 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         inventoryBox.setLayoutY(DESIGN_HEIGHT - (inventoryBoxHeight + gap));
         fixedRoot.getChildren().add(inventoryBox);
 
-        // TODO: Make sure to update the text below with the right keybind.
         Label inventoryLabel = new Label("""
                 Inventory. A possible feature for extensions to this project.
                 
-                For now, please use the inventory hotbar (by pressing E) to switch the currently selected item if the \
+                For now, please use the inventory hotbar to switch the currently selected item if the \
                 player wishes to use a specific item to interact with this object.
                 """);
         inventoryLabel.setTextFill(Color.web("#ffffff"));
