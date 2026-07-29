@@ -31,7 +31,10 @@ class QuickModeStartUpInteractorTest {
     private TestRoomRegistry testRegistry;
     private QuickModeStartUpInteractor interactor;
 
-    // Fake RoomRegistry
+    private String selectedRoomId;
+    private Room selectedRoom;
+
+    // Fake dataAccess
     private static class TestRoomRegistry implements RoomRegistry {
         private final Map<String, Room> rooms = new HashMap<>();
 
@@ -50,12 +53,8 @@ class QuickModeStartUpInteractorTest {
         testPresenter = new TestPresenter();
         testRegistry = new TestRoomRegistry();
         interactor = new QuickModeStartUpInteractor(testPresenter, testRegistry);
-    }
 
-    @Test
-    void execute_SuccessfulStart_PreparesGameStartView() {
-        // Arrange
-        String roomId = "room_01";
+        this.selectedRoomId = "room_01";
 
         List<Interactable> interactables = new ArrayList<>();
         List<Item> items = new ArrayList<>();
@@ -91,9 +90,9 @@ class QuickModeStartUpInteractorTest {
                 "/images/ui/buttons/QuickButton.png",
                 messages);
 
-        Position pos1 = new Position(10, 20);
-        Position pos2 = new Position(30, 40);
-        Position pos3 = new Position(50, 60);
+        Position pos1 = new Position(10.0, 20.0);
+        Position pos2 = new Position(30.0, 40.0);
+        Position pos3 = new Position(50.0, 60.0);
 
         // Build a room populated with entities and positions
 
@@ -106,7 +105,7 @@ class QuickModeStartUpInteractorTest {
         positions.put(key.getId(),pos2);
         positions.put(hint.getObjectID(), pos3);
 
-        Room room = new CommonRoom(roomId,
+        this.selectedRoom = new CommonRoom(selectedRoomId,
                 "description",
                 "/images/ui/buttons/QuickButton.png",
                 interactables,
@@ -114,16 +113,19 @@ class QuickModeStartUpInteractorTest {
                 hints,
                 positions);
 
-        testRegistry.addRoom(roomId, room);
+        testRegistry.addRoom(selectedRoomId, selectedRoom);
+    }
+
+    @Test
+    void testSuccessfulStartPreparesGameStartView() {
+
 
         //Mock the input data
-        QuickModeStartUpInputData inputData = new QuickModeStartUpInputData(roomId);
+        QuickModeStartUpInputData inputData = new QuickModeStartUpInputData(selectedRoomId);
 
-        // Act
         interactor.execute(inputData);
 
-        // Assert
-        assertNull(testPresenter.getErrorMessage(), "Error message should be null on success.");
+        assertNull(testPresenter.getErrorMessage());
 
         QuickModeStartUpOutputData outputData = testPresenter.getSuccessData();
         assertNotNull(outputData, "Output data should not be null.");
@@ -132,11 +134,11 @@ class QuickModeStartUpInteractorTest {
         // Assert contents of display map
         ObjectsInfo doorInfo = outputData.getObjectToDisplay().get("door1");
         assertEquals("/images/ui/buttons/QuickButton.png", doorInfo.imgPath());
-        assertEquals(pos1, doorInfo.position());
+        assertEquals(new Position(10.0, 20.0), doorInfo.position());
     }
 
     @Test
-    void execute_NullOrEmptyRoomId_CallsPrepareFailView() {
+    void testNullOrEmptyRoomIdCallsPrepareFailView() {
         // Arrange
         QuickModeStartUpInputData inputData = new QuickModeStartUpInputData("   ");
 
@@ -149,7 +151,7 @@ class QuickModeStartUpInteractorTest {
     }
 
     @Test
-    void execute_RoomNotFound_CallsPrepareFailView() {
+    void testRoomNotFoundCallsPrepareFailView() {
         // Arrange
         String roomId = "non_existent_room";
         QuickModeStartUpInputData inputData = new QuickModeStartUpInputData(roomId);

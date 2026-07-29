@@ -86,7 +86,9 @@ public class CommonRoom implements Room{
 
     @Override
     public void removeItem(Item item) {
-        items.remove(item);
+        if(items.contains(item)) {
+            items.remove(item);
+        }
     }
 
     //Hint
