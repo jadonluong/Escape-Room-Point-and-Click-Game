@@ -4,7 +4,7 @@ import interface_adapter.ViewModel;
 
 public class EnterExitViewModel extends ViewModel<EnterExitState> {
     public EnterExitViewModel() {
-        super("EnterExit");
+        super("Puzzle");
         setState(new EnterExitState());
     }
 }
