@@ -5,6 +5,10 @@ import application.use_cases.Audio.ToggleSfx.ToggleSfxInteractor;
 import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsInteractor;
 import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpInteractor;
 import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInteractor;
+import application.use_cases.Interactable.Interact.InteractInteractor;
+import application.use_cases.Interactable.Zoom.ZoomInteractor;
+import application.use_cases.Puzzle.EnterExit.EnterExitInteractor;
+import application.use_cases.Puzzle.Solve.SolveInteractor;
 import application.use_cases.User.Login.LoginInteractor;
 import application.use_cases.User.Logout.LogoutInteractor;
 import application.use_cases.User.SignUp.ProfanityCheck;
@@ -33,6 +37,17 @@ import interface_adapter.GamePlay.QuickModeStartUp.QuickModeStartUpController;
 import interface_adapter.GamePlay.QuickModeStartUp.QuickModeStartUpPresenter;
 import interface_adapter.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpController;
 import interface_adapter.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpPresenter;
+import interface_adapter.Interactable.Interact.InteractController;
+import interface_adapter.Interactable.Interact.InteractPresenter;
+import interface_adapter.Interactable.Interact.InteractViewModel;
+import interface_adapter.Interactable.Zoom.ZoomController;
+import interface_adapter.Interactable.Zoom.ZoomPresenter;
+import interface_adapter.Interactable.Zoom.ZoomViewModel;
+import interface_adapter.Puzzle.EnterExit.EnterExitController;
+import interface_adapter.Puzzle.EnterExit.EnterExitPresenter;
+import interface_adapter.Puzzle.EnterExit.EnterExitViewModel;
+import interface_adapter.Puzzle.Solve.SolveController;
+import interface_adapter.Puzzle.Solve.SolvePresenter;
 import interface_adapter.User.LoggedIn.LoggedInViewModel;
 import interface_adapter.User.Login.LoginController;
 import interface_adapter.User.Login.LoginPresenter;
@@ -55,7 +70,10 @@ import view.common.AudioControlView;
 import view.common.OverlayFactory;
 import view.common.PlaceholderView;
 import view.common.SoundPlayer;
+import view.interactable.InteractOverlay;
+import view.interactable.ZoomView;
 import view.mainmenu.MainMenuView;
+import view.puzzle.PuzzleView;
 import view.user.LoginOverlay;
 import view.user.SignupOverlay;
 
@@ -170,10 +188,44 @@ public class AppBuilder extends Application {
         PlaceholderView tutorialPlaceholder = new PlaceholderView("Tutorial", viewManagerModel);
         PlaceholderView quickGamePlaceholder = new PlaceholderView("Quick Game", viewManagerModel);
 
+        // --- Interactable Zoom Chain ---
+        ZoomViewModel zoomViewModel = new ZoomViewModel();
+        ZoomPresenter zoomPresenter = new ZoomPresenter(zoomViewModel, viewManagerModel);
+        ZoomInteractor zoomInteractor = new ZoomInteractor(gameAssetManager, zoomPresenter);
+        ZoomController zoomController = new ZoomController(zoomInteractor);
+
+        // --- Interactable Interact Chain ---
+        InteractViewModel interactViewModel = new InteractViewModel();
+        InteractPresenter interactPresenter = new InteractPresenter(interactViewModel, viewManagerModel);
+        InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter);
+        InteractController interactController = new InteractController(interactInteractor);
+
+        // --- Puzzle EnterExit Chain ---
+        EnterExitViewModel enterExitViewModel = new EnterExitViewModel();
+        EnterExitPresenter enterExitPresenter = new EnterExitPresenter(enterExitViewModel, interactViewModel,
+                viewManagerModel);
+        EnterExitInteractor enterExitInteractor = new EnterExitInteractor(gameAssetManager, enterExitPresenter);
+        EnterExitController enterExitController = new EnterExitController(enterExitInteractor);
+
+        // --- Puzzle Solve Chain ---
+        SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, viewManagerModel);
+        SolveInteractor solveInteractor = new SolveInteractor(gameAssetManager, solvePresenter);
+        SolveController solveController = new SolveController(solveInteractor);
+
+        // --- Interactable and Puzzle Views ---
+        ZoomView zoomView = new ZoomView(zoomController, zoomViewModel, interactController, enterExitController);
+        InteractOverlay interactOverlay = new InteractOverlay(interactViewModel, viewManagerModel);
+        PuzzleView puzzleView = new PuzzleView(enterExitViewModel);
+
         // --- Register every top-level screen by name ---
         viewManager.registerView("main menu", mainMenu);
         viewManager.registerView("in-game", inGameView);
         viewManager.registerView("browse rooms", browseRoomsView);
+
+        // --- Register Interactable and Puzzle Views ---
+        viewManager.registerView("Zoom", zoomView);
+        // TODO: Register InteractOverlay in viewManager once overlay cases are handled in ViewManager
+        viewManager.registerView("Puzzle",  puzzleView);
 
         // --- Trigger the first screen ---
         viewManagerModel.firePropertyChanged();
