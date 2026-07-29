@@ -13,6 +13,7 @@ import application.use_cases.User.Login.LoginInteractor;
 import application.use_cases.User.Logout.LogoutInteractor;
 import application.use_cases.User.SignUp.ProfanityCheck;
 import application.use_cases.User.SignUp.SignupInteractor;
+import application.use_cases.Item.PickUp.PickUpInteractor; // added
 import data_access.GameAssetManager;
 import data_access.JsonUserDataAccessObject;
 import domain.entities.Hint.CommonHintFactory;
@@ -61,6 +62,9 @@ import interface_adapter.User.Signup.SignupController;
 import interface_adapter.User.Signup.SignupPresenter;
 import interface_adapter.User.Signup.SignupViewModel;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.inventory.InventoryViewModel; // added
+import interface_adapter.inventory.InventoryPresenter; // added
+import interface_adapter.inventory.InventoryState; // added
 import javafx.application.Application;
 import javafx.stage.Stage;
 import view.Game.BrowseRoomsView;
@@ -76,6 +80,7 @@ import view.mainmenu.MainMenuView;
 import view.puzzle.PuzzleView;
 import view.user.LoginOverlay;
 import view.user.SignupOverlay;
+import view.inventory.InventoryOverlay; // added
 
 import java.net.http.HttpClient;
 
@@ -164,6 +169,15 @@ public class AppBuilder extends Application {
                 = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager);
         QuickModeStartUpController quickModeStartUpController
                 = new QuickModeStartUpController(quickModeStartUpInteractor);
+
+        // --- Items & Inventory Chain ---
+        InventoryViewModel inventoryViewModel = new InventoryViewModel();
+        InventoryPresenter inventoryPresenter = new InventoryPresenter(inventoryViewModel);
+        PickUpInteractor pickUpInteractor = new PickUpInteractor(userDAO, inventoryPresenter);
+        OverlayFactory inventoryOverlayFactory = onClose -> new InventoryOverlay(
+                onClose,
+                inventoryViewModel
+        );
 
         // --- Main menu ---
         MainMenuView mainMenu = new MainMenuView(
