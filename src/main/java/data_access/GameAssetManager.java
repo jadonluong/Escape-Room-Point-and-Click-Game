@@ -39,8 +39,6 @@ import java.util.Map;
  * Manages game flow as the centralized data initialization engine and in-memory vault
  * for all static, read-only game assets.
  */
-
-// TODO: position should record Number instead of Integer
 public class GameAssetManager implements
         RoomRegistry, ItemRegistry, InteractableRegistry,
         GetHintDataAccessInterface,
@@ -234,9 +232,9 @@ public class GameAssetManager implements
     private static Map<String, Position> getPositionMap(JsonRoomData data) {
         Map<String, Position> posMap = new HashMap<>();
         if (data.positions != null) {
-            for (Map.Entry<String, List<Integer>> positionEntry : data.positions.entrySet()){
+            for (Map.Entry<String, List<Double>> positionEntry : data.positions.entrySet()){
                 String objectID = positionEntry.getKey();
-                List<Integer> coordinates = positionEntry.getValue();
+                List<Double> coordinates = positionEntry.getValue();
 
                 if (coordinates != null && coordinates.size() >= 2) {
                     Position pos = new Position(coordinates.get(0), coordinates.get(1));
@@ -326,7 +324,7 @@ public class GameAssetManager implements
 
     @Override
     public Puzzle getPuzzleById(String puzzleId) {
-        return null;
+        return masterPuzzles.get(puzzleId);
     }
 
 
@@ -383,7 +381,7 @@ public class GameAssetManager implements
         List<String> interactables;
         List<String> items;
         List<String> hints;
-        Map<String, List<Integer>> positions;
+        Map<String, List<Double>> positions;
     }
 
     private static class JsonInteractableData {
