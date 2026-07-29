@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * An abstract class that implements the User interface.
  */
-// TODO: how is tutorial mode handled?
+// TODO: handle tutorial mode
 public abstract class AbstractUser implements User {
     protected transient String activeGameMode;
 

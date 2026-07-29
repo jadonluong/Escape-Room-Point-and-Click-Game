@@ -6,7 +6,6 @@ import domain.entities.User.CommonUser;
  * The Login interactor.
  */
 
-// TODO: take commonUserFactory out of app builder
 public class LoginInteractor implements LoginInputBoundary{
     private final LoginUserDataAccessInterface userDataAccessObject;
     private final LoginOutputBoundary userPresenter;

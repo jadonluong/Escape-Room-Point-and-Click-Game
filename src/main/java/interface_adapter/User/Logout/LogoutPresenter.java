@@ -14,10 +14,8 @@ import interface_adapter.ViewManagerModel;
 public class LogoutPresenter implements LogoutOutputBoundary, SaveAndLogoutOutputBoundary {
     private final ViewManagerModel viewManagerModel;
     private final MainMenuViewModel mainMenuViewModel;
-    private LoggedInViewModel loggedInViewModel; // TODO: LoggedInViewModel is a place holder, in the game, this should be the pause overlay?
-    private SaveProgressViewModel saveProgressViewModel;
-
-    //TODO: add MainMenuViewModel, MainMenuState, (LoggedInViewModel and LoggedInstate)
+    private final LoggedInViewModel loggedInViewModel;
+    private final SaveProgressViewModel saveProgressViewModel;
 
     public LogoutPresenter(ViewManagerModel viewManagerModel,
                            MainMenuViewModel mainMenuViewModel,
