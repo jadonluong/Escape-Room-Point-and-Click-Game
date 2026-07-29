@@ -17,6 +17,9 @@ import domain.entities.Interactable.CommonInteractableFactory;
 import domain.entities.Interactable.InteractableFactory;
 import domain.entities.Item.CommonItemFactory;
 import domain.entities.Item.ItemFactory;
+import domain.entities.Puzzle.CommonPuzzleFactory;
+import domain.entities.Puzzle.Puzzle;
+import domain.entities.Puzzle.PuzzleFactory;
 import domain.entities.Room.CommonRoomFactory;
 import domain.entities.Room.RoomFactory;
 import domain.entities.User.CommonUserFactory;
@@ -70,8 +73,9 @@ public class AppBuilder extends Application {
         InteractableFactory interactableFactory = new CommonInteractableFactory();
         RoomFactory roomFactory = new CommonRoomFactory();
         HintFactory hintFactory = new CommonHintFactory();
+        PuzzleFactory puzzleFactory = new CommonPuzzleFactory();
 
-        GameAssetManager gameAssetManager = new GameAssetManager(itemFactory, interactableFactory, roomFactory, hintFactory);
+        GameAssetManager gameAssetManager = new GameAssetManager(itemFactory, interactableFactory, roomFactory, hintFactory, puzzleFactory);
 
         JsonUserDataAccessObject userDAO = new JsonUserDataAccessObject(gameAssetManager,gameAssetManager);
         CommonUserFactory userFactory = new CommonUserFactoryClass();

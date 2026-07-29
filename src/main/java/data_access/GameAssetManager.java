@@ -20,6 +20,7 @@ import domain.entities.Interactable.InteractableFactory;
 import domain.entities.Item.Item;
 import domain.entities.Item.ItemFactory;
 import domain.entities.Puzzle.Puzzle;
+import domain.entities.Puzzle.PuzzleFactory;
 import domain.entities.Room.Position;
 import domain.entities.Room.Room;
 import domain.entities.Room.RoomFactory;
@@ -38,7 +39,6 @@ import java.util.Map;
  * Manages game flow as the centralized data initialization engine and in-memory vault
  * for all static, read-only game assets.
  */
-// TODO: add masterPuzzle from temporary puzzle db for demo and update getPuzzleById method
 
 // TODO: position should record Number instead of Integer
 public class GameAssetManager implements
@@ -52,6 +52,7 @@ public class GameAssetManager implements
     private final InteractableFactory interactableFactory;
     private final RoomFactory roomFactory;
     private final HintFactory hintFactory;
+    private final PuzzleFactory puzzleFactory;
 
     // Master in-memory static template lookups
     private final Map<String, Room> masterRooms = new HashMap<>();
@@ -59,18 +60,22 @@ public class GameAssetManager implements
     private final Map<String, Interactable> masterInteractables = new HashMap<>();
     private final Map<String, Hint> masterHints = new HashMap<>();
     private final Map<String,List<Room>> masterModes = new HashMap<>();
+    private final Map<String, Puzzle> masterPuzzles = new HashMap<>();
 
     public GameAssetManager(ItemFactory itemFactory,
                             InteractableFactory interactableFactory,
                             RoomFactory roomFactory,
-                            HintFactory hintFactory) {
+                            HintFactory hintFactory,
+                            PuzzleFactory puzzleFactory) {
 
         this.itemFactory = itemFactory;
         this.interactableFactory = interactableFactory;
         this.roomFactory = roomFactory;
         this.hintFactory = hintFactory;
+        this.puzzleFactory = puzzleFactory;
         try {
             loadItems();
+            loadPuzzles();
             loadInteractables(); // Must run before rooms to populate dependencies
             loadHints();
             loadRooms();         // Instantiates rooms and links child interactables
@@ -99,6 +104,38 @@ public class GameAssetManager implements
                         // Pass the string ID directly to restoreItem
                         Item item = itemFactory.restoreItem(stringId, data.name, data.description, data.craftable, data.imagePath);
                         masterItems.put(stringId, item);
+                    }
+                }
+            }
+        }
+    }
+
+    private void loadPuzzles() throws IOException {
+        try (InputStream stream = getClass().getResourceAsStream("/data/puzzles.json")) {
+            if (stream == null) {
+                return;
+            }
+
+            try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+                Type type = new TypeToken<Map<String, JsonPuzzleData>>() {}.getType();
+                Map<String, JsonPuzzleData> rawData = gson.fromJson(reader, type);
+
+                if (rawData != null) {
+                    for (Map.Entry<String, JsonPuzzleData> entry : rawData.entrySet()) {
+                        String puzzleId = entry.getKey();
+                        JsonPuzzleData data = entry.getValue();
+
+                        if ("Anagram".equalsIgnoreCase(data.puzzleType)) {
+                            Puzzle puzzle = puzzleFactory.createAnagram(puzzleId,
+                                    data.description,
+                                    data.scrambled,
+                                    data.answer,
+                                    data.hint,
+                                    data.successMessage,
+                                    data.rewardItemId,
+                                    data.unlockedRoomId);
+                            masterPuzzles.put(puzzleId, puzzle);
+                        }
                     }
                 }
             }
@@ -369,5 +406,16 @@ public class GameAssetManager implements
     private static class JsonHintData {
         String imagePath;
         List<String> hintMessages;
+    }
+
+    private static class JsonPuzzleData {
+        String puzzleType;
+        String description;
+        String scrambled;
+        String answer;
+        String hint;
+        String successMessage;
+        String rewardItemId;
+        String unlockedRoomId;
     }
 }

@@ -116,3 +116,10 @@ This file explains what the databases could potentially look like.
 
 ## Puzzle DB
 - Do we need one? Since we're calling the puzzle API and puzzles are connected to interactables...
+- for demo purposes only:
+{
+  "puzzleId": {
+    "puzzleType":""
+    // the rest is specific to different types of puzzles
+  }
+}
