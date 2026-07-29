@@ -5,6 +5,7 @@ import application.use_cases.Audio.ToggleSfx.ToggleSfxInteractor;
 import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsInteractor;
 import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpInteractor;
 import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInteractor;
+import application.use_cases.Hint.GetHint.GetHintInteractor;
 import application.use_cases.Interactable.Interact.InteractInteractor;
 import application.use_cases.Interactable.Zoom.ZoomInteractor;
 import application.use_cases.Puzzle.EnterExit.EnterExitInteractor;
@@ -38,6 +39,9 @@ import interface_adapter.GamePlay.QuickModeStartUp.QuickModeStartUpController;
 import interface_adapter.GamePlay.QuickModeStartUp.QuickModeStartUpPresenter;
 import interface_adapter.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpController;
 import interface_adapter.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpPresenter;
+import interface_adapter.Hint.GetHintController;
+import interface_adapter.Hint.GetHintPresenter;
+import interface_adapter.Hint.GetHintViewModel;
 import interface_adapter.Interactable.Interact.InteractController;
 import interface_adapter.Interactable.Interact.InteractPresenter;
 import interface_adapter.Interactable.Interact.InteractViewModel;
@@ -69,6 +73,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import view.Game.BrowseRoomsView;
 import view.Game.InGameView;
+import view.Hint.HintOverlay;
 import view.ViewManager;
 import view.common.AudioControlView;
 import view.common.OverlayFactory;
@@ -144,6 +149,16 @@ public class AppBuilder extends Application {
                 onClose -> new LoginOverlay(onClose, loginController, loginViewModel);
         OverlayFactory signupOverlayFactory =
                 onClose -> new SignupOverlay(onClose, signupController, signupViewModel);
+
+        // --- Get hint chain ---
+        GetHintViewModel getHintViewModel = new GetHintViewModel();
+        GetHintPresenter getHintPresenter = new GetHintPresenter(getHintViewModel);
+        GetHintInteractor getHintInteractor = new GetHintInteractor(getHintPresenter, gameAssetManager);
+        GetHintController getHintController = new GetHintController(getHintInteractor);
+        // TODO: put getHintController in inGameView?
+
+        // --- Get hint overlay ---
+        OverlayFactory getHintOverlayFactory = onClose -> new HintOverlay(getHintViewModel, onClose);
 
         //--- View Model for starting game ---
         InGameViewModel inGameViewModel = new InGameViewModel();
