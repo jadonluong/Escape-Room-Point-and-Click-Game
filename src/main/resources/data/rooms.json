@@ -4,7 +4,7 @@
     "interactables": ["prison_interact_1", "prison_interact_2", "prison_interact_3", "prison_interact_4"],
     "items": ["prison_item_1", "prison_item_2"],
     "hints": ["prison_hint_1", "prison_hint_2"],
-    "imagePath": "src/main/resources/images/rooms/PrisonBackground.png",
+    "imagePath": "/images/rooms/PrisonBackground.png",
     "positions": {
       "itemID": [],
       "interactableID": []
