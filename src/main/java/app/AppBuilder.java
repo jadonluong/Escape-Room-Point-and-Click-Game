@@ -178,7 +178,7 @@ public class AppBuilder extends Application {
 
         // --- Browse Rooms ---
         BrowseRoomsView browseRoomsView = new BrowseRoomsView(viewManager,
-                mainMenu, browseRoomsViewModel, browseRoomsController, quickModeStartUpController);
+                mainMenu, browseRoomsViewModel,  quickModeStartUpController);
 
         // --- In-game ---
         InGameView inGameView = new InGameView(inGameViewModel);
@@ -219,8 +219,8 @@ public class AppBuilder extends Application {
 
         // --- Register every top-level screen by name ---
         viewManager.registerView("main menu", mainMenu);
-        viewManager.registerView("in-game", inGameView);
         viewManager.registerView("browse rooms", browseRoomsView);
+        viewManager.registerView("in-game", inGameView);
 
         // --- Register Interactable and Puzzle Views ---
         viewManager.registerView("Zoom", zoomView);

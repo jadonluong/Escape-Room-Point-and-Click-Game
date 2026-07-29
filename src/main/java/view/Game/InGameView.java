@@ -1,5 +1,6 @@
 package view.Game;
 
+import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsState;
 import interface_adapter.GamePlay.InGameState;
 import interface_adapter.GamePlay.InGameViewModel;
 import javafx.scene.layout.Pane;
@@ -41,9 +42,11 @@ public class InGameView extends StackPane implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
 
-        InGameState state = viewModel.getState();
+        if (evt.getNewValue() instanceof InGameState newState) {
+            renderer.renderAll(newState);
+        }
 
-        renderer.renderAll(state);
+
     }
 
 
