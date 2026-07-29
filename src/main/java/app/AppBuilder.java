@@ -23,7 +23,7 @@ import domain.entities.Interactable.InteractableFactory;
 import domain.entities.Item.CommonItemFactory;
 import domain.entities.Item.ItemFactory;
 import domain.entities.Puzzle.CommonPuzzleFactory;
-import domain.entities.Puzzle.Puzzle; // added
+import domain.entities.Puzzle.Puzzle;
 import domain.entities.Puzzle.PuzzleFactory;
 import domain.entities.Room.CommonRoomFactory;
 import domain.entities.Room.RoomFactory;
@@ -64,7 +64,7 @@ import interface_adapter.User.Signup.SignupViewModel;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.inventory.InventoryViewModel; // added
 import interface_adapter.inventory.InventoryPresenter; // added
-import interface_adapter.inventory.InventoryPresenter; // added
+import interface_adapter.inventory.InventoryState; // added
 import javafx.application.Application;
 import javafx.stage.Stage;
 import view.Game.BrowseRoomsView;
@@ -169,6 +169,15 @@ public class AppBuilder extends Application {
                 = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager);
         QuickModeStartUpController quickModeStartUpController
                 = new QuickModeStartUpController(quickModeStartUpInteractor);
+
+        // --- Items & Inventory Chain ---
+        InventoryViewModel inventoryViewModel = new InventoryViewModel();
+        InventoryPresenter inventoryPresenter = new InventoryPresenter(inventoryViewModel);
+        PickUpInteractor pickUpInteractor = new PickUpInteractor(userDAO, inventoryPresenter);
+        OverlayFactory inventoryOverlayFactory = onClose -> new InventoryOverlay(
+                onClose,
+                inventoryViewModel
+        );
 
         // --- Main menu ---
         MainMenuView mainMenu = new MainMenuView(
