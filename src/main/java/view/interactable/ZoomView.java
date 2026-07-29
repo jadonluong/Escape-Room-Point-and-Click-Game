@@ -248,6 +248,9 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
     }
 
     private Image loadImage(String resourcePath) {
+        if (resourcePath == null) {
+            return null; // no sprite to show yet — e.g. before any Zoom has occurred
+        }
         java.io.InputStream stream = getClass().getResourceAsStream(resourcePath);
         if (stream == null) {
             throw new IllegalArgumentException("Resource not found: " + resourcePath);
