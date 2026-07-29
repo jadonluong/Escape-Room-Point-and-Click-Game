@@ -39,7 +39,7 @@ public class BrowseRoomsView extends StackPane implements PropertyChangeListener
     private final Label errorLabel = new Label();
 
     public BrowseRoomsView(ViewManager viewManager, StackPane previousView, BrowseRoomsViewModel viewModel,
-                           BrowseRoomsController browseRoomsController, QuickModeStartUpController quickModeStartUpController) {
+                           QuickModeStartUpController quickModeStartUpController) {
         this.viewManager = viewManager;
         this.previousView = previousView;
         this.viewModel = viewModel;
@@ -165,7 +165,7 @@ public class BrowseRoomsView extends StackPane implements PropertyChangeListener
         descriptionLabel.setLayoutY(110);
 
         ImageView playButton = makeButton("/images/ui/buttons/QuickButton.png", 400, 150,
-                width - 450, (height - 150) / 2, () -> onRoomSelected(roomId));
+                width - 450, (height - 150) / 2, () -> quickModeStartUpController.execute(roomId));
 
         card.getChildren().addAll(cardBg, thumbnail, nameLabel, descriptionLabel, playButton);
         return card;
