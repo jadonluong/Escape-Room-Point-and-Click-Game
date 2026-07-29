@@ -36,7 +36,8 @@ public abstract class AbstractUserTest<T extends AbstractUser> {
                 "fake_path",
                 interactables,
                 items,
-                hints);
+                hints,
+                positions);
         user.setActiveGameMode("StoryMode");
         user.unlockRoom(room);
         ArrayList<Room> roomList = new ArrayList<>();
