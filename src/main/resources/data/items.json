@@ -1,8 +1,22 @@
 {
-  "itemID_1": {
-    "name": "itemName",
-    "description": "description of item",
+  "prison_item_1": {
+    "name": "stick",
+    "description": "A brown stick",
     "craftable": true,
-    "imagePath": "the file path of the image of the item"
+    "imagePath": "src/main/resources/images/items/prison/stick.png"
+  },
+
+  "prison_item_2": {
+    "name": "spider",
+    "description": "A gold-smelling spider",
+    "craftable": true,
+    "imagePath": "src/main/resources/images/items/prison/spider3.png"
+  },
+
+  "prison_item_3": {
+    "name": "super spider",
+    "description": "A spider that can eat metal",
+    "craftable": true,
+    "imagePath": "src/main/resources/images/items/prison/spider4.png"
   }
 }

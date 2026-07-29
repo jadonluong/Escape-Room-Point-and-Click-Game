@@ -1,5 +1,5 @@
 {
-  "QuickMode": ["roomID_1"],
-  "StoryMode": ["roomID_#"],
-  "TutorialMode": ["roomID_#"]
+  "QuickMode": ["prison"],
+  "StoryMode": ["prison"],
+  "TutorialMode": ["prison"]
 }

@@ -1,19 +1,70 @@
 {
-  "interactableID_1": {
-    "defaultName": "interactableName",
-    "defaultDescription": "description",
-    "defaultSprite": "...",
-    "interactedName": "...",
-    "interactedDescription": "...",
-    "interactedSprite": "...",
+  "prison_interact_1": {
+    "defaultName": "chest",
+    "defaultDescription": "locked chest",
+    "defaultSprite": "src/main/resources/images/items/prison/chest.png",
+    "interactedName": "unlocked chest",
+    "interactedDescription": "unlocked chest",
+    "interactedSprite": "src/main/resources/images/items/prison/chest.png",
+    "isConsumed": true,
+    "consumesItem": false,
+    "needsItem": true,
+    "requiredItemId": "prison_item_2",
+    "rewardItemId": "prison_Item_3",
+    "linkedPuzzleId": null,
+    "unlockedRoomId": null,
+    "successMessage": null
+  },
+
+  "prison_interact_2": {
+    "defaultName": "door",
+    "defaultDescription": "locked door",
+    "defaultSprite": "src/main/resources/images/items/prison/door.png",
+    "interactedName": "unlocked door",
+    "interactedDescription": "unlocked door",
+    "interactedSprite": "src/main/resources/images/items/prison/door.png",
+    "isConsumed": true,
+    "consumesItem": true,
+    "needsItem": true,
+    "requiredItemId": "prison_item_3",
+    "rewardItemId": null,
+    "linkedPuzzleId": null,
+    "unlockedRoomId": "study",
+    "successMessage": "Quick! You have 3 minutes until the guard notices!"
+  },
+
+  "prison_interact_3": {
+    "defaultName": "skeleton",
+    "defaultDescription": "A fellow inmate",
+    "defaultSprite": "src/main/resources/images/items/prison/skeleton.png",
+    "interactedName": "Annoying skeleton",
+    "interactedDescription": "Annoying skeleton laughing at you",
+    "interactedSprite": "src/main/resources/images/items/prison/skeleton.png",
     "isConsumed": false,
     "consumesItem": true,
     "needsItem": true,
-    "requiredItemId": "...",
-    "rewardItemId": "...",
-    "linkedPuzzleId": "...",
-    "unlockedRoomId": "...",
-    "successMessage": "..."
+    "requiredItemId": "prison_item_1",
+    "rewardItemId": null,
+    "linkedPuzzleId": null,
+    "unlockedRoomId": null,
+    "successMessage": "I’d lend you a hand, but I need every bone in my body to watch you fail, HAHAHAHAHA!!!"
+  },
+
+  "prison_interact_4": {
+    "defaultName": "locker",
+    "defaultDescription": "locker locked",
+    "defaultSprite": "src/main/resources/images/items/prison/locker.png",
+    "interactedName": "unlocked locker",
+    "interactedDescription": "locker unlocked",
+    "interactedSprite": "src/main/resources/images/items/prison/locker.png",
+    "isConsumed": false,
+    "consumesItem": false,
+    "needsItem": true,
+    "requiredItemId": "prison_item_1",
+    "rewardItemId": null,
+    "linkedPuzzleId": "prison_puzzle_1",
+    "unlockedRoomId": null,
+    "successMessage": null
   }
 }
 

@@ -1,0 +1,12 @@
+{
+  "prison_puzzle_1": {
+    "puzzleType": "Anagram",
+    "description": "This is a anagram puzzle for prison",
+    "scrambled": "SAMIETN",
+    "answer": "INMATES",
+    "hint": "Who's there with you?",
+    "successMessage": null,
+    "rewardItemId": "prison_item_2",
+    "unlockedRoomId": null
+  }
+}
