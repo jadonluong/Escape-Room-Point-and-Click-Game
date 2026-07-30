@@ -2,7 +2,6 @@ package view.interactable;
 
 import interface_adapter.Interactable.Interact.InteractState;
 import interface_adapter.Interactable.Interact.InteractViewModel;
-import interface_adapter.ViewManagerModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -12,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import view.ViewManager;
 import view.common.ModalOverlay;
 
 import java.awt.event.ActionEvent;
@@ -25,22 +25,8 @@ public class InteractOverlay extends ModalOverlay implements ActionListener, Pro
     private Label messageLabel = new Label();
     private Label subtitleLabel = new Label("Click anywhere outside the box to dismiss this message.");
 
-    public InteractOverlay(InteractViewModel interactViewModel, ViewManagerModel viewManagerModel) {
-        super(() -> { // When InteractOverlay closes
-            InteractState state = interactViewModel.getState();
-            String returnToView = state.getReturnToView();
-
-            state.setSuccessMessage(null);
-            state.setErrorMessage(null);
-            state.setReturnToView(null);
-
-            if (returnToView != null) { // In case I forget to set this...
-                viewManagerModel.setState(returnToView);
-            } else {
-                viewManagerModel.setState("Room");
-            }
-            viewManagerModel.firePropertyChanged();
-        });
+    public InteractOverlay(InteractViewModel interactViewModel, ViewManager viewManager) {
+        super(() -> viewManager.hideOverlay("Interact")); // When the overlay closes.
 
         this.interactViewModel = interactViewModel;
         this.interactViewModel.addPropertyChangeListener(this);

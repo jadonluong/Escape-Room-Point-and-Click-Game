@@ -269,25 +269,25 @@ public class AppBuilder extends Application {
 
         // --- Interactable Interact Chain ---
         InteractViewModel interactViewModel = new InteractViewModel();
-        InteractPresenter interactPresenter = new InteractPresenter(interactViewModel, viewManagerModel);
+        InteractPresenter interactPresenter = new InteractPresenter(interactViewModel, viewManagerModel, viewManager);
         InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter);
         InteractController interactController = new InteractController(interactInteractor);
 
         // --- Puzzle EnterExit Chain ---
         EnterExitViewModel enterExitViewModel = new EnterExitViewModel();
         EnterExitPresenter enterExitPresenter = new EnterExitPresenter(enterExitViewModel, interactViewModel,
-                viewManagerModel);
+                viewManagerModel, viewManager);
         EnterExitInteractor enterExitInteractor = new EnterExitInteractor(gameAssetManager, enterExitPresenter);
         EnterExitController enterExitController = new EnterExitController(enterExitInteractor);
 
         // --- Puzzle Solve Chain ---
-        SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, viewManagerModel);
+        SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, viewManagerModel, viewManager);
         SolveInteractor solveInteractor = new SolveInteractor(gameAssetManager, solvePresenter);
         SolveController solveController = new SolveController(solveInteractor);
 
         // --- Interactable and Puzzle Views ---
         ZoomView zoomView = new ZoomView(zoomController, zoomViewModel, interactController, enterExitController);
-        InteractOverlay interactOverlay = new InteractOverlay(interactViewModel, viewManagerModel);
+        InteractOverlay interactOverlay = new InteractOverlay(interactViewModel, viewManager);
         PuzzleView puzzleView = new PuzzleView(enterExitViewModel);
 
         // --- Action triggering ---
@@ -303,8 +303,8 @@ public class AppBuilder extends Application {
 
         // --- Register Interactable and Puzzle Views ---
         viewManager.registerView("Zoom", zoomView);
-        // TODO: Register InteractOverlay in viewManager once overlay cases are handled in ViewManager
-        viewManager.registerView("Puzzle",  puzzleView);
+        viewManager.registerOverlay("Interact", interactOverlay);
+        viewManager.registerView("Puzzle", puzzleView);
 
         // --- Trigger the first screen ---
         viewManagerModel.firePropertyChanged();
