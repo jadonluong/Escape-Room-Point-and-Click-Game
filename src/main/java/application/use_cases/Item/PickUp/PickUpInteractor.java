@@ -22,12 +22,9 @@ public class PickUpInteractor implements PickUpInputBoundary{
             return;
         }
 
-        String currentUsername = userDAO.getCurrentUsername();
-        if (currentUsername != null) {
-            User user = userDAO.getUser(currentUsername);
-            if (user != null) {
-                user.saveItem(item); // Adds item to dynamic ArrayList
-            }
+        User user = userDAO.getCurrentUser();
+        if (user != null) {
+            user.saveItem(item); // Adds item to dynamic ArrayList
         }
 
         PickUpOutputData outputData = new PickUpOutputData(item.getName());
