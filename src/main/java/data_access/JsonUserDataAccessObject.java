@@ -4,6 +4,9 @@ import application.game_registry.ItemRegistry;
 import application.game_registry.RoomRegistry;
 import application.use_cases.GamePlay.ActionTrigger.ActionTriggerDataAccessInterface;
 import application.use_cases.Hint.GetHint.GetHintUserDataAccessInterface;
+import application.use_cases.Interactable.Interact.InteractUserDataAccessInterface;
+import application.use_cases.Puzzle.EnterExit.EnterExitUserDataAccessInterface;
+import application.use_cases.Puzzle.Solve.SolveUserDataAccessInterface;
 import application.use_cases.User.Login.LoginUserDataAccessInterface;
 import application.use_cases.User.SaveProgress.SaveProgressUserDataAccessInterface;
 import application.use_cases.User.SignUp.SignupUserDataAccessInterface;
@@ -33,7 +36,10 @@ public class JsonUserDataAccessObject implements
         LogoutUserDataAccessInterface,
         SaveProgressUserDataAccessInterface,
         GetHintUserDataAccessInterface,
-        ActionTriggerDataAccessInterface {
+        ActionTriggerDataAccessInterface,
+        InteractUserDataAccessInterface,
+        EnterExitUserDataAccessInterface,
+        SolveUserDataAccessInterface {
 
     private static final String FILE_PATH = "user_data/users.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
