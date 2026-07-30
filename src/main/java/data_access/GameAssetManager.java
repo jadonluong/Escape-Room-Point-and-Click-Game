@@ -125,7 +125,6 @@ public class GameAssetManager implements
 
                         if ("Anagram".equalsIgnoreCase(data.puzzleType)) {
                             Puzzle puzzle = puzzleFactory.createAnagram(puzzleId,
-                                    data.description,
                                     data.scrambled,
                                     data.answer,
                                     data.hint,
@@ -408,7 +407,6 @@ public class GameAssetManager implements
 
     private static class JsonPuzzleData {
         String puzzleType;
-        String description;
         String scrambled;
         String answer;
         String hint;
