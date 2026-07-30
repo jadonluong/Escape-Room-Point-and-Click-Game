@@ -9,7 +9,6 @@ public class CryptogramPuzzle implements Puzzle{
 
     private String encrypted;
     private String answer;
-    private String hint;
     private Map<String, String> cipher;
     private String cipherKeyId;
 
@@ -17,15 +16,13 @@ public class CryptogramPuzzle implements Puzzle{
     private String rewardItemId;
     private String unlockedRoomId;
 
-    public CryptogramPuzzle(String id, String description, String encrypted, String answer, String hint,
-                            Map<String, String> cipher, String cipherKeyId, String successMessage, String rewardItemId,
-                            String unlockedRoomId) {
+    public CryptogramPuzzle(String id, String encrypted, String answer, Map<String, String> cipher, String cipherKeyId,
+                            String successMessage, String rewardItemId, String unlockedRoomId) {
         this.id = id;
         this.isSolved = false;
-        this.description = description;
+        this.description = "Use the cipher to translate the encrypted sentence!";
         this.encrypted = encrypted;
         this.answer = answer;
-        this.hint = hint;
         this.cipher = cipher;
         this.cipherKeyId = cipherKeyId;
         this.successMessage = successMessage;
@@ -60,11 +57,6 @@ public class CryptogramPuzzle implements Puzzle{
     @Override
     public String getAnswer() {
         return answer;
-    }
-
-    @Override
-    public String getHint() {
-        return hint;
     }
 
     public Map<String, String> getCipher() {
