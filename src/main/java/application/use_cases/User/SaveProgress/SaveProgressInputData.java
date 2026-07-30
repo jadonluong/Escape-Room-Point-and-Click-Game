@@ -6,13 +6,13 @@ import domain.entities.User.User;
  * The Input Data for the Save Progress Use Case.
  */
 public class SaveProgressInputData {
-    private User user;
+    private String username;
 
-    public SaveProgressInputData(User user){
-        this.user = user;
+    public SaveProgressInputData(String username){
+        this.username = username;
     }
 
-    public User getUser() {
-        return this.user;
+    public String getUsername() {
+        return this.username;
     }
 }

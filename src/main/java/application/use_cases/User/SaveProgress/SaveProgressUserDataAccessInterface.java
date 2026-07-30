@@ -1,6 +1,7 @@
 package application.use_cases.User.SaveProgress;
 
 import domain.entities.User.CommonUser;
+import domain.entities.User.User;
 
 public interface SaveProgressUserDataAccessInterface {
 
@@ -9,4 +10,6 @@ public interface SaveProgressUserDataAccessInterface {
      * @param user the Common user to be saved to database
      */
     void saveProgress(CommonUser user);
+
+    User getCurrentUser();
 }

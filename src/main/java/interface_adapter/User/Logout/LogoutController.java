@@ -30,11 +30,11 @@ public class LogoutController {
 
     /**
      * Executes the save and logout use case.
-     * @param user the current user
+     * @param username the username of the current user
      */
-    public void executeLogoutWithSave(User user) {
+    public void executeLogoutWithSave(String username) {
 
-        SaveAndLogoutInputData inputData = new SaveAndLogoutInputData(user);
+        SaveAndLogoutInputData inputData = new SaveAndLogoutInputData(username);
         saveAndLogoutInteractor.execute(inputData);
     }
 }

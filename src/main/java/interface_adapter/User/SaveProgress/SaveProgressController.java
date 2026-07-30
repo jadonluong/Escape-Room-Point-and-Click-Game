@@ -17,10 +17,10 @@ public class SaveProgressController {
 
     /**
      * Executes the Save Progress Use case.
-     * @param user the User object of the user clicking save or save&logout
+     * @param username the username of the user clicking save or save&logout
      */
-    public void execute(User user) {
-        SaveProgressInputData inputData = new SaveProgressInputData(user);
+    public void execute(String username) {
+        SaveProgressInputData inputData = new SaveProgressInputData(username);
         this.saveProgressInteractor.execute(inputData);
     }
 }

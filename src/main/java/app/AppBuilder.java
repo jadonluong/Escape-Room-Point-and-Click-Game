@@ -171,9 +171,8 @@ public class AppBuilder extends Application {
         // --- Get hint chain ---
         GetHintViewModel getHintViewModel = new GetHintViewModel();
         GetHintPresenter getHintPresenter = new GetHintPresenter(getHintViewModel);
-        GetHintInteractor getHintInteractor = new GetHintInteractor(getHintPresenter, gameAssetManager);
+        GetHintInteractor getHintInteractor = new GetHintInteractor(getHintPresenter, gameAssetManager, userDAO);
         GetHintController getHintController = new GetHintController(getHintInteractor);
-        // TODO: put getHintController in inGameView?
 
         // --- Get hint overlay ---
         OverlayFactory getHintOverlayFactory = onClose -> new HintOverlay(getHintViewModel, onClose);
@@ -238,14 +237,16 @@ public class AppBuilder extends Application {
                 // --- On save ---
                 () -> {
                     if (userDAO.getCurrentUser() != null) {
-                        saveProgressController.execute(userDAO.getCurrentUser());
+                        String username = loggedInViewModel.getState().getUsername();
+                        saveProgressController.execute(username);
                     }
                 },
 
                 // --- On save & quit ---
                 () -> {
                     if (userDAO.getCurrentUser() != null) {
-                        logoutController.executeLogoutWithSave(userDAO.getCurrentUser());
+                        String username = loggedInViewModel.getState().getUsername();
+                        logoutController.executeLogoutWithSave(username);
                     }
                 },
 
@@ -291,7 +292,7 @@ public class AppBuilder extends Application {
         PuzzleView puzzleView = new PuzzleView(enterExitViewModel);
 
         // --- Action triggering ---
-        ActionTriggerInteractor actionTriggerInteractor = new ActionTriggerInteractor(zoomInteractor, userDAO);
+        ActionTriggerInteractor actionTriggerInteractor = new ActionTriggerInteractor(zoomInteractor, pickUpInteractor, getHintInteractor, userDAO);
         ActionTriggerController actionTriggerController = new ActionTriggerController(actionTriggerInteractor);
         // --- In-game ---
         InGameView inGameView = new InGameView(inGameViewModel, actionTriggerController);

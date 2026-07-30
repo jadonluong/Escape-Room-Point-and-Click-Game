@@ -3,6 +3,7 @@ package data_access;
 import application.game_registry.ItemRegistry;
 import application.game_registry.RoomRegistry;
 import application.use_cases.GamePlay.ActionTrigger.ActionTriggerDataAccessInterface;
+import application.use_cases.Hint.GetHint.GetHintUserDataAccessInterface;
 import application.use_cases.User.Login.LoginUserDataAccessInterface;
 import application.use_cases.User.SaveProgress.SaveProgressUserDataAccessInterface;
 import application.use_cases.User.SignUp.SignupUserDataAccessInterface;
@@ -31,6 +32,7 @@ public class JsonUserDataAccessObject implements
         SignupUserDataAccessInterface,
         LogoutUserDataAccessInterface,
         SaveProgressUserDataAccessInterface,
+        GetHintUserDataAccessInterface,
         ActionTriggerDataAccessInterface {
 
     private static final String FILE_PATH = "user_data/users.json";

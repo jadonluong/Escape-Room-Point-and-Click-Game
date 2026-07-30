@@ -6,11 +6,11 @@ import domain.entities.User.User;
  * The input data for the Save and Logout use case.
  */
 public class SaveAndLogoutInputData {
-    private final User user;
+    private final String username;
 
-    public SaveAndLogoutInputData(User user) {
-        this.user = user;
+    public SaveAndLogoutInputData(String username) {
+        this.username = username;
     }
 
-    public User getUser() { return this.user; }
+    public String getUsername() { return this.username; }
 }
