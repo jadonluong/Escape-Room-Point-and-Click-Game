@@ -29,9 +29,8 @@ public class BrowseRoomsInteractor implements BrowseRoomsInputBoundary {
 
             //Put RoomId as key, description and img path as value.
             Map<String,RoomInfo> data = new HashMap<>();
-            rooms.forEach(room -> {
-                data.put(room.getId(), new RoomInfo(room.getDescription(),room.getImagePath()));
-            });
+            rooms.forEach(room ->
+                data.put(room.getId(), new RoomInfo(room.getDescription(), room.getImagePath())));
 
 
             //Instantiate Output Data class using the String IDs

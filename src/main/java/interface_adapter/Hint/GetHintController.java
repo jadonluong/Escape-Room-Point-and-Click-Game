@@ -19,7 +19,7 @@ public class GetHintController {
      * @param objectID the ID of the object the user clicked on
      * @param currentUser the user requesting the hint
      */
-    public void execute(String objectID, User currentUser) {
+    public void execute(String objectID, String currentUser) {
         GetHintInputData inputData = new GetHintInputData(objectID, currentUser);
         getHintInteractor.execute(inputData);
     }
