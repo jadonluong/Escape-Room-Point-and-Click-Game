@@ -7,7 +7,8 @@ import interface_adapter.Interactable.Interact.InteractViewModel;
 import interface_adapter.ViewManagerModel;
 import view.ViewManager;
 
-public class SolvePresenter implements SolveOutputBoundary {
+public class
+SolvePresenter implements SolveOutputBoundary {
     private final InteractViewModel interactViewModel;
     private final ViewManagerModel viewManagerModel;
     private final ViewManager viewManager;
@@ -25,8 +26,12 @@ public class SolvePresenter implements SolveOutputBoundary {
         state.setSuccessMessage(outputData.getSuccessMessage());
         state.setErrorMessage(null);
 
+        interactViewModel.setState(state);
+        interactViewModel.firePropertyChanged();
+
         viewManagerModel.setState("Zoom"); // Bring back to ZoomView before opening InteractOverlay!
         viewManagerModel.firePropertyChanged();
+
         viewManager.showOverlay("Interact");
     }
 
@@ -35,6 +40,9 @@ public class SolvePresenter implements SolveOutputBoundary {
         InteractState state = interactViewModel.getState();
         state.setSuccessMessage(null);
         state.setErrorMessage(errorMessage);
+
+        interactViewModel.setState(state);
+        interactViewModel.firePropertyChanged();
 
         viewManager.showOverlay("Interact");
     }
