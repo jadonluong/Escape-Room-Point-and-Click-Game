@@ -271,19 +271,20 @@ public class AppBuilder extends Application {
         // --- Interactable Interact Chain ---
         InteractViewModel interactViewModel = new InteractViewModel();
         InteractPresenter interactPresenter = new InteractPresenter(interactViewModel, viewManagerModel, viewManager);
-        InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter);
+        InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter, userDAO);
         InteractController interactController = new InteractController(interactInteractor);
 
         // --- Puzzle EnterExit Chain ---
         EnterExitViewModel enterExitViewModel = new EnterExitViewModel();
         EnterExitPresenter enterExitPresenter = new EnterExitPresenter(enterExitViewModel, interactViewModel,
                 viewManagerModel, viewManager);
-        EnterExitInteractor enterExitInteractor = new EnterExitInteractor(gameAssetManager, enterExitPresenter);
+        EnterExitInteractor enterExitInteractor = new EnterExitInteractor(gameAssetManager, enterExitPresenter,
+                userDAO);
         EnterExitController enterExitController = new EnterExitController(enterExitInteractor);
 
         // --- Puzzle Solve Chain ---
         SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, viewManagerModel, viewManager);
-        SolveInteractor solveInteractor = new SolveInteractor(gameAssetManager, solvePresenter);
+        SolveInteractor solveInteractor = new SolveInteractor(gameAssetManager, solvePresenter, userDAO);
         SolveController solveController = new SolveController(solveInteractor);
 
         // --- Interactable and Puzzle Views ---

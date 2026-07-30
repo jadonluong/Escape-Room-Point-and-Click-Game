@@ -9,16 +9,19 @@ import domain.entities.User.User;
 public class EnterExitInteractor implements EnterExitInputBoundary {
     private EnterExitDataAccessInterface dataAccess;
     private EnterExitOutputBoundary outputBoundary;
+    private EnterExitUserDataAccessInterface userDataAccess;
 
-    public EnterExitInteractor(EnterExitDataAccessInterface dataAccess, EnterExitOutputBoundary outputBoundary) {
+    public EnterExitInteractor(EnterExitDataAccessInterface dataAccess, EnterExitOutputBoundary outputBoundary,
+                               EnterExitUserDataAccessInterface userDataAccess) {
         this.dataAccess = dataAccess;
         this.outputBoundary = outputBoundary;
+        this.userDataAccess = userDataAccess;
     }
 
     @Override
     public void enter(EnterExitInputData inputData) {
         Puzzle puzzle = dataAccess.getPuzzleById(inputData.getPuzzleId());
-        User player = dataAccess.getCurrentUser();
+        User player = userDataAccess.getCurrentUser();
 
         if (puzzle instanceof CryptogramPuzzle && !player.hasItemID(((CryptogramPuzzle) puzzle).getCipherKeyId())) {
             outputBoundary.prepareFailureView("You need a cipher key to decode this!");

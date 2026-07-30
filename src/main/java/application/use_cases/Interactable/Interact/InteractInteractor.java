@@ -8,15 +8,18 @@ import domain.entities.User.User;
 public class InteractInteractor implements InteractInputBoundary {
     private InteractDataAccessInterface dataAccess;
     private InteractOutputBoundary outputBoundary;
+    private InteractUserDataAccessInterface userDataAccess;
 
-    public InteractInteractor(InteractDataAccessInterface dataAccess, InteractOutputBoundary outputBoundary) {
+    public InteractInteractor(InteractDataAccessInterface dataAccess, InteractOutputBoundary outputBoundary,
+                              InteractUserDataAccessInterface userDataAccess) {
         this.dataAccess = dataAccess;
         this.outputBoundary = outputBoundary;
+        this.userDataAccess = userDataAccess;
     }
 
     @Override // Note: Write specific cases for more complex Interactable's by checking id!
     public void interact(InteractInputData inputData) {
-        User player = dataAccess.getCurrentUser();
+        User player = userDataAccess.getCurrentUser();
         Interactable interactable = dataAccess.getInteractableById(inputData.getInteractableId());
 
         if (interactable.isInteracted()) {

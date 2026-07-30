@@ -6,10 +6,13 @@ import domain.entities.User.User;
 public class SolveInteractor implements SolveInputBoundary {
     private SolveDataAccessInterface dataAccess;
     private SolveOutputBoundary outputBoundary;
+    private SolveUserDataAccessInterface userDataAccess;
 
-    public SolveInteractor(SolveDataAccessInterface dataAccess, SolveOutputBoundary outputBoundary) {
+    public SolveInteractor(SolveDataAccessInterface dataAccess, SolveOutputBoundary outputBoundary,
+                           SolveUserDataAccessInterface userDataAccess) {
         this.dataAccess = dataAccess;
         this.outputBoundary = outputBoundary;
+        this.userDataAccess = userDataAccess;
     }
 
     @Override
@@ -18,7 +21,7 @@ public class SolveInteractor implements SolveInputBoundary {
         if (puzzle.solve(inputData.getPlayerAnswer())) {
             puzzle.setSolved(true);
 
-            User player = dataAccess.getCurrentUser();
+            User player = userDataAccess.getCurrentUser();
             String rewardItemId = puzzle.getRewardItemId();
             if (rewardItemId != null) {
                 player.saveItem(dataAccess.getItemById(rewardItemId));
