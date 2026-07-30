@@ -34,7 +34,7 @@ public class InGameView extends StackPane implements PropertyChangeListener {
         gamePane.setMinSize(DESIGN_WIDTH, DESIGN_HEIGHT);
         gamePane.setMaxSize(DESIGN_WIDTH, DESIGN_HEIGHT);
 
-        ImageView bg = new ImageView(imgLoader.loadImage("/images/ui/backgrounds/MainMenuUnloggedBG.png"));
+        ImageView bg = new ImageView(imgLoader.loadImage("/images/rooms/PrisonBackground.png"));
         bg.setFitWidth(DESIGN_WIDTH);
         bg.setFitHeight(DESIGN_HEIGHT);
         gamePane.getChildren().add(bg);
