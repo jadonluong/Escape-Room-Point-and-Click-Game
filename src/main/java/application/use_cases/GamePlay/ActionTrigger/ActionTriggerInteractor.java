@@ -2,10 +2,12 @@ package application.use_cases.GamePlay.ActionTrigger;
 
 import application.use_cases.Hint.GetHint.GetHintInputBoundary;
 import application.use_cases.Hint.GetHint.GetHintInputData;
+import application.use_cases.Interactable.Interact.InteractDataAccessInterface;
 import application.use_cases.Interactable.Zoom.ZoomInputBoundary;
 import application.use_cases.Interactable.Zoom.ZoomInputData;
 import application.use_cases.Item.PickUp.PickUpInputBoundary;
 import application.use_cases.Item.PickUp.PickUpInputData;
+import domain.entities.Item.Item;
 
 import java.util.Objects;
 
@@ -34,7 +36,9 @@ public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
             zoomInteractor.zoomIn(interactableInputDate);
         }
         else if(Objects.equals(inputData.mode, "item")) {
-            PickUpInputData itemInputData = new PickUpInputData(inputData.id);
+            InteractDataAccessInterface currentRoom = null;
+            Item itemToPickUp = currentRoom.getItemById(inputData.id);
+            PickUpInputData itemInputData = new PickUpInputData(itemToPickUp);
             pickUpInteractor.execute(itemInputData);
         }
         else if(Objects.equals(inputData.mode, "hint")) {
