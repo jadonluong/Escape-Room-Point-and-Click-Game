@@ -117,7 +117,7 @@ public class ViewManager implements PropertyChangeListener {
         stage.show();
     }
 
-    public void showOverlay(String overlayName) { // TODO: Make sure everyone is calling this for overlays!
+    public void showOverlay(String overlayName) {
         ModalOverlay overlay = overlays.get(overlayName);
         if (overlay == null) {
             return;
@@ -132,7 +132,7 @@ public class ViewManager implements PropertyChangeListener {
         }
 
         Parent root = scene.getRoot();
-        if (!(root instanceof StackPane)) { // TODO: Ask if everyone's
+        if (!(root instanceof StackPane)) {
             return;
         }
         ((StackPane) root).getChildren().add(overlay);
