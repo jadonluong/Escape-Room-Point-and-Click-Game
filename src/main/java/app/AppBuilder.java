@@ -12,6 +12,8 @@ import application.use_cases.Puzzle.EnterExit.EnterExitInteractor;
 import application.use_cases.Puzzle.Solve.SolveInteractor;
 import application.use_cases.User.Login.LoginInteractor;
 import application.use_cases.User.Logout.LogoutInteractor;
+import application.use_cases.User.SaveAndLogout.SaveAndLogoutInteractor;
+import application.use_cases.User.SaveProgress.SaveProgressInteractor;
 import application.use_cases.User.SignUp.ProfanityCheck;
 import application.use_cases.User.SignUp.SignupInteractor;
 import application.use_cases.Item.PickUp.PickUpInteractor; // added
@@ -60,6 +62,8 @@ import interface_adapter.User.Login.LoginViewModel;
 import interface_adapter.User.Logout.LogoutController;
 import interface_adapter.User.Logout.LogoutPresenter;
 import interface_adapter.User.MainMenu.MainMenuViewModel;
+import interface_adapter.User.SaveProgress.SaveProgressController;
+import interface_adapter.User.SaveProgress.SaveProgressPresenter;
 import interface_adapter.User.SaveProgress.SaveProgressViewModel;
 import interface_adapter.User.Signup.ProfanityCheckGateway;
 import interface_adapter.User.Signup.SignupController;
@@ -72,6 +76,7 @@ import interface_adapter.inventory.InventoryState; // added
 import javafx.application.Application;
 import javafx.stage.Stage;
 import view.Game.BrowseRoomsView;
+import view.Game.GameMenuView;
 import view.Game.InGameView;
 import view.Hint.HintOverlay;
 import view.ViewManager;
@@ -130,12 +135,23 @@ public class AppBuilder extends Application {
         LoginInteractor loginInteractor = new LoginInteractor(userDAO, loginPresenter);
         LoginController loginController = new LoginController(loginInteractor);
 
+
+
         // --- Logout chain ---
         MainMenuViewModel mainMenuViewModel = new MainMenuViewModel();
         SaveProgressViewModel saveProgressViewModel = new SaveProgressViewModel();
+
+            // --- Save progress chain ---
+            SaveProgressPresenter saveProgressPresenter = new SaveProgressPresenter(saveProgressViewModel);
+            SaveProgressInteractor saveProgressInteractor = new SaveProgressInteractor(saveProgressPresenter, userDAO);
+            SaveProgressController saveProgressController = new SaveProgressController(saveProgressInteractor);
+
         LogoutPresenter logoutPresenter = new LogoutPresenter(viewManagerModel, mainMenuViewModel, loggedInViewModel, saveProgressViewModel);
         LogoutInteractor logoutInteractor = new LogoutInteractor(userDAO, logoutPresenter);
-        LogoutController logoutController = new LogoutController(logoutInteractor, null /* saveAndLogoutInteractor — not wired yet */);
+
+        SaveAndLogoutInteractor saveAndLogoutInteractor = new SaveAndLogoutInteractor(userDAO, userDAO, logoutPresenter); // Note: save & logout chain uses logout controller
+
+        LogoutController logoutController = new LogoutController(logoutInteractor, saveAndLogoutInteractor);
 
         // --- Signup chain ---
         ProfanityCheck profanityCheck = new ProfanityCheckGateway(HttpClient.newHttpClient());
@@ -211,6 +227,35 @@ public class AppBuilder extends Application {
 
         // --- In-game ---
         InGameView inGameView = new InGameView(inGameViewModel);
+
+        // --- Game menu overlay ---
+        OverlayFactory gameMenuOverlayFactory = onClose -> new GameMenuView(
+                onClose,
+                loggedInViewModel,
+                sfxController,
+                musicController,
+                audioViewModel,
+
+                // --- On save ---
+                () -> {
+                    if (userDAO.getCurrentUser() != null) {
+                        saveProgressController.execute(userDAO.getCurrentUser());
+                    }
+                },
+
+                // --- On save & quit ---
+                () -> {
+                    if (userDAO.getCurrentUser() != null) {
+                        logoutController.executeLogoutWithSave(userDAO.getCurrentUser());
+                    }
+                },
+
+                // --- On quit ---
+                () -> {
+                    String username = loggedInViewModel.getState().getUsername();
+                    logoutController.executeLogoutWithoutSave(username);
+                }
+        );
 
         // --- Placeholder screens ---
         PlaceholderView storyPlaceholder = new PlaceholderView("Story Line", viewManagerModel);

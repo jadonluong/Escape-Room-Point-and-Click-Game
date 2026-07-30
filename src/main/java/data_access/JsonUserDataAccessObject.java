@@ -38,12 +38,32 @@ public class JsonUserDataAccessObject implements
     private final RoomRegistry roomRegistry;
     private final ItemRegistry itemRegistry;
     private String currentUsername;
+    private User currentUser;
 
     public JsonUserDataAccessObject(RoomRegistry roomRegistry, ItemRegistry itemRegistry) {
         this.roomRegistry = roomRegistry;
         this.itemRegistry = itemRegistry;
         this.users = load();
     }
+
+    @Override
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+        if (user != null) {
+            this.currentUsername = user.getUsername();
+        } else {
+            this.currentUsername = null;
+        }
+    }
+
+    @Override
+    public User getCurrentUser() {
+        if (currentUsername == null || currentUsername.isEmpty()) {
+            return null;
+        }
+        return this.currentUser; // Returns the live, in-memory updated User, guest or common user.
+    }
+
 
     private Map<String, CommonUser> load() {
         try {
@@ -215,16 +235,6 @@ public class JsonUserDataAccessObject implements
             throw new IllegalArgumentException("Cannot save progress. No such user.");
         }
         persist();
-    }
-
-    @Override
-    public String getCurrentUsername() {
-        return currentUsername;
-    }
-
-    @Override
-    public void setCurrentUsername(String username) {
-        this.currentUsername = username;
     }
 
 }

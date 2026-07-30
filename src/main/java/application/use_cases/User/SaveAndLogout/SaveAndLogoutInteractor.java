@@ -37,7 +37,7 @@ public class SaveAndLogoutInteractor implements SaveAndLogoutInputBoundary {
         saveProgressDataAccessObject.saveProgress(commonUser);
 
         // 3. Perform Session Cleanup
-        logoutDataAccessObject.setCurrentUsername(null);
+        logoutDataAccessObject.setCurrentUser(null);
 
         // 4. Trigger the Saved Logout Success View Cleanly
         SaveAndLogoutOutputData outputData = new SaveAndLogoutOutputData(commonUser.getUsername(), false);

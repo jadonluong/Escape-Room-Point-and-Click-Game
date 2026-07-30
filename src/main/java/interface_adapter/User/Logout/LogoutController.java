@@ -30,7 +30,7 @@ public class LogoutController {
 
     /**
      * Executes the save and logout use case.
-     * @param user the
+     * @param user the current user
      */
     public void executeLogoutWithSave(User user) {
 
