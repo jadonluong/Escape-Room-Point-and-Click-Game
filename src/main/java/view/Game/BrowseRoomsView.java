@@ -71,7 +71,7 @@ public class BrowseRoomsView extends StackPane implements PropertyChangeListener
         fixedRoot.getChildren().add(errorLabel);
 
         fixedRoot.getChildren().add(
-                makeButton("/images/ui/buttons/QuitButton.png", 500, 190, 2200, 100,
+                makeButton("/images/ui/buttons/QuitButton.png", 500, 1900, 2200, 100,
                         () -> this.viewManager.show(this.previousView))
         );
 
