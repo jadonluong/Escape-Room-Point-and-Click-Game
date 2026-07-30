@@ -62,7 +62,7 @@
     "needsItem": true,
     "requiredItemId": "prison_item_1",
     "rewardItemId": null,
-    "linkedPuzzleId": "prison_puzzle_1",
+    "linkedPuzzleId": null,
     "unlockedRoomId": null,
     "successMessage": null
   }
