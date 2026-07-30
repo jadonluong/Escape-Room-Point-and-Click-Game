@@ -41,12 +41,19 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
         this.renderer = new GameRenderer(gamePane, actionTriggerController);
 
-
         viewModel.addPropertyChangeListener(this);
 
-
-        // Layer order matters
         getChildren().add(gamePane);
+        setAlignment(javafx.geometry.Pos.CENTER);
+
+        widthProperty().addListener((o, ov, nv) -> rescale());
+        heightProperty().addListener((o, ov, nv) -> rescale());
+    }
+
+    private void rescale() {
+        double scale = Math.min(getWidth() / DESIGN_WIDTH, getHeight() / DESIGN_HEIGHT);
+        gamePane.setScaleX(scale);
+        gamePane.setScaleY(scale);
     }
 
 
