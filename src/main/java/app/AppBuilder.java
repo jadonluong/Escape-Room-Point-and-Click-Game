@@ -282,13 +282,13 @@ public class AppBuilder extends Application {
         EnterExitController enterExitController = new EnterExitController(enterExitInteractor);
 
         // --- Puzzle Solve Chain ---
-        SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, viewManager);
+        SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, viewManagerModel, viewManager);
         SolveInteractor solveInteractor = new SolveInteractor(gameAssetManager, solvePresenter);
         SolveController solveController = new SolveController(solveInteractor);
 
         // --- Interactable and Puzzle Views ---
         ZoomView zoomView = new ZoomView(zoomController, zoomViewModel, interactController, enterExitController);
-        InteractOverlay interactOverlay = new InteractOverlay(interactViewModel, viewManagerModel);
+        InteractOverlay interactOverlay = new InteractOverlay(interactViewModel, viewManager);
         PuzzleView puzzleView = new PuzzleView(enterExitViewModel);
 
         // --- Register every top-level screen by name ---

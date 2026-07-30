@@ -9,10 +9,13 @@ import view.ViewManager;
 
 public class SolvePresenter implements SolveOutputBoundary {
     private final InteractViewModel interactViewModel;
+    private final ViewManagerModel viewManagerModel;
     private final ViewManager viewManager;
 
-    public SolvePresenter(InteractViewModel interactViewModel, ViewManager viewManager) {
+    public SolvePresenter(InteractViewModel interactViewModel, ViewManagerModel viewManagerModel,
+                          ViewManager viewManager) {
         this.interactViewModel = interactViewModel;
+        this.viewManagerModel = viewManagerModel;
         this.viewManager = viewManager;
     }
 
@@ -22,6 +25,8 @@ public class SolvePresenter implements SolveOutputBoundary {
         state.setSuccessMessage(outputData.getSuccessMessage());
         state.setErrorMessage(null);
 
+        viewManagerModel.setState("Zoom"); // Bring back to ZoomView before opening InteractOverlay!
+        viewManagerModel.firePropertyChanged();
         viewManager.showOverlay("Interact");
     }
 
