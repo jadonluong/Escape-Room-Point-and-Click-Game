@@ -43,17 +43,20 @@ public class TutorialAndStoryModeStartUpInteractor implements TutorialAndStoryMo
         startingRoom.getInteractables().forEach(interactable -> {
             ObjectsToDisplay.put(interactable.getId(),
                     new ObjectsInfo(interactable.getSprite(),
-                            startingRoom.getPosition(interactable.getId())));
+                            startingRoom.getPosition(interactable.getId()),
+                            "Interactable"));
         });
         startingRoom.getItems().forEach(item -> {
             ObjectsToDisplay.put(item.getId(),
                     new ObjectsInfo(item.getImagePath(),
-                            startingRoom.getPosition(item.getId())) );
+                            startingRoom.getPosition(item.getId()),
+                            "Item") );
         });
         startingRoom.getHints().forEach(hint -> {
             ObjectsToDisplay.put(hint.getObjectID(),
                     new ObjectsInfo(hint.getImagePath(),
-                            startingRoom.getPosition(hint.getObjectID())) );
+                            startingRoom.getPosition(hint.getObjectID()),
+                            "Hint"));
         });
 
         //wrap the data

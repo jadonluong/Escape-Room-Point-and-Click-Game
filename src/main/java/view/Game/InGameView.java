@@ -1,5 +1,6 @@
 package view.Game;
 
+import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsState;
 import interface_adapter.GamePlay.InGameState;
 import interface_adapter.GamePlay.InGameViewModel;
@@ -20,12 +21,11 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
     private final GameRenderer renderer;
 
-
-    public InGameView(InGameViewModel viewModel) {
+    public InGameView(InGameViewModel viewModel, ActionTriggerController actionTriggerController) {
 
         this.viewModel = viewModel;
 
-        this.renderer = new GameRenderer(objectPane);
+        this.renderer = new GameRenderer(objectPane, actionTriggerController);
 
         viewModel.addPropertyChangeListener(this);
 

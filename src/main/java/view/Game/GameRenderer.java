@@ -1,6 +1,7 @@
 package view.Game;
 
 import application.use_cases.GamePlay.ObjectsInfo;
+import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
 import interface_adapter.GamePlay.InGameState;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
@@ -16,8 +17,11 @@ public class GameRenderer {
     private final Pane gamePane;
     private final Map<String, ImageView> renderedObjects = new HashMap<>();
 
-    public GameRenderer(Pane objectPane) {
+    private final ActionTriggerController actionTriggerController;
+
+    public GameRenderer(Pane objectPane, ActionTriggerController actionTriggerController) {
         this.gamePane = objectPane;
+        this.actionTriggerController = actionTriggerController;
     }
 
     public void renderOne(InGameState state, String id){
@@ -61,9 +65,8 @@ public class GameRenderer {
 //        imageView.setLayoutY(
 //                info.position().y()
 //        );
-
         ImageView imageView = makeButton(info.imgPath(), 50, 50,
-                info.position().x(), info.position().y(), null);
+                info.position().x(), info.position().y(), () -> actionTriggerController.execute(id,info.type()));
 
         renderedObjects.put(id, imageView);
         gamePane.getChildren().add(imageView);

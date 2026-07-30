@@ -42,21 +42,24 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
             targetRoom.getInteractables().forEach(interactable -> {
                 objectsToDisplay.put(interactable.getId(),
                         new ObjectsInfo(interactable.getSprite(),
-                                targetRoom.getPosition(interactable.getId())));
+                                targetRoom.getPosition(interactable.getId()),
+                                "Interactable"));
             });
 
             // Put Items
             targetRoom.getItems().forEach(item -> {
                 objectsToDisplay.put(item.getId(),
                         new ObjectsInfo(item.getImagePath(),
-                                targetRoom.getPosition(item.getId())));
+                                targetRoom.getPosition(item.getId())
+                                ,"Item"));
             });
 
             // Put Hints
             targetRoom.getHints().forEach(hint -> {
                 objectsToDisplay.put(hint.getObjectID(),
                         new ObjectsInfo(hint.getImagePath()
-                                ,targetRoom.getPosition(hint.getObjectID())));
+                                ,targetRoom.getPosition(hint.getObjectID())
+                                ,"Hint"));
             });
 
             QuickModeStartUpOutputData outputData = new QuickModeStartUpOutputData(objectsToDisplay);

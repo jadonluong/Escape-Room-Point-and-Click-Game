@@ -2,6 +2,7 @@ package app;
 
 import application.use_cases.Audio.ToggleMusic.ToggleMusicInteractor;
 import application.use_cases.Audio.ToggleSfx.ToggleSfxInteractor;
+import application.use_cases.GamePlay.ActionTrigger.ActionTriggerInteractor;
 import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsInteractor;
 import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpInteractor;
 import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInteractor;
@@ -33,6 +34,7 @@ import domain.entities.Room.RoomFactory;
 import domain.entities.User.CommonUserFactory;
 import domain.entities.User.CommonUserFactoryClass;
 import interface_adapter.Audio.*;
+import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsController;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsPresenter;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsViewModel;
@@ -225,9 +227,6 @@ public class AppBuilder extends Application {
         BrowseRoomsView browseRoomsView = new BrowseRoomsView(viewManager,
                 mainMenu, browseRoomsViewModel,  quickModeStartUpController);
 
-        // --- In-game ---
-        InGameView inGameView = new InGameView(inGameViewModel);
-
         // --- Game menu overlay ---
         OverlayFactory gameMenuOverlayFactory = onClose -> new GameMenuView(
                 onClose,
@@ -290,6 +289,12 @@ public class AppBuilder extends Application {
         ZoomView zoomView = new ZoomView(zoomController, zoomViewModel, interactController, enterExitController);
         InteractOverlay interactOverlay = new InteractOverlay(interactViewModel, viewManagerModel);
         PuzzleView puzzleView = new PuzzleView(enterExitViewModel);
+
+        // --- Action triggering ---
+        ActionTriggerInteractor actionTriggerInteractor = new ActionTriggerInteractor(zoomInteractor, userDAO);
+        ActionTriggerController actionTriggerController = new ActionTriggerController(actionTriggerInteractor);
+        // --- In-game ---
+        InGameView inGameView = new InGameView(inGameViewModel, actionTriggerController);
 
         // --- Register every top-level screen by name ---
         viewManager.registerView("main menu", mainMenu);
