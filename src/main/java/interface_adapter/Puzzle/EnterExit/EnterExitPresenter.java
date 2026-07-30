@@ -5,17 +5,20 @@ import application.use_cases.Puzzle.EnterExit.EnterExitOutputData;
 import interface_adapter.Interactable.Interact.InteractState;
 import interface_adapter.Interactable.Interact.InteractViewModel;
 import interface_adapter.ViewManagerModel;
+import view.ViewManager;
 
 public class EnterExitPresenter implements EnterExitOutputBoundary {
     private final EnterExitViewModel enterExitViewModel;
     private final InteractViewModel interactViewModel;
     private final ViewManagerModel viewManagerModel;
+    private final ViewManager viewManager;
 
     public EnterExitPresenter(EnterExitViewModel enterExitViewModel, InteractViewModel interactViewModel,
-                              ViewManagerModel viewManagerModel) {
+                              ViewManagerModel viewManagerModel, ViewManager viewManager) {
         this.enterExitViewModel = enterExitViewModel;
         this.interactViewModel = interactViewModel;
         this.viewManagerModel = viewManagerModel;
+        this.viewManager = viewManager;
     }
 
     @Override
@@ -43,9 +46,7 @@ public class EnterExitPresenter implements EnterExitOutputBoundary {
         InteractState state = interactViewModel.getState(); // Reuse the InteractOverlay for this :)
         state.setSuccessMessage(null);
         state.setErrorMessage(errorMessage);
-        state.setReturnToView("Zoom");
 
-        viewManagerModel.setState("Interact");
-        viewManagerModel.firePropertyChanged();
+        viewManager.showOverlay("Interact");
     }
 }
