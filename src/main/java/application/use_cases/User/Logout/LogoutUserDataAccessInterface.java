@@ -1,9 +1,6 @@
 package application.use_cases.User.Logout;
 
-import domain.entities.Item.Item;
-import domain.entities.Room.Room;
-
-import java.util.ArrayList;
+import domain.entities.User.User;
 
 /**
  * the DAO of the Logout Use Case.
@@ -11,14 +8,14 @@ import java.util.ArrayList;
 public interface LogoutUserDataAccessInterface {
 
     /**
-     * Returns the username of the curren user of the application.
-     * @return the username of the current user
+     * Returns the user object of the curren user of the application.
+     * @return the user object of the current user
      */
-    String getCurrentUsername();
+    User getCurrentUser();
 
     /**
-     * Sets the username indicating who is the current user of the application.
-     * @param username the new current username
+     * Sets the user object indicating who is the current user of the application.
+     * @param user the new current user
      */
-    void setCurrentUsername(String username);
+    void setCurrentUser(User user);
 }

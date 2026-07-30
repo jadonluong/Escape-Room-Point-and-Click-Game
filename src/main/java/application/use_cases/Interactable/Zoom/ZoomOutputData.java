@@ -4,16 +4,19 @@ public class ZoomOutputData {
     private String name;
     private String description;
     private String sprite;
-
-    private boolean canInteract; // Can the player Interact? This check is for Interactables that ONLY have Zoom.
     private String interactLabel; // What should the Interact button say?
 
-    public ZoomOutputData(String name, String description, String sprite, boolean canInteract, String interactLabel) {
+    private String interactableId;
+    private String puzzleId;
+
+    public ZoomOutputData(String name, String description, String sprite, String interactLabel, String interactableId,
+                          String puzzleId) {
         this.name = name;
         this.description = description;
         this.sprite = sprite;
-        this.canInteract = canInteract;
         this.interactLabel = interactLabel;
+        this.interactableId = interactableId;
+        this.puzzleId = puzzleId;
     }
 
     public String getName() {
@@ -28,11 +31,15 @@ public class ZoomOutputData {
         return sprite;
     }
 
-    public boolean canInteract() {
-        return canInteract;
-    }
-
     public String getInteractLabel() {
         return interactLabel;
+    }
+
+    public String getInteractableId() {
+        return interactableId;
+    }
+
+    public String getPuzzleId() {
+        return puzzleId;
     }
 }

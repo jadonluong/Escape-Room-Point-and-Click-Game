@@ -1,6 +1,7 @@
 package domain.entities.User;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The interface with methods related to the hints the user has watched.
@@ -22,8 +23,14 @@ public interface UserHints {
     HashMap<String, Integer> getHintsWatched();
 
     /**
-     * Restores the user with the loadedHints.
-     * @param loadedHints the hints the user has already watched and stored in the database
+     * Returns the hints the user has watched in each room in quick mode.
+     * @return the hints the user has watched in each room in quick mode
      */
-    void setHintProgress(HashMap<String, Integer> loadedHints);
+    Map<String, HashMap<String, Integer>> getQuickModeHintsWatched();
+
+    /**
+     * Returns the hints the user has watched in story mode.
+     * @return the hints the user has watched in story mode
+     */
+    HashMap<String, Integer> getStoryModeHintsWatched();
 }

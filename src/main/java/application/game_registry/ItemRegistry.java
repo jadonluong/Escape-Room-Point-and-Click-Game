@@ -12,5 +12,5 @@ public interface ItemRegistry {
      * @param itemID the item ID
      * @return the Item object with itemID
      */
-    Item getItemByID(String itemID);
+    Item getItemById(String itemID);
 }

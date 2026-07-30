@@ -49,7 +49,6 @@ public class CodeLockPuzzle implements Puzzle {
         return answer;
     }
 
-    @Override
     public String getHint() {
         return hint;
     }

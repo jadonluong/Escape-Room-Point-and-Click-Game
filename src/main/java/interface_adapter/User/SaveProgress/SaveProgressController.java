@@ -2,11 +2,8 @@ package interface_adapter.User.SaveProgress;
 
 import application.use_cases.User.SaveProgress.SaveProgressInputBoundary;
 import application.use_cases.User.SaveProgress.SaveProgressInputData;
-import domain.entities.Item.Item;
-import domain.entities.Room.Room;
+import domain.entities.User.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * The controller for the Save Progress Use Case.
@@ -20,18 +17,10 @@ public class SaveProgressController {
 
     /**
      * Executes the Save Progress Use case.
-     * @param username the username of the user
-     * @param rooms the rooms the user has unlocked
-     * @param items the items the user has collected
-     * @param hintsWatched the hints the user has watched
-     * @param isRegistered the status of the user, true if the user is a common user, false if the user is a guest user
+     * @param username the username of the user clicking save or save&logout
      */
-    public void execute(String username,
-                        ArrayList<Room> rooms,
-                        ArrayList<Item> items,
-                        HashMap<String, Integer> hintsWatched,
-                        boolean isRegistered) {
-        SaveProgressInputData inputData = new SaveProgressInputData(username, rooms, items, hintsWatched, isRegistered);
+    public void execute(String username) {
+        SaveProgressInputData inputData = new SaveProgressInputData(username);
         this.saveProgressInteractor.execute(inputData);
     }
 }

@@ -16,4 +16,16 @@ public interface UserIdentity {
      * @return true if the user is a common user, false if the user is a guest user.
      */
     boolean isRegistered();
+
+    /**
+     * Sets the game mode the user is in.
+     * @param mode the game mode the user is in
+     */
+    void setActiveGameMode(String mode);
+
+    /**
+     * Returns the game mode the user is in.
+     * @return the game mode the user is in
+     */
+    String getActiveGameMode();
 }

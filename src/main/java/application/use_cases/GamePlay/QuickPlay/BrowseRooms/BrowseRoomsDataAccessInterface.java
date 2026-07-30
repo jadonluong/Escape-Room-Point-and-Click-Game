@@ -5,5 +5,5 @@ import domain.entities.Room.Room;
 import java.util.List;
 
 public interface BrowseRoomsDataAccessInterface {
-    List<Room> findRoomsByMode(String mode);
+    List<Room> getRoomsForQuickMode();
 }

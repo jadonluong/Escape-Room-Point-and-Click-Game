@@ -9,7 +9,7 @@ public class QuickModeConfig implements GameModeConfig {
     public QuickModeConfig(String StartingRoom) {
         this.StartingRoom = StartingRoom;
     }
-        //TODO: Setup this after the premade rooms are done.
+
 
     @Override
     public String getStartingRoomId() {

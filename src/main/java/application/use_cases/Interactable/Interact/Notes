@@ -19,11 +19,6 @@ Special Consideration:
 - If an Interactable does not follow the above design choices then write a special case!
 
 Notes:
-- In the UI layer, check to see if the Interactable can be interacted with or not (aside from the Zoom In). You can do
-    this by checking for null unlockedRoomId, linkedPuzzleId, and successMessage (and not rewardItemId since the reward
-    should only be given to the player once).
-- In the UI layer, make sure to refresh the current View (to update User and Room)! This is not necessary for repeated
-    interactions on a portal or puzzle, however, since there is nothing about the User and Room to update.
 - Make sure to create the unlocked Room (if not already done at the very start), linked Puzzle, and reward Item
     entities at the same time (at latest) as the creation of the corresponding Interactable! This will avoid the
     NullPointerException.

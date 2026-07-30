@@ -13,11 +13,11 @@ public class AnagramPuzzle implements Puzzle {
     private String rewardItemId;
     private String unlockedRoomId;
 
-    public AnagramPuzzle(String id, String description, String scrambled, String answer, String hint,
-                         String successMessage, String rewardItemId, String unlockedRoomId) {
+    public AnagramPuzzle(String id, String scrambled, String answer, String hint, String successMessage,
+                         String rewardItemId, String unlockedRoomId) {
         this.id = id;
         this.isSolved = false;
-        this.description = description;
+        this.description = "Unscramble the letters to make a word! The hint gives you the definition of the answer.";
         this.scrambled = scrambled;
         this.answer = answer;
         this.hint = hint;
@@ -55,7 +55,6 @@ public class AnagramPuzzle implements Puzzle {
         return answer;
     }
 
-    @Override
     public String getHint() {
         return hint;
     }

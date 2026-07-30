@@ -1,9 +1,7 @@
 package application.use_cases.User.SaveProgress;
 
-import domain.entities.Item.Item;
-import domain.entities.Room.Room;
-
-import java.util.ArrayList;
+import domain.entities.User.CommonUser;
+import domain.entities.User.User;
 
 /**
  * The interactor for the Save Progress Use Case.
@@ -20,40 +18,28 @@ public class SaveProgressInteractor implements SaveProgressInputBoundary{
 
     @Override
     public void execute(SaveProgressInputData saveProgressInputData) {
-        if (!saveProgressInputData.getRegisteredStatus()) {
+        if (!saveProgressInputData.getUsername().equals(saveProgressUserDataAccessObject.getCurrentUser().getUsername())) {
+            saveProgressPresenter.prepareFailView("Invalid username provided.");
+        }
+
+        User currentUser = saveProgressUserDataAccessObject.getCurrentUser();
+
+        if (!currentUser.isRegistered()) {
             saveProgressPresenter.prepareFailView("User is in Guest Mode, progress cannot be saved.");
         }
-        else {
-            saveProgressUserDataAccessObject.saveProgress(saveProgressInputData.getUsername(),
-                    getRoomIDs(saveProgressInputData),
-                    getItemIDs(saveProgressInputData),
-                    saveProgressInputData.getHintsWatched());
 
-            final SaveProgressOutputData saveProgressOutputData = new SaveProgressOutputData(
-                    saveProgressInputData.getUsername(),
-                    false);
-
-            saveProgressPresenter.prepareSuccessView(saveProgressOutputData);
+        // Safety net
+        if (!(currentUser instanceof CommonUser commonUser)) {
+            saveProgressPresenter.prepareFailView("Invalid user type for saving progress.");
+            return;
         }
-    }
 
-    private static ArrayList<String> getItemIDs(SaveProgressInputData saveProgressInputData) {
-        ArrayList<String> itemIDs = new ArrayList<>();
-        for (Item item : saveProgressInputData.getItemInventory()) {
-            if (!itemIDs.contains(item.getId())) {
-                itemIDs.add(item.getId());
-            }
-        }
-        return itemIDs;
-    }
+        saveProgressUserDataAccessObject.saveProgress(commonUser);
 
-    private static ArrayList<String> getRoomIDs(SaveProgressInputData saveProgressInputData) {
-        ArrayList<String> roomIDs = new ArrayList<>();
-        for (Room room : saveProgressInputData.getRoomsUnlocked()) {
-            if (!roomIDs.contains(room.getId())) {
-                roomIDs.add(room.getId());
-            }
-        }
-        return roomIDs;
+        final SaveProgressOutputData saveProgressOutputData = new SaveProgressOutputData(
+                commonUser.getUsername(),
+                false);
+
+        saveProgressPresenter.prepareSuccessView(saveProgressOutputData);
     }
 }

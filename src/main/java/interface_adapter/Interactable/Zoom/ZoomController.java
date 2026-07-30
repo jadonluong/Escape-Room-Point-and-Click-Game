@@ -10,8 +10,8 @@ public class ZoomController {
         this.inputBoundary = inputBoundary;
     }
 
-    public void zoomIn(String userId, String interactableId) {
-        final ZoomInputData inputData = new ZoomInputData(userId, interactableId);
+    public void zoomIn(String interactableId) {
+        final ZoomInputData inputData = new ZoomInputData(interactableId);
         inputBoundary.zoomIn(inputData);
     }
 

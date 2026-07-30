@@ -1,15 +1,19 @@
 package domain.entities.Room;
 
+import domain.entities.Hint.Hint;
 import domain.entities.Interactable.Interactable;
+import domain.entities.Item.Item;
+import domain.entities.Puzzle.Puzzle;
 
 import java.util.List;
+import java.util.Map;
 
 public class CommonRoomFactory implements RoomFactory {
 
     @Override
-    public Room createRoom(String roomId, String description, String path, List<String> Interactable
-    , List<String> items,  List<String> puzzles) {
+    public Room createRoom(String roomId, String description, String imagePath, List<Interactable> Interactable
+    , List<Item> items, List<Hint> hint, Map<String, Position> positions) {
 
-        return new CommonRoom(roomId,description,path, Interactable, items, puzzles);
+        return new CommonRoom(roomId,description,imagePath, Interactable, items, hint,positions);
     }
 }

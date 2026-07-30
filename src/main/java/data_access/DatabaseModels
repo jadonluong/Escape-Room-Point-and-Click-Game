@@ -2,18 +2,36 @@ This file explains what the databases could potentially look like.
 
 ## User DB
 - format: JSON file
+- note: tutorial mode is not saved to db.
 - sample DB:
   - {"username_1": {
       "password": "string password",
-      "roomsUnlocked": ["roomID_1", "roomID_2", ...],
-      "itemInventory": ["itemID_1", "itemID_2", ...],
-      "hintsWatched": {
-          "objectID_1": request_count(int),
-          "objectID_2": request_count(int),
-          ...},
+      "ModeProgress": {
+        "QuickMode": {
+            "quickModeRoomsUnlocked": ["roomID_1", "roomID_2", ...],
+            "quickModeItemInventory": {
+                "roomID_1": ["itemID", ...],
+                "roomID_2": [...]
+            }
+            "quickModeHintsWatched": {
+                "roomID_1": {
+                    "objectID_1": request_count(int),
+                    "objectID_2": request_count(int),
+                ...},
+                "roomID_2": {...}
+            }
+        }
+        "StoryMode": {
+            "storyModeRoomsUnlocked": [...],
+            "storyModeItemInventory": [...],
+            "storyModeHintsWatched": [...],
+            "storyModeCurrentRoomID": "roomID",
+        }
+      }
+  }
 
       "username_2": {...}
-     }
+  }
 
 
 ## Hints DB
@@ -21,12 +39,11 @@ This file explains what the databases could potentially look like.
 - sample DB:
   - {"objectID_1": {
         "imagePath": "path",
-        "hintMessages": ["hintMessage_1", "hintMessage_2", ...]
+        "hintMessages": ["hintMessage_1", "hintMessage_2", ...],
         },
 
      "objectID_2": {...}
      }
-- TODO: add hint objects to room.
 - update: may be used somewhere in HintOverlay for view.
 
 ## Item DB
@@ -52,7 +69,9 @@ This file explains what the databases could potentially look like.
         "description": "description of the room",
         "interactables": ["interactableID", ...],
         "items": ["itemID", ...],
+        "hints": ["objectID", ...],
         "imagePath": "string of the file path of the room image",
+        "positions": ...the positions of each object in this room
         },
 
      "roomID_2/roomName_2": {...}
@@ -70,7 +89,7 @@ This file explains what the databases could potentially look like.
 
 
 ## Interactable DB
-- Note: sample DB may need to change (still not sure what should be saved)
+- Note: sprite already stores image path
 - format: JSON file
 - sample DB:
   - {"interactableID_1": {
@@ -88,7 +107,6 @@ This file explains what the databases could potentially look like.
         "linkedPuzzleId": "...",
         "unlockedRoomId": "...",
         "successMessage": "...",
-        "imagePath": "file path of the interactable image"
         },
 
       "interactableID_2": {...}
@@ -98,3 +116,10 @@ This file explains what the databases could potentially look like.
 
 ## Puzzle DB
 - Do we need one? Since we're calling the puzzle API and puzzles are connected to interactables...
+- for demo purposes only:
+{
+  "puzzleId": {
+    "puzzleType":""
+    // the rest is specific to different types of puzzles
+  }
+}

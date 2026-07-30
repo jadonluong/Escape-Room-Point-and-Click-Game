@@ -6,10 +6,13 @@ import domain.entities.User.User;
 public class SolveInteractor implements SolveInputBoundary {
     private SolveDataAccessInterface dataAccess;
     private SolveOutputBoundary outputBoundary;
+    private SolveUserDataAccessInterface userDataAccess;
 
-    public SolveInteractor(SolveDataAccessInterface dataAccess, SolveOutputBoundary outputBoundary) {
+    public SolveInteractor(SolveDataAccessInterface dataAccess, SolveOutputBoundary outputBoundary,
+                           SolveUserDataAccessInterface userDataAccess) {
         this.dataAccess = dataAccess;
         this.outputBoundary = outputBoundary;
+        this.userDataAccess = userDataAccess;
     }
 
     @Override
@@ -17,18 +20,14 @@ public class SolveInteractor implements SolveInputBoundary {
         Puzzle puzzle = dataAccess.getPuzzleById(inputData.getPuzzleId());
         if (puzzle.solve(inputData.getPlayerAnswer())) {
             puzzle.setSolved(true);
-            dataAccess.savePuzzle(puzzle);
 
-            User player = dataAccess.getUserById(inputData.getUserId());
+            User player = userDataAccess.getCurrentUser();
             String rewardItemId = puzzle.getRewardItemId();
             if (rewardItemId != null) {
                 player.saveItem(dataAccess.getItemById(rewardItemId));
-                dataAccess.saveUser(player);
             }
 
-            SolveOutputData outputData = new SolveOutputData(inputData.getUserId(), inputData.getInteractableId(),
-                    puzzle.getSuccessMessage());
-            outputBoundary.prepareSuccessView(outputData);
+            outputBoundary.prepareSuccessView(new SolveOutputData(puzzle.getSuccessMessage()));
         } else {
             outputBoundary.prepareFailureView("Your input was incorrect.");
         }

@@ -3,7 +3,6 @@ package domain.entities.User;
 import domain.entities.Room.Room;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * The interface with methods that tracks and records the user's progress.
@@ -32,4 +31,10 @@ public interface UserProgress {
      * @return the ID of the current room the user is in.
      */
     String getCurrentRoomID();
+
+    /**
+     * Switches the user to another room. This is called after the user unlocks a room
+     * @param room the room the user is entering
+     */
+    void switchRoom(Room room);
 }

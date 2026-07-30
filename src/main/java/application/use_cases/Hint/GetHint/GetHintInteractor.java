@@ -9,11 +9,15 @@ import domain.entities.User.User;
 public class GetHintInteractor implements GetHintInputBoundary {
     private final GetHintOutputBoundary getHintPresenter;
     private final GetHintDataAccessInterface getHintDataAccessObject;
+    private final GetHintUserDataAccessInterface getHintUserDataAccessObject;
 
     public GetHintInteractor(GetHintOutputBoundary getHintOutputBoundary,
-                             GetHintDataAccessInterface getHintDataAccessInterface) {
+                             GetHintDataAccessInterface getHintDataAccessInterface,
+                             GetHintUserDataAccessInterface getHintUserDataAccessInterface
+                             ) {
         this.getHintPresenter = getHintOutputBoundary;
         this.getHintDataAccessObject = getHintDataAccessInterface;
+        this.getHintUserDataAccessObject = getHintUserDataAccessInterface;
     }
 
     @Override
@@ -25,12 +29,18 @@ public class GetHintInteractor implements GetHintInputBoundary {
             return;
         }
 
-        User user = getHintInputData.getCurrentUser();
+        String userId = getHintInputData.getCurrentUserId();
+        User currentUser = getHintUserDataAccessObject.getCurrentUser();
+
+        if (!userId.equals(currentUser.getUsername())) {
+            getHintPresenter.prepareFailView("You are not the current user"); // This should not happen.
+        }
+
         Hint hintObject = getHintDataAccessObject.getHintForObjectID(objectID);
 
-        user.saveHint(objectID, hintObject.getHintMessageCount()); // saves the hint request in-memory.
+        currentUser.saveHint(objectID, hintObject.getHintMessageCount()); // saves the hint request in-memory.
 
-        int calculatedIndex = user.getHintsWatched().get(objectID);
+        int calculatedIndex = currentUser.getHintsWatched().get(objectID);
         String finalHintMessage = hintObject.getHintMessageForRequestCount(calculatedIndex);
 
         GetHintOutputData outputData = new GetHintOutputData(finalHintMessage);

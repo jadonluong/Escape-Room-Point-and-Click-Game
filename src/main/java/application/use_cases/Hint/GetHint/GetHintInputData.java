@@ -7,18 +7,18 @@ import domain.entities.User.User;
  */
 public class GetHintInputData {
     private final String objectID;
-    private final User currentUser;
+    private final String currentUserId;
 
-    public GetHintInputData(String objectID, User user) {
+    public GetHintInputData(String objectID, String userId) {
         this.objectID = objectID;
-        this.currentUser = user;
+        this.currentUserId = userId;
     }
 
     public String getObjectID() {
         return this.objectID;
     }
 
-    public User getCurrentUser() {
-        return this.currentUser;
+    public String getCurrentUserId() {
+        return this.currentUserId;
     }
 }

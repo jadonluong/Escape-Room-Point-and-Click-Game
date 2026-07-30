@@ -6,7 +6,6 @@ public interface Puzzle {
     void setSolved(boolean solved);
     String getDescription();
     String getAnswer();
-    String getHint();
     String getSuccessMessage();
     String getRewardItemId();
     String getUnlockedRoomId();

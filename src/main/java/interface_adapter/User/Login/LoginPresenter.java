@@ -2,13 +2,16 @@ package interface_adapter.User.Login;
 
 import application.use_cases.User.Login.LoginOutputBoundary;
 import application.use_cases.User.Login.LoginOutputData;
+import interface_adapter.User.LoggedIn.LoggedInViewModel;
 
 public class LoginPresenter implements LoginOutputBoundary {
 
     private final LoginViewModel loginViewModel;
+    private final LoggedInViewModel loggedInViewModel;
 
-    public LoginPresenter(LoginViewModel loginViewModel) {
+    public LoginPresenter(LoginViewModel loginViewModel, LoggedInViewModel loggedInViewModel) {
         this.loginViewModel = loginViewModel;
+        this.loggedInViewModel = loggedInViewModel;
     }
 
     @Override
@@ -20,6 +23,9 @@ public class LoginPresenter implements LoginOutputBoundary {
     @Override
     public void prepareSuccessView(LoginOutputData outputData) {
         loginViewModel.getState().setErrorMessage("");
-        loginViewModel.firePropertyChanged();
+
+        loggedInViewModel.getState().setUsername(outputData.getUser().getUsername());
+        loggedInViewModel.getState().setRegistered(outputData.getUser().isRegistered());
+        loggedInViewModel.firePropertyChanged();
     }
 }

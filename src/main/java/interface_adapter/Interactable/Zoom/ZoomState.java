@@ -4,9 +4,10 @@ public class ZoomState {
     private String name;
     private String description;
     private String sprite;
-
-    private boolean canInteract;
     private String interactLabel;
+
+    private String interactableId;
+    private String puzzleId;
 
     public String getName() {
         return name;
@@ -32,19 +33,27 @@ public class ZoomState {
         this.sprite = sprite;
     }
 
-    public boolean canInteract() {
-        return canInteract;
-    }
-
-    public void setCanInteract(boolean canInteract) {
-        this.canInteract = canInteract;
-    }
-
     public String getInteractLabel() {
         return interactLabel;
     }
 
     public void setInteractLabel(String interactLabel) {
         this.interactLabel = interactLabel;
+    }
+
+    public String getInteractableId() {
+        return interactableId;
+    }
+
+    public void setInteractableId(String interactableId) {
+        this.interactableId = interactableId;
+    }
+
+    public String getPuzzleId() {
+        return puzzleId;
+    }
+
+    public void setPuzzleId(String puzzleId) {
+        this.puzzleId = puzzleId;
     }
 }

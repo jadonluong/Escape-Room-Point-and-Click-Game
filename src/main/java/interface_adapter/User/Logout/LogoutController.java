@@ -4,11 +4,7 @@ import application.use_cases.User.Logout.LogoutInputBoundary;
 import application.use_cases.User.Logout.LogoutInputData;
 import application.use_cases.User.SaveAndLogout.SaveAndLogoutInputBoundary;
 import application.use_cases.User.SaveAndLogout.SaveAndLogoutInputData;
-import domain.entities.Item.Item;
-import domain.entities.Room.Room;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import domain.entities.User.User;
 
 /**
  * The controller for the Logout Use Case.
@@ -34,20 +30,11 @@ public class LogoutController {
 
     /**
      * Executes the save and logout use case.
-     * @param username the username of the user saving their progress and logging out
-     * @param roomsUnlocked the rooms the user has unlocked
-     * @param itemInventory the items the user has collected
-     * @param hintsWatched the hints the user has watched
-     * @param isRegistered the status of the user, true if the user is a common user, false if the user is a guest user
+     * @param username the username of the current user
      */
-    public void executeLogoutWithSave(String username,
-                                      ArrayList<Room> roomsUnlocked,
-                                      ArrayList<Item> itemInventory,
-                                      HashMap<String, Integer> hintsWatched,
-                                      boolean isRegistered) {
+    public void executeLogoutWithSave(String username) {
 
-        SaveAndLogoutInputData inputData = new SaveAndLogoutInputData(username,
-                roomsUnlocked, itemInventory, hintsWatched, isRegistered);
+        SaveAndLogoutInputData inputData = new SaveAndLogoutInputData(username);
         saveAndLogoutInteractor.execute(inputData);
     }
 }

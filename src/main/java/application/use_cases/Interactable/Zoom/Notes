@@ -1,3 +1,1 @@
 - Decrease the size of the sprite in the zoomed out (room) view!
-- Remember to update Room and User when implementing prepareZoomOutView!
-- Remember to have prepareSuccessView call zoomIn to return to the zoomed in view!

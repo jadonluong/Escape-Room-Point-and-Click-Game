@@ -1,5 +1,6 @@
 package application.use_cases.User.Login;
 
+import domain.entities.User.CommonUser;
 import domain.entities.User.CommonUserFunction;
 import domain.entities.User.User;
 
@@ -19,7 +20,7 @@ public interface LoginUserDataAccessInterface {
      * @param username the username to look up
      * @return the user with the given username
      */
-    User getUser(String username);
+    CommonUser getUser(String username);
 
     /**
      * Checks if the given username exists.
@@ -27,4 +28,10 @@ public interface LoginUserDataAccessInterface {
      * @return true if a user with the given username exists; false otherwise
      */
     boolean existsByName(String username);
+
+    /**
+     * Saves the current user
+     * @param user the user object that was initiated from db
+     */
+    void setCurrentUser(User user);
 }
