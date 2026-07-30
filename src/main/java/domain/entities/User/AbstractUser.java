@@ -10,7 +10,6 @@ import java.util.Map;
 /**
  * An abstract class that implements the User interface.
  */
-// TODO: handle tutorial mode
 public abstract class AbstractUser implements User {
     protected transient String activeGameMode;
 
@@ -23,6 +22,11 @@ public abstract class AbstractUser implements User {
     protected transient ArrayList<Room> storyModeLiveRoomsUnlocked = new ArrayList<>();
     protected transient ArrayList<Item> storyModeLiveItemInventory = new ArrayList<>();
     protected transient HashMap<String, Integer> storyModeHintsWatched = new HashMap<>();
+
+    // The live game storage for tutorial mode
+    protected transient ArrayList<Room> tutorialModeLiveRoomsUnlocked = new ArrayList<>();
+    protected transient ArrayList<Item> tutorialModeLiveItemInventory = new ArrayList<>();
+    protected transient HashMap<String, Integer> tutorialModeHintsWatched = new HashMap<>();
 
     protected transient String currentRoomID;
     protected transient String storyModeCurrentRoomID; // A copy of this is in common user which is saved in db.
@@ -48,9 +52,14 @@ public abstract class AbstractUser implements User {
                 storyModeLiveRoomsUnlocked.add(room);
             }
         }
-        else {
+        else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
             if (!quickModeLiveRoomsUnlocked.contains(room)) {
                 quickModeLiveRoomsUnlocked.add(room);
+            }
+        }
+        else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
+            if (!tutorialModeLiveRoomsUnlocked.contains(room)) {
+                tutorialModeLiveRoomsUnlocked.add(room);
             }
         }
     }
@@ -63,6 +72,9 @@ public abstract class AbstractUser implements User {
         else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
             return this.quickModeLiveRoomsUnlocked;
         }
+        else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
+            return this.tutorialModeLiveRoomsUnlocked;
+        }
         return new ArrayList<>();
     }
 
@@ -72,12 +84,20 @@ public abstract class AbstractUser implements User {
             if (!this.storyModeLiveItemInventory.contains(item)) {
                 this.storyModeLiveItemInventory.add(item);
             }
-        } else if (this.currentRoomID != null){
-            ArrayList<Item> items = this.quickModeLiveItemInventory.get(this.currentRoomID);
-            // Note: this is only called to instantiate from db or to save an item after switching rooms,
-            // so there is no guard against currentRoomID not in quickModeLiveItemInventory
-            if (!items.contains(item)) {
-                items.add(item);
+        }
+        else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
+            if (this.currentRoomID != null) {
+                ArrayList<Item> items = this.quickModeLiveItemInventory.get(this.currentRoomID);
+                // Note: this is only called to instantiate from db or to save an item after switching rooms,
+                // so there is no guard against currentRoomID not in quickModeLiveItemInventory
+                if (!items.contains(item)) {
+                    items.add(item);
+                }
+            }
+        }
+        else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
+            if (!this.tutorialModeLiveItemInventory.contains(item)) {
+                this.tutorialModeLiveItemInventory.add(item);
             }
         }
     }
@@ -97,6 +117,12 @@ public abstract class AbstractUser implements User {
                         .computeIfAbsent(this.currentRoomID, k -> new ArrayList<>());
             }
         }
+        else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
+            if (this.tutorialModeLiveItemInventory == null) {
+                this.tutorialModeLiveItemInventory = new ArrayList<>();
+            }
+            return this.tutorialModeLiveItemInventory;
+        }
         return new ArrayList<>();
     }
 
@@ -109,6 +135,9 @@ public abstract class AbstractUser implements User {
         }
         else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
             return this.quickModeLiveItemInventory.get(this.currentRoomID).remove(item);
+        }
+        else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
+            return this.tutorialModeLiveItemInventory.remove(item);
         }
         return false;
     }
@@ -161,6 +190,14 @@ public abstract class AbstractUser implements User {
             }
             return false;
         }
+        else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
+            for (Item item : this.tutorialModeLiveItemInventory) {
+                if (item.getId().equals(itemID)) {
+                    return true;
+                }
+            }
+            return false;
+        }
         return false;
     }
 
@@ -188,10 +225,20 @@ public abstract class AbstractUser implements User {
                 this.quickModeHintsWatched.get(this.currentRoomID).put(objectID, currentHintIndex + 1);
             }
         }
+        else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
+            if (!this.tutorialModeHintsWatched.containsKey(objectID)) {
+                this.tutorialModeHintsWatched.put(objectID, 0);
+            }
+
+            int currentHintIndex = this.tutorialModeHintsWatched.get(objectID);
+            if (currentHintIndex < maxHintsAvailable - 1) {
+                this.tutorialModeHintsWatched.put(objectID, currentHintIndex + 1);
+            }
+        }
     }
 
     /*This method returns the hints the user watched.
-    If they are in story mode: all the hints they've watched;
+    If they are in story mode or tutorial mode: all the hints they've watched;
     If they are in quick mode, the hints they've watched in the room they are currently in.
      */
     @Override
@@ -199,9 +246,13 @@ public abstract class AbstractUser implements User {
         if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
             return this.storyModeHintsWatched;
         }
-        else {
+        else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
             return this.quickModeHintsWatched.get(currentRoomID);
         }
+        else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
+            return this.tutorialModeHintsWatched;
+        }
+        return new HashMap<>();
     }
 
     @Override
