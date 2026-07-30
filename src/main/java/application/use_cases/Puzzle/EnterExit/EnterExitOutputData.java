@@ -23,11 +23,10 @@ public class EnterExitOutputData {
     }
 
     // CryptogramPuzzle
-    public EnterExitOutputData(String puzzleType, String description, String hint, String encrypted,
-                               Map<String, String> cipher) {
+    public EnterExitOutputData(String puzzleType, String description, String encrypted, Map<String, String> cipher) {
         this.puzzleType = puzzleType;
         this.description = description;
-        this.hint = hint;
+        this.hint = null;
         this.scrambled = null;
         this.encrypted = encrypted;
         this.cipher = cipher;

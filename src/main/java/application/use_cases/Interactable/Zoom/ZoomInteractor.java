@@ -2,7 +2,6 @@ package application.use_cases.Interactable.Zoom;
 
 import domain.entities.Interactable.Interactable;
 import domain.entities.Puzzle.Puzzle;
-import domain.entities.User.User;
 
 public class ZoomInteractor implements ZoomInputBoundary {
     private ZoomDataAccessInterface dataAccess;
@@ -34,7 +33,7 @@ public class ZoomInteractor implements ZoomInputBoundary {
         }
 
         ZoomOutputData outputData = new ZoomOutputData(interactable.getName(), interactable.getDescription(),
-                interactable.getSprite(), interactLabel, inputData.getUser(), interactableId, puzzleId);
+                interactable.getSprite(), interactLabel, interactableId, puzzleId);
         outputBoundary.prepareZoomInView(outputData);
     }
 

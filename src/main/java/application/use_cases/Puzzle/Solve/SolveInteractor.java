@@ -18,7 +18,7 @@ public class SolveInteractor implements SolveInputBoundary {
         if (puzzle.solve(inputData.getPlayerAnswer())) {
             puzzle.setSolved(true);
 
-            User player = inputData.getUser();
+            User player = dataAccess.getCurrentUser();
             String rewardItemId = puzzle.getRewardItemId();
             if (rewardItemId != null) {
                 player.saveItem(dataAccess.getItemById(rewardItemId));

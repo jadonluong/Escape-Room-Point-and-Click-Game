@@ -18,7 +18,7 @@ public class EnterExitInteractor implements EnterExitInputBoundary {
     @Override
     public void enter(EnterExitInputData inputData) {
         Puzzle puzzle = dataAccess.getPuzzleById(inputData.getPuzzleId());
-        User player = inputData.getUser();
+        User player = dataAccess.getCurrentUser();
 
         if (puzzle instanceof CryptogramPuzzle && !player.hasItemID(((CryptogramPuzzle) puzzle).getCipherKeyId())) {
             outputBoundary.prepareFailureView("You need a cipher key to decode this!");
@@ -35,13 +35,14 @@ public class EnterExitInteractor implements EnterExitInputBoundary {
 
     private EnterExitOutputData makeOutputData(Puzzle puzzle) {
         if (puzzle instanceof AnagramPuzzle) {
-            return new EnterExitOutputData("Anagram", puzzle.getDescription(), puzzle.getHint(),
-                    ((AnagramPuzzle) puzzle).getScrambled());
+            return new EnterExitOutputData("Anagram", puzzle.getDescription(),
+                    ((AnagramPuzzle) puzzle).getHint(), ((AnagramPuzzle) puzzle).getScrambled());
         } else if (puzzle instanceof CryptogramPuzzle) {
-            return new EnterExitOutputData("Cryptogram", puzzle.getDescription(), puzzle.getHint(),
+            return new EnterExitOutputData("Cryptogram", puzzle.getDescription(),
                     ((CryptogramPuzzle) puzzle).getEncrypted(), ((CryptogramPuzzle) puzzle).getCipher());
         } else if (puzzle instanceof CodeLockPuzzle) {
-            return new EnterExitOutputData("CodeLock", puzzle.getDescription(), puzzle.getHint());
+            return new EnterExitOutputData("CodeLock", puzzle.getDescription(),
+                    ((CodeLockPuzzle) puzzle).getHint());
         }
         return null; // Won't happen unless a new type of Puzzle class is added.
     }

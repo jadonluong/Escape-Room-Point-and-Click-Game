@@ -1,24 +1,20 @@
 package application.use_cases.Interactable.Zoom;
 
-import domain.entities.User.User;
-
 public class ZoomOutputData {
     private String name;
     private String description;
     private String sprite;
     private String interactLabel; // What should the Interact button say?
 
-    private User user;
     private String interactableId;
     private String puzzleId;
 
-    public ZoomOutputData(String name, String description, String sprite, String interactLabel, User user,
-                          String interactableId, String puzzleId) {
+    public ZoomOutputData(String name, String description, String sprite, String interactLabel, String interactableId,
+                          String puzzleId) {
         this.name = name;
         this.description = description;
         this.sprite = sprite;
         this.interactLabel = interactLabel;
-        this.user = user;
         this.interactableId = interactableId;
         this.puzzleId = puzzleId;
     }
@@ -37,10 +33,6 @@ public class ZoomOutputData {
 
     public String getInteractLabel() {
         return interactLabel;
-    }
-
-    public User getUser() {
-        return user;
     }
 
     public String getInteractableId() {

@@ -7,6 +7,7 @@ import domain.entities.Room.Room;
 import domain.entities.User.User;
 
 public interface InteractDataAccessInterface {
+    User getCurrentUser();
     Room getRoomById(String roomId);
     Interactable getInteractableById(String interactableId);
     Item getItemById(String itemId);

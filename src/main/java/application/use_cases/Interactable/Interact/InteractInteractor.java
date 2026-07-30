@@ -16,7 +16,7 @@ public class InteractInteractor implements InteractInputBoundary {
 
     @Override // Note: Write specific cases for more complex Interactable's by checking id!
     public void interact(InteractInputData inputData) {
-        User player = inputData.getUser();
+        User player = dataAccess.getCurrentUser();
         Interactable interactable = dataAccess.getInteractableById(inputData.getInteractableId());
 
         if (interactable.isInteracted()) {
