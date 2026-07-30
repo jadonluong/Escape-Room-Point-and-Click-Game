@@ -17,6 +17,8 @@ public class GameRenderer {
     private final Pane gamePane;
     private final Map<String, ImageView> renderedObjects = new HashMap<>();
 
+    private final ImgLoader imgLoader = new ImgLoader();
+
     private final ActionTriggerController actionTriggerController;
 
     public GameRenderer(Pane objectPane, ActionTriggerController actionTriggerController) {
@@ -56,15 +58,6 @@ public class GameRenderer {
 
     private void render(String id, ObjectsInfo info) {
 
-//        Image image = new Image(info.imgPath());
-//        ImageView imageView = new ImageView(image);
-//
-//        imageView.setLayoutX(
-//                info.position().x()
-//        );
-//        imageView.setLayoutY(
-//                info.position().y()
-//        );
         ImageView imageView = makeButton(info.imgPath(), 50, 50,
                 info.position().x(), info.position().y(), () -> actionTriggerController.execute(id,info.type()));
 
@@ -80,7 +73,7 @@ public class GameRenderer {
 
     private ImageView makeButton(String resourcePath, double imgWidth, double imgHeight,
                                  double x, double y, Runnable onClick) {
-        ImageView button = new ImageView(loadImage(resourcePath));
+        ImageView button = new ImageView(imgLoader.loadImage(resourcePath));
         button.setFitWidth(imgWidth);
         button.setFitHeight(imgHeight);
         button.setLayoutX(x);
@@ -102,11 +95,4 @@ public class GameRenderer {
         return button;
     }
 
-    private Image loadImage(String resourcePath) {
-        InputStream stream = getClass().getResourceAsStream(resourcePath);
-        if (stream == null) {
-            throw new IllegalArgumentException("Resource not found: " + resourcePath);
-        }
-        return new Image(stream);
-    }
 }

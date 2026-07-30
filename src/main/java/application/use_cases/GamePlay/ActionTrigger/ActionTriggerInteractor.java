@@ -29,6 +29,8 @@ public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
     }
     @Override
     public void execute(ActionTriggerInputData inputData) {
+
+        String userId = dataAccess.getCurrentUser().getUsername();
         if(Objects.equals(inputData.mode, "Interactable")) {
             ZoomInputData interactableInputDate = new ZoomInputData(inputData.id);
             zoomInteractor.zoomIn(interactableInputDate);
@@ -38,7 +40,7 @@ public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
             pickUpInteractor.execute(itemInputData);
         }
         else if(Objects.equals(inputData.mode, "hint")) {
-            GetHintInputData hintInputData = new GetHintInputData(inputData.id);
+            GetHintInputData hintInputData = new GetHintInputData(inputData.id, userId);
             getHintInteractor.execute(hintInputData);
         }
         else{}
