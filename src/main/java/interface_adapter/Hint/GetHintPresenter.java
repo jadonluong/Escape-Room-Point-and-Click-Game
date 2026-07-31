@@ -2,12 +2,15 @@ package interface_adapter.Hint;
 
 import application.use_cases.Hint.GetHint.GetHintOutputBoundary;
 import application.use_cases.Hint.GetHint.GetHintOutputData;
+import view.ViewManager;
 
 public class GetHintPresenter implements GetHintOutputBoundary {
     private final GetHintViewModel getHintViewModel;
+    private final ViewManager viewManager;
 
-    public GetHintPresenter(GetHintViewModel getHintViewModel) {
+    public GetHintPresenter(GetHintViewModel getHintViewModel, ViewManager viewManager) {
         this.getHintViewModel = getHintViewModel;
+        this.viewManager = viewManager;
     }
 
     @Override
@@ -17,6 +20,8 @@ public class GetHintPresenter implements GetHintOutputBoundary {
         state.setSuccessMessage(message);
         getHintViewModel.setState(state);
         getHintViewModel.firePropertyChanged();
+
+        viewManager.showOverlay("get hint");
     }
 
     @Override

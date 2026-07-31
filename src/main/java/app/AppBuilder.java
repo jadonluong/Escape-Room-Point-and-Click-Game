@@ -176,6 +176,8 @@ public class AppBuilder extends Application {
 
         // --- Get hint overlay ---
         OverlayFactory getHintOverlayFactory = onClose -> new HintOverlay(getHintViewModel, onClose);
+        HintOverlay hintOverlay = new HintOverlay (getHintViewModel,viewManager);
+
 
         //--- View Model for starting game ---
         InGameViewModel inGameViewModel = new InGameViewModel();
@@ -307,6 +309,7 @@ public class AppBuilder extends Application {
         viewManager.registerView("Zoom", zoomView);
         viewManager.registerOverlay("Interact", interactOverlay);
         viewManager.registerView("Puzzle", puzzleView);
+        viewManager.registerOverlay("get hint", hintOverlay, true);
 
         // --- Trigger the first screen ---
         viewManagerModel.firePropertyChanged();
