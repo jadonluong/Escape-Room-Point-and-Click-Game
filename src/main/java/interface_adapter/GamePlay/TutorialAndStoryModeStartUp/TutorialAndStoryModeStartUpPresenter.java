@@ -21,6 +21,7 @@ public class TutorialAndStoryModeStartUpPresenter implements TutorialAndStoryMod
         // 1. Get current state and update it
         InGameState currentState = viewModel.getState();
         currentState.setObjectsToDisplay(outputData.getObjectToDisplay());
+        currentState.setImgPath(outputData.getRoomImgPath());
         currentState.setErrorMessage(null); // Clear error on success
 
         // 2. Notify ViewModel listeners

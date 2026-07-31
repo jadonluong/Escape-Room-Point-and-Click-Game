@@ -62,7 +62,8 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
                                 ,"Hint"));
             });
 
-            QuickModeStartUpOutputData outputData = new QuickModeStartUpOutputData(objectsToDisplay);
+            QuickModeStartUpOutputData outputData = new QuickModeStartUpOutputData(objectsToDisplay,
+                    targetRoom.getImagePath());
 
             presenter.prepareGameStartView(outputData);
 

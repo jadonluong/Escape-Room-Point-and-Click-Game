@@ -26,15 +26,18 @@ public class InGameView extends StackPane implements PropertyChangeListener {
     private static final double DESIGN_WIDTH = 2907;
     private static final double DESIGN_HEIGHT = 2040;
 
+    private String imgPath;
+
     public InGameView(InGameViewModel viewModel, ActionTriggerController actionTriggerController) {
 
         this.viewModel = viewModel;
+        this.imgPath = viewModel.getState().getImgPath();
 
         gamePane.setPrefSize(DESIGN_WIDTH, DESIGN_HEIGHT);
         gamePane.setMinSize(DESIGN_WIDTH, DESIGN_HEIGHT);
         gamePane.setMaxSize(DESIGN_WIDTH, DESIGN_HEIGHT);
 
-        ImageView bg = new ImageView(imgLoader.loadImage("/images/rooms/PrisonBackground.png"));
+        ImageView bg = new ImageView(imgPath);
         bg.setFitWidth(DESIGN_WIDTH);
         bg.setFitHeight(DESIGN_HEIGHT);
         gamePane.getChildren().add(bg);
@@ -62,6 +65,7 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
         if (evt.getNewValue() instanceof InGameState newState) {
             renderer.renderAll(newState);
+            imgPath = newState.getImgPath();
         }
 
 

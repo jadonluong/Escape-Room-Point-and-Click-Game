@@ -8,6 +8,7 @@ import java.util.Map;
 public class InGameState {
     private Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
     private String errorMessage = null;
+    private String imgPath;
 
 
     public InGameState() {}
@@ -16,8 +17,16 @@ public class InGameState {
         return objectsToDisplay;
     }
 
+    public String getImgPath(){
+        return imgPath;
+    }
+
     public void setObjectsToDisplay(Map<String, ObjectsInfo> objectsToDisplay) {
         this.objectsToDisplay = objectsToDisplay;
+    }
+
+    public void setImgPath(String imgPath){
+        this.imgPath = imgPath;
     }
 
     public String getErrorMessage() {
