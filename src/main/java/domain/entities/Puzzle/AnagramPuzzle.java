@@ -1,26 +1,28 @@
 package domain.entities.Puzzle;
 
+import java.util.List;
+
 public class AnagramPuzzle implements Puzzle {
     private String id;
     private boolean isSolved;
     private String description;
 
     private String scrambled;
-    private String answer;
+    private List<String> answers;
     private String hint;
 
     private String successMessage;
     private String rewardItemId;
     private String unlockedRoomId;
 
-    public AnagramPuzzle(String id, String scrambled, String answer, String hint, String successMessage,
-                         String rewardItemId, String unlockedRoomId) {
+    public AnagramPuzzle(String id, String scrambled, List<String> answers, String successMessage, String rewardItemId,
+                         String unlockedRoomId) {
         this.id = id;
         this.isSolved = false;
         this.description = "Unscramble the letters to make a word! The hint gives you the definition of the answer.";
         this.scrambled = scrambled;
-        this.answer = answer;
-        this.hint = hint;
+        this.answers = answers;
+        this.hint = "You can do it!";
         this.successMessage = successMessage;
         this.rewardItemId = rewardItemId;
         this.unlockedRoomId = unlockedRoomId;
@@ -50,9 +52,8 @@ public class AnagramPuzzle implements Puzzle {
         return scrambled;
     }
 
-    @Override
-    public String getAnswer() {
-        return answer;
+    public List<String> getAnswer() {
+        return answers;
     }
 
     public String getHint() {
@@ -76,9 +77,11 @@ public class AnagramPuzzle implements Puzzle {
 
     @Override
     public boolean solve(String playerAnswer) {
-        if (answer.equalsIgnoreCase(playerAnswer.trim())) {
-            isSolved = true;
-            return true;
+        for (String answer : answers) {
+            if (answer.equalsIgnoreCase(playerAnswer.trim())) {
+                isSolved = true;
+                return true;
+            }
         }
         return false;
     }

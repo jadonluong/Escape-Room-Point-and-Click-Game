@@ -54,7 +54,6 @@ public class CryptogramPuzzle implements Puzzle{
         return encrypted;
     }
 
-    @Override
     public String getAnswer() {
         return answer;
     }
