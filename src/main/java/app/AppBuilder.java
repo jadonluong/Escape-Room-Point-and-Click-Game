@@ -170,12 +170,12 @@ public class AppBuilder extends Application {
 
         // --- Get hint chain ---
         GetHintViewModel getHintViewModel = new GetHintViewModel();
-        GetHintPresenter getHintPresenter = new GetHintPresenter(getHintViewModel);
+        GetHintPresenter getHintPresenter = new GetHintPresenter(getHintViewModel, viewManager);
         GetHintInteractor getHintInteractor = new GetHintInteractor(getHintPresenter, gameAssetManager, userDAO);
         GetHintController getHintController = new GetHintController(getHintInteractor);
 
         // --- Get hint overlay ---
-        OverlayFactory getHintOverlayFactory = onClose -> new HintOverlay(getHintViewModel, onClose);
+        // OverlayFactory getHintOverlayFactory = onClose -> new HintOverlay(getHintViewModel, onClose);
         HintOverlay hintOverlay = new HintOverlay (getHintViewModel,viewManager);
 
 
