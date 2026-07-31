@@ -31,7 +31,7 @@ public class InGameView extends StackPane implements PropertyChangeListener {
     public InGameView(InGameViewModel viewModel, ActionTriggerController actionTriggerController) {
 
         this.viewModel = viewModel;
-        this.imgPath = viewModel.getState().getImgPath();
+        this.imgPath = "/images/items/prison/spider1.png";
 
         gamePane.setPrefSize(DESIGN_WIDTH, DESIGN_HEIGHT);
         gamePane.setMinSize(DESIGN_WIDTH, DESIGN_HEIGHT);
