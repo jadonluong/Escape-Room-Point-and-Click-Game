@@ -7,8 +7,8 @@
     "imagePath": "/images/rooms/PrisonBackground.png",
     "imageThumbnail": "/images/rooms/PrisonComplete.png",
     "positions": {
-      "prison_interact_2": [79, 540],
-      "prison_interact_4": [793, 575],
+      "prison_interact_2": [793, 575],
+      "prison_interact_4": [79, 540],
       "prison_interact_3": [1444, 599],
       "prison_item_1": [1292, 1520],
       "prison_hint_1": [1872, 571],

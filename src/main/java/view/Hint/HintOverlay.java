@@ -13,6 +13,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import view.ViewManager;
 import view.common.ModalOverlay;
 
 public class HintOverlay extends ModalOverlay implements PropertyChangeListener{
@@ -20,8 +21,8 @@ public class HintOverlay extends ModalOverlay implements PropertyChangeListener{
     private final GetHintViewModel getHintViewModel;
     private Label messageLabel;
 
-    public HintOverlay(GetHintViewModel getHintViewModel, Runnable onClose) {
-        super(onClose);
+    public HintOverlay(GetHintViewModel getHintViewModel, ViewManager viewManager) {
+        super(() -> viewManager.hideOverlay("get hint"));
         this.getHintViewModel = getHintViewModel;
 
         // Register listener for view model updates
