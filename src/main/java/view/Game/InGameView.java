@@ -56,8 +56,8 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
     private void rescale() {
         double scale = Math.min(getWidth() / DESIGN_WIDTH, getHeight() / DESIGN_HEIGHT);
-        gamePane.setScaleX(scale);
-        gamePane.setScaleY(scale);
+        backgroundPane.setScaleX(scale);
+        backgroundPane.setScaleY(scale);
     }
 
 
