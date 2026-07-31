@@ -5,6 +5,7 @@ import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsState;
 import interface_adapter.GamePlay.InGameState;
 import interface_adapter.GamePlay.InGameViewModel;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
@@ -18,7 +19,6 @@ public class InGameView extends StackPane implements PropertyChangeListener {
     // Different layers
     private final Pane backgroundPane = new Pane();
     private final Pane gamePane = new Pane();
-    private final Pane uiPane = new Pane();
 
     private final GameRenderer renderer;
     private final ImgLoader imgLoader = new ImgLoader();
@@ -40,13 +40,14 @@ public class InGameView extends StackPane implements PropertyChangeListener {
         ImageView bg = new ImageView(imgPath);
         bg.setFitWidth(DESIGN_WIDTH);
         bg.setFitHeight(DESIGN_HEIGHT);
-        gamePane.getChildren().add(bg);
+        backgroundPane.getChildren().add(bg);
+        backgroundPane.getChildren().add(gamePane);
 
         this.renderer = new GameRenderer(gamePane, actionTriggerController);
 
         viewModel.addPropertyChangeListener(this);
 
-        getChildren().add(gamePane);
+        getChildren().add(backgroundPane);
         setAlignment(javafx.geometry.Pos.CENTER);
 
         widthProperty().addListener((o, ov, nv) -> rescale());
@@ -72,12 +73,4 @@ public class InGameView extends StackPane implements PropertyChangeListener {
     }
 
 
-    public Pane getBackgroundPane() {
-        return backgroundPane;
-    }
-
-
-    public Pane getUiPane() {
-        return uiPane;
-    }
 }
