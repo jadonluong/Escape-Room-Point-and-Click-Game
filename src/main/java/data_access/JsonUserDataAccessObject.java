@@ -165,11 +165,73 @@ public class JsonUserDataAccessObject implements
          */
         return user;
     }
-
+    
     private void hydrateUserFromDataModel(CommonUser user, UserDataModel userDTO) {
         if (userDTO.modeProgress == null) return;
 
+        hydrateStoryModeFromDTO(user, userDTO);
+
+        hydrateQuickModeFromDTO(user, userDTO);
+    }
+
+    private void hydrateQuickModeFromDTO(CommonUser user, UserDataModel userDTO) {
+        user.setActiveGameMode("QuickMode");
+        UserDataModel.QuickModeDataDTO qmData = userDTO.modeProgress.quickMode;
+        if (qmData != null) {
+            for (String roomId : qmData.quickModeRoomsUnlocked) {
+                Room room = roomRegistry.getRoomById(roomId);
+                if (room != null && !user.getRoomsUnlocked().contains(room)) {
+                    user.unlockRoom(room);
+                }
+            }
+
+            for (Map.Entry<String, ArrayList<String>> entry : qmData.quickModeItemInventory.entrySet()) {
+                String roomID = entry.getKey();
+                user.saveCurrentRoomID(roomID);
+
+                // Instantiate every item collected in the room with roomID
+                for (String itemID : entry.getValue()) {
+                    Item item = itemRegistry.getItemById(itemID);
+                    if (item != null && !user.getItemInventory().contains(item)) {
+                        user.saveItem(item);
+                    }
+                }
+            }
+            if (qmData.quickModeHintsWatched != null) {
+                user.setQuickModeHintsWatched(new HashMap<>(qmData.quickModeHintsWatched));
+            }
+        }
+        user.saveCurrentRoomID(null);
+        user.setActiveGameMode(null);
+    }
+
+    private void hydrateStoryModeFromDTO(CommonUser user, UserDataModel userDTO) {
+        user.setActiveGameMode("StoryMode");
         UserDataModel.StoryModeDataDTO smData = userDTO.modeProgress.storyMode;
+        if (smData != null) {
+            if (smData.storyModeCurrentRoomID != null) {
+                user.setStoryModeCurrentRoomID(smData.storyModeCurrentRoomID);
+            }
+
+            for (String roomId : smData.storyModeRoomsUnlocked) {
+                Room room = roomRegistry.getRoomById(roomId);
+                if (room != null && !user.getRoomsUnlocked().contains(room)) {
+                    user.unlockRoom(room);
+                }
+            }
+
+            for (String itemId : smData.storyModeItemInventory) {
+                Item item = itemRegistry.getItemById(itemId);
+                if (item != null && !user.getItemInventory().contains(item)) {
+                    user.saveItem(item);
+                }
+            }
+
+            if (smData.storyModeHintsWatched != null) {
+                user.setStoryModeHintsWatched(new HashMap<>(smData.storyModeHintsWatched));
+            }
+        }
+        user.setActiveGameMode(null);
     }
 
     /**
