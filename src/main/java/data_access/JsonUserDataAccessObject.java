@@ -234,6 +234,7 @@ public class JsonUserDataAccessObject implements
         user.setActiveGameMode(null);
     }
 
+    // TODO: clean this up once we confirm everything is working
     /**
      * Syncs deserialized JSON data from ModeProgress into AbstractUser's transient fields.
      */
