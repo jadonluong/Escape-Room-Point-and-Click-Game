@@ -230,37 +230,6 @@ public class AppBuilder extends Application {
         BrowseRoomsView browseRoomsView = new BrowseRoomsView(viewManager,
                 mainMenu, browseRoomsViewModel,  quickModeStartUpController);
 
-        // --- Game menu overlay ---
-        OverlayFactory gameMenuOverlayFactory = onClose -> new GameMenuView(
-                viewManager,
-                loggedInViewModel,
-                sfxController,
-                musicController,
-                audioViewModel,
-
-                // --- On save ---
-                () -> {
-                    if (userDAO.getCurrentUser() != null) {
-                        String username = loggedInViewModel.getState().getUsername();
-                        saveProgressController.execute(username);
-                    }
-                },
-
-                // --- On save & quit ---
-                () -> {
-                    if (userDAO.getCurrentUser() != null) {
-                        String username = loggedInViewModel.getState().getUsername();
-                        logoutController.executeLogoutWithSave(username);
-                    }
-                },
-
-                // --- On quit ---
-                () -> {
-                    String username = loggedInViewModel.getState().getUsername();
-                    logoutController.executeLogoutWithoutSave(username);
-                }
-        );
-
         // --- Placeholder screens ---
         PlaceholderView storyPlaceholder = new PlaceholderView("Story Line", viewManagerModel);
         PlaceholderView tutorialPlaceholder = new PlaceholderView("Tutorial", viewManagerModel);
