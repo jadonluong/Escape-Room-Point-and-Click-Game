@@ -15,6 +15,7 @@ import java.beans.PropertyChangeListener;
 public class InGameView extends StackPane implements PropertyChangeListener {
 
     private final InGameViewModel viewModel;
+    private final GameMenuView gameMenuView;
 
     // Different layers
     private final Pane backgroundPane = new Pane();
@@ -27,9 +28,12 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
     private String imgPath;
 
-    public InGameView(InGameViewModel viewModel, ActionTriggerController actionTriggerController) {
+    public InGameView(InGameViewModel viewModel,
+                      GameMenuView gameMenuView,
+                      ActionTriggerController actionTriggerController) {
 
         this.viewModel = viewModel;
+        this.gameMenuView = gameMenuView;
         this.imgPath = "/images/items/prison/spider1.png";
 
         upDateBackgroundPane(imgPath);
@@ -48,11 +52,38 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
         viewModel.addPropertyChangeListener(this);
 
-        getChildren().add(backgroundPane);
         setAlignment(javafx.geometry.Pos.CENTER);
 
         widthProperty().addListener((o, ov, nv) -> rescale());
         heightProperty().addListener((o, ov, nv) -> rescale());
+
+        // Add the Menu, but set it invisible at start.
+        gameMenuView.setVisible(false);
+        gameMenuView.setManaged(false);
+
+        getChildren().addAll(backgroundPane, gameMenuView);
+    }
+
+    private void toggleMenu() {
+        boolean showing = gameMenuView.isVisible();
+
+        gameMenuView.setVisible(!showing);
+        gameMenuView.setManaged(!showing);
+
+        if (showing) {
+            requestFocus();   // return keyboard focus to the game
+        }
+    }
+
+
+
+    public void upDateBackgroundPane(String imgPath) {
+        backgroundPane.getChildren().clear();
+        ImageView bg = new ImageView(imgPath);
+        bg.setFitWidth(DESIGN_WIDTH);
+        bg.setFitHeight(DESIGN_HEIGHT);
+        backgroundPane.getChildren().add(bg);
+        backgroundPane.getChildren().add(gamePane);
     }
 
     private void rescale() {
@@ -71,15 +102,6 @@ public class InGameView extends StackPane implements PropertyChangeListener {
         }
 
 
-    }
-
-    public void upDateBackgroundPane(String imgPath) {
-        backgroundPane.getChildren().clear();
-        ImageView bg = new ImageView(imgPath);
-        bg.setFitWidth(DESIGN_WIDTH);
-        bg.setFitHeight(DESIGN_HEIGHT);
-        backgroundPane.getChildren().add(bg);
-        backgroundPane.getChildren().add(gamePane);
     }
 
 

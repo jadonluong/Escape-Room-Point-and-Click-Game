@@ -297,7 +297,9 @@ public class AppBuilder extends Application {
         // --- Action triggering ---
         ActionTriggerInteractor actionTriggerInteractor = new ActionTriggerInteractor(zoomInteractor, pickUpInteractor, getHintInteractor, userDAO);
         ActionTriggerController actionTriggerController = new ActionTriggerController(actionTriggerInteractor);
+
         // --- In-game ---
+        GameMenuView gameMenuView = new GameMenuView(viewManager,)
         InGameView inGameView = new InGameView(inGameViewModel, actionTriggerController);
 
         // --- Register every top-level screen by name ---
