@@ -2,11 +2,15 @@ package view.puzzle;
 
 import interface_adapter.Puzzle.EnterExit.EnterExitState;
 import interface_adapter.Puzzle.EnterExit.EnterExitViewModel;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +27,7 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
 
     public PuzzleView(EnterExitViewModel enterExitViewModel) {
         this.enterExitViewModel = enterExitViewModel;
+        /*
         EnterExitState enterExitState = enterExitViewModel.getState();
 
         // Background
@@ -38,7 +43,7 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         double gap = DESIGN_HEIGHT / 20.0; // Size of the gap between all the main boxes
 
         // Answer Box
-        double answerBoxWidth = DESIGN_WIDTH * (7.0 / 12.0);
+        double answerBoxWidth = DESIGN_WIDTH * (7.0 / 12.0) - (gap * 3);
         double answerBoxHeight = (DESIGN_HEIGHT - (gap * 2)) / 11.0;
 
         Rectangle answerBox = new Rectangle(answerBoxWidth, answerBoxHeight);
@@ -48,6 +53,15 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         answerBox.setLayoutX(gap);
         answerBox.setLayoutY(DESIGN_HEIGHT - (answerBoxHeight + gap));
         fixedRoot.getChildren().add(answerBox);
+        // -------------
+
+        // Answer Button
+        double answerButtonWidth = (gap * 2) * (2.0/3.0);
+
+        Label answerButtonLabel = new Label("✓");
+
+        Button answerButton = new Button();
+
         // -------------
 
         // Puzzle Box
@@ -69,11 +83,28 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
             }
 
             Label puzzleLabel = new Label(puzzleText);
-            // TODO: Add the text.
+            puzzleLabel.setTextFill(Color.WHITE);
+            puzzleLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 24));
+            puzzleLabel.setWrapText(true);
+            puzzleLabel.setAlignment(Pos.CENTER);
+            puzzleLabel.setPrefWidth(puzzleBox.getWidth() - 50);
+            puzzleLabel.setPrefHeight(puzzleBox.getHeight() - 50);
+            puzzleLabel.setMaxWidth(puzzleBox.getWidth() - 50);
+            puzzleLabel.setMaxHeight(puzzleBox.getHeight() - 50);
+            puzzleLabel.setLayoutX(puzzleBox.getLayoutX() + 25);
+            puzzleLabel.setLayoutY(puzzleBox.getLayoutY() + 25);
+            fixedRoot.getChildren().add(puzzleLabel);
+
+            // TODO: Add a picture?
+        } else {
+            // TODO: Add a picture?
         }
         // ----------
 
+        //
+
         // TODO: Finish this.
+        */
     }
 
     @Override
