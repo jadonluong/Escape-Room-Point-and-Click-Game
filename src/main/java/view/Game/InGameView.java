@@ -21,7 +21,6 @@ public class InGameView extends StackPane implements PropertyChangeListener {
     private final Pane gamePane = new Pane();
 
     private final GameRenderer renderer;
-    private final ImgLoader imgLoader = new ImgLoader();
 
     private static final double DESIGN_WIDTH = 2907;
     private static final double DESIGN_HEIGHT = 2040;
@@ -33,15 +32,17 @@ public class InGameView extends StackPane implements PropertyChangeListener {
         this.viewModel = viewModel;
         this.imgPath = "/images/items/prison/spider1.png";
 
+        upDateBackgroundPane(imgPath);
+
+        backgroundPane.setPrefSize(DESIGN_WIDTH, DESIGN_HEIGHT);
+        backgroundPane.setMinSize(DESIGN_WIDTH, DESIGN_HEIGHT);
+        backgroundPane.setMaxSize(DESIGN_WIDTH, DESIGN_HEIGHT);
+
         gamePane.setPrefSize(DESIGN_WIDTH, DESIGN_HEIGHT);
         gamePane.setMinSize(DESIGN_WIDTH, DESIGN_HEIGHT);
         gamePane.setMaxSize(DESIGN_WIDTH, DESIGN_HEIGHT);
 
-        ImageView bg = new ImageView(imgPath);
-        bg.setFitWidth(DESIGN_WIDTH);
-        bg.setFitHeight(DESIGN_HEIGHT);
-        backgroundPane.getChildren().add(bg);
-        backgroundPane.getChildren().add(gamePane);
+
 
         this.renderer = new GameRenderer(gamePane, actionTriggerController);
 
@@ -66,10 +67,19 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
         if (evt.getNewValue() instanceof InGameState newState) {
             renderer.renderAll(newState);
-            imgPath = newState.getImgPath();
+            upDateBackgroundPane(newState.getImgPath());
         }
 
 
+    }
+
+    public void upDateBackgroundPane(String imgPath) {
+        backgroundPane.getChildren().clear();
+        ImageView bg = new ImageView(imgPath);
+        bg.setFitWidth(DESIGN_WIDTH);
+        bg.setFitHeight(DESIGN_HEIGHT);
+        backgroundPane.getChildren().add(bg);
+        backgroundPane.getChildren().add(gamePane);
     }
 
 

@@ -31,8 +31,7 @@ import domain.entities.Puzzle.Puzzle;
 import domain.entities.Puzzle.PuzzleFactory;
 import domain.entities.Room.CommonRoomFactory;
 import domain.entities.Room.RoomFactory;
-import domain.entities.User.CommonUserFactory;
-import domain.entities.User.CommonUserFactoryClass;
+import domain.entities.User.*;
 import interface_adapter.Audio.*;
 import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsController;
@@ -114,6 +113,9 @@ public class AppBuilder extends Application {
 
         JsonUserDataAccessObject userDAO = new JsonUserDataAccessObject(gameAssetManager,gameAssetManager);
         CommonUserFactory userFactory = new CommonUserFactoryClass();
+        GuestUserFactory guestUserFactory = new GuestUserFactoryClass();
+        User defaultGuestUser = guestUserFactory.createGuestUser();
+        userDAO.setCurrentUser(defaultGuestUser);
 
         // --- Audio chain (built before ViewManager, which needs the sfx state) ---
         AudioViewModel audioViewModel = new AudioViewModel();
