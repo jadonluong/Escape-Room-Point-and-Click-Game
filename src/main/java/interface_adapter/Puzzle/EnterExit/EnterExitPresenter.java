@@ -31,6 +31,9 @@ public class EnterExitPresenter implements EnterExitOutputBoundary {
         state.setEncrypted(outputData.getEncrypted());
         state.setCipher(outputData.getCipher());
 
+        enterExitViewModel.setState(state);
+        enterExitViewModel.firePropertyChanged();
+
         viewManagerModel.setState("Puzzle");
         viewManagerModel.firePropertyChanged();
     }
@@ -46,6 +49,9 @@ public class EnterExitPresenter implements EnterExitOutputBoundary {
         InteractState state = interactViewModel.getState(); // Reuse the InteractOverlay for this :)
         state.setSuccessMessage(null);
         state.setErrorMessage(errorMessage);
+
+        interactViewModel.setState(state);
+        interactViewModel.firePropertyChanged();
 
         viewManager.showOverlay("Interact");
     }

@@ -12,7 +12,7 @@ This file explains what the databases could potentially look like.
             "quickModeItemInventory": {
                 "roomID_1": ["itemID", ...],
                 "roomID_2": [...]
-            }
+            },
             "quickModeHintsWatched": {
                 "roomID_1": {
                     "objectID_1": request_count(int),
@@ -24,7 +24,7 @@ This file explains what the databases could potentially look like.
         "StoryMode": {
             "storyModeRoomsUnlocked": [...],
             "storyModeItemInventory": [...],
-            "storyModeHintsWatched": [...],
+            "storyModeHintsWatched": {String, Integer},
             "storyModeCurrentRoomID": "roomID",
         }
       }

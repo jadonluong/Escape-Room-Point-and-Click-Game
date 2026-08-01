@@ -123,11 +123,13 @@ public class GameAssetManager implements
                         String puzzleId = entry.getKey();
                         JsonPuzzleData data = entry.getValue();
 
+                        List<String> answers = new ArrayList<>();
+                        answers.add(data.answer);
+
                         if ("Anagram".equalsIgnoreCase(data.puzzleType)) {
                             Puzzle puzzle = puzzleFactory.createAnagram(puzzleId,
                                     data.scrambled,
-                                    data.answer,
-                                    data.hint,
+                                    answers,
                                     data.successMessage,
                                     data.rewardItemId,
                                     data.unlockedRoomId);

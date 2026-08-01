@@ -23,11 +23,13 @@ import domain.entities.User.User;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class JsonUserDataAccessObject implements
@@ -43,7 +45,7 @@ public class JsonUserDataAccessObject implements
 
     private static final String FILE_PATH = "user_data/users.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final Map<String, CommonUser> users;
+    private final Map<String, UserDataModel> rawUsers;
 
     private final RoomRegistry roomRegistry;
     private final ItemRegistry itemRegistry;
@@ -53,7 +55,7 @@ public class JsonUserDataAccessObject implements
     public JsonUserDataAccessObject(RoomRegistry roomRegistry, ItemRegistry itemRegistry) {
         this.roomRegistry = roomRegistry;
         this.itemRegistry = itemRegistry;
-        this.users = load();
+        this.rawUsers = load();
     }
 
     @Override
@@ -75,15 +77,16 @@ public class JsonUserDataAccessObject implements
     }
 
 
-    private Map<String, CommonUser> load() {
+    private Map<String, UserDataModel> load() {
         try {
             Path path = Paths.get(FILE_PATH);
             if (!Files.exists(path)) {
                 return new HashMap<>();
             }
-            String json = Files.readString(path);
-            Type type = new TypeToken<Map<String, CommonUser>>() {}.getType();
-            Map<String, CommonUser> result = gson.fromJson(json, type);
+            String json = Files.readString(path, StandardCharsets.UTF_8);
+            Type type = new TypeToken<Map<String, UserDataModel>>() {
+            }.getType();
+            Map<String, UserDataModel> result = gson.fromJson(json, type);
             return result != null ? result : new HashMap<>();
         } catch (IOException e) {
             throw new RuntimeException("Failed to load user data from " + FILE_PATH, e);
@@ -96,7 +99,7 @@ public class JsonUserDataAccessObject implements
             if (path.getParent() != null) {
                 Files.createDirectories(path.getParent());
             }
-            Files.writeString(path, gson.toJson(users));
+            Files.writeString(path, gson.toJson(rawUsers), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException("Failed to save user data to " + FILE_PATH, e);
         }
@@ -104,12 +107,15 @@ public class JsonUserDataAccessObject implements
 
     @Override
     public boolean existsByName(String username) {
-        return users.containsKey(username);
+        return rawUsers.containsKey(username);
     }
 
     // Only called in the signup use case.
     @Override
     public void save(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("Cannot save a null user.");
+        }
         if (!(user instanceof CommonUserFunction)) {
             throw new IllegalArgumentException("Cannot save a user with no password.");
         }
@@ -117,18 +123,20 @@ public class JsonUserDataAccessObject implements
             throw new IllegalArgumentException("Unsupported User implementation type.");
         }
 
-        String username = user.getUsername();
+        UserDataModel model = convertEntityToDataModel(incomingUser);
 
-        users.put(username, incomingUser);
+        rawUsers.put(model.username, model);
         persist();
     }
 
     @Override
     public CommonUserFunction getUserPassword(String username) {
-        CommonUser user = users.get(username);
-        if (user == null) {
+        UserDataModel userDTO = rawUsers.get(username);
+        if (userDTO == null) {
             throw new IllegalArgumentException("No such user: " + username);
         }
+        CommonUser user = new CommonUser(userDTO.username, userDTO.password);
+        hydrateUserFromDataModel(user, userDTO);
         return user;
     }
 
@@ -138,22 +146,95 @@ public class JsonUserDataAccessObject implements
      */
     @Override
     public CommonUser getUser(String username) {
-        CommonUser user = users.get(username);
+        UserDataModel userDTO = rawUsers.get(username);
 
-        if (user == null) {
+        if (userDTO == null) {
             throw new IllegalArgumentException("No such user: " + username);
         }
 
+        CommonUser user = new CommonUser(userDTO.username, userDTO.password);
         // Safety check: ensure runtime memory fields are never null
         user.initializeRuntimeState();
 
-        syncRuntimeFromJSON(user); // Copy transient hint maps & room IDs from ModeProgress into AbstractUser
+        hydrateUserFromDataModel(user, userDTO);
+
+
+        /* syncRuntimeFromJSON(user); // Copy transient hint maps & room IDs from ModeProgress into AbstractUser
         hydrateStoryModeLiveObjects(user);
         hydrateQuickModeLiveObjects(user);
-
+         */
         return user;
     }
+    
+    private void hydrateUserFromDataModel(CommonUser user, UserDataModel userDTO) {
+        if (userDTO.modeProgress == null) return;
 
+        hydrateStoryModeFromDTO(user, userDTO);
+
+        hydrateQuickModeFromDTO(user, userDTO);
+    }
+
+    private void hydrateQuickModeFromDTO(CommonUser user, UserDataModel userDTO) {
+        user.setActiveGameMode("QuickMode");
+        UserDataModel.QuickModeDataDTO qmData = userDTO.modeProgress.quickMode;
+        if (qmData != null) {
+            for (String roomId : qmData.quickModeRoomsUnlocked) {
+                Room room = roomRegistry.getRoomById(roomId);
+                if (room != null && !user.getRoomsUnlocked().contains(room)) {
+                    user.unlockRoom(room);
+                }
+            }
+
+            for (Map.Entry<String, ArrayList<String>> entry : qmData.quickModeItemInventory.entrySet()) {
+                String roomID = entry.getKey();
+                user.saveCurrentRoomID(roomID);
+
+                // Instantiate every item collected in the room with roomID
+                for (String itemID : entry.getValue()) {
+                    Item item = itemRegistry.getItemById(itemID);
+                    if (item != null && !user.getItemInventory().contains(item)) {
+                        user.saveItem(item);
+                    }
+                }
+            }
+            if (qmData.quickModeHintsWatched != null) {
+                user.setQuickModeHintsWatched(new HashMap<>(qmData.quickModeHintsWatched));
+            }
+        }
+        user.saveCurrentRoomID(null);
+        user.setActiveGameMode(null);
+    }
+
+    private void hydrateStoryModeFromDTO(CommonUser user, UserDataModel userDTO) {
+        user.setActiveGameMode("StoryMode");
+        UserDataModel.StoryModeDataDTO smData = userDTO.modeProgress.storyMode;
+        if (smData != null) {
+            if (smData.storyModeCurrentRoomID != null) {
+                user.setStoryModeCurrentRoomID(smData.storyModeCurrentRoomID);
+            }
+
+            for (String roomId : smData.storyModeRoomsUnlocked) {
+                Room room = roomRegistry.getRoomById(roomId);
+                if (room != null && !user.getRoomsUnlocked().contains(room)) {
+                    user.unlockRoom(room);
+                }
+            }
+
+            for (String itemId : smData.storyModeItemInventory) {
+                Item item = itemRegistry.getItemById(itemId);
+                if (item != null && !user.getItemInventory().contains(item)) {
+                    user.saveItem(item);
+                }
+            }
+
+            if (smData.storyModeHintsWatched != null) {
+                user.setStoryModeHintsWatched(new HashMap<>(smData.storyModeHintsWatched));
+            }
+        }
+        user.setActiveGameMode(null);
+    }
+
+    // TODO: clean this up once we confirm everything is working
     /**
      * Syncs deserialized JSON data from ModeProgress into AbstractUser's transient fields.
      */
@@ -244,7 +325,59 @@ public class JsonUserDataAccessObject implements
         if (user == null) {
             throw new IllegalArgumentException("Cannot save progress. No such user.");
         }
+        UserDataModel model = convertEntityToDataModel(user);
+        rawUsers.put(model.username, model);
         persist();
     }
+
+    private UserDataModel convertEntityToDataModel(CommonUser user) {
+        UserDataModel model = new UserDataModel();
+        model.username = user.getUsername();
+        model.password = user.getPassword();
+        model.modeProgress = new UserDataModel.ModeProgressDTO();
+        model.modeProgress.quickMode = new UserDataModel.QuickModeDataDTO();
+        model.modeProgress.storyMode = new UserDataModel.StoryModeDataDTO();
+
+        model.modeProgress.storyMode.storyModeCurrentRoomID = user.getStoryModeCurrentRoomID();
+        model.modeProgress.storyMode.storyModeRoomsUnlocked = user.getStoryModeRoomsUnlockedIDs();
+        model.modeProgress.storyMode.storyModeItemInventory = user.getStoryModeItemInventoryIDs();
+        model.modeProgress.storyMode.storyModeHintsWatched = user.getStoryModeHintsWatched();
+
+        model.modeProgress.quickMode.quickModeRoomsUnlocked = user.getQuickModeRoomsUnlockedIDs();
+        model.modeProgress.quickMode.quickModeItemInventory = user.getQuickModeItemInventoryIDs();
+        model.modeProgress.quickMode.quickModeHintsWatched = user.getQuickModeHintsWatched();
+
+        return model;
+    }
+
+    public UserDataModel getRawUserData(String username) {
+        return rawUsers.get(username);
+    }
+
+
+    private static class UserDataModel {
+        public String username;
+        public String password;
+        public ModeProgressDTO modeProgress;
+
+        public static class ModeProgressDTO {
+            public QuickModeDataDTO quickMode;
+            public StoryModeDataDTO storyMode;
+        }
+
+        public static class QuickModeDataDTO {
+            public List<String> quickModeRoomsUnlocked = new ArrayList<>();
+            public Map<String, ArrayList<String>> quickModeItemInventory = new HashMap<>();
+            public Map<String, HashMap<String, Integer>> quickModeHintsWatched = new HashMap<>();
+        }
+
+        public static class StoryModeDataDTO {
+            public String storyModeCurrentRoomID;
+            public List<String> storyModeRoomsUnlocked = new ArrayList<>();
+            public List<String> storyModeItemInventory = new ArrayList<>();
+            public HashMap<String, Integer> storyModeHintsWatched = new HashMap<>();
+        }
+    }
+
 
 }

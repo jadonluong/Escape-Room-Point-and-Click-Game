@@ -60,7 +60,8 @@ public class TutorialAndStoryModeStartUpInteractor implements TutorialAndStoryMo
         });
 
         //wrap the data
-        TutorialAndStoryModeStartUpOutPutData outPutData = new TutorialAndStoryModeStartUpOutPutData(ObjectsToDisplay);
+        TutorialAndStoryModeStartUpOutPutData outPutData = new TutorialAndStoryModeStartUpOutPutData(ObjectsToDisplay,
+                startingRoom.getImagePath());
         presenter.prepareGameStartView(outPutData);
     }
 }

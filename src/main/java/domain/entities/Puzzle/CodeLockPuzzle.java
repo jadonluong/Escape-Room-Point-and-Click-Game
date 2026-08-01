@@ -44,7 +44,6 @@ public class CodeLockPuzzle implements Puzzle {
         return description;
     }
 
-    @Override
     public String getAnswer() {
         return answer;
     }

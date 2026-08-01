@@ -59,7 +59,7 @@ public class GameRenderer {
     private void render(String id, ObjectsInfo info) {
 
         ImageView imageView = makeButton(info.imgPath(), 50, 50,
-                info.position().x(), info.position().y(), () -> actionTriggerController.execute(id,info.type()));
+                 () -> actionTriggerController.execute(id,info.type()));
 
         renderedObjects.put(id, imageView);
         gamePane.getChildren().add(imageView);
@@ -71,11 +71,10 @@ public class GameRenderer {
         renderedObjects.clear();
     }
 
-    private ImageView makeButton(String resourcePath, double imgWidth, double imgHeight,
+    private ImageView makeButton(String resourcePath,
                                  double x, double y, Runnable onClick) {
         ImageView button = new ImageView(imgLoader.loadImage(resourcePath));
-        button.setFitWidth(imgWidth);
-        button.setFitHeight(imgHeight);
+
         button.setLayoutX(x);
         button.setLayoutY(y);
 

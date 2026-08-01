@@ -23,6 +23,9 @@ public class InteractPresenter implements InteractOutputBoundary {
         state.setSuccessMessage(outputData.getSuccessMessage());
         state.setErrorMessage(null);
 
+        interactViewModel.setState(state);
+        interactViewModel.firePropertyChanged();
+
         viewManager.showOverlay("Interact");
     }
 
@@ -31,6 +34,9 @@ public class InteractPresenter implements InteractOutputBoundary {
         InteractState state = interactViewModel.getState();
         state.setErrorMessage(errorMessage);
         state.setSuccessMessage(null);
+
+        interactViewModel.setState(state);
+        interactViewModel.firePropertyChanged();
 
         viewManager.showOverlay("Interact");
     }

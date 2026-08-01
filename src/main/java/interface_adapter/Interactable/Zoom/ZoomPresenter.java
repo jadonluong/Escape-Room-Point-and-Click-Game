@@ -23,6 +23,9 @@ public class ZoomPresenter implements ZoomOutputBoundary {
         state.setInteractableId(outputData.getInteractableId());
         state.setPuzzleId(outputData.getPuzzleId());
 
+        zoomViewModel.setState(state);
+        zoomViewModel.firePropertyChanged();
+
         viewManagerModel.setState("Zoom");
         viewManagerModel.firePropertyChanged();
     }
