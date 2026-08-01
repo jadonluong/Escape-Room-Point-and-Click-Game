@@ -13,7 +13,10 @@ import view.ViewManager;
 import view.common.AudioControlView;
 import view.common.ModalOverlay;
 
-public class GameMenuView extends ModalOverlay {
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+public class GameMenuView extends ModalOverlay implements PropertyChangeListener {
 
     private final LoggedInViewModel loggedInViewModel;
     private final AudioControlView audioControlView;
@@ -21,6 +24,8 @@ public class GameMenuView extends ModalOverlay {
     private final Runnable onSaveAndQuit;
     private final Runnable onQuit;
     private final ViewManager viewManager;
+
+    private VBox saveArea;
 
     public GameMenuView(ViewManager viewManager, LoggedInViewModel loggedInViewModel,
                         ToggleSfxController sfxController,
@@ -37,6 +42,8 @@ public class GameMenuView extends ModalOverlay {
         this.onSave = onSave;
         this.onSaveAndQuit = onSaveAndQuit;
         this.onQuit = onQuit;
+
+        loggedInViewModel.addPropertyChangeListener(this);
         initialize(); // safe now — all fields above are set first, see earlier ModalOverlay fix
     }
 
@@ -52,25 +59,30 @@ public class GameMenuView extends ModalOverlay {
         box.setStyle("-fx-background-color: #1997d4; -fx-background-radius: 16;");
 
         // Guests never see these — not disabled, not present in the layout at all.
-        if (loggedInViewModel.getState().isLoggedIn()) {
-            Button saveButton = new Button("SAVE");
-            saveButton.setOnAction(e -> onSave.run());
+            saveArea = new VBox(16);
+            saveArea.setAlignment(Pos.CENTER);
 
-            Label saveNote = new Label("* game does not auto save!");
-            saveNote.setStyle("-fx-text-fill: white; -fx-font-size: 11px;");
+            updateSaveButton();
 
-            Button saveAndQuitButton = new Button("SAVE & QUIT");
-            saveAndQuitButton.setOnAction(e -> onSaveAndQuit.run());
-
-            box.getChildren().addAll(saveButton, saveNote, saveAndQuitButton);
-        }
+//        if (loggedInViewModel.getState().isLoggedIn()) {
+//            Button saveButton = new Button("SAVE");
+//            saveButton.setOnAction(e -> onSave.run());
+//
+//            Label saveNote = new Label("* game does not auto save!");
+//            saveNote.setStyle("-fx-text-fill: white; -fx-font-size: 11px;");
+//
+//            Button saveAndQuitButton = new Button("SAVE & QUIT");
+//            saveAndQuitButton.setOnAction(e -> onSaveAndQuit.run());
+//
+//            box.getChildren().addAll(saveButton, saveNote, saveAndQuitButton);
+//        }
 
         Button quitButton = new Button("QUIT");
         quitButton.setOnAction(e -> onQuit.run());
         Label quitNote = new Label("* will not save!");
         quitNote.setStyle("-fx-text-fill: white; -fx-font-size: 11px;");
 
-        box.getChildren().addAll(quitButton, quitNote, audioControlView);
+        box.getChildren().addAll(saveArea, quitButton, quitNote, audioControlView);
 
         return box;
     }
@@ -81,5 +93,40 @@ public class GameMenuView extends ModalOverlay {
 
     public void hide() {
         viewManager.hideOverlay("in-game menu");
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        updateSaveButton();
+    }
+
+    private void updateSaveButton() {
+
+        saveArea.getChildren().clear();
+
+        if (loggedInViewModel.getState().isLoggedIn()) {
+            System.out.println("login");
+            Button saveButton = new Button("SAVE");
+            saveButton.setOnAction(e -> onSave.run());
+
+
+            Label saveNote = new Label("* game does not auto save!");
+            saveNote.setStyle(
+                    "-fx-text-fill: white; -fx-font-size: 11px;"
+            );
+
+
+            Button saveAndQuitButton = new Button("SAVE & QUIT");
+            saveAndQuitButton.setOnAction(
+                    e -> onSaveAndQuit.run()
+            );
+
+
+            saveArea.getChildren().addAll(
+                    saveButton,
+                    saveNote,
+                    saveAndQuitButton
+            );
+        }
     }
 }
