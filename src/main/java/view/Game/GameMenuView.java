@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import view.ViewManager;
 import view.common.AudioControlView;
 import view.common.ModalOverlay;
 
@@ -20,15 +21,14 @@ public class GameMenuView extends ModalOverlay {
     private final Runnable onSaveAndQuit;
     private final Runnable onQuit;
 
-    public GameMenuView(Runnable onClose,
-                        LoggedInViewModel loggedInViewModel,
+    public GameMenuView(ViewManager viewManager, LoggedInViewModel loggedInViewModel,
                         ToggleSfxController sfxController,
                         ToggleMusicController musicController,
                         AudioViewModel audioViewModel,
                         Runnable onSave,
                         Runnable onSaveAndQuit,
                         Runnable onQuit) {
-        super(onClose);
+        super(() -> viewManager.hideOverlay("in-game menu"));
         this.loggedInViewModel = loggedInViewModel;
         this.audioControlView = new AudioControlView(sfxController, musicController, audioViewModel);
         this.onSave = onSave;
