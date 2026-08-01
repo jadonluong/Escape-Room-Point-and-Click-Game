@@ -5,6 +5,7 @@ import domain.entities.Item.Item;
 public class CraftingInputData {
     private final Item itemA;
     private final Item itemB;
+    private final Item item;
 
     public CraftingInputData(Item itemA, Item itemB) {
         this.itemA = itemA;
@@ -17,5 +18,9 @@ public class CraftingInputData {
 
     public Item getItemB() {
         return this.itemB;
+    }
+
+    public Item getItem() {
+        return this.item;
     }
 }

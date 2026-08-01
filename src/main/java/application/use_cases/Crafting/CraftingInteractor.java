@@ -20,17 +20,25 @@ public class CraftingInteractor implements CraftingInputBoundary{
 
     @Override
     public void execute(CraftingInputData inputData) {
-        Item item = inputData.getItem();
-
-        if (item == null) {
+        if (inputData == null || inputData.getItem() == null) {
+            presenter.prepareFailView("Crafting failed: Invalid item.");
             return;
         }
 
+        Item item = inputData.getItem();
+        JsonUserDataAccessObject userDAO;
         User user = userDAO.getCurrentUser();
-        if (user != null) {
-            user.saveItem(item); // Adds item to dynamic ArrayList
+
+        if (user == null) {
+            presenter.prepareFailView("Crafting failed: User not logged in.");
+            return;
         }
 
+        // Add item to user entity and persist state
+        user.saveItem(item);
+        userDAO.saveUser(user);
+
+        // Notify presenter of success
         CraftingOutputData outputData = new CraftingOutputData(item.getName());
         presenter.prepareSuccessView(outputData);
     }
