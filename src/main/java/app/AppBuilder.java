@@ -232,7 +232,7 @@ public class AppBuilder extends Application {
 
         // --- Game menu overlay ---
         OverlayFactory gameMenuOverlayFactory = onClose -> new GameMenuView(
-                onClose,
+                viewManager,
                 loggedInViewModel,
                 sfxController,
                 musicController,
@@ -301,8 +301,36 @@ public class AppBuilder extends Application {
         ActionTriggerController actionTriggerController = new ActionTriggerController(actionTriggerInteractor);
 
         // --- In-game ---
-        GameMenuView gameMenuView = new GameMenuView(viewManager,)
-        InGameView inGameView = new InGameView(inGameViewModel, actionTriggerController);
+
+        // Create game menu view
+        GameMenuView gameMenuView =
+                new GameMenuView(viewManager,
+                loggedInViewModel,
+                sfxController,
+                musicController,
+                audioViewModel,
+                        () -> {
+                            if (userDAO.getCurrentUser() != null) {
+                                String username = loggedInViewModel.getState().getUsername();
+                                saveProgressController.execute(username);
+                            }
+                        },
+
+                        // --- On save & quit ---
+                        () -> {
+                            if (userDAO.getCurrentUser() != null) {
+                                String username = loggedInViewModel.getState().getUsername();
+                                logoutController.executeLogoutWithSave(username);
+                            }
+                        },
+
+                        // --- On quit ---
+                        () -> {
+                            String username = loggedInViewModel.getState().getUsername();
+                            logoutController.executeLogoutWithoutSave(username);
+                        }
+                );
+        InGameView inGameView = new InGameView(inGameViewModel, gameMenuView, actionTriggerController);
 
         // --- Register every top-level screen by name ---
         viewManager.registerView("main menu", mainMenu);
@@ -314,6 +342,9 @@ public class AppBuilder extends Application {
         viewManager.registerOverlay("Interact", interactOverlay);
         viewManager.registerView("Puzzle", puzzleView);
         viewManager.registerOverlay("get hint", hintOverlay, true);
+
+        // --- Register In-game menu ---
+        viewManager.registerOverlay("in-game menu" ,gameMenuView);
 
         // --- Trigger the first screen ---
         viewManagerModel.firePropertyChanged();

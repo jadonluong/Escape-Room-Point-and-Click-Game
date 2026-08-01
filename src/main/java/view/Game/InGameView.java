@@ -5,6 +5,7 @@ import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsState;
 import interface_adapter.GamePlay.InGameState;
 import interface_adapter.GamePlay.InGameViewModel;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -15,7 +16,6 @@ import java.beans.PropertyChangeListener;
 public class InGameView extends StackPane implements PropertyChangeListener {
 
     private final InGameViewModel viewModel;
-    private final GameMenuView gameMenuView;
 
     // Different layers
     private final Pane backgroundPane = new Pane();
@@ -33,7 +33,6 @@ public class InGameView extends StackPane implements PropertyChangeListener {
                       ActionTriggerController actionTriggerController) {
 
         this.viewModel = viewModel;
-        this.gameMenuView = gameMenuView;
         this.imgPath = "/images/items/prison/spider1.png";
 
         upDateBackgroundPane(imgPath);
@@ -57,23 +56,35 @@ public class InGameView extends StackPane implements PropertyChangeListener {
         widthProperty().addListener((o, ov, nv) -> rescale());
         heightProperty().addListener((o, ov, nv) -> rescale());
 
+        // Allow this view to receive keyboard input
+        setFocusTraversable(true);
+
+        // Request focus when this view is added to the scene
+        sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                requestFocus();
+            }
+        });
+
         // Add the Menu, but set it invisible at start.
-        gameMenuView.setVisible(false);
-        gameMenuView.setManaged(false);
 
-        getChildren().addAll(backgroundPane, gameMenuView);
+
+
+        // Listen for ESC
+        setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                if (gameMenuView.isVisible()) {
+                    gameMenuView.hide();
+                } else {
+                    gameMenuView.show();
+                }
+                event.consume();
+            }
+        });
+
+        getChildren().addAll(backgroundPane);
     }
 
-    private void toggleMenu() {
-        boolean showing = gameMenuView.isVisible();
-
-        gameMenuView.setVisible(!showing);
-        gameMenuView.setManaged(!showing);
-
-        if (showing) {
-            requestFocus();   // return keyboard focus to the game
-        }
-    }
 
 
 

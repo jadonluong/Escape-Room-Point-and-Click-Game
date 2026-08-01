@@ -20,6 +20,7 @@ public class GameMenuView extends ModalOverlay {
     private final Runnable onSave;
     private final Runnable onSaveAndQuit;
     private final Runnable onQuit;
+    private final ViewManager viewManager;
 
     public GameMenuView(ViewManager viewManager, LoggedInViewModel loggedInViewModel,
                         ToggleSfxController sfxController,
@@ -28,7 +29,9 @@ public class GameMenuView extends ModalOverlay {
                         Runnable onSave,
                         Runnable onSaveAndQuit,
                         Runnable onQuit) {
+
         super(() -> viewManager.hideOverlay("in-game menu"));
+        this.viewManager = viewManager;
         this.loggedInViewModel = loggedInViewModel;
         this.audioControlView = new AudioControlView(sfxController, musicController, audioViewModel);
         this.onSave = onSave;
@@ -70,5 +73,13 @@ public class GameMenuView extends ModalOverlay {
         box.getChildren().addAll(quitButton, quitNote, audioControlView);
 
         return box;
+    }
+
+    public void show() {
+        viewManager.showOverlay("in-game menu");
+    }
+
+    public void hide() {
+        viewManager.hideOverlay("in-game menu");
     }
 }
