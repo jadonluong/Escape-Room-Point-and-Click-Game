@@ -210,29 +210,37 @@ public abstract class AbstractUser implements User {
 
             // maxHintsAvailable is the length of the list containing the hints written for the object with objectID,
             // so we need to cap at maxHintsAvailable - 1 instead of maxHintsAvailable.
-            int currentHintIndex = this.storyModeHintsWatched.get(objectID);
-            if (currentHintIndex < maxHintsAvailable - 1) {
-                this.storyModeHintsWatched.put(objectID, currentHintIndex + 1);
+            else {
+                int currentHintIndex = this.storyModeHintsWatched.get(objectID);
+                if (currentHintIndex < maxHintsAvailable - 1) {
+                    this.storyModeHintsWatched.put(objectID, currentHintIndex + 1);
+                }
             }
         }
         else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (!this.quickModeHintsWatched.get(this.currentRoomID).containsKey(objectID)) {
-                this.quickModeHintsWatched.get(this.currentRoomID).put(objectID,  0);
+            Map<String, Integer> roomHints = this.quickModeHintsWatched
+                    .computeIfAbsent(this.currentRoomID, k -> new HashMap<>());
+
+            if (!roomHints.containsKey(objectID)) {
+                roomHints.put(objectID,  0);
             }
 
-            int currentHintIndex = this.quickModeHintsWatched.get(this.currentRoomID).get(objectID);
-            if (currentHintIndex < maxHintsAvailable - 1) {
-                this.quickModeHintsWatched.get(this.currentRoomID).put(objectID, currentHintIndex + 1);
+            else {
+                int currentHintIndex = roomHints.get(objectID);
+                if (currentHintIndex < maxHintsAvailable - 1) {
+                    roomHints.put(objectID, currentHintIndex + 1);
+                }
             }
         }
         else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
             if (!this.tutorialModeHintsWatched.containsKey(objectID)) {
                 this.tutorialModeHintsWatched.put(objectID, 0);
             }
-
-            int currentHintIndex = this.tutorialModeHintsWatched.get(objectID);
-            if (currentHintIndex < maxHintsAvailable - 1) {
-                this.tutorialModeHintsWatched.put(objectID, currentHintIndex + 1);
+            else {
+                int currentHintIndex = this.tutorialModeHintsWatched.get(objectID);
+                if (currentHintIndex < maxHintsAvailable - 1) {
+                    this.tutorialModeHintsWatched.put(objectID, currentHintIndex + 1);
+                }
             }
         }
     }
