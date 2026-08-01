@@ -354,7 +354,7 @@ public class JsonUserDataAccessObject implements
     }
 
 
-    public class UserDataModel {
+    private static class UserDataModel {
         public String username;
         public String password;
         public ModeProgressDTO modeProgress;
