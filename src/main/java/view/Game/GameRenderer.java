@@ -58,7 +58,9 @@ public class GameRenderer {
 
     private void render(String id, ObjectsInfo info) {
 
-        ImageView imageView = makeButton(info.imgPath(), 50, 50,
+        Double x = info.position().x();
+        Double y = info.position().y();
+        ImageView imageView = makeButton(info.imgPath(), x, y,
                  () -> actionTriggerController.execute(id,info.type()));
 
         renderedObjects.put(id, imageView);
