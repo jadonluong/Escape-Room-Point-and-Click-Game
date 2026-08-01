@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import view.ViewManager;
 import view.common.ModalOverlay;
 
 import java.beans.PropertyChangeEvent;
@@ -17,15 +18,61 @@ import java.util.List;
 public class InventoryOverlay extends ModalOverlay implements PropertyChangeListener {
 
     private final InventoryViewModel viewModel;
+    private final ViewManager viewManager; // Added ViewManager
     private final HBox hotbarContainer = new HBox(10);
     private final Label statusLabel = new Label();
     private final Button craftButton = new Button("Craft Selected");
     private final Button dropButton = new Button("Drop Selected");
 
-    public InventoryOverlay(Runnable onClose, InventoryViewModel viewModel) {
-        super(onClose);
+    public InventoryOverlay(ViewManager viewManager, InventoryViewModel viewModel) {
+        super(() -> viewManager.hideOverlay("inventory"));
         this.viewModel = viewModel;
         this.viewModel.addPropertyChangeListener(this);
+
+        // Force initial render of current state when overlay is created
+        updateUI(viewModel.getState());
+    }
+
+    public void show() {
+        // Re-sync UI state whenever opened
+        updateUI(viewModel.getState());
+        viewManager.showOverlay("inventory");
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getNewValue() instanceof InventoryState state) {
+            updateUI(state);
+        }
+    }
+
+    // Helper method to refresh the UI
+    private void updateUI(InventoryState state) {
+        hotbarContainer.getChildren().clear();
+
+        List<String> items = state.getItems();
+        if (items != null) {
+            for (int i = 0; i < items.size(); i++) {
+                String itemName = items.get(i);
+                Button slotButton = new Button(itemName);
+                slotButton.setPrefSize(80, 80);
+
+                // Highlight selected items visually
+                if (i == state.getSelectedIndexA() || i == state.getSelectedIndexB()) {
+                    slotButton.setStyle("-fx-border-color: yellow; -fx-border-width: 3px;");
+                }
+
+                int slotIndex = i;
+                slotButton.setOnAction(e -> handleSlotClick(slotIndex));
+
+                hotbarContainer.getChildren().add(slotButton);
+            }
+        }
+        statusLabel.setText(state.getStatusMessage());
+    }
+
+    public void hide() {
+        viewManager.hideOverlay("inventory");
     }
 
     @Override
@@ -37,7 +84,6 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
         hotbarContainer.setAlignment(Pos.CENTER);
         hotbarContainer.setStyle("-fx-padding: 10;");
 
-        // For horizontal scrolling
         ScrollPane scrollPane = new ScrollPane(hotbarContainer);
         scrollPane.setFitToHeight(true);
         scrollPane.setPrefHeight(110);
@@ -65,23 +111,23 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        InventoryState state = (InventoryState) evt.getNewValue();
+        if (evt.getNewValue() instanceof InventoryState state) {
+            hotbarContainer.getChildren().clear();
 
-        // 1. Clear previous hotbar buttons
-        hotbarContainer.getChildren().clear();
+            List<String> items = state.getItems();
+            if (items != null) {
+                for (int i = 0; i < items.size(); i++) {
+                    String itemName = items.get(i);
+                    Button slotButton = new Button(itemName);
+                    slotButton.setPrefSize(80, 80);
+                    int slotIndex = i;
+                    slotButton.setOnAction(e -> handleSlotClick(slotIndex));
 
-        // 2. Dynamically rebuild hotbar buttons for every item in the ArrayList
-        List<String> items = state.getItems();
-        for (int i = 0; i < items.size(); i++) {
-            String itemName = items.get(i);
-            Button slotButton = new Button(itemName);
-            slotButton.setPrefSize(80, 80);
-            int slotIndex = i;
-            slotButton.setOnAction(e -> handleSlotClick(slotIndex));
+                    hotbarContainer.getChildren().add(slotButton);
+                }
+            }
 
-            hotbarContainer.getChildren().add(slotButton);
+            statusLabel.setText(state.getStatusMessage());
         }
-
-        statusLabel.setText(state.getStatusMessage());
     }
 }
