@@ -40,6 +40,7 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
     public ZoomView(ZoomController zoomController, ZoomViewModel zoomViewModel, InteractController interactController,
                     EnterExitController enterExitController) {
         this.zoomViewModel = zoomViewModel;
+        this.zoomViewModel.addPropertyChangeListener(this);
         ZoomState zoomState = zoomViewModel.getState();
 
         // Background
