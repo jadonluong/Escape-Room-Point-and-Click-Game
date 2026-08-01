@@ -188,7 +188,7 @@ public class AppBuilder extends Application {
         TutorialAndStoryModeStartUpPresenter tutorialAndStoryModeStartUpPresenter
                 = new TutorialAndStoryModeStartUpPresenter(inGameViewModel, viewManagerModel);
         TutorialAndStoryModeStartUpInteractor tutorialAndStoryModeStartUpInteractor
-                = new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter, gameAssetManager);
+                = new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter, gameAssetManager, userDAO);
         TutorialAndStoryModeStartUpController tutorialAndStoryModeStartUpController
                 = new TutorialAndStoryModeStartUpController(tutorialAndStoryModeStartUpInteractor);
 
@@ -202,7 +202,7 @@ public class AppBuilder extends Application {
         QuickModeStartUpPresenter quickModeStartUpPresenter
                 = new QuickModeStartUpPresenter(inGameViewModel, viewManagerModel);
         QuickModeStartUpInteractor quickModeStartUpInteractor
-                = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager);
+                = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager, userDAO);
         QuickModeStartUpController quickModeStartUpController
                 = new QuickModeStartUpController(quickModeStartUpInteractor);
 

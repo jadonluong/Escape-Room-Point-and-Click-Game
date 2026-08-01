@@ -7,20 +7,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 import application.game_registry.RoomRegistry;
+import domain.entities.User.User;
 
 public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary {
     private final QuickModeStartUpOutputBoundary presenter;
     private final RoomRegistry dataAccess;
+    private final QuickModeStartUpDataAccessInterface quickModeStartUpDataAccess;
 
-    public QuickModeStartUpInteractor(QuickModeStartUpOutputBoundary presenter, RoomRegistry dataAccess) {
+    public QuickModeStartUpInteractor(QuickModeStartUpOutputBoundary presenter,
+                                      RoomRegistry dataAccess,
+                                      QuickModeStartUpDataAccessInterface quickModeStartUpDataAccess ) {
         this.presenter = presenter;
         this.dataAccess = dataAccess;
+        this.quickModeStartUpDataAccess = quickModeStartUpDataAccess;
     }
 
     @Override
     public void execute(QuickModeStartUpInputData inputData) {
+            User currentUser = quickModeStartUpDataAccess.getCurrentUser();
+            currentUser.setActiveGameMode("QuickMode");
 
             String roomId = inputData.getTargetRoom();
+
+            currentUser.saveCurrentRoomID(roomId);
 
             if (roomId == null || roomId.trim().isEmpty()) {
                 presenter.prepareFailView("Invalid room ID provided.");

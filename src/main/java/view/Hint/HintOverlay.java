@@ -139,11 +139,4 @@ public class HintOverlay extends ModalOverlay implements PropertyChangeListener{
             messageLabel.setText(state.getSuccessMessage());
         }
     }
-
-    /**
-     * Unregisters the listener to prevent memory leaks when destroying the view.
-     */
-    public void cleanup() {
-        this.getHintViewModel.removePropertyChangeListener(this);
-    }
 }
