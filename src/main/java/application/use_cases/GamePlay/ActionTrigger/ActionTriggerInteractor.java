@@ -13,10 +13,10 @@ import java.util.Objects;
 
 public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
 
-    private ZoomInputBoundary zoomInteractor;
-    private ActionTriggerDataAccessInterface dataAccess;
-    private PickUpInputBoundary pickUpInteractor;
-    private GetHintInputBoundary getHintInteractor;
+    private final ZoomInputBoundary zoomInteractor;
+    private final ActionTriggerDataAccessInterface dataAccess;
+    private final PickUpInputBoundary pickUpInteractor;
+    private final GetHintInputBoundary getHintInteractor;
 
 
     public ActionTriggerInteractor(ZoomInputBoundary zoomInteractor,
