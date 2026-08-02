@@ -44,6 +44,9 @@ public class HintOverlay extends ModalOverlay implements PropertyChangeListener{
         // Add ONLY the modal card to the layout — NO dark backdrop
         getChildren().add(modalBox);
 
+        // Allow mouse clicks outside the modal card to PASS THROUGH to the game below
+        this.setPickOnBounds(false);
+
         // Position card at TOP_CENTER of the screen
         setAlignment(modalBox, Pos.TOP_CENTER);
 
