@@ -4,6 +4,7 @@ import application.game_registry.ItemRegistry;
 import application.game_registry.RoomRegistry;
 import application.use_cases.GamePlay.ActionTrigger.ActionTriggerDataAccessInterface;
 import application.use_cases.Hint.GetHint.GetHintUserDataAccessInterface;
+import application.use_cases.Interactable.Interact.InteractDataAccessInterface;
 import application.use_cases.Interactable.Interact.InteractUserDataAccessInterface;
 import application.use_cases.Puzzle.EnterExit.EnterExitUserDataAccessInterface;
 import application.use_cases.Puzzle.Solve.SolveUserDataAccessInterface;
@@ -74,6 +75,13 @@ public class JsonUserDataAccessObject implements
             return null;
         }
         return this.currentUser; // Returns the live, in-memory updated User, guest or common user.
+    }
+
+    @Override
+    public Item getItemById(String id) {
+        // Delegates item lookup to your asset manager
+        return itemRegistry.getItemById(id);
+        // (If GameAssetManager uses a different method name like getItem(id), use that instead)
     }
 
 

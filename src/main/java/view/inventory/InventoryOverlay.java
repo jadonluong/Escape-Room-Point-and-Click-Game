@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import view.ViewManager;
 import view.common.ModalOverlay;
@@ -31,8 +32,8 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
         this.viewModel.addPropertyChangeListener(this);
 
         // Force initial render of current state when overlay is created
-        updateUI(viewModel.getState());
         initialize();
+        updateUI(viewModel.getState());
     }
 
     public void show() {
@@ -47,9 +48,7 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getNewValue() instanceof InventoryState state) {
-            updateUI(state);
-        }
+        updateUI(viewModel.getState());
     }
 
     // Helper method to refresh the UI
@@ -57,15 +56,30 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
         hotbarContainer.getChildren().clear();
 
         List<String> items = state.getItems();
-        if (items != null) {
+        if (items != null && !items.isEmpty()) {
             for (int i = 0; i < items.size(); i++) {
                 String itemName = items.get(i);
+
                 Button slotButton = new Button(itemName);
                 slotButton.setPrefSize(80, 80);
+                slotButton.setMinSize(80, 80);
 
-                // Highlight selected items visually
                 if (i == state.getSelectedIndexA() || i == state.getSelectedIndexB()) {
-                    slotButton.setStyle("-fx-border-color: yellow; -fx-border-width: 3px;");
+                    slotButton.setStyle(
+                            "-fx-background-color: #2c3e50; " +
+                                    "-fx-text-fill: white; " +
+                                    "-fx-font-weight: bold; " +
+                                    "-fx-border-color: #f1c40f; " +
+                                    "-fx-border-width: 3px; " +
+                                    "-fx-border-radius: 5px;"
+                    );
+                } else {
+                    slotButton.setStyle(
+                            "-fx-background-color: #34495e; " +
+                                    "-fx-text-fill: white; " +
+                                    "-fx-font-weight: bold; " +
+                                    "-fx-background-radius: 5px;"
+                    );
                 }
 
                 int slotIndex = i;
@@ -80,8 +94,20 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
     @Override
     protected VBox buildModalBox() {
         VBox mainLayout = new VBox(15);
-        mainLayout.setAlignment(Pos.CENTER);
-        mainLayout.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9); -fx-padding: 20; -fx-background-radius: 12;");
+        // mainLayout.setAlignment(Pos.BOTTOM_CENTER);
+        mainLayout.setMaxWidth(650);
+        mainLayout.setMaxHeight(350);
+
+        StackPane.setAlignment(mainLayout, Pos.BOTTOM_CENTER);
+        mainLayout.setStyle("-fx-background-color: rgba(20, 20, 25, 0.92); " +
+                "-fx-padding: 25; " +
+                "-fx-background-radius: 15; " +
+                "-fx-border-color: #4a4a5a; " +
+                "-fx-border-width: 2px; " +
+                "-fx-border-radius: 15;"
+        );
+
+        statusLabel.setStyle("-fx-text-fill: #e0e0e0; -fx-font-size: 16px; -fx-font-weight: bold;");
 
         hotbarContainer.setAlignment(Pos.CENTER);
         hotbarContainer.setStyle("-fx-padding: 10;");
