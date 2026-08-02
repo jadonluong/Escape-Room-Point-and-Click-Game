@@ -52,10 +52,9 @@ public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
                 System.out.println("   ERROR: itemToPickUp is NULL!");
             }
         }
-        else if(Objects.equals(inputData.mode, "hint")) {
+        else if ("Hint".equalsIgnoreCase(inputData.mode)) {
             GetHintInputData hintInputData = new GetHintInputData(inputData.id, userId);
             getHintInteractor.execute(hintInputData);
         }
-        else{}
     }
 }
