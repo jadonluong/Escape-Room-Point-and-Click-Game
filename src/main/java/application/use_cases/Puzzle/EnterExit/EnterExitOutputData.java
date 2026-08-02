@@ -3,6 +3,7 @@ package application.use_cases.Puzzle.EnterExit;
 import java.util.Map;
 
 public class EnterExitOutputData {
+    private String puzzleId;
     private String puzzleType; // "Anagram", "Cryptogram", "CodeLock", etc.
     private String description;
     private String hint;
@@ -13,7 +14,8 @@ public class EnterExitOutputData {
     private Map<String, String> cipher;
 
     // AnagramPuzzle
-    public EnterExitOutputData(String puzzleType, String description, String hint, String scrambled) {
+    public EnterExitOutputData(String puzzleId, String puzzleType, String description, String hint, String scrambled) {
+        this.puzzleId = puzzleId;
         this.puzzleType = puzzleType;
         this.description = description;
         this.hint = hint;
@@ -23,7 +25,9 @@ public class EnterExitOutputData {
     }
 
     // CryptogramPuzzle
-    public EnterExitOutputData(String puzzleType, String description, String encrypted, Map<String, String> cipher) {
+    public EnterExitOutputData(String puzzleId, String puzzleType, String description, String encrypted,
+                               Map<String, String> cipher) {
+        this.puzzleId = puzzleId;
         this.puzzleType = puzzleType;
         this.description = description;
         this.hint = null;
@@ -33,13 +37,18 @@ public class EnterExitOutputData {
     }
 
     // CodeLockPuzzle
-    public EnterExitOutputData(String puzzleType, String description, String hint) {
+    public EnterExitOutputData(String puzzleId, String puzzleType, String description, String hint) {
+        this.puzzleId = puzzleId;
         this.puzzleType = puzzleType;
         this.description = description;
         this.hint = hint;
         this.scrambled = null;
         this.encrypted = null;
         this.cipher = null;
+    }
+
+    public String getPuzzleId() {
+        return puzzleId;
     }
 
     public String getPuzzleType() {
