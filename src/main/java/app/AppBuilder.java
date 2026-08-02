@@ -210,10 +210,6 @@ public class AppBuilder extends Application {
         InventoryViewModel inventoryViewModel = new InventoryViewModel();
         InventoryPresenter inventoryPresenter = new InventoryPresenter(inventoryViewModel);
         PickUpInteractor pickUpInteractor = new PickUpInteractor(userDAO, inventoryPresenter);
-        OverlayFactory inventoryOverlayFactory = onClose -> new InventoryOverlay(
-                onClose,
-                inventoryViewModel
-        );
 
         // --- Main menu ---
         MainMenuView mainMenu = new MainMenuView(
@@ -299,7 +295,8 @@ public class AppBuilder extends Application {
                             logoutController.executeLogoutWithoutSave(username);
                         }
                 );
-        InGameView inGameView = new InGameView(inGameViewModel, gameMenuView, actionTriggerController);
+        InventoryOverlay inventoryOverlay = new InventoryOverlay(viewManager, inventoryViewModel);
+        InGameView inGameView = new InGameView(inGameViewModel, gameMenuView, inventoryOverlay, actionTriggerController);
 
         // --- Register every top-level screen by name ---
         viewManager.registerView("main menu", mainMenu);
@@ -314,6 +311,8 @@ public class AppBuilder extends Application {
 
         // --- Register In-game menu ---
         viewManager.registerOverlay("in-game menu" ,gameMenuView);
+
+        viewManager.registerOverlay("inventory", inventoryOverlay);
 
         // --- Trigger the first screen ---
         viewManagerModel.firePropertyChanged();
