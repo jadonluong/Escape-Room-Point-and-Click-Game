@@ -27,7 +27,7 @@ public class InventoryPresenter implements PickUpOutputBoundary, DropOutputBound
 
     @Override
     public void prepareSuccessView(PickUpOutputData outputData) {
-        // --- Update Inventory State ---
+        // 1. Update Inventory State
         InventoryState newState = new InventoryState(viewModel.getState());
         newState.getItems().add(outputData.getItemName());
         newState.setStatusMessage("Picked up: " + outputData.getItemName());
@@ -35,25 +35,19 @@ public class InventoryPresenter implements PickUpOutputBoundary, DropOutputBound
         viewModel.setState(newState);
         viewModel.firePropertyChanged();
 
-        // 2. Remove Item
+        // 2. Remove item from the active room floor map
         if (inGameViewModel != null && inGameViewModel.getState() != null) {
             InGameState roomState = inGameViewModel.getState();
 
             if (roomState.getObjectsToDisplay() != null) {
                 Map<String, ObjectsInfo> map = roomState.getObjectsToDisplay();
-
-                // Try removing by item ID (e.g., "prison_item_1")
                 map.remove(outputData.getItemId());
-
-                // Try removing by item Name (e.g., "stick")
                 map.remove(outputData.getItemName());
-
-                // Fallback: Remove any key in the room matching ID or Name
                 map.keySet().removeIf(key -> key.equalsIgnoreCase(outputData.getItemId())
                         || key.equalsIgnoreCase(outputData.getItemName()));
             }
 
-            // 3. Trigger InGameView re-render so stick vanishes from floor
+            // 3. Re-render the room
             inGameViewModel.firePropertyChanged();
         }
     }

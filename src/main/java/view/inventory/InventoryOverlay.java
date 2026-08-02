@@ -61,24 +61,18 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
         List<String> items = state.getItems();
         if (items != null && !items.isEmpty()) {
 
-            // 1. Group items and count occurrences (LinkedHashMap preserves pickup order)
             Map<String, Integer> itemCounts = new LinkedHashMap<>();
             for (String itemName : items) {
                 itemCounts.put(itemName, itemCounts.getOrDefault(itemName, 0) + 1);
             }
 
-            // 2. Extract unique item names
             List<String> uniqueItems = new ArrayList<>(itemCounts.keySet());
 
-            // 3. Render one button per unique item with its count
             for (int i = 0; i < uniqueItems.size(); i++) {
                 String itemName = uniqueItems.get(i);
                 int count = itemCounts.get(itemName);
 
-                // Formats text as "stick x 1" for example
-                String buttonText = itemName + " x " + count;
-
-                Button slotButton = new Button(buttonText);
+                Button slotButton = new Button(itemName + " x " + count);
                 slotButton.setPrefSize(80, 80);
                 slotButton.setMinSize(80, 80);
 
@@ -102,7 +96,6 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
 
                 int slotIndex = i;
                 slotButton.setOnAction(e -> handleSlotClick(slotIndex));
-
                 hotbarContainer.getChildren().add(slotButton);
             }
         }
