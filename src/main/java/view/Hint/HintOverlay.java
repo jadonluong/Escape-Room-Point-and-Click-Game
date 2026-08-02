@@ -76,7 +76,15 @@ public class HintOverlay extends ModalOverlay implements PropertyChangeListener{
         // Cross icon close button (no background, no border)
         Button closeButton = new Button("✕");
         closeButton.setDefaultButton(true);
-        closeButton.setOnAction(e -> onClose.run());
+        closeButton.setOnAction(e ->{
+            javafx.scene.Scene currentScene = getScene();
+
+            onClose.run();
+
+            if (currentScene != null && currentScene.getRoot() != null) {
+                currentScene.getRoot().requestFocus();
+            }}
+        );
 
         String defaultCrossStyle =
                 "-fx-background-color: transparent;" +
