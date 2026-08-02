@@ -37,25 +37,15 @@ public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
             ZoomInputData interactableInputDate = new ZoomInputData(inputData.id);
             zoomInteractor.zoomIn(interactableInputDate);
         }
-        else if (Objects.equals(inputData.mode, "item") || "item".equalsIgnoreCase(inputData.mode)) {
-            System.out.println("-> ACTION TRIGGERED FOR ITEM!");
-            System.out.println("   ID Clicked: " + inputData.id);
-            System.out.println("   Mode String: " + inputData.mode);
+        else if (Objects.equals(inputData.mode, "item")) {
 
             Item itemToPickUp = dataAccess.getItemById(inputData.id);
-            System.out.println("   Item Object Found: " + itemToPickUp);
             if (itemToPickUp != null) {
-                System.out.println("   Calling PickUpInteractor...");
                 PickUpInputData itemInputData = new PickUpInputData(itemToPickUp);
                 pickUpInteractor.execute(itemInputData);
-            } else {
-                System.out.println("   ERROR: itemToPickUp is NULL!");
             }
         }
-        else if ("Hint".equalsIgnoreCase(inputData.mode) || "hint".equalsIgnoreCase(inputData.mode)) {
-            System.out.println("-> HINT TRIGGERED!");
-            System.out.println("   Hint Object ID: " + inputData.id);
-            System.out.println("   User ID: " + userId);
+        else if ("Hint".equalsIgnoreCase(inputData.mode)) {
 
             GetHintInputData hintInputData = new GetHintInputData(inputData.id, userId);
             getHintInteractor.execute(hintInputData);
