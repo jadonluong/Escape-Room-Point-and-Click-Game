@@ -1,14 +1,13 @@
 package view.Game;
 
 import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
-import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsState;
 import interface_adapter.GamePlay.InGameState;
 import interface_adapter.GamePlay.InGameViewModel;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import view.inventory.InventoryOverlay;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -16,6 +15,8 @@ import java.beans.PropertyChangeListener;
 public class InGameView extends StackPane implements PropertyChangeListener {
 
     private final InGameViewModel viewModel;
+    private final GameMenuView gameMenuView;
+    private final InventoryOverlay inventoryOverlay;
 
     // Different layers
     private final Pane backgroundPane = new Pane();
@@ -30,9 +31,12 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
     public InGameView(InGameViewModel viewModel,
                       GameMenuView gameMenuView,
+                      InventoryOverlay inventoryOverlay,
                       ActionTriggerController actionTriggerController) {
 
         this.viewModel = viewModel;
+        this.gameMenuView = gameMenuView;
+        this.inventoryOverlay = inventoryOverlay;
         this.imgPath = "/images/items/prison/spider1.png";
 
         upDateBackgroundPane(imgPath);
@@ -70,18 +74,26 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
 
 
-        // Listen for ESC
-        setOnKeyPressed(event -> {
+        // Listen for ESC/ENTER
+        this.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
+                System.out.println("ESC pressed!");
                 if (gameMenuView.isVisible()) {
                     gameMenuView.hide();
                 } else {
                     gameMenuView.show();
                 }
                 event.consume();
+            } else if (event.getCode() == KeyCode.ENTER) {
+                System.out.println("'ENTER' key pressed! Toggling inventory...");
+                if (inventoryOverlay.isVisible()) {
+                    inventoryOverlay.hide();
+                } else {
+                    inventoryOverlay.show();
+                }
+                event.consume();
             }
         });
-
         getChildren().addAll(backgroundPane);
     }
 
