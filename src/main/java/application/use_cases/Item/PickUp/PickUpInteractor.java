@@ -27,7 +27,7 @@ public class PickUpInteractor implements PickUpInputBoundary{
             user.saveItem(item); // Adds item to dynamic ArrayList
         }
 
-        PickUpOutputData outputData = new PickUpOutputData(item.getName());
+        PickUpOutputData outputData = new PickUpOutputData(item);
         presenter.prepareSuccessView(outputData);
     }
 }

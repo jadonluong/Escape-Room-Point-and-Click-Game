@@ -36,4 +36,10 @@ public class InGameState {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+
+    public void removeObject(String id) {
+        if (this.objectsToDisplay != null) {
+            this.objectsToDisplay.remove(id);
+        }
+    }
 }
