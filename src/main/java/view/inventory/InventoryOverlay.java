@@ -32,6 +32,7 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
 
         // Force initial render of current state when overlay is created
         updateUI(viewModel.getState());
+        initialize();
     }
 
     public void show() {

@@ -74,16 +74,18 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
 
 
-        // Listen for ESC
-        setOnKeyPressed(event -> {
+        // Listen for ESC/ENTER
+        this.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
+                System.out.println("ESC pressed!");
                 if (gameMenuView.isVisible()) {
                     gameMenuView.hide();
                 } else {
                     gameMenuView.show();
                 }
                 event.consume();
-            } else if (event.getCode() == KeyCode.E) {
+            } else if (event.getCode() == KeyCode.ENTER) {
+                System.out.println("'ENTER' key pressed! Toggling inventory...");
                 if (inventoryOverlay.isVisible()) {
                     inventoryOverlay.hide();
                 } else {
@@ -92,7 +94,6 @@ public class InGameView extends StackPane implements PropertyChangeListener {
                 event.consume();
             }
         });
-
         getChildren().addAll(backgroundPane);
     }
 
