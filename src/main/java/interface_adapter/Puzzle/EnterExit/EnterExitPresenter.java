@@ -24,6 +24,7 @@ public class EnterExitPresenter implements EnterExitOutputBoundary {
     @Override
     public void prepareEnterView(EnterExitOutputData outputData) {
         EnterExitState state = enterExitViewModel.getState();
+        state.setPuzzleId(outputData.getPuzzleId());
         state.setPuzzleType(outputData.getPuzzleType());
         state.setDescription(outputData.getDescription());
         state.setHint(outputData.getHint());

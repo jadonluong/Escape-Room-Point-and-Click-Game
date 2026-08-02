@@ -7,18 +7,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 import application.game_registry.RoomRegistry;
+import domain.entities.User.User;
 
 public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary {
     private final QuickModeStartUpOutputBoundary presenter;
     private final RoomRegistry dataAccess;
+    private final QuickModeStartUpDataAccessInterface quickModeStartUpDataAccess;
 
-    public QuickModeStartUpInteractor(QuickModeStartUpOutputBoundary presenter, RoomRegistry dataAccess) {
+    public QuickModeStartUpInteractor(QuickModeStartUpOutputBoundary presenter,
+                                      RoomRegistry dataAccess,
+                                      QuickModeStartUpDataAccessInterface quickModeStartUpDataAccess ) {
         this.presenter = presenter;
         this.dataAccess = dataAccess;
+        this.quickModeStartUpDataAccess = quickModeStartUpDataAccess;
     }
 
     @Override
     public void execute(QuickModeStartUpInputData inputData) {
+            User currentUser = quickModeStartUpDataAccess.getCurrentUser();
+
+            if (currentUser == null) {
+                presenter.prepareFailView("No user selected");
+                return;
+            }
+
+            currentUser.setActiveGameMode("QuickMode");
 
             String roomId = inputData.getTargetRoom();
 
@@ -27,12 +40,16 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
                 return;
             }
 
+            currentUser.saveCurrentRoomID(roomId);
+
             Room targetRoom = dataAccess.getRoomById(roomId);
 
             if (targetRoom == null) {
                 presenter.prepareFailView("Could not load room with ID: " + roomId);
                 return;
             }
+
+            currentUser.unlockRoom(targetRoom);
 
             Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
 

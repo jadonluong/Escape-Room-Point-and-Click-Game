@@ -188,7 +188,7 @@ public class AppBuilder extends Application {
         TutorialAndStoryModeStartUpPresenter tutorialAndStoryModeStartUpPresenter
                 = new TutorialAndStoryModeStartUpPresenter(inGameViewModel, viewManagerModel);
         TutorialAndStoryModeStartUpInteractor tutorialAndStoryModeStartUpInteractor
-                = new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter, gameAssetManager);
+                = new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter, gameAssetManager, userDAO);
         TutorialAndStoryModeStartUpController tutorialAndStoryModeStartUpController
                 = new TutorialAndStoryModeStartUpController(tutorialAndStoryModeStartUpInteractor);
 
@@ -202,7 +202,7 @@ public class AppBuilder extends Application {
         QuickModeStartUpPresenter quickModeStartUpPresenter
                 = new QuickModeStartUpPresenter(inGameViewModel, viewManagerModel);
         QuickModeStartUpInteractor quickModeStartUpInteractor
-                = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager);
+                = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager, userDAO);
         QuickModeStartUpController quickModeStartUpController
                 = new QuickModeStartUpController(quickModeStartUpInteractor);
 
@@ -210,10 +210,6 @@ public class AppBuilder extends Application {
         InventoryViewModel inventoryViewModel = new InventoryViewModel();
         InventoryPresenter inventoryPresenter = new InventoryPresenter(inventoryViewModel);
         PickUpInteractor pickUpInteractor = new PickUpInteractor(userDAO, inventoryPresenter);
-        OverlayFactory inventoryOverlayFactory = onClose -> new InventoryOverlay(
-                onClose,
-                inventoryViewModel
-        );
 
         // --- Main menu ---
         MainMenuView mainMenu = new MainMenuView(
@@ -229,37 +225,6 @@ public class AppBuilder extends Application {
         // --- Browse Rooms ---
         BrowseRoomsView browseRoomsView = new BrowseRoomsView(viewManager,
                 mainMenu, browseRoomsViewModel,  quickModeStartUpController);
-
-        // --- Game menu overlay ---
-        OverlayFactory gameMenuOverlayFactory = onClose -> new GameMenuView(
-                onClose,
-                loggedInViewModel,
-                sfxController,
-                musicController,
-                audioViewModel,
-
-                // --- On save ---
-                () -> {
-                    if (userDAO.getCurrentUser() != null) {
-                        String username = loggedInViewModel.getState().getUsername();
-                        saveProgressController.execute(username);
-                    }
-                },
-
-                // --- On save & quit ---
-                () -> {
-                    if (userDAO.getCurrentUser() != null) {
-                        String username = loggedInViewModel.getState().getUsername();
-                        logoutController.executeLogoutWithSave(username);
-                    }
-                },
-
-                // --- On quit ---
-                () -> {
-                    String username = loggedInViewModel.getState().getUsername();
-                    logoutController.executeLogoutWithoutSave(username);
-                }
-        );
 
         // --- Placeholder screens ---
         PlaceholderView storyPlaceholder = new PlaceholderView("Story Line", viewManagerModel);
@@ -294,13 +259,44 @@ public class AppBuilder extends Application {
         // --- Interactable and Puzzle Views ---
         ZoomView zoomView = new ZoomView(zoomController, zoomViewModel, interactController, enterExitController);
         InteractOverlay interactOverlay = new InteractOverlay(interactViewModel, viewManager);
-        PuzzleView puzzleView = new PuzzleView(enterExitViewModel);
+        PuzzleView puzzleView = new PuzzleView(enterExitViewModel, enterExitController, solveController);
 
         // --- Action triggering ---
         ActionTriggerInteractor actionTriggerInteractor = new ActionTriggerInteractor(zoomInteractor, pickUpInteractor, getHintInteractor, userDAO);
         ActionTriggerController actionTriggerController = new ActionTriggerController(actionTriggerInteractor);
+
         // --- In-game ---
-        InGameView inGameView = new InGameView(inGameViewModel, actionTriggerController);
+
+        // Create game menu view
+        GameMenuView gameMenuView =
+                new GameMenuView(viewManager,
+                loggedInViewModel,
+                sfxController,
+                musicController,
+                audioViewModel,
+                        () -> {
+                            if (userDAO.getCurrentUser() != null) {
+                                String username = loggedInViewModel.getState().getUsername();
+                                saveProgressController.execute(username);
+                            }
+                        },
+
+                        // --- On save & quit ---
+                        () -> {
+                            if (userDAO.getCurrentUser() != null) {
+                                String username = loggedInViewModel.getState().getUsername();
+                                logoutController.executeLogoutWithSave(username);
+                            }
+                        },
+
+                        // --- On quit ---
+                        () -> {
+                            String username = loggedInViewModel.getState().getUsername();
+                            logoutController.executeLogoutWithoutSave(username);
+                        }
+                );
+        InventoryOverlay inventoryOverlay = new InventoryOverlay(viewManager, inventoryViewModel);
+        InGameView inGameView = new InGameView(inGameViewModel, gameMenuView, inventoryOverlay, actionTriggerController);
 
         // --- Register every top-level screen by name ---
         viewManager.registerView("main menu", mainMenu);
@@ -312,6 +308,11 @@ public class AppBuilder extends Application {
         viewManager.registerOverlay("Interact", interactOverlay);
         viewManager.registerView("Puzzle", puzzleView);
         viewManager.registerOverlay("get hint", hintOverlay, true);
+
+        // --- Register In-game menu ---
+        viewManager.registerOverlay("in-game menu" ,gameMenuView);
+
+        viewManager.registerOverlay("inventory", inventoryOverlay);
 
         // --- Trigger the first screen ---
         viewManagerModel.firePropertyChanged();
