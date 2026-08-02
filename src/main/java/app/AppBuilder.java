@@ -259,7 +259,7 @@ public class AppBuilder extends Application {
         // --- Interactable and Puzzle Views ---
         ZoomView zoomView = new ZoomView(zoomController, zoomViewModel, interactController, enterExitController);
         InteractOverlay interactOverlay = new InteractOverlay(interactViewModel, viewManager);
-        PuzzleView puzzleView = new PuzzleView(enterExitViewModel);
+        PuzzleView puzzleView = new PuzzleView(enterExitViewModel, enterExitController, solveController);
 
         // --- Action triggering ---
         ActionTriggerInteractor actionTriggerInteractor = new ActionTriggerInteractor(zoomInteractor, pickUpInteractor, getHintInteractor, userDAO);
