@@ -45,7 +45,7 @@ public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
                 pickUpInteractor.execute(itemInputData);
             }
         }
-        else if ("Hint".equalsIgnoreCase(inputData.mode)) {
+        else if (Objects.equals(inputData.mode, "Hint")) {
 
             GetHintInputData hintInputData = new GetHintInputData(inputData.id, userId);
             getHintInteractor.execute(hintInputData);
