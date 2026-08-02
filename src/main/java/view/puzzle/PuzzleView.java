@@ -1,10 +1,14 @@
 package view.puzzle;
 
+import interface_adapter.Puzzle.EnterExit.EnterExitController;
 import interface_adapter.Puzzle.EnterExit.EnterExitState;
 import interface_adapter.Puzzle.EnterExit.EnterExitViewModel;
+import interface_adapter.Puzzle.Solve.SolveController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -24,11 +28,18 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
     private EnterExitViewModel enterExitViewModel;
 
     private final Pane fixedRoot = new Pane();
+    private Label puzzleLabel = new Label();
+    private ImageView puzzleImageView = new ImageView();
+    private Label nameLabel = new Label();
+    private Label descriptionLabel = new Label();
+    private Label hintLabel = new Label();
 
-    public PuzzleView(EnterExitViewModel enterExitViewModel) {
+    public PuzzleView(EnterExitViewModel enterExitViewModel, EnterExitController enterExitController,
+                      SolveController solveController) {
         this.enterExitViewModel = enterExitViewModel;
-        /*
+
         EnterExitState enterExitState = enterExitViewModel.getState();
+        String puzzleType = enterExitState.getPuzzleType();
 
         // Background
         fixedRoot.setPrefSize(DESIGN_WIDTH, DESIGN_HEIGHT);
@@ -42,31 +53,48 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
 
         double gap = DESIGN_HEIGHT / 20.0; // Size of the gap between all the main boxes
 
-        // Answer Box
-        double answerBoxWidth = DESIGN_WIDTH * (7.0 / 12.0) - (gap * 3);
-        double answerBoxHeight = (DESIGN_HEIGHT - (gap * 2)) / 11.0;
+        // Answer Field
+        double answerFieldWidth = DESIGN_WIDTH * (7.0 / 12.0) - (gap * 3);
+        double answerFieldHeight = (DESIGN_HEIGHT - (gap * 2)) / 11.0;
 
-        Rectangle answerBox = new Rectangle(answerBoxWidth, answerBoxHeight);
-        answerBox.setFill(Color.web("#2a2a2a"));
-        answerBox.setStroke(Color.WHITE);
-        answerBox.setStrokeWidth(3);
-        answerBox.setLayoutX(gap);
-        answerBox.setLayoutY(DESIGN_HEIGHT - (answerBoxHeight + gap));
-        fixedRoot.getChildren().add(answerBox);
+        TextField answerField = new TextField();
+        answerField.setPromptText("Type your answer here...");
+        answerField.setPrefSize(answerFieldWidth, answerFieldHeight);
+        answerField.setStyle(
+                "-fx-background-color: #555555; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-size: 20px; " +
+                        "-fx-border-color: #ffffff; " +
+                        "-fx-border-width: 3; " +
+                        "-fx-background-radius: 5; " +
+                        "-fx-border-radius: 5;"
+        );
+        answerField.setLayoutX(gap);
+        answerField.setLayoutY(DESIGN_HEIGHT - (answerFieldHeight + gap));
+        fixedRoot.getChildren().add(answerField);
         // -------------
 
         // Answer Button
         double answerButtonWidth = (gap * 2) * (2.0/3.0);
 
-        Label answerButtonLabel = new Label("✓");
+        Button answerButton = new Button("✓");
+        answerButton.setPrefSize(answerButtonWidth, answerFieldHeight);
+        answerButton.setStyle("-fx-background-color: #2a2a2a; " + "-fx-text-fill: #ffffff; " +
+                "-fx-font-size: 20px; " + "-fx-font-weight: bold; " + "-fx-cursor: hand; " +
+                "-fx-border-color: #ffffff; " + "-fx-border-width: 3;"
+        );
+        answerButton.setLayoutX(gap + answerFieldWidth + (gap * 2) * (1.0/3.0));
+        answerButton.setLayoutY(DESIGN_HEIGHT - (answerFieldHeight + gap));
 
-        Button answerButton = new Button();
+        answerButton.setOnAction(e -> solveController.solve(enterExitState.getPuzzleId(),
+                answerField.getText()));
 
+        fixedRoot.getChildren().add(answerButton);
         // -------------
 
         // Puzzle Box
         double puzzleBoxWidth = DESIGN_WIDTH * (7.0 / 12.0);
-        double puzzleBoxHeight = DESIGN_HEIGHT - (answerBoxHeight + (gap * 3));
+        double puzzleBoxHeight = DESIGN_HEIGHT - (answerFieldHeight + (gap * 3));
 
         Rectangle puzzleBox = new Rectangle(puzzleBoxWidth, puzzleBoxHeight);
         puzzleBox.setFill(Color.web("#2a2a2a"));
@@ -76,13 +104,13 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         puzzleBox.setLayoutY(gap);
         fixedRoot.getChildren().add(puzzleBox);
 
-        if (!enterExitState.getPuzzleType().equals("CodeLock")) { // If not CodeLockPuzzle then needs text.
-            String puzzleText = enterExitState.getScrambled();
-            if (enterExitState.getEncrypted() != null) { // !CodeLock --> exactly one of scrambled & encrypted !null
+        if (!puzzleType.equals("CodeLock")) { // If not CodeLockPuzzle then needs text.
+            String puzzleText = enterExitState.getScrambled(); // AnagramPuzzle
+            if (puzzleType.equals("Cryptogram")) { // CryptogramPuzzle
                 puzzleText = enterExitState.getEncrypted();
             }
 
-            Label puzzleLabel = new Label(puzzleText);
+            puzzleLabel.setText(puzzleText);
             puzzleLabel.setTextFill(Color.WHITE);
             puzzleLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 24));
             puzzleLabel.setWrapText(true);
@@ -94,17 +122,110 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
             puzzleLabel.setLayoutX(puzzleBox.getLayoutX() + 25);
             puzzleLabel.setLayoutY(puzzleBox.getLayoutY() + 25);
             fixedRoot.getChildren().add(puzzleLabel);
-
-            // TODO: Add a picture?
+            // TODO: Change visibility of puzzleLabel and puzzleImage here and in propertyChange too.
         } else {
-            // TODO: Add a picture?
+            // TODO: Add a picture of a lock or something? <-- puzzleImage
         }
         // ----------
 
-        //
+        double rightSideBoxesLayoutX = puzzleBoxWidth + (gap * 2);
+        double rightSideBoxesWidth = DESIGN_WIDTH - (puzzleBoxWidth + (gap * 3));
 
-        // TODO: Finish this.
-        */
+        // Puzzle Name
+        double nameBoxHeight = gap * 1.5;
+        double nameBoxWidth = rightSideBoxesWidth - (nameBoxHeight + (gap * (3.0 / 4.0)));
+
+        Rectangle nameBox = new Rectangle(nameBoxWidth, nameBoxHeight);
+        nameBox.setFill(Color.web("#2a2a2a"));
+        nameBox.setStroke(Color.web("#ffffff"));
+        nameBox.setStrokeWidth(3);
+        nameBox.setLayoutX(rightSideBoxesLayoutX);
+        nameBox.setLayoutY(gap);
+        fixedRoot.getChildren().add(nameBox);
+
+        nameLabel.setText(puzzleType + " Puzzle");
+        nameLabel.setTextFill(Color.web("#ffffff"));
+        nameLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 17));
+        nameLabel.setAlignment(Pos.TOP_LEFT);
+        nameLabel.setPrefWidth(nameBox.getWidth() - 24);
+        nameLabel.setPrefHeight(nameBox.getHeight() - 24);
+        nameLabel.setMaxWidth(nameBox.getWidth() - 24);
+        nameLabel.setMaxHeight(nameBox.getHeight() - 24);
+        nameLabel.setLayoutX(nameBox.getLayoutX() + 12);
+        nameLabel.setLayoutY(nameBox.getLayoutY() + 12);
+        fixedRoot.getChildren().add(nameLabel);
+        // ---------------------
+
+        // Exit Button
+        Button exitButton = new Button("X");
+        exitButton.setPrefSize(nameBoxHeight, nameBoxHeight);
+        exitButton.setStyle("-fx-background-color: #2a2a2a; " + "-fx-text-fill: #ffffff; " +
+                "-fx-font-size: 20px; " + "-fx-font-weight: bold; " + "-fx-cursor: hand; " +
+                "-fx-border-color: #ffffff; " + "-fx-border-width: 3;"
+        );
+
+        exitButton.setLayoutX(DESIGN_WIDTH - (gap + nameBoxHeight));
+        exitButton.setLayoutY(gap);
+
+        exitButton.setOnAction(e -> enterExitController.exit());
+
+        fixedRoot.getChildren().add(exitButton);
+        // --------------
+
+        // Hint Box
+        double hintBoxHeight = rightSideBoxesWidth + (gap * 2);
+
+        Rectangle hintBox = new Rectangle(rightSideBoxesWidth, hintBoxHeight);
+        hintBox.setFill(Color.web("#2a2a2a"));
+        hintBox.setStroke(Color.web("#ffffff"));
+        hintBox.setStrokeWidth(3);
+        hintBox.setLayoutX(rightSideBoxesLayoutX);
+        hintBox.setLayoutY(DESIGN_HEIGHT - (hintBoxHeight + gap));
+        fixedRoot.getChildren().add(hintBox);
+
+        if (puzzleType.equals("Cryptogram")) {
+            // TODO: Figure out how you want to display the cipher.
+        } else {
+            hintLabel.setText(enterExitState.getHint());
+        }
+
+        hintLabel.setTextFill(Color.web("#ffffff"));
+        hintLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        hintLabel.setWrapText(true);
+        hintLabel.setAlignment(Pos.TOP_LEFT);
+        hintLabel.setPrefWidth(hintBox.getWidth() - 30);
+        hintLabel.setPrefHeight(hintBox.getHeight() - 30);
+        hintLabel.setMaxWidth(hintBox.getWidth() - 30);
+        hintLabel.setMaxHeight(hintBox.getHeight() - 30);
+        hintLabel.setLayoutX(hintBox.getLayoutX() + 15);
+        hintLabel.setLayoutY(hintBox.getLayoutY() + 15);
+        fixedRoot.getChildren().add(hintLabel);
+        // ----------------
+
+        // Puzzle Description
+        double descriptionBoxHeight = DESIGN_HEIGHT - (nameBoxHeight + hintBoxHeight + (gap * 4));
+
+        Rectangle descriptionBox = new Rectangle(rightSideBoxesWidth, descriptionBoxHeight);
+        descriptionBox.setFill(Color.web("#2a2a2a"));
+        descriptionBox.setStroke(Color.web("#ffffff"));
+        descriptionBox.setStrokeWidth(3);
+        descriptionBox.setLayoutX(rightSideBoxesLayoutX);
+        descriptionBox.setLayoutY(nameBoxHeight + (gap * 2));
+        fixedRoot.getChildren().add(descriptionBox);
+
+        descriptionLabel.setText(enterExitState.getDescription());
+        descriptionLabel.setTextFill(Color.web("#ffffff"));
+        descriptionLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        descriptionLabel.setWrapText(true);
+        descriptionLabel.setAlignment(Pos.TOP_LEFT);
+        descriptionLabel.setPrefWidth(descriptionBox.getWidth() - 30);
+        descriptionLabel.setPrefHeight(descriptionBox.getHeight() - 30);
+        descriptionLabel.setMaxWidth(descriptionBox.getWidth() - 30);
+        descriptionLabel.setMaxHeight(descriptionBox.getHeight() - 30);
+        descriptionLabel.setLayoutX(descriptionBox.getLayoutX() + 15);
+        descriptionLabel.setLayoutY(descriptionBox.getLayoutY() + 15);
+        fixedRoot.getChildren().add(descriptionLabel);
+        // ---------------
     }
 
     @Override

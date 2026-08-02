@@ -3,6 +3,7 @@ package interface_adapter.Puzzle.EnterExit;
 import java.util.Map;
 
 public class EnterExitState {
+    private String puzzleId;
     private String puzzleType;
     private String description;
     private String hint;
@@ -11,6 +12,14 @@ public class EnterExitState {
 
     private String encrypted;
     private Map<String, String> cipher;
+
+    public String getPuzzleId() {
+        return puzzleId;
+    }
+
+    public void setPuzzleId(String puzzleId) {
+        this.puzzleId = puzzleId;
+    }
 
     public String getPuzzleType() {
         return puzzleType;

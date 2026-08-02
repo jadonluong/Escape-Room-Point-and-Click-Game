@@ -38,13 +38,13 @@ public class EnterExitInteractor implements EnterExitInputBoundary {
 
     private EnterExitOutputData makeOutputData(Puzzle puzzle) {
         if (puzzle instanceof AnagramPuzzle) {
-            return new EnterExitOutputData("Anagram", puzzle.getDescription(),
+            return new EnterExitOutputData(puzzle.getId(), "Anagram", puzzle.getDescription(),
                     ((AnagramPuzzle) puzzle).getHint(), ((AnagramPuzzle) puzzle).getScrambled());
         } else if (puzzle instanceof CryptogramPuzzle) {
-            return new EnterExitOutputData("Cryptogram", puzzle.getDescription(),
+            return new EnterExitOutputData(puzzle.getId(), "Cryptogram", puzzle.getDescription(),
                     ((CryptogramPuzzle) puzzle).getEncrypted(), ((CryptogramPuzzle) puzzle).getCipher());
         } else if (puzzle instanceof CodeLockPuzzle) {
-            return new EnterExitOutputData("CodeLock", puzzle.getDescription(),
+            return new EnterExitOutputData(puzzle.getId(), "CodeLock", puzzle.getDescription(),
                     ((CodeLockPuzzle) puzzle).getHint());
         }
         return null; // Won't happen unless a new type of Puzzle class is added.
