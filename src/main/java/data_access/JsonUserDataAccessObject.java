@@ -3,6 +3,8 @@ package data_access;
 import application.game_registry.ItemRegistry;
 import application.game_registry.RoomRegistry;
 import application.use_cases.GamePlay.ActionTrigger.ActionTriggerDataAccessInterface;
+import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpDataAccessInterface;
+import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutAndStoryModeStartUpUserDataAccessInterface;
 import application.use_cases.Hint.GetHint.GetHintUserDataAccessInterface;
 import application.use_cases.Interactable.Interact.InteractDataAccessInterface;
 import application.use_cases.Interactable.Interact.InteractUserDataAccessInterface;
@@ -40,6 +42,8 @@ public class JsonUserDataAccessObject implements
         SaveProgressUserDataAccessInterface,
         GetHintUserDataAccessInterface,
         ActionTriggerDataAccessInterface,
+        QuickModeStartUpDataAccessInterface,
+        TutAndStoryModeStartUpUserDataAccessInterface,
         InteractUserDataAccessInterface,
         EnterExitUserDataAccessInterface,
         SolveUserDataAccessInterface {

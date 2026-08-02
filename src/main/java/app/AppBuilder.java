@@ -188,7 +188,7 @@ public class AppBuilder extends Application {
         TutorialAndStoryModeStartUpPresenter tutorialAndStoryModeStartUpPresenter
                 = new TutorialAndStoryModeStartUpPresenter(inGameViewModel, viewManagerModel);
         TutorialAndStoryModeStartUpInteractor tutorialAndStoryModeStartUpInteractor
-                = new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter, gameAssetManager);
+                = new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter, gameAssetManager, userDAO);
         TutorialAndStoryModeStartUpController tutorialAndStoryModeStartUpController
                 = new TutorialAndStoryModeStartUpController(tutorialAndStoryModeStartUpInteractor);
 
@@ -202,7 +202,7 @@ public class AppBuilder extends Application {
         QuickModeStartUpPresenter quickModeStartUpPresenter
                 = new QuickModeStartUpPresenter(inGameViewModel, viewManagerModel);
         QuickModeStartUpInteractor quickModeStartUpInteractor
-                = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager);
+                = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager, userDAO);
         QuickModeStartUpController quickModeStartUpController
                 = new QuickModeStartUpController(quickModeStartUpInteractor);
 
@@ -225,37 +225,6 @@ public class AppBuilder extends Application {
         // --- Browse Rooms ---
         BrowseRoomsView browseRoomsView = new BrowseRoomsView(viewManager,
                 mainMenu, browseRoomsViewModel,  quickModeStartUpController);
-
-        // --- Game menu overlay ---
-        OverlayFactory gameMenuOverlayFactory = onClose -> new GameMenuView(
-                viewManager,
-                loggedInViewModel,
-                sfxController,
-                musicController,
-                audioViewModel,
-
-                // --- On save ---
-                () -> {
-                    if (userDAO.getCurrentUser() != null) {
-                        String username = loggedInViewModel.getState().getUsername();
-                        saveProgressController.execute(username);
-                    }
-                },
-
-                // --- On save & quit ---
-                () -> {
-                    if (userDAO.getCurrentUser() != null) {
-                        String username = loggedInViewModel.getState().getUsername();
-                        logoutController.executeLogoutWithSave(username);
-                    }
-                },
-
-                // --- On quit ---
-                () -> {
-                    String username = loggedInViewModel.getState().getUsername();
-                    logoutController.executeLogoutWithoutSave(username);
-                }
-        );
 
         // --- Placeholder screens ---
         PlaceholderView storyPlaceholder = new PlaceholderView("Story Line", viewManagerModel);
@@ -290,7 +259,7 @@ public class AppBuilder extends Application {
         // --- Interactable and Puzzle Views ---
         ZoomView zoomView = new ZoomView(zoomController, zoomViewModel, interactController, enterExitController);
         InteractOverlay interactOverlay = new InteractOverlay(interactViewModel, viewManager);
-        PuzzleView puzzleView = new PuzzleView(enterExitViewModel);
+        PuzzleView puzzleView = new PuzzleView(enterExitViewModel, enterExitController, solveController);
 
         // --- Action triggering ---
         ActionTriggerInteractor actionTriggerInteractor = new ActionTriggerInteractor(zoomInteractor, pickUpInteractor, getHintInteractor, userDAO);

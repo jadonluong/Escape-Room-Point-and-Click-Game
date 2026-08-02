@@ -3,6 +3,7 @@ package application.use_cases.GamePlay.TutorialAndStoryModeStartUp;
 
 import application.use_cases.GamePlay.ObjectsInfo;
 import domain.entities.Room.Room;
+import domain.entities.User.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,12 +11,15 @@ import java.util.Map;
 public class TutorialAndStoryModeStartUpInteractor implements TutorialAndStoryModeStartUpInputBoundary {
     private final StartUpDataAccessInterface dataAccess;
     private final TutorialAndStoryModeStartUpOutputBoundary presenter;
+    private final TutAndStoryModeStartUpUserDataAccessInterface userDataAccess;
 
     public TutorialAndStoryModeStartUpInteractor(TutorialAndStoryModeStartUpOutputBoundary
                                                          TutorialAndStoryModeStartUpPresenter
-            , StartUpDataAccessInterface dataAccess) {
+            , StartUpDataAccessInterface dataAccess,
+                                                 TutAndStoryModeStartUpUserDataAccessInterface userDataAccess) {
         this.dataAccess = dataAccess;
         this.presenter = TutorialAndStoryModeStartUpPresenter;
+        this.userDataAccess = userDataAccess;
 
     }
 
@@ -24,10 +28,24 @@ public class TutorialAndStoryModeStartUpInteractor implements TutorialAndStoryMo
     public void execute(TutorialAndStoryModeStartUpInputData inputData) {
 
         Room startingRoom;
+        User currentUser = userDataAccess.getCurrentUser();
+
+        if (currentUser == null) {
+            presenter.prepareFailView("User is null");
+            return;
+        }
 
         switch (inputData.getMode()) {
-            case "TUTORIAL" -> startingRoom = dataAccess.findStartingRoomForTut();
-            case "STORY"    -> startingRoom = dataAccess.findStartingRoomForStory();
+            case "TUTORIAL" -> {
+                currentUser.setActiveGameMode("TutorialMode");
+                startingRoom = dataAccess.findStartingRoomForTut();
+                currentUser.unlockRoom(startingRoom);
+            }
+            case "STORY"    -> {
+                currentUser.setActiveGameMode("StoryMode");
+                startingRoom = dataAccess.findStartingRoomForStory();
+                currentUser.unlockRoom(startingRoom);
+            }
             default -> {
                 presenter.prepareFailView("Invalid mode selected: " + inputData.getMode());
                 return;

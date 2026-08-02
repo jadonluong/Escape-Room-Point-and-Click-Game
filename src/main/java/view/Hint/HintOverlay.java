@@ -44,11 +44,14 @@ public class HintOverlay extends ModalOverlay implements PropertyChangeListener{
         // Add ONLY the modal card to the layout — NO dark backdrop
         getChildren().add(modalBox);
 
+        // Allow mouse clicks outside the modal card to PASS THROUGH to the game below
+        this.setPickOnBounds(false);
+
         // Position card at TOP_CENTER of the screen
         setAlignment(modalBox, Pos.TOP_CENTER);
 
         // Add a top margin (20px) so the card doesn't stick directly to the top window edge
-        StackPane.setMargin(modalBox, new Insets(20, 0, 0, 0));
+        StackPane.setMargin(modalBox, new Insets(10, 0, 0, 0));
 
         // Retain ESC key shortcut handling
         setFocusTraversable(true);
@@ -73,7 +76,15 @@ public class HintOverlay extends ModalOverlay implements PropertyChangeListener{
         // Cross icon close button (no background, no border)
         Button closeButton = new Button("✕");
         closeButton.setDefaultButton(true);
-        closeButton.setOnAction(e -> onClose.run());
+        closeButton.setOnAction(e ->{
+            javafx.scene.Scene currentScene = getScene();
+
+            onClose.run();
+
+            if (currentScene != null && currentScene.getRoot() != null) {
+                currentScene.getRoot().requestFocus();
+            }}
+        );
 
         String defaultCrossStyle =
                 "-fx-background-color: transparent;" +
@@ -103,7 +114,7 @@ public class HintOverlay extends ModalOverlay implements PropertyChangeListener{
         // Content box holding the message
         VBox contentBox = new VBox(messageLabel);
         contentBox.setAlignment(Pos.CENTER);
-        contentBox.setPadding(new Insets(20, 10, 10, 10));
+        contentBox.setPadding(new Insets(10, 20, 10, 10));
 
         // Main modal container
         VBox modalBox = new VBox();
@@ -111,8 +122,9 @@ public class HintOverlay extends ModalOverlay implements PropertyChangeListener{
         modalBox.getChildren().add(cardLayout);
 
         modalBox.setAlignment(Pos.CENTER);
-        modalBox.setPadding(new Insets(12));
-        modalBox.setMaxWidth(360);
+        modalBox.setPadding(new Insets(8, 12, 8, 12));
+        modalBox.setMaxWidth(450);
+        modalBox.setMaxHeight(85);
 
         // Solid white card with crisp border
         modalBox.setStyle(
@@ -138,12 +150,5 @@ public class HintOverlay extends ModalOverlay implements PropertyChangeListener{
         if (state.getSuccessMessage() != null) {
             messageLabel.setText(state.getSuccessMessage());
         }
-    }
-
-    /**
-     * Unregisters the listener to prevent memory leaks when destroying the view.
-     */
-    public void cleanup() {
-        this.getHintViewModel.removePropertyChangeListener(this);
     }
 }
