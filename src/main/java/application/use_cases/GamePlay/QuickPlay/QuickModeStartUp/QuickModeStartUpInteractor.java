@@ -25,16 +25,22 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
     @Override
     public void execute(QuickModeStartUpInputData inputData) {
             User currentUser = quickModeStartUpDataAccess.getCurrentUser();
+
+            if (currentUser == null) {
+                presenter.prepareFailView("No user selected");
+                return;
+            }
+
             currentUser.setActiveGameMode("QuickMode");
 
             String roomId = inputData.getTargetRoom();
-
-            currentUser.saveCurrentRoomID(roomId);
 
             if (roomId == null || roomId.trim().isEmpty()) {
                 presenter.prepareFailView("Invalid room ID provided.");
                 return;
             }
+
+            currentUser.saveCurrentRoomID(roomId);
 
             Room targetRoom = dataAccess.getRoomById(roomId);
 
@@ -42,6 +48,8 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
                 presenter.prepareFailView("Could not load room with ID: " + roomId);
                 return;
             }
+
+            currentUser.unlockRoom(targetRoom);
 
             Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
 

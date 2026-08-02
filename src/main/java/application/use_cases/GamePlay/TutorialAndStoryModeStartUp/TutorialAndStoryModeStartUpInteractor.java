@@ -30,14 +30,21 @@ public class TutorialAndStoryModeStartUpInteractor implements TutorialAndStoryMo
         Room startingRoom;
         User currentUser = userDataAccess.getCurrentUser();
 
+        if (currentUser == null) {
+            presenter.prepareFailView("User is null");
+            return;
+        }
+
         switch (inputData.getMode()) {
             case "TUTORIAL" -> {
                 currentUser.setActiveGameMode("TutorialMode");
                 startingRoom = dataAccess.findStartingRoomForTut();
+                currentUser.unlockRoom(startingRoom);
             }
             case "STORY"    -> {
                 currentUser.setActiveGameMode("StoryMode");
                 startingRoom = dataAccess.findStartingRoomForStory();
+                currentUser.unlockRoom(startingRoom);
             }
             default -> {
                 presenter.prepareFailView("Invalid mode selected: " + inputData.getMode());
