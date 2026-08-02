@@ -39,7 +39,11 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         this.enterExitViewModel = enterExitViewModel;
 
         EnterExitState enterExitState = enterExitViewModel.getState();
+
         String puzzleType = enterExitState.getPuzzleType();
+        if (puzzleType == null) {
+            puzzleType = "";
+        }
 
         // Background
         fixedRoot.setPrefSize(DESIGN_WIDTH, DESIGN_HEIGHT);
