@@ -97,7 +97,7 @@ public class CommonInteractable implements Interactable {
     @Override
     public boolean needsItem() {
         return needsItem;
-    }
+    } // Bruh I realized I don't actually need this...
 
     @Override
     public String getRequiredItemId() {
