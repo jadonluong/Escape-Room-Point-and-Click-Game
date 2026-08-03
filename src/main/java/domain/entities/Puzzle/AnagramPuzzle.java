@@ -52,7 +52,7 @@ public class AnagramPuzzle implements Puzzle {
         return scrambled;
     }
 
-    public List<String> getAnswer() {
+    public List<String> getAnswers() {
         return answers;
     }
 

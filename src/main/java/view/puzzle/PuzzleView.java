@@ -278,11 +278,9 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
                 StringBuilder hintText = new StringBuilder();
                 if (cipher != null) {
                     for (Map.Entry<String, String> entry : cipher.entrySet()) {
-                        hintText.append(entry.getKey()).append(" → ").append(entry.getValue()).append("  ");
+                        hintText.append(entry.getKey()).append(" → ").append(entry.getValue()).append("   ");
                     }
                     hintLabel.setText(hintText.toString());
-                } else {
-                    hintLabel.setText("");
                 }
 
                 puzzleLabel.setText(enterExitState.getEncrypted());

@@ -20,6 +20,7 @@ import application.use_cases.User.SignUp.SignupInteractor;
 import application.use_cases.Item.PickUp.PickUpInteractor; // added
 import data_access.GameAssetManager;
 import data_access.JsonUserDataAccessObject;
+import data_access.PuzzleGenerator;
 import domain.entities.Hint.CommonHintFactory;
 import domain.entities.Hint.HintFactory;
 import domain.entities.Interactable.CommonInteractableFactory;
@@ -27,11 +28,12 @@ import domain.entities.Interactable.InteractableFactory;
 import domain.entities.Item.CommonItemFactory;
 import domain.entities.Item.ItemFactory;
 import domain.entities.Puzzle.CommonPuzzleFactory;
-import domain.entities.Puzzle.Puzzle;
 import domain.entities.Puzzle.PuzzleFactory;
 import domain.entities.Room.CommonRoomFactory;
 import domain.entities.Room.RoomFactory;
 import domain.entities.User.*;
+import infrastructure.AnagramApiClient;
+import infrastructure.CryptogramApiClient;
 import interface_adapter.Audio.*;
 import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsController;
@@ -108,6 +110,12 @@ public class AppBuilder extends Application {
         RoomFactory roomFactory = new CommonRoomFactory();
         HintFactory hintFactory = new CommonHintFactory();
         PuzzleFactory puzzleFactory = new CommonPuzzleFactory();
+
+        // --- Puzzle Generator chain ---
+        AnagramApiClient anagramApiClient = new AnagramApiClient("apv_7700ad64-d8be-4591-8f67-607ed21edcce");
+        CryptogramApiClient cryptogramApiClient = new CryptogramApiClient(
+                "apv_7700ad64-d8be-4591-8f67-607ed21edcce");
+        PuzzleGenerator puzzleGenerator = new PuzzleGenerator(anagramApiClient, cryptogramApiClient, puzzleFactory);
 
         GameAssetManager gameAssetManager = new GameAssetManager(itemFactory, interactableFactory, roomFactory, hintFactory, puzzleFactory);
 
