@@ -121,7 +121,7 @@ public class GetHintTest {
         interactor.execute(inputData);
 
         assertNull(testPresenter.getSuccessData());
-        assertEquals(testPresenter.getMessage(), "No hints available");
+        assertEquals( "No hints available", testPresenter.getMessage());
     }
 
     @Test
@@ -131,6 +131,6 @@ public class GetHintTest {
         interactor.execute(inputData);
 
         assertNull(testPresenter.getSuccessData());
-        assertEquals(testPresenter.getMessage(), "You are not the current user");
+        assertEquals( "You are not the current user", testPresenter.getMessage());
     }
 }
