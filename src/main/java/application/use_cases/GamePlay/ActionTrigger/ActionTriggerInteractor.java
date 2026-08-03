@@ -2,7 +2,6 @@ package application.use_cases.GamePlay.ActionTrigger;
 
 import application.use_cases.Hint.GetHint.GetHintInputBoundary;
 import application.use_cases.Hint.GetHint.GetHintInputData;
-import application.use_cases.Interactable.Interact.InteractDataAccessInterface;
 import application.use_cases.Interactable.Zoom.ZoomInputBoundary;
 import application.use_cases.Interactable.Zoom.ZoomInputData;
 import application.use_cases.Item.PickUp.PickUpInputBoundary;
@@ -38,11 +37,11 @@ public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
         // System.out.println("1. Clicked ID: " + inputData.id);
         // System.out.println("2. Mode String: " + inputData.mode);
 
-        if(Objects.equals(inputData.mode, "Interactable")) {
+        if(Objects.equals(inputData.type, "Interactable")) {
             ZoomInputData interactableInputDate = new ZoomInputData(inputData.id);
             zoomInteractor.zoomIn(interactableInputDate);
         }
-        else if ("item".equalsIgnoreCase(inputData.mode)) {
+        else if ("item".equalsIgnoreCase(inputData.type)) {
 
             Item itemToPickUp = dataAccess.getItemById(inputData.id);
             // System.out.println("3. Item Found in DAO: " + itemToPickUp);
@@ -52,7 +51,7 @@ public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
                 pickUpInteractor.execute(itemInputData);
             }
         }
-        else if (Objects.equals(inputData.mode, "Hint")) {
+        else if (Objects.equals(inputData.type, "Hint")) {
 
             GetHintInputData hintInputData = new GetHintInputData(inputData.id, userId);
             getHintInteractor.execute(hintInputData);
