@@ -70,10 +70,12 @@ public class TutorialAndStoryModeStartUpInteractor implements TutorialAndStoryMo
                             "Interactable"));
         });
         startingRoom.getItems().forEach(item -> {
-            ObjectsToDisplay.put(item.getId(),
-                    new ObjectsInfo(item.getImagePath(),
-                            startingRoom.getPosition(item.getId()),
-                            "Item") );
+            if (!currentUser.hasItemID(item.getId())) {
+                ObjectsToDisplay.put(item.getId(),
+                        new ObjectsInfo(item.getImagePath(),
+                                startingRoom.getPosition(item.getId()),
+                                "Item"));
+            }
         });
         startingRoom.getHints().forEach(hint -> {
             ObjectsToDisplay.put(hint.getObjectID(),

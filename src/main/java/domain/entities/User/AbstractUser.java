@@ -179,26 +179,35 @@ public abstract class AbstractUser implements User {
     @Override
     public boolean hasItemID(String itemID) {
         if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
-           for (Item item : this.storyModeLiveItemInventory) {
-               if (item.getId().equals(itemID)) {
-                   return true;
-               }
-           }
-           return false;
+            if (!this.storyModeLiveItemInventory.isEmpty()) {
+                for (Item item : this.storyModeLiveItemInventory) {
+                    if (item.getId().equals(itemID)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return false;
         }
         else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
-            for (Item item : this.quickModeLiveItemInventory.get(this.currentRoomID)) {
-                if (item.getId().equals(itemID)) {
-                    return true;
+            if (!this.quickModeLiveItemInventory.isEmpty()) {
+                for (Item item : this.quickModeLiveItemInventory.get(this.currentRoomID)) {
+                    if (item.getId().equals(itemID)) {
+                        return true;
+                    }
                 }
+                return false;
             }
             return false;
         }
         else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
-            for (Item item : this.tutorialModeLiveItemInventory) {
-                if (item.getId().equals(itemID)) {
-                    return true;
+            if (!this.tutorialModeLiveItemInventory.isEmpty()) {
+                for (Item item : this.tutorialModeLiveItemInventory) {
+                    if (item.getId().equals(itemID)) {
+                        return true;
+                    }
                 }
+                return false;
             }
             return false;
         }
