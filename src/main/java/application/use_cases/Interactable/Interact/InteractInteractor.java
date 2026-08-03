@@ -44,8 +44,10 @@ public class InteractInteractor implements InteractInputBoundary {
             rewardItemName = dataAccess.getItemById(rewardItemId).getName();
         }
 
+        String selectedItemName = null;
         if (interactable.isConsumesItem() && selectedItemId != null) {
             player.removeItem(dataAccess.getItemById(selectedItemId));
+            selectedItemName = dataAccess.getItemById(selectedItemId).getName();
         }
 
         Room currentRoom = dataAccess.getRoomById(player.getCurrentRoomID());
@@ -53,7 +55,8 @@ public class InteractInteractor implements InteractInputBoundary {
             currentRoom.removeInteractable(interactable.getId());
         }
 
-        outputBoundary.prepareSuccessView(new InteractOutputData(interactable.getSuccessMessage(), rewardItemName));
+        outputBoundary.prepareSuccessView(new InteractOutputData(interactable.getSuccessMessage(), rewardItemId,
+                rewardItemName, selectedItemId, selectedItemName));
     }
 
     private void itemRequiredFirstInteraction(User player, Interactable interactable) {
@@ -83,8 +86,8 @@ public class InteractInteractor implements InteractInputBoundary {
             if (puzzle.isSolved() && puzzleUnlockedRoomId != null) {
                 moveToRoom(player, puzzleUnlockedRoomId);
             } else if (puzzle.isSolved()) {
-                outputBoundary.prepareSuccessView(new InteractOutputData(puzzle.getSuccessMessage(),
-                        null));
+                outputBoundary.prepareSuccessView(new InteractOutputData(puzzle.getSuccessMessage(), null,
+                        null, null, null));
             }
             return;
         }
@@ -96,7 +99,8 @@ public class InteractInteractor implements InteractInputBoundary {
             }
             successMessage = successMessage.concat(" already!"); // "You have obtained a(n) __ already!"
         }
-        outputBoundary.prepareSuccessView(new InteractOutputData(successMessage, null));
+        outputBoundary.prepareSuccessView(new InteractOutputData(successMessage, null,
+                null, null, null));
     }
 
     private void moveToRoom(User player, String unlockedRoomId) {

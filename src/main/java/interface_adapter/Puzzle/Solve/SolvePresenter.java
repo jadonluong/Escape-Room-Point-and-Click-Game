@@ -38,7 +38,7 @@ SolvePresenter implements SolveOutputBoundary {
         if (outputData.getRewardItemName() != null) {
             InventoryState inventoryState = inventoryViewModel.getState();
             List<String> items  = inventoryState.getItems();
-            items.add(outputData.getRewardItemName());
+            items.add(outputData.getRewardItemId() + ":" + outputData.getRewardItemName());
             inventoryState.setItems(items);
 
             inventoryViewModel.setState(inventoryState);

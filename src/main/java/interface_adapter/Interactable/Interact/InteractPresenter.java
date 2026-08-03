@@ -32,15 +32,22 @@ public class InteractPresenter implements InteractOutputBoundary {
         interactViewModel.setState(interactState);
         interactViewModel.firePropertyChanged();
 
-        if (outputData.getRewardItemName() != null) {
-            InventoryState inventoryState = inventoryViewModel.getState();
-            List<String> items = inventoryState.getItems();
-            items.add(outputData.getRewardItemName());
-            inventoryState.setItems(items);
+        InventoryState inventoryState = inventoryViewModel.getState();
+        List<String> items = inventoryState.getItems();
 
-            inventoryViewModel.setState(inventoryState);
-            inventoryViewModel.firePropertyChanged();
+        if (outputData.getRewardItemName() != null) {
+            String rewardEntry = outputData.getRewardItemId() + ":" + outputData.getRewardItemName();
+            items.add(rewardEntry);
         }
+
+        if (outputData.getSelectedItemId() != null) {
+            String consumedEntry = outputData.getSelectedItemId() + ":" + outputData.getSelectedItemName();
+            items.remove(consumedEntry);
+        }
+
+        inventoryState.setItems(items);
+        inventoryViewModel.setState(inventoryState);
+        inventoryViewModel.firePropertyChanged();
 
         viewManager.showOverlay("Interact");
     }
