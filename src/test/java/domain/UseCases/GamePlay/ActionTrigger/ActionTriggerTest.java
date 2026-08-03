@@ -1,6 +1,7 @@
 package domain.UseCases.GamePlay.ActionTrigger;
 
 import application.use_cases.GamePlay.ActionTrigger.ActionTriggerDataAccessInterface;
+import application.use_cases.GamePlay.ActionTrigger.ActionTriggerGameDataAccessInterface;
 import application.use_cases.GamePlay.ActionTrigger.ActionTriggerInputData;
 import application.use_cases.GamePlay.ActionTrigger.ActionTriggerInteractor;
 import application.use_cases.GamePlay.UserDataAccessInterface;
@@ -68,7 +69,8 @@ public class ActionTriggerTest {
         }
     }
 
-    private static class TestUserDataAccess implements ActionTriggerDataAccessInterface {
+    private static class TestUserDataAccess implements ActionTriggerDataAccessInterface,
+            ActionTriggerGameDataAccessInterface {
         private User currentUser;
         private Item item;
 
@@ -102,6 +104,7 @@ public class ActionTriggerTest {
                 testInteracter,
                 testInteracter,
                 testInteracter,
+                dataAccess,
                 dataAccess
         );
 

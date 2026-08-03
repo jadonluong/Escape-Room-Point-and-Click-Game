@@ -73,7 +73,7 @@ public class BrowseRoomsTest {
 
         emptyInteractor.execute();
 
-        assertEquals("No rooms available.", testPresenter.getErrorMessage());
+        assertEquals("No rooms found", testPresenter.getErrorMessage());
         assertNull(testPresenter.getSuccessData());
     }
 

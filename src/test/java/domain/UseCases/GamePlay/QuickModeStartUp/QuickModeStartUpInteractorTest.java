@@ -73,7 +73,6 @@ class QuickModeStartUpInteractorTest {
         String password = "secure_password";
 
         User user = factory.createCommonUser(username, password);
-
         testPresenter = new TestPresenter();
         testRegistry = new TestRoomRegistry();
         testUserDataAccess =  new TestUserDataAccess();
@@ -163,6 +162,29 @@ class QuickModeStartUpInteractorTest {
         assertEquals(new Position(10.0, 20.0), doorInfo.position());
     }
 
+    @Test
+    void testUserAlreadyHaveItem(){
+        Item key = new CommonItem("key1",
+                "/images/ui/buttons/QuickButton.png",
+                "description",
+                true,
+                "/images/ui/buttons/QuickButton.png");
+
+        User user = testUserDataAccess.getCurrentUser();
+        user.setActiveGameMode("QuickMode");
+        user.saveCurrentRoomID(selectedRoomId);
+        user.saveItem(key);
+
+
+        QuickModeStartUpInputData inputData = new QuickModeStartUpInputData(selectedRoomId);
+
+        interactor.execute(inputData);
+
+        QuickModeStartUpOutputData outputData = testPresenter.getSuccessData();
+
+        assertEquals(2, outputData.getObjectToDisplay().size());
+
+    }
     @Test
     void testNullOrEmptyRoomIdCallsPrepareFailView() {
         // Arrange
