@@ -8,9 +8,11 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -20,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Map;
 
 public class PuzzleView extends StackPane implements ActionListener, PropertyChangeListener {
     private static final double DESIGN_WIDTH = 959; // Roughly same scale as dimensions in MainMenuView
@@ -28,8 +31,9 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
     private EnterExitViewModel enterExitViewModel;
 
     private final Pane fixedRoot = new Pane();
+    private ImageView lockImage =  new ImageView();
     private Label puzzleLabel = new Label();
-    private ImageView puzzleImageView = new ImageView();
+    private ImageView passwordBarImage = new ImageView();
     private Label nameLabel = new Label();
     private Label descriptionLabel = new Label();
     private Label hintLabel = new Label();
@@ -37,13 +41,9 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
     public PuzzleView(EnterExitViewModel enterExitViewModel, EnterExitController enterExitController,
                       SolveController solveController) {
         this.enterExitViewModel = enterExitViewModel;
+        this.enterExitViewModel.addPropertyChangeListener(this);
 
         EnterExitState enterExitState = enterExitViewModel.getState();
-
-        String puzzleType = enterExitState.getPuzzleType();
-        if (puzzleType == null) {
-            puzzleType = "";
-        }
 
         // Background
         fixedRoot.setPrefSize(DESIGN_WIDTH, DESIGN_HEIGHT);
@@ -100,36 +100,43 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         double puzzleBoxWidth = DESIGN_WIDTH * (7.0 / 12.0);
         double puzzleBoxHeight = DESIGN_HEIGHT - (answerFieldHeight + (gap * 3));
 
+        VBox puzzleBoxContainerBox = new VBox(10);
+        puzzleBoxContainerBox.setAlignment(Pos.CENTER);
+        puzzleBoxContainerBox.setLayoutX(gap);
+        puzzleBoxContainerBox.setLayoutY(gap);
+        puzzleBoxContainerBox.setPrefSize(puzzleBoxWidth, puzzleBoxHeight);
+
         Rectangle puzzleBox = new Rectangle(puzzleBoxWidth, puzzleBoxHeight);
         puzzleBox.setFill(Color.web("#2a2a2a"));
         puzzleBox.setStroke(Color.WHITE);
         puzzleBox.setStrokeWidth(3);
-        puzzleBox.setLayoutX(gap);
-        puzzleBox.setLayoutY(gap);
-        fixedRoot.getChildren().add(puzzleBox);
 
-        if (!puzzleType.equals("CodeLock")) { // If not CodeLockPuzzle then needs text.
-            String puzzleText = enterExitState.getScrambled(); // AnagramPuzzle
-            if (puzzleType.equals("Cryptogram")) { // CryptogramPuzzle
-                puzzleText = enterExitState.getEncrypted();
-            }
+        lockImage.setFitWidth(puzzleBox.getWidth() - 100);
+        lockImage.setFitHeight(puzzleBox.getHeight() - 100);
+        lockImage.setPreserveRatio(true);
 
-            puzzleLabel.setText(puzzleText);
-            puzzleLabel.setTextFill(Color.WHITE);
-            puzzleLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 24));
-            puzzleLabel.setWrapText(true);
-            puzzleLabel.setAlignment(Pos.CENTER);
-            puzzleLabel.setPrefWidth(puzzleBox.getWidth() - 50);
-            puzzleLabel.setPrefHeight(puzzleBox.getHeight() - 50);
-            puzzleLabel.setMaxWidth(puzzleBox.getWidth() - 50);
-            puzzleLabel.setMaxHeight(puzzleBox.getHeight() - 50);
-            puzzleLabel.setLayoutX(puzzleBox.getLayoutX() + 25);
-            puzzleLabel.setLayoutY(puzzleBox.getLayoutY() + 25);
-            fixedRoot.getChildren().add(puzzleLabel);
-            // TODO: Change visibility of puzzleLabel and puzzleImage here and in propertyChange too.
-        } else {
-            // TODO: Add a picture of a lock or something? <-- puzzleImage
-        }
+        puzzleLabel.setTextFill(Color.WHITE);
+        puzzleLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 24));
+        puzzleLabel.setWrapText(true);
+        puzzleLabel.setAlignment(Pos.CENTER);
+        puzzleLabel.setPrefWidth(puzzleBox.getWidth() - 50);
+        puzzleLabel.setPrefHeight(puzzleBox.getHeight() - 50);
+        puzzleLabel.setMaxWidth(puzzleBox.getWidth() - 50);
+        puzzleLabel.setMaxHeight(puzzleBox.getHeight() - 50);
+
+        passwordBarImage.setFitWidth(puzzleBox.getWidth() - 100);
+        passwordBarImage.setFitHeight(puzzleBox.getHeight() - 100);
+        passwordBarImage.setPreserveRatio(true);
+
+        puzzleBoxContainerBox.getChildren().addAll(lockImage, puzzleLabel, passwordBarImage);
+
+        StackPane puzzleBoxContainer = new StackPane();
+        puzzleBoxContainer.getChildren().addAll(puzzleBox, puzzleBoxContainerBox);
+        puzzleBoxContainer.setLayoutX(gap);
+        puzzleBoxContainer.setLayoutY(gap);
+        puzzleBoxContainer.setPrefSize(puzzleBoxWidth, puzzleBoxHeight);
+
+        fixedRoot.getChildren().add(puzzleBoxContainer);
         // ----------
 
         double rightSideBoxesLayoutX = puzzleBoxWidth + (gap * 2);
@@ -147,7 +154,6 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         nameBox.setLayoutY(gap);
         fixedRoot.getChildren().add(nameBox);
 
-        nameLabel.setText(puzzleType + " Puzzle");
         nameLabel.setTextFill(Color.web("#ffffff"));
         nameLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 17));
         nameLabel.setAlignment(Pos.TOP_LEFT);
@@ -187,12 +193,6 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         hintBox.setLayoutY(DESIGN_HEIGHT - (hintBoxHeight + gap));
         fixedRoot.getChildren().add(hintBox);
 
-        if (puzzleType.equals("Cryptogram")) {
-            // TODO: Figure out how you want to display the cipher.
-        } else {
-            hintLabel.setText(enterExitState.getHint());
-        }
-
         hintLabel.setTextFill(Color.web("#ffffff"));
         hintLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
         hintLabel.setWrapText(true);
@@ -217,7 +217,6 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         descriptionBox.setLayoutY(nameBoxHeight + (gap * 2));
         fixedRoot.getChildren().add(descriptionBox);
 
-        descriptionLabel.setText(enterExitState.getDescription());
         descriptionLabel.setTextFill(Color.web("#ffffff"));
         descriptionLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
         descriptionLabel.setWrapText(true);
@@ -232,6 +231,17 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         // ---------------
     }
 
+    private Image loadImage(String resourcePath) {
+        if (resourcePath == null) {
+            return null;
+        }
+        java.io.InputStream stream = getClass().getResourceAsStream(resourcePath);
+        if (stream == null) {
+            throw new IllegalArgumentException("Resource not found: " + resourcePath);
+        }
+        return new Image(stream);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         // No need.
@@ -239,6 +249,60 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        // TODO: Implement this.
+        EnterExitState enterExitState = enterExitViewModel.getState();
+        String puzzleType = enterExitState.getPuzzleType();
+        if (puzzleType == null) {
+            puzzleType = "";
+        }
+
+        lockImage.setImage(loadImage("/images/puzzleview/lock.png"));
+        passwordBarImage.setImage(loadImage("/images/puzzleview/password_bar.png"));
+
+        nameLabel.setText(puzzleType + " Puzzle");
+        descriptionLabel.setText(enterExitState.getDescription());
+
+        switch (puzzleType) {
+            case "Anagram":
+                hintLabel.setText(enterExitState.getHint());
+
+                puzzleLabel.setText(enterExitState.getScrambled());
+                puzzleLabel.setVisible(true);
+                puzzleLabel.setManaged(true);
+                lockImage.setVisible(true);
+                lockImage.setManaged(true);
+                passwordBarImage.setVisible(false);
+                passwordBarImage.setManaged(false);
+                break;
+            case "Cryptogram":
+                Map<String, String> cipher = enterExitState.getCipher();
+                StringBuilder hintText = new StringBuilder();
+                if (cipher != null) {
+                    for (Map.Entry<String, String> entry : cipher.entrySet()) {
+                        hintText.append(entry.getKey()).append(" → ").append(entry.getValue()).append("  ");
+                    }
+                    hintLabel.setText(hintText.toString());
+                } else {
+                    hintLabel.setText("");
+                }
+
+                puzzleLabel.setText(enterExitState.getEncrypted());
+                puzzleLabel.setVisible(true);
+                puzzleLabel.setManaged(true);
+                lockImage.setVisible(true);
+                lockImage.setManaged(true);
+                passwordBarImage.setVisible(false);
+                passwordBarImage.setManaged(false);
+                break;
+            case "CodeLock":
+                hintLabel.setText(enterExitState.getHint());
+
+                puzzleLabel.setVisible(false);
+                puzzleLabel.setManaged(false);
+                lockImage.setVisible(true);
+                lockImage.setManaged(true);
+                passwordBarImage.setVisible(true);
+                passwordBarImage.setManaged(true);
+                break;
+        }
     }
 }

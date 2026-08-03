@@ -32,7 +32,7 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
     private final Pane fixedRoot = new Pane();
     private Label nameLabel = new Label();
     private Label descriptionLabel = new Label();
-    private ImageView spriteImageView = new ImageView();
+    private ImageView spriteImage = new ImageView();
     private Button interactButton = new Button();
     private Rectangle interactBox = new Rectangle();
     private Label interactBoxLabel = new Label();
@@ -67,17 +67,15 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         spriteBox.setLayoutY(gap);
         fixedRoot.getChildren().add(spriteBox);
 
-        Image spriteImage = loadImage(zoomState.getSprite());
-        spriteImageView.setImage(spriteImage);
-        spriteImageView.setFitWidth(spriteBox.getWidth() - 40);
-        spriteImageView.setFitHeight(spriteBox.getHeight() - 40);
-        spriteImageView.setPreserveRatio(true);
+        spriteImage.setFitWidth(spriteBox.getWidth() - 40);
+        spriteImage.setFitHeight(spriteBox.getHeight() - 40);
+        spriteImage.setPreserveRatio(true);
 
         StackPane spriteContainer = new StackPane();
         spriteContainer.setLayoutX(spriteBox.getLayoutX());
         spriteContainer.setLayoutY(spriteBox.getLayoutY());
         spriteContainer.setPrefSize(spriteBoxWidth, spriteBoxHeight);
-        spriteContainer.getChildren().add(spriteImageView);
+        spriteContainer.getChildren().add(spriteImage);
         spriteContainer.setAlignment(Pos.CENTER);
         fixedRoot.getChildren().add(spriteContainer);
         // -------------------
@@ -117,7 +115,6 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
 
         // Interact Button
         double interactButtonHeight = (2.0 / 7.0) * (DESIGN_HEIGHT - (inventoryBoxHeight + (gap * 5)));
-        String interactLabel = zoomState.getInteractLabel();
 
         StackPane interactContainer = new StackPane();
         interactContainer.setPrefSize(rightSideBoxesWidth, interactButtonHeight);
@@ -133,10 +130,13 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         );
 
         interactButton.setOnAction(e -> {
-            if (interactLabel == null || !interactLabel.equals("Enter Puzzle")) {
-                interactController.interact(zoomState.getInteractableId());
-            } else {
-                enterExitController.enter(zoomState.getPuzzleId());
+            String interactLabel = zoomState.getInteractLabel();
+            if (interactLabel != null) {
+                if (!interactLabel.equals("Enter Puzzle")) { //
+                    interactController.interact(zoomState.getInteractableId());
+                } else {
+                    enterExitController.enter(zoomState.getPuzzleId());
+                }
             }
         });
 
@@ -152,24 +152,6 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         interactBoxLabel.setWrapText(true);
 
         interactContainer.getChildren().addAll(interactButton, interactBox, interactBoxLabel);
-
-        if (interactLabel != null) {
-            interactButton.setText(interactLabel);
-            interactButton.setVisible(true);
-            interactButton.setManaged(true);
-            interactBox.setVisible(false);
-            interactBox.setManaged(false);
-            interactBoxLabel.setVisible(false);
-            interactBoxLabel.setManaged(false);
-        } else {
-            interactButton.setVisible(false);
-            interactButton.setManaged(false);
-            interactBox.setVisible(true);
-            interactBox.setManaged(true);
-            interactBoxLabel.setVisible(true);
-            interactBoxLabel.setManaged(true);
-        }
-
         fixedRoot.getChildren().add(interactContainer);
         // ----------------------------
 
@@ -185,7 +167,6 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
                 descriptionBoxHeight + (gap * 3)));
         fixedRoot.getChildren().add(descriptionBox);
 
-        descriptionLabel.setText(zoomState.getDescription());
         descriptionLabel.setTextFill(Color.web("#ffffff"));
         descriptionLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
         descriptionLabel.setWrapText(true);
@@ -211,7 +192,6 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         nameBox.setLayoutY(gap);
         fixedRoot.getChildren().add(nameBox);
 
-        nameLabel.setText(zoomState.getName());
         nameLabel.setTextFill(Color.web("#ffffff"));
         nameLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 17));
         nameLabel.setAlignment(Pos.TOP_LEFT);
@@ -249,7 +229,7 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
 
     private Image loadImage(String resourcePath) {
         if (resourcePath == null) {
-            return null; // no sprite to show yet — e.g. before any Zoom has occurred
+            return null;
         }
         java.io.InputStream stream = getClass().getResourceAsStream(resourcePath);
         if (stream == null) {
@@ -275,9 +255,7 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
 
         nameLabel.setText(zoomState.getName());
         descriptionLabel.setText(zoomState.getDescription());
-
-        Image spriteImage = loadImage(zoomState.getSprite());
-        spriteImageView.setImage(spriteImage);
+        spriteImage.setImage(loadImage(zoomState.getSprite()));
 
         String interactLabel = zoomState.getInteractLabel();
         if (interactLabel != null) {

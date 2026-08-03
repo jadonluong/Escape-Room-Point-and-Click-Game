@@ -42,7 +42,16 @@ public class InteractOverlay extends ModalOverlay implements ActionListener, Pro
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        updateMessage();
+        InteractState state = interactViewModel.getState();
+        if (state.getSuccessMessage() != null) {
+            messageLabel.setText(state.getSuccessMessage());
+            messageLabel.setTextFill(Color.web("#80EF80"));
+        } else if (state.getErrorMessage() != null) {
+            messageLabel.setText(state.getErrorMessage());
+            messageLabel.setTextFill(Color.web("#E54C38"));
+        } else { // In case there's no successMessage or errorMessage.
+            this.onClose.run();
+        }
     }
 
     @Override
@@ -61,7 +70,6 @@ public class InteractOverlay extends ModalOverlay implements ActionListener, Pro
         modalBox.setMaxSize(450, 450);
 
         // Message Label
-        updateMessage();
         messageLabel.setFont(Font.font("Arial", FontWeight.BOLD, 30));
         messageLabel.setTextAlignment(TextAlignment.CENTER);
         messageLabel.setWrapText(true);
@@ -79,18 +87,5 @@ public class InteractOverlay extends ModalOverlay implements ActionListener, Pro
 
         modalBox.getChildren().addAll(messageLabel, spacer, subtitleLabel);
         return modalBox;
-    }
-
-    private void updateMessage() {
-        InteractState state = interactViewModel.getState();
-        if (state.getSuccessMessage() != null) {
-            messageLabel.setText(state.getSuccessMessage());
-            messageLabel.setTextFill(Color.web("#80EF80"));
-        } else if (state.getErrorMessage() != null) {
-            messageLabel.setText(state.getErrorMessage());
-            messageLabel.setTextFill(Color.web("#E54C38"));
-        } else { // In case there's no successMessage or errorMessage.
-            this.onClose.run();
-        }
     }
 }
