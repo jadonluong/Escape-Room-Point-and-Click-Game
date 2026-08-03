@@ -101,7 +101,10 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
                 }
 
                 int slotIndex = i;
-                slotButton.setOnAction(e -> handleSlotClick(slotIndex));
+                String selectedItemName = itemName; // e.g. "stick"
+
+                //Pass both the index (for UI highlight) and the itemName (for SelectItemController)
+                slotButton.setOnAction(e -> handleSlotClick(slotIndex, selectedItemName));
                 hotbarContainer.getChildren().add(slotButton);
             }
         }
@@ -141,7 +144,7 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
         return mainLayout;
     }
 
-    private void handleSlotClick(int index) {
+    private void handleSlotClick(int index, String itemName) {
         InventoryState state = viewModel.getState();
         if (state.getSelectedIndexA() == -1) {
             state.setSelectedIndexA(index);
@@ -151,6 +154,13 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
             state.setSelectedIndexA(index);
             state.setSelectedIndexB(-1);
         }
+
+        // 1. Save the selected item ID into live user session tracking!
+        if (selectItemController != null) {
+            selectItemController.execute(itemName);
+        }
+
+        // 2. Refresh UI highlight state
         viewModel.firePropertyChanged();
     }
 }
