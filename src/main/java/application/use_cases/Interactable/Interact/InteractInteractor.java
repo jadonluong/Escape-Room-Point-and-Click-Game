@@ -38,8 +38,10 @@ public class InteractInteractor implements InteractInputBoundary {
         interactable.setInteracted(true);
 
         String rewardItemId = interactable.getRewardItemId();
+        String rewardItemName = null;
         if (rewardItemId != null) {
             player.saveItem(dataAccess.getItemById(rewardItemId));
+            rewardItemName = dataAccess.getItemById(rewardItemId).getName();
         }
 
         if (interactable.isConsumesItem() && selectedItemId != null) {
@@ -51,7 +53,7 @@ public class InteractInteractor implements InteractInputBoundary {
             currentRoom.removeInteractable(interactable.getId());
         }
 
-        outputBoundary.prepareSuccessView(new InteractOutputData(interactable.getSuccessMessage()));
+        outputBoundary.prepareSuccessView(new InteractOutputData(interactable.getSuccessMessage(), rewardItemName));
     }
 
     private void itemRequiredFirstInteraction(User player, Interactable interactable) {
@@ -81,19 +83,20 @@ public class InteractInteractor implements InteractInputBoundary {
             if (puzzle.isSolved() && puzzleUnlockedRoomId != null) {
                 moveToRoom(player, puzzleUnlockedRoomId);
             } else if (puzzle.isSolved()) {
-                outputBoundary.prepareSuccessView(new InteractOutputData(puzzle.getSuccessMessage()));
+                outputBoundary.prepareSuccessView(new InteractOutputData(puzzle.getSuccessMessage(),
+                        null));
             }
             return;
         }
 
         String successMessage = interactable.getSuccessMessage();
         if (interactable.getRewardItemId() != null) {
-            if (successMessage.endsWith(".")) { // In case we forgot to add a period at the end
+            if (successMessage.endsWith(".") || successMessage.endsWith("!")) { // In case we forgot to add punctuation
                 successMessage = successMessage.substring(0, successMessage.length() - 1);
             }
             successMessage = successMessage.concat(" already!"); // "You have obtained a(n) __ already!"
         }
-        outputBoundary.prepareSuccessView(new InteractOutputData(successMessage));
+        outputBoundary.prepareSuccessView(new InteractOutputData(successMessage, null));
     }
 
     private void moveToRoom(User player, String unlockedRoomId) {

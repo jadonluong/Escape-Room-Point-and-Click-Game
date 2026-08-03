@@ -23,11 +23,13 @@ public class SolveInteractor implements SolveInputBoundary {
 
             User player = userDataAccess.getCurrentUser();
             String rewardItemId = puzzle.getRewardItemId();
+            String rewardItemName = null;
             if (rewardItemId != null) {
                 player.saveItem(dataAccess.getItemById(rewardItemId));
+                rewardItemName = dataAccess.getItemById(rewardItemId).getName();
             }
 
-            outputBoundary.prepareSuccessView(new SolveOutputData(puzzle.getSuccessMessage()));
+            outputBoundary.prepareSuccessView(new SolveOutputData(puzzle.getSuccessMessage(), rewardItemName));
         } else {
             outputBoundary.prepareFailureView("Your input was incorrect.");
         }

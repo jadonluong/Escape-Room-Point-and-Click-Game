@@ -13,7 +13,7 @@
     "rewardItemId": "prison_Item_3",
     "linkedPuzzleId": null,
     "unlockedRoomId": null,
-    "successMessage": null
+    "successMessage": "You have obtained a super spider!"
   },
 
   "prison_interact_2": {
@@ -64,7 +64,7 @@
     "rewardItemId": "prison_item_2",
     "linkedPuzzleId": null,
     "unlockedRoomId": null,
-    "successMessage": null
+    "successMessage": "You have obtained a spider."
   }
 }
 

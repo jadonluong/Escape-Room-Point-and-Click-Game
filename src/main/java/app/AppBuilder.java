@@ -248,8 +248,10 @@ public class AppBuilder extends Application {
 
         // --- Interactable Interact Chain ---
         InteractViewModel interactViewModel = new InteractViewModel();
-        InteractPresenter interactPresenter = new InteractPresenter(interactViewModel, viewManagerModel, viewManager);
-        InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter, userSessionTracking);
+        InteractPresenter interactPresenter = new InteractPresenter(interactViewModel, inventoryViewModel,
+                viewManagerModel, viewManager);
+        InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter,
+                userSessionTracking);
         InteractController interactController = new InteractController(interactInteractor);
 
         // --- Puzzle EnterExit Chain ---
@@ -261,7 +263,8 @@ public class AppBuilder extends Application {
         EnterExitController enterExitController = new EnterExitController(enterExitInteractor);
 
         // --- Puzzle Solve Chain ---
-        SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, viewManagerModel, viewManager);
+        SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, inventoryViewModel, viewManagerModel,
+                viewManager);
         SolveInteractor solveInteractor = new SolveInteractor(gameAssetManager, solvePresenter, userSessionTracking);
         SolveController solveController = new SolveController(solveInteractor);
 

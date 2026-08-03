@@ -5,29 +5,45 @@ import application.use_cases.Puzzle.Solve.SolveOutputData;
 import interface_adapter.Interactable.Interact.InteractState;
 import interface_adapter.Interactable.Interact.InteractViewModel;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.inventory.InventoryState;
+import interface_adapter.inventory.InventoryViewModel;
 import view.ViewManager;
+
+import java.util.List;
 
 public class
 SolvePresenter implements SolveOutputBoundary {
     private final InteractViewModel interactViewModel;
+    private final InventoryViewModel inventoryViewModel;
     private final ViewManagerModel viewManagerModel;
     private final ViewManager viewManager;
 
-    public SolvePresenter(InteractViewModel interactViewModel, ViewManagerModel viewManagerModel,
-                          ViewManager viewManager) {
+    public SolvePresenter(InteractViewModel interactViewModel, InventoryViewModel inventoryViewModel,
+                          ViewManagerModel viewManagerModel, ViewManager viewManager) {
         this.interactViewModel = interactViewModel;
+        this.inventoryViewModel = inventoryViewModel;
         this.viewManagerModel = viewManagerModel;
         this.viewManager = viewManager;
     }
 
     @Override
     public void prepareSuccessView(SolveOutputData outputData) {
-        InteractState state = interactViewModel.getState();
-        state.setSuccessMessage(outputData.getSuccessMessage());
-        state.setErrorMessage(null);
+        InteractState interactState = interactViewModel.getState();
+        interactState.setSuccessMessage(outputData.getSuccessMessage());
+        interactState.setErrorMessage(null);
 
-        interactViewModel.setState(state);
+        interactViewModel.setState(interactState);
         interactViewModel.firePropertyChanged();
+
+        if (outputData.getRewardItemName() != null) {
+            InventoryState inventoryState = inventoryViewModel.getState();
+            List<String> items  = inventoryState.getItems();
+            items.add(outputData.getRewardItemName());
+            inventoryState.setItems(items);
+
+            inventoryViewModel.setState(inventoryState);
+            inventoryViewModel.firePropertyChanged();
+        }
 
         viewManagerModel.setState("Zoom"); // Bring back to ZoomView before opening InteractOverlay!
         viewManagerModel.firePropertyChanged();
