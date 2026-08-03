@@ -87,9 +87,8 @@ public abstract class AbstractUser implements User {
         }
         else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
             if (this.currentRoomID != null) {
-                ArrayList<Item> items = this.quickModeLiveItemInventory.get(this.currentRoomID);
-                // Note: this is only called to instantiate from db or to save an item after switching rooms,
-                // so there is no guard against currentRoomID not in quickModeLiveItemInventory
+                ArrayList<Item> items = this.quickModeLiveItemInventory
+                        .computeIfAbsent(this.currentRoomID, k -> new ArrayList<>());
                 if (!items.contains(item)) {
                     items.add(item);
                 }
@@ -154,6 +153,11 @@ public abstract class AbstractUser implements User {
     @Override
     public String getCurrentRoomID() {
         return this.currentRoomID;
+    }
+
+    @Override
+    public String getStoryModeCurrentRoomID() {
+        return this.storyModeCurrentRoomID;
     }
 
     @Override

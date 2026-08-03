@@ -208,7 +208,7 @@ public class AppBuilder extends Application {
 
         // --- Items & Inventory Chain ---
         InventoryViewModel inventoryViewModel = new InventoryViewModel();
-        InventoryPresenter inventoryPresenter = new InventoryPresenter(inventoryViewModel);
+        InventoryPresenter inventoryPresenter = new InventoryPresenter(inventoryViewModel, inGameViewModel);
         PickUpInteractor pickUpInteractor = new PickUpInteractor(userDAO, inventoryPresenter);
 
         // --- Main menu ---
