@@ -27,12 +27,10 @@ public class InventoryPresenter implements PickUpOutputBoundary, DropOutputBound
 
     @Override
     public void prepareSuccessView(PickUpOutputData outputData) {
-        // 1. Update Inventory State
-        InventoryState newState = new InventoryState(viewModel.getState());
-        newState.getItems().add(outputData.getItemName());
-        newState.setStatusMessage("Picked up: " + outputData.getItemName());
-
-        viewModel.setState(newState);
+        // 1. Update Inventory State (using 'viewModel' and 'state.getItems()')
+        InventoryState state = viewModel.getState();
+        state.getItems().add(outputData.getItemId()); // 👈 Stores item ID into inventory list
+        state.setStatusMessage("Picked up: " + outputData.getItemName());
         viewModel.firePropertyChanged();
 
         // 2. Remove item from the active room floor map
