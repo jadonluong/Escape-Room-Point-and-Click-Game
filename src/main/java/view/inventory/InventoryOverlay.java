@@ -68,17 +68,20 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
         if (items != null && !items.isEmpty()) {
 
             Map<String, Integer> itemCounts = new LinkedHashMap<>();
-            for (String itemName : items) {
-                itemCounts.put(itemName, itemCounts.getOrDefault(itemName, 0) + 1);
+            for (String item : items) {
+                itemCounts.put(item, itemCounts.getOrDefault(item, 0) + 1);
             }
 
             List<String> uniqueItems = new ArrayList<>(itemCounts.keySet());
 
             for (int i = 0; i < uniqueItems.size(); i++) {
-                String itemName = uniqueItems.get(i);
-                int count = itemCounts.get(itemName);
+                String rawItem = uniqueItems.get(i);
+                int count = itemCounts.get(rawItem);
 
-                Button slotButton = new Button(itemName + " x " + count);
+                String itemId = rawItem.contains(":") ? rawItem.split(":")[0] : rawItem;
+                String displayName = rawItem.contains(":") ? rawItem.split(":")[1] : rawItem;
+
+                Button slotButton = new Button(displayName + " x " + count);
                 slotButton.setPrefSize(80, 80);
                 slotButton.setMinSize(80, 80);
 
@@ -101,10 +104,7 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
                 }
 
                 int slotIndex = i;
-                String selectedItemName = itemName; // e.g. "stick"
-
-                //Pass both the index (for UI highlight) and the itemName (for SelectItemController)
-                slotButton.setOnAction(e -> handleSlotClick(slotIndex, selectedItemName));
+                slotButton.setOnAction(e -> handleSlotClick(slotIndex, itemId));
                 hotbarContainer.getChildren().add(slotButton);
             }
         }
