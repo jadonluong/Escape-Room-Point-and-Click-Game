@@ -8,11 +8,14 @@ import domain.entities.User.CommonUser;
 
 public class LoginInteractor implements LoginInputBoundary{
     private final LoginUserDataAccessInterface userDataAccessObject;
+    private final LoginUserSessionDataAccessInterface userSessionDataAccessObject;
     private final LoginOutputBoundary userPresenter;
 
     public LoginInteractor(LoginUserDataAccessInterface loginUserDataAccessInterface,
+                           LoginUserSessionDataAccessInterface userSessionDataAccessObject,
                            LoginOutputBoundary loginPresenter) {
         this.userDataAccessObject = loginUserDataAccessInterface;
+        this.userSessionDataAccessObject = userSessionDataAccessObject;
         this.userPresenter = loginPresenter;
     }
 
@@ -41,7 +44,7 @@ public class LoginInteractor implements LoginInputBoundary{
             }
 
             CommonUser loadedUser = userDataAccessObject.getUser(username);
-            userDataAccessObject.setCurrentUser(loadedUser);
+            userSessionDataAccessObject.setCurrentUser(loadedUser);
 
             final LoginOutputData outputData = new LoginOutputData(loadedUser, false);
             userPresenter.prepareSuccessView(outputData);

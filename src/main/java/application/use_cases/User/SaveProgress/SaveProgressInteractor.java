@@ -9,20 +9,23 @@ import domain.entities.User.User;
 public class SaveProgressInteractor implements SaveProgressInputBoundary{
     private final SaveProgressOutputBoundary saveProgressPresenter;
     private final SaveProgressUserDataAccessInterface saveProgressUserDataAccessObject;
+    private final SaveProgressUserSessionDataAccessInterface saveProgressUserSessionDataAccessObject;
 
     public SaveProgressInteractor(SaveProgressOutputBoundary saveProgressOutputBoundary,
-                                  SaveProgressUserDataAccessInterface saveProgressUserDataAccessInterface) {
+                                  SaveProgressUserDataAccessInterface saveProgressUserDataAccessInterface,
+                                  SaveProgressUserSessionDataAccessInterface saveProgressUserSessionDataAccessObject) {
         this.saveProgressPresenter = saveProgressOutputBoundary;
         this.saveProgressUserDataAccessObject = saveProgressUserDataAccessInterface;
+        this.saveProgressUserSessionDataAccessObject = saveProgressUserSessionDataAccessObject;
     }
 
     @Override
     public void execute(SaveProgressInputData saveProgressInputData) {
-        if (!saveProgressInputData.getUsername().equals(saveProgressUserDataAccessObject.getCurrentUser().getUsername())) {
+        if (!saveProgressInputData.getUsername().equals(saveProgressUserSessionDataAccessObject.getCurrentUser().getUsername())) {
             saveProgressPresenter.prepareFailView("Invalid username provided.");
         }
 
-        User currentUser = saveProgressUserDataAccessObject.getCurrentUser();
+        User currentUser = saveProgressUserSessionDataAccessObject.getCurrentUser();
 
         if (!currentUser.isRegistered()) {
             saveProgressPresenter.prepareFailView("User is in Guest Mode, progress cannot be saved.");

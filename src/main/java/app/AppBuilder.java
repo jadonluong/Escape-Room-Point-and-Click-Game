@@ -9,6 +9,7 @@ import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndSto
 import application.use_cases.Hint.GetHint.GetHintInteractor;
 import application.use_cases.Interactable.Interact.InteractInteractor;
 import application.use_cases.Interactable.Zoom.ZoomInteractor;
+import application.use_cases.User.LiveUserSessionTracking;
 import application.use_cases.Puzzle.EnterExit.EnterExitInteractor;
 import application.use_cases.Puzzle.Solve.SolveInteractor;
 import application.use_cases.User.Login.LoginInteractor;
@@ -75,7 +76,6 @@ import interface_adapter.User.Signup.SignupViewModel;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.inventory.InventoryViewModel; // added
 import interface_adapter.inventory.InventoryPresenter; // added
-import interface_adapter.inventory.InventoryState; // added
 import javafx.application.Application;
 import javafx.stage.Stage;
 import view.Game.BrowseRoomsView;
@@ -120,10 +120,11 @@ public class AppBuilder extends Application {
         GameAssetManager gameAssetManager = new GameAssetManager(itemFactory, interactableFactory, roomFactory, hintFactory, puzzleFactory);
 
         JsonUserDataAccessObject userDAO = new JsonUserDataAccessObject(gameAssetManager,gameAssetManager);
+        LiveUserSessionTracking userSessionTracking = new LiveUserSessionTracking();
         CommonUserFactory userFactory = new CommonUserFactoryClass();
         GuestUserFactory guestUserFactory = new GuestUserFactoryClass();
         User defaultGuestUser = guestUserFactory.createGuestUser();
-        userDAO.setCurrentUser(defaultGuestUser);
+        userSessionTracking.setCurrentUser(defaultGuestUser);
 
         // --- Audio chain (built before ViewManager, which needs the sfx state) ---
         AudioViewModel audioViewModel = new AudioViewModel();
@@ -144,7 +145,7 @@ public class AppBuilder extends Application {
         LoginViewModel loginViewModel = new LoginViewModel();
         LoggedInViewModel  loggedInViewModel = new LoggedInViewModel();
         LoginPresenter loginPresenter = new LoginPresenter(loginViewModel, loggedInViewModel);
-        LoginInteractor loginInteractor = new LoginInteractor(userDAO, loginPresenter);
+        LoginInteractor loginInteractor = new LoginInteractor(userDAO, userSessionTracking, loginPresenter);
         LoginController loginController = new LoginController(loginInteractor);
 
 
@@ -155,13 +156,13 @@ public class AppBuilder extends Application {
 
             // --- Save progress chain ---
             SaveProgressPresenter saveProgressPresenter = new SaveProgressPresenter(saveProgressViewModel);
-            SaveProgressInteractor saveProgressInteractor = new SaveProgressInteractor(saveProgressPresenter, userDAO);
+            SaveProgressInteractor saveProgressInteractor = new SaveProgressInteractor(saveProgressPresenter, userDAO, userSessionTracking);
             SaveProgressController saveProgressController = new SaveProgressController(saveProgressInteractor);
 
         LogoutPresenter logoutPresenter = new LogoutPresenter(viewManagerModel, mainMenuViewModel, loggedInViewModel, saveProgressViewModel);
-        LogoutInteractor logoutInteractor = new LogoutInteractor(userDAO, logoutPresenter);
+        LogoutInteractor logoutInteractor = new LogoutInteractor(userSessionTracking, logoutPresenter);
 
-        SaveAndLogoutInteractor saveAndLogoutInteractor = new SaveAndLogoutInteractor(userDAO, userDAO, logoutPresenter); // Note: save & logout chain uses logout controller
+        SaveAndLogoutInteractor saveAndLogoutInteractor = new SaveAndLogoutInteractor(userDAO, userSessionTracking, logoutPresenter); // Note: save & logout chain uses logout controller
 
         LogoutController logoutController = new LogoutController(logoutInteractor, saveAndLogoutInteractor);
 
@@ -181,7 +182,7 @@ public class AppBuilder extends Application {
         // --- Get hint chain ---
         GetHintViewModel getHintViewModel = new GetHintViewModel();
         GetHintPresenter getHintPresenter = new GetHintPresenter(getHintViewModel, viewManager);
-        GetHintInteractor getHintInteractor = new GetHintInteractor(getHintPresenter, gameAssetManager, userDAO);
+        GetHintInteractor getHintInteractor = new GetHintInteractor(getHintPresenter, gameAssetManager, userSessionTracking);
         GetHintController getHintController = new GetHintController(getHintInteractor);
 
         // --- Get hint overlay ---
@@ -196,7 +197,7 @@ public class AppBuilder extends Application {
         TutorialAndStoryModeStartUpPresenter tutorialAndStoryModeStartUpPresenter
                 = new TutorialAndStoryModeStartUpPresenter(inGameViewModel, viewManagerModel);
         TutorialAndStoryModeStartUpInteractor tutorialAndStoryModeStartUpInteractor
-                = new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter, gameAssetManager, userDAO);
+                = new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter, gameAssetManager, userSessionTracking);
         TutorialAndStoryModeStartUpController tutorialAndStoryModeStartUpController
                 = new TutorialAndStoryModeStartUpController(tutorialAndStoryModeStartUpInteractor);
 
@@ -210,7 +211,7 @@ public class AppBuilder extends Application {
         QuickModeStartUpPresenter quickModeStartUpPresenter
                 = new QuickModeStartUpPresenter(inGameViewModel, viewManagerModel);
         QuickModeStartUpInteractor quickModeStartUpInteractor
-                = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager, userDAO);
+                = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager, userSessionTracking);
         QuickModeStartUpController quickModeStartUpController
                 = new QuickModeStartUpController(quickModeStartUpInteractor);
 
@@ -248,7 +249,7 @@ public class AppBuilder extends Application {
         // --- Interactable Interact Chain ---
         InteractViewModel interactViewModel = new InteractViewModel();
         InteractPresenter interactPresenter = new InteractPresenter(interactViewModel, viewManagerModel, viewManager);
-        InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter, userDAO);
+        InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter, userSessionTracking);
         InteractController interactController = new InteractController(interactInteractor);
 
         // --- Puzzle EnterExit Chain ---
@@ -256,12 +257,12 @@ public class AppBuilder extends Application {
         EnterExitPresenter enterExitPresenter = new EnterExitPresenter(enterExitViewModel, interactViewModel,
                 viewManagerModel, viewManager);
         EnterExitInteractor enterExitInteractor = new EnterExitInteractor(gameAssetManager, enterExitPresenter,
-                userDAO);
+                userSessionTracking);
         EnterExitController enterExitController = new EnterExitController(enterExitInteractor);
 
         // --- Puzzle Solve Chain ---
         SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, viewManagerModel, viewManager);
-        SolveInteractor solveInteractor = new SolveInteractor(gameAssetManager, solvePresenter, userDAO);
+        SolveInteractor solveInteractor = new SolveInteractor(gameAssetManager, solvePresenter, userSessionTracking);
         SolveController solveController = new SolveController(solveInteractor);
 
         // --- Interactable and Puzzle Views ---
@@ -270,7 +271,7 @@ public class AppBuilder extends Application {
         PuzzleView puzzleView = new PuzzleView(enterExitViewModel, enterExitController, solveController);
 
         // --- Action triggering ---
-        ActionTriggerInteractor actionTriggerInteractor = new ActionTriggerInteractor(zoomInteractor, pickUpInteractor, getHintInteractor, userDAO);
+        ActionTriggerInteractor actionTriggerInteractor = new ActionTriggerInteractor(zoomInteractor, pickUpInteractor, getHintInteractor, userSessionTracking, gameAssetManager);
         ActionTriggerController actionTriggerController = new ActionTriggerController(actionTriggerInteractor);
 
         // --- In-game ---
@@ -283,7 +284,7 @@ public class AppBuilder extends Application {
                 musicController,
                 audioViewModel,
                         () -> {
-                            if (userDAO.getCurrentUser() != null) {
+                            if (userSessionTracking.getCurrentUser() != null) {
                                 String username = loggedInViewModel.getState().getUsername();
                                 saveProgressController.execute(username);
                             }
@@ -291,7 +292,7 @@ public class AppBuilder extends Application {
 
                         // --- On save & quit ---
                         () -> {
-                            if (userDAO.getCurrentUser() != null) {
+                            if (userSessionTracking.getCurrentUser() != null) {
                                 String username = loggedInViewModel.getState().getUsername();
                                 logoutController.executeLogoutWithSave(username);
                             }

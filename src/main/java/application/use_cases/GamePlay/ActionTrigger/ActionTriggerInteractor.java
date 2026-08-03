@@ -1,5 +1,6 @@
 package application.use_cases.GamePlay.ActionTrigger;
 
+import application.game_registry.ItemRegistry;
 import application.use_cases.Hint.GetHint.GetHintInputBoundary;
 import application.use_cases.Hint.GetHint.GetHintInputData;
 import application.use_cases.Interactable.Zoom.ZoomInputBoundary;
@@ -14,6 +15,7 @@ public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
 
     private final ZoomInputBoundary zoomInteractor;
     private final ActionTriggerDataAccessInterface dataAccess;
+    private final ActionTriggerGameDataAccessInterface gameDataAccess;
     private final PickUpInputBoundary pickUpInteractor;
     private final GetHintInputBoundary getHintInteractor;
 
@@ -21,12 +23,13 @@ public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
     public ActionTriggerInteractor(ZoomInputBoundary zoomInteractor,
                                    PickUpInputBoundary pickUpInteractor,
                                    GetHintInputBoundary getHintInteractor,
-                                   ActionTriggerDataAccessInterface dataAccess) {
+                                   ActionTriggerDataAccessInterface dataAccess,
+                                   ActionTriggerGameDataAccessInterface gameDataAccess) {
         this.zoomInteractor = zoomInteractor;
         this.dataAccess = dataAccess;
         this.pickUpInteractor = pickUpInteractor;
         this.getHintInteractor = getHintInteractor;
-
+        this.gameDataAccess = gameDataAccess;
     }
     @Override
     public void execute(ActionTriggerInputData inputData) {
@@ -43,7 +46,7 @@ public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
         }
         else if ("item".equalsIgnoreCase(inputData.type)) {
 
-            Item itemToPickUp = dataAccess.getItemById(inputData.id);
+            Item itemToPickUp = gameDataAccess.getItemById(inputData.id);
             // System.out.println("3. Item Found in DAO: " + itemToPickUp);
 
             if (itemToPickUp != null) {

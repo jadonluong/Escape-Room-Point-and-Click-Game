@@ -3,6 +3,7 @@ package data_access;
 import application.game_registry.InteractableRegistry;
 import application.game_registry.ItemRegistry;
 import application.game_registry.RoomRegistry;
+import application.use_cases.GamePlay.ActionTrigger.ActionTriggerGameDataAccessInterface;
 import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsDataAccessInterface;
 import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.StartUpDataAccessInterface;
 import application.use_cases.Hint.GetHint.GetHintDataAccessInterface;
@@ -42,7 +43,7 @@ import java.util.Map;
 public class GameAssetManager implements
         RoomRegistry, ItemRegistry, InteractableRegistry,
         GetHintDataAccessInterface,
-        BrowseRoomsDataAccessInterface, StartUpDataAccessInterface,
+        BrowseRoomsDataAccessInterface, StartUpDataAccessInterface, ActionTriggerGameDataAccessInterface,
         InteractDataAccessInterface, EnterExitDataAccessInterface, SolveDataAccessInterface, ZoomDataAccessInterface {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
