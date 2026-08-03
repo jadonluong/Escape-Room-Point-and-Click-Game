@@ -1,6 +1,7 @@
 package application.use_cases.GamePlay.QuickPlay.QuickModeStartUp;
 
 import application.use_cases.GamePlay.ObjectsInfo;
+import application.use_cases.GamePlay.UserDataAccessInterface;
 import domain.entities.Room.Room;
 
 import java.util.HashMap;
@@ -12,11 +13,11 @@ import domain.entities.User.User;
 public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary {
     private final QuickModeStartUpOutputBoundary presenter;
     private final RoomRegistry dataAccess;
-    private final QuickModeStartUpDataAccessInterface quickModeStartUpDataAccess;
+    private final UserDataAccessInterface quickModeStartUpDataAccess;
 
     public QuickModeStartUpInteractor(QuickModeStartUpOutputBoundary presenter,
                                       RoomRegistry dataAccess,
-                                      QuickModeStartUpDataAccessInterface quickModeStartUpDataAccess ) {
+                                      UserDataAccessInterface quickModeStartUpDataAccess ) {
         this.presenter = presenter;
         this.dataAccess = dataAccess;
         this.quickModeStartUpDataAccess = quickModeStartUpDataAccess;
@@ -50,6 +51,7 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
             }
 
             currentUser.unlockRoom(targetRoom);
+            currentUser.switchRoom(targetRoom);
 
             Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
 

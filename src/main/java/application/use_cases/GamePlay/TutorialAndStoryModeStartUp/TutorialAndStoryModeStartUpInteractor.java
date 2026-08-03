@@ -2,6 +2,7 @@ package application.use_cases.GamePlay.TutorialAndStoryModeStartUp;
 
 
 import application.use_cases.GamePlay.ObjectsInfo;
+import application.use_cases.GamePlay.UserDataAccessInterface;
 import domain.entities.Room.Room;
 import domain.entities.User.User;
 
@@ -11,12 +12,12 @@ import java.util.Map;
 public class TutorialAndStoryModeStartUpInteractor implements TutorialAndStoryModeStartUpInputBoundary {
     private final StartUpDataAccessInterface dataAccess;
     private final TutorialAndStoryModeStartUpOutputBoundary presenter;
-    private final TutAndStoryModeStartUpUserDataAccessInterface userDataAccess;
+    private final UserDataAccessInterface userDataAccess;
 
     public TutorialAndStoryModeStartUpInteractor(TutorialAndStoryModeStartUpOutputBoundary
                                                          TutorialAndStoryModeStartUpPresenter
             , StartUpDataAccessInterface dataAccess,
-                                                 TutAndStoryModeStartUpUserDataAccessInterface userDataAccess) {
+                                                 UserDataAccessInterface userDataAccess) {
         this.dataAccess = dataAccess;
         this.presenter = TutorialAndStoryModeStartUpPresenter;
         this.userDataAccess = userDataAccess;
@@ -50,7 +51,10 @@ public class TutorialAndStoryModeStartUpInteractor implements TutorialAndStoryMo
                 presenter.prepareFailView("Invalid mode selected: " + inputData.getMode());
                 return;
             }
-        };
+        }
+
+        currentUser.unlockRoom(startingRoom);
+        currentUser.switchRoom(startingRoom);
 
 
         Map<String, ObjectsInfo> ObjectsToDisplay = new HashMap<>();
@@ -58,6 +62,7 @@ public class TutorialAndStoryModeStartUpInteractor implements TutorialAndStoryMo
         //fetch all data that is needed for rendering.
         //It contains ObjectId as key(for interactable/hint/item), and info (which is a record
         //of ImagePath and Position) as value.
+
         startingRoom.getInteractables().forEach(interactable -> {
             ObjectsToDisplay.put(interactable.getId(),
                     new ObjectsInfo(interactable.getSprite(),

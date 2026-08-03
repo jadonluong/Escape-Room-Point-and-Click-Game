@@ -5,6 +5,7 @@ import application.use_cases.GamePlay.ObjectsInfo;
 import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpInputData;
 import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpInteractor;
 import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputData;
+import application.use_cases.GamePlay.UserDataAccessInterface;
 import domain.entities.Hint.Hint;
 import domain.entities.Interactable.CommonInteractable;
 import domain.entities.Interactable.Interactable;
@@ -15,6 +16,9 @@ import domain.entities.Room.Position;
 import domain.entities.Room.CommonRoom;
 
 import domain.entities.Room.Room;
+import domain.entities.User.CommonUserFactory;
+import domain.entities.User.CommonUserFactoryClass;
+import domain.entities.User.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +33,7 @@ class QuickModeStartUpInteractorTest {
 
     private TestPresenter testPresenter;
     private TestRoomRegistry testRegistry;
+    private TestUserDataAccess  testUserDataAccess;
     private QuickModeStartUpInteractor interactor;
 
     private String selectedRoomId;
@@ -48,12 +53,33 @@ class QuickModeStartUpInteractorTest {
         }
     }
 
+    private static class TestUserDataAccess implements UserDataAccessInterface {
+        private User currentUser;
+
+        public void setCurrentUser(User currentUser) {
+            this.currentUser = currentUser;
+        }
+
+        @Override
+        public User getCurrentUser(){
+            return currentUser;
+        }
+    }
+
     @BeforeEach
     void setUp() {
+        CommonUserFactory factory = new CommonUserFactoryClass();
+        String username = "test_user";
+        String password = "secure_password";
+
+        User user = factory.createCommonUser(username, password);
+
         testPresenter = new TestPresenter();
         testRegistry = new TestRoomRegistry();
-        interactor = new QuickModeStartUpInteractor(testPresenter, testRegistry);
+        testUserDataAccess =  new TestUserDataAccess();
+        interactor = new QuickModeStartUpInteractor(testPresenter, testRegistry, testUserDataAccess);
 
+        testUserDataAccess.setCurrentUser(user);
         this.selectedRoomId = "room_01";
 
         List<Interactable> interactables = new ArrayList<>();

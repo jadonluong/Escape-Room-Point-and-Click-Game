@@ -50,9 +50,7 @@ public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
             if (itemToPickUp != null) {
                 PickUpInputData itemInputData = new PickUpInputData(itemToPickUp);
                 pickUpInteractor.execute(itemInputData);
-            } // else {
-                // System.out.println("❌ ERROR: getItemById('" + inputData.id + "') returned NULL!");
-            // }
+            }
         }
         else if (Objects.equals(inputData.mode, "Hint")) {
 
