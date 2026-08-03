@@ -10,7 +10,7 @@
     "consumesItem": false,
     "needsItem": true,
     "requiredItemId": "prison_item_2",
-    "rewardItemId": "prison_Item_3",
+    "rewardItemId": "prison_item_3",
     "linkedPuzzleId": null,
     "unlockedRoomId": null,
     "successMessage": "You have obtained a super spider!"
