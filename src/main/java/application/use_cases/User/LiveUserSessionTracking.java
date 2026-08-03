@@ -4,6 +4,8 @@ import application.use_cases.GamePlay.ActionTrigger.ActionTriggerDataAccessInter
 import application.use_cases.GamePlay.UserDataAccessInterface;
 import application.use_cases.Hint.GetHint.GetHintUserDataAccessInterface;
 import application.use_cases.Interactable.Interact.InteractUserDataAccessInterface;
+import application.use_cases.Item.PickUp.PickUpUserDataAccessInterface;
+import application.use_cases.Item.SelectItem.SelectItemUserDataAccessInterface;
 import application.use_cases.Puzzle.EnterExit.EnterExitUserDataAccessInterface;
 import application.use_cases.Puzzle.Solve.SolveUserDataAccessInterface;
 import application.use_cases.User.Login.LoginUserSessionDataAccessInterface;
@@ -19,7 +21,9 @@ public class LiveUserSessionTracking implements GetHintUserDataAccessInterface,
         ActionTriggerDataAccessInterface,
         InteractUserDataAccessInterface,
         EnterExitUserDataAccessInterface,
-        SolveUserDataAccessInterface {
+        SolveUserDataAccessInterface,
+        PickUpUserDataAccessInterface,
+        SelectItemUserDataAccessInterface {
 
     private User currentUser;
 

@@ -1,16 +1,14 @@
 package application.use_cases.Item.PickUp;
 
-import data_access.JsonUserDataAccessObject;
 import domain.entities.Item.Item;
 import domain.entities.User.User;
 
-public class PickUpInteractor implements PickUpInputBoundary{
-    private final JsonUserDataAccessObject userDAO;
+public class PickUpInteractor implements PickUpInputBoundary {
+    private final PickUpUserDataAccessInterface userSession; // 👈 Updated type
     private final PickUpOutputBoundary presenter;
 
-    // 1. Accept userDAO and presenter in the constructor
-    public PickUpInteractor(JsonUserDataAccessObject userDAO, PickUpOutputBoundary presenter) {
-        this.userDAO = userDAO;
+    public PickUpInteractor(PickUpUserDataAccessInterface userSession, PickUpOutputBoundary presenter) {
+        this.userSession = userSession;
         this.presenter = presenter;
     }
 
@@ -22,9 +20,9 @@ public class PickUpInteractor implements PickUpInputBoundary{
             return;
         }
 
-        User user = userDAO.getCurrentUser();
+        User user = userSession.getCurrentUser(); // 👈 Calls userSession now
         if (user != null) {
-            user.saveItem(item); // Adds item to dynamic ArrayList
+            user.saveItem(item);
         }
 
         PickUpOutputData outputData = new PickUpOutputData(item);

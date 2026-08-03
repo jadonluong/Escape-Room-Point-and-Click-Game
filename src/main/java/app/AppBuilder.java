@@ -18,7 +18,8 @@ import application.use_cases.User.SaveAndLogout.SaveAndLogoutInteractor;
 import application.use_cases.User.SaveProgress.SaveProgressInteractor;
 import application.use_cases.User.SignUp.ProfanityCheck;
 import application.use_cases.User.SignUp.SignupInteractor;
-import application.use_cases.Item.PickUp.PickUpInteractor; // added
+import application.use_cases.Item.PickUp.PickUpInteractor;
+import application.use_cases.Item.SelectItem.SelectItemInteractor;
 import data_access.GameAssetManager;
 import data_access.JsonUserDataAccessObject;
 import data_access.PuzzleGenerator;
@@ -54,6 +55,8 @@ import interface_adapter.Interactable.Interact.InteractViewModel;
 import interface_adapter.Interactable.Zoom.ZoomController;
 import interface_adapter.Interactable.Zoom.ZoomPresenter;
 import interface_adapter.Interactable.Zoom.ZoomViewModel;
+import interface_adapter.inventory.SelectItemController;
+import interface_adapter.inventory.SelectItemPresenter;
 import interface_adapter.Puzzle.EnterExit.EnterExitController;
 import interface_adapter.Puzzle.EnterExit.EnterExitPresenter;
 import interface_adapter.Puzzle.EnterExit.EnterExitViewModel;
@@ -218,7 +221,12 @@ public class AppBuilder extends Application {
         // --- Items & Inventory Chain ---
         InventoryViewModel inventoryViewModel = new InventoryViewModel();
         InventoryPresenter inventoryPresenter = new InventoryPresenter(inventoryViewModel, inGameViewModel);
-        PickUpInteractor pickUpInteractor = new PickUpInteractor(userDAO, inventoryPresenter);
+        PickUpInteractor pickUpInteractor = new PickUpInteractor(userSessionTracking, inventoryPresenter);
+
+        // --- Select Item Chain ---
+        SelectItemPresenter selectItemPresenter = new SelectItemPresenter();
+        SelectItemInteractor selectItemInteractor = new SelectItemInteractor(userSessionTracking, selectItemPresenter);
+        SelectItemController selectItemController = new SelectItemController(selectItemInteractor);
 
         // --- Main menu ---
         MainMenuView mainMenu = new MainMenuView(
@@ -308,6 +316,7 @@ public class AppBuilder extends Application {
                         }
                 );
         InventoryOverlay inventoryOverlay = new InventoryOverlay(viewManager, inventoryViewModel);
+        inventoryOverlay.setSelectItemController(selectItemController);
         InGameView inGameView = new InGameView(inGameViewModel, gameMenuView, inventoryOverlay, actionTriggerController);
 
         // --- Register every top-level screen by name ---

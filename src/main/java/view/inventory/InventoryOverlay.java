@@ -2,6 +2,7 @@ package view.inventory;
 
 import interface_adapter.inventory.InventoryState;
 import interface_adapter.inventory.InventoryViewModel;
+import interface_adapter.inventory.SelectItemController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,6 +28,7 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
     private final Label statusLabel = new Label();
     private final Button craftButton = new Button("Craft Selected");
     private final Button dropButton = new Button("Drop Selected");
+    private SelectItemController selectItemController;
 
     public InventoryOverlay(ViewManager viewManager, InventoryViewModel viewModel) {
         super(() -> viewManager.hideOverlay("inventory"));
@@ -37,6 +39,10 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
         // Force initial render of current state when overlay is created
         initialize();
         updateUI(viewModel.getState());
+    }
+
+    public void setSelectItemController(SelectItemController selectItemController) {
+        this.selectItemController = selectItemController;
     }
 
     public void show() {
