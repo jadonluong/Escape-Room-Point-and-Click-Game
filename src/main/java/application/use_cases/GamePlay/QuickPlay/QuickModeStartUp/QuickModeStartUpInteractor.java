@@ -65,10 +65,12 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
 
             // Put Items
             targetRoom.getItems().forEach(item -> {
-                objectsToDisplay.put(item.getId(),
-                        new ObjectsInfo(item.getImagePath(),
-                                targetRoom.getPosition(item.getId())
-                                ,"Item"));
+                if (!currentUser.hasItemID(item.getId())) {
+                    objectsToDisplay.put(item.getId(),
+                            new ObjectsInfo(item.getImagePath(),
+                                    targetRoom.getPosition(item.getId())
+                                    , "Item"));
+                }
             });
 
             // Put Hints
