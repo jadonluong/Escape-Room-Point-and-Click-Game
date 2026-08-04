@@ -88,7 +88,6 @@ import view.Hint.HintOverlay;
 import view.ViewManager;
 import view.common.AudioControlView;
 import view.common.OverlayFactory;
-import view.common.PlaceholderView;
 import view.common.SoundPlayer;
 import view.interactable.InteractOverlay;
 import view.interactable.ZoomView;
@@ -251,11 +250,6 @@ public class AppBuilder extends Application {
         // --- Browse Rooms ---
         BrowseRoomsView browseRoomsView = new BrowseRoomsView(viewManager,
                 mainMenu, browseRoomsViewModel,  quickModeStartUpController);
-
-        // --- Placeholder screens ---
-        PlaceholderView storyPlaceholder = new PlaceholderView("Story Line", viewManagerModel);
-        PlaceholderView tutorialPlaceholder = new PlaceholderView("Tutorial", viewManagerModel);
-        PlaceholderView quickGamePlaceholder = new PlaceholderView("Quick Game", viewManagerModel);
 
         // --- Interactable Zoom Chain ---
         ZoomViewModel zoomViewModel = new ZoomViewModel();
