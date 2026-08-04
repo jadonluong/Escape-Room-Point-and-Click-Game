@@ -89,7 +89,7 @@ public class SignupTest {
     }
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         testPresenter = new TestSignupPresenter();
         testUserDAO = new TestUserDataAccess();
         TestCommonUserFactory commonUserFactory = new TestCommonUserFactory();
