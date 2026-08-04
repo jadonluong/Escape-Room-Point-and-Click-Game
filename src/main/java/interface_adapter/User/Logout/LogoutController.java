@@ -4,7 +4,6 @@ import application.use_cases.User.Logout.LogoutInputBoundary;
 import application.use_cases.User.Logout.LogoutInputData;
 import application.use_cases.User.SaveAndLogout.SaveAndLogoutInputBoundary;
 import application.use_cases.User.SaveAndLogout.SaveAndLogoutInputData;
-import domain.entities.User.User;
 
 /**
  * The controller for the Logout Use Case.

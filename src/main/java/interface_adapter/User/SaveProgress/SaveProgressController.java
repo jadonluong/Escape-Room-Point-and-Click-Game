@@ -2,8 +2,6 @@ package interface_adapter.User.SaveProgress;
 
 import application.use_cases.User.SaveProgress.SaveProgressInputBoundary;
 import application.use_cases.User.SaveProgress.SaveProgressInputData;
-import domain.entities.User.User;
-
 
 /**
  * The controller for the Save Progress Use Case.
