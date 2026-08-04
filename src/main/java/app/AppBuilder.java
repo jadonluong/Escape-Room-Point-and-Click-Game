@@ -232,7 +232,16 @@ public class AppBuilder extends Application {
         MainMenuView mainMenu = new MainMenuView(
                 viewManagerModel, mainMenuViewModel, loggedInViewModel,
                 loginOverlayFactory, signupOverlayFactory,
-                () -> logoutController.executeLogoutWithoutSave(loggedInViewModel.getState().getUsername()),
+                () -> {
+                    if (loggedInViewModel.getState().isLoggedIn()) {
+                        logoutController.executeLogoutWithoutSave(loggedInViewModel.getState().getUsername());
+                    }
+                    else {
+                        // Guest was never logged in — just navigate home, no logout flow, no message.
+                        viewManagerModel.setState("main menu");
+                        viewManagerModel.firePropertyChanged();
+                    }
+                },
                 audioControlView,
                 tutorialAndStoryModeStartUpController,
                 browseRoomsController);
@@ -311,8 +320,12 @@ public class AppBuilder extends Application {
 
                         // --- On quit ---
                         () -> {
-                            String username = loggedInViewModel.getState().getUsername();
-                            logoutController.executeLogoutWithoutSave(username);
+                            if (loggedInViewModel.getState().isLoggedIn()) {
+                                logoutController.executeLogoutWithoutSave(loggedInViewModel.getState().getUsername());
+                            } else {
+                                viewManagerModel.setState("main menu");
+                                viewManagerModel.firePropertyChanged();
+                            }
                         }
                 );
         InventoryOverlay inventoryOverlay = new InventoryOverlay(viewManager, inventoryViewModel);

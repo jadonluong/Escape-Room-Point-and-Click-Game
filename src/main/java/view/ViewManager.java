@@ -78,7 +78,7 @@ public class ViewManager implements PropertyChangeListener {
             return;
         }
 
-        hideAllNonTopLayerOverlays();
+        hideAllOverlays(); // was hideAllNonTopLayerOverlays() — every overlay is orphaned by a root swap regardless of layer, so bookkeeping needs to match
         this.currentView = view;
         this.currentViewName = viewName;
 
@@ -185,6 +185,13 @@ public class ViewManager implements PropertyChangeListener {
                 continue;
             }
             hideOverlay(overlayName); // Removes the overlay from visibleOverlays, so iterate over a copy!
+        }
+    }
+
+    private void hideAllOverlays() {
+        Set<String> visibleCopy = new HashSet<>(visibleOverlays);
+        for (String overlayName : visibleCopy) {
+            hideOverlay(overlayName);
         }
     }
 
