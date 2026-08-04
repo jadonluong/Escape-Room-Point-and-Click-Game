@@ -31,6 +31,7 @@ public class EnterExitPresenter implements EnterExitOutputBoundary {
         state.setScrambled(outputData.getScrambled());
         state.setEncrypted(outputData.getEncrypted());
         state.setCipher(outputData.getCipher());
+        state.setInteractableId(outputData.getInteractableId());
 
         enterExitViewModel.setState(state);
         enterExitViewModel.firePropertyChanged();

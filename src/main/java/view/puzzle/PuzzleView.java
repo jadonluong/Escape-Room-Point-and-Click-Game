@@ -91,7 +91,7 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         answerButton.setLayoutY(DESIGN_HEIGHT - (answerFieldHeight + gap));
 
         answerButton.setOnAction(e -> solveController.solve(enterExitState.getPuzzleId(),
-                answerField.getText()));
+                answerField.getText(), enterExitState.getInteractableId()));
 
         fixedRoot.getChildren().add(answerButton);
         // -------------

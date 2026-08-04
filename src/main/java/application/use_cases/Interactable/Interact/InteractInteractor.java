@@ -56,7 +56,7 @@ public class InteractInteractor implements InteractInputBoundary {
         }
 
         outputBoundary.prepareSuccessView(new InteractOutputData(interactable.getSuccessMessage(), rewardItemId,
-                rewardItemName, selectedItemId, selectedItemName));
+                rewardItemName, selectedItemId, selectedItemName, interactable.getId()));
     }
 
     private void itemRequiredFirstInteraction(User player, Interactable interactable) {
@@ -87,7 +87,7 @@ public class InteractInteractor implements InteractInputBoundary {
                 moveToRoom(player, puzzleUnlockedRoomId);
             } else if (puzzle.isSolved()) {
                 outputBoundary.prepareSuccessView(new InteractOutputData(puzzle.getSuccessMessage(), null,
-                        null, null, null));
+                        null, null, null, interactable.getId()));
             }
             return;
         }
@@ -100,7 +100,7 @@ public class InteractInteractor implements InteractInputBoundary {
             successMessage = successMessage.concat(" already!"); // "You have obtained a(n) __ already!"
         }
         outputBoundary.prepareSuccessView(new InteractOutputData(successMessage, null,
-                null, null, null));
+                null, null, null, interactable.getId()));
     }
 
     private void moveToRoom(User player, String unlockedRoomId) {

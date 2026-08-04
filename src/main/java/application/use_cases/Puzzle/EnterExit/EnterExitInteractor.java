@@ -28,7 +28,7 @@ public class EnterExitInteractor implements EnterExitInputBoundary {
             return;
         }
 
-        outputBoundary.prepareEnterView(makeOutputData(puzzle));
+        outputBoundary.prepareEnterView(makeOutputData(puzzle, inputData.getInteractableId()));
     }
 
     @Override
@@ -36,16 +36,17 @@ public class EnterExitInteractor implements EnterExitInputBoundary {
         outputBoundary.prepareExitView();
     }
 
-    private EnterExitOutputData makeOutputData(Puzzle puzzle) {
+    private EnterExitOutputData makeOutputData(Puzzle puzzle, String interactableId) {
         if (puzzle instanceof AnagramPuzzle) {
             return new EnterExitOutputData(puzzle.getId(), "Anagram", puzzle.getDescription(),
-                    ((AnagramPuzzle) puzzle).getHint(), ((AnagramPuzzle) puzzle).getScrambled());
+                    ((AnagramPuzzle) puzzle).getHint(), ((AnagramPuzzle) puzzle).getScrambled(), interactableId);
         } else if (puzzle instanceof CryptogramPuzzle) {
             return new EnterExitOutputData(puzzle.getId(), "Cryptogram", puzzle.getDescription(),
-                    ((CryptogramPuzzle) puzzle).getEncrypted(), ((CryptogramPuzzle) puzzle).getCipher());
+                    ((CryptogramPuzzle) puzzle).getEncrypted(), ((CryptogramPuzzle) puzzle).getCipher(),
+                    interactableId);
         } else if (puzzle instanceof CodeLockPuzzle) {
             return new EnterExitOutputData(puzzle.getId(), "CodeLock", puzzle.getDescription(),
-                    ((CodeLockPuzzle) puzzle).getHint());
+                    ((CodeLockPuzzle) puzzle).getHint(), interactableId);
         }
         return null; // Won't happen unless a new type of Puzzle class is added.
     }

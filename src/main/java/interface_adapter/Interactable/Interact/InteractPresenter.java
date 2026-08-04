@@ -2,6 +2,8 @@ package interface_adapter.Interactable.Interact;
 
 import application.use_cases.Interactable.Interact.InteractOutputBoundary;
 import application.use_cases.Interactable.Interact.InteractOutputData;
+import application.use_cases.Interactable.Zoom.ZoomInputData;
+import application.use_cases.Interactable.Zoom.ZoomInteractor;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.inventory.InventoryState;
 import interface_adapter.inventory.InventoryViewModel;
@@ -12,13 +14,15 @@ import java.util.List;
 public class InteractPresenter implements InteractOutputBoundary {
     private final InteractViewModel interactViewModel;
     private final InventoryViewModel inventoryViewModel;
+    private final ZoomInteractor zoomInteractor;
     private final ViewManagerModel viewManagerModel;
     private final ViewManager viewManager;
 
     public InteractPresenter(InteractViewModel interactViewModel, InventoryViewModel inventoryViewModel,
-                             ViewManagerModel viewManagerModel, ViewManager viewManager) {
+                             ZoomInteractor zoomInteractor, ViewManagerModel viewManagerModel, ViewManager viewManager) {
         this.interactViewModel = interactViewModel;
         this.inventoryViewModel = inventoryViewModel;
+        this.zoomInteractor = zoomInteractor;
         this.viewManagerModel = viewManagerModel;
         this.viewManager = viewManager;
     }
@@ -48,6 +52,8 @@ public class InteractPresenter implements InteractOutputBoundary {
         inventoryState.setItems(items);
         inventoryViewModel.setState(inventoryState);
         inventoryViewModel.firePropertyChanged();
+
+        zoomInteractor.zoomIn(new ZoomInputData(outputData.getInteractableId()));
 
         viewManager.showOverlay("Interact");
     }

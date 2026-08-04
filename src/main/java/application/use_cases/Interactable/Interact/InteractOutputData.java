@@ -9,14 +9,17 @@ public class InteractOutputData {
     private String selectedItemId;
     private String selectedItemName;
 
+    private String interactableId;
+
 
     public InteractOutputData(String successMessage, String rewardItemId, String rewardItemName, String selectedItemId,
-                              String selectedItemName) {
+                              String selectedItemName, String interactableId) {
         this.successMessage = successMessage;
         this.rewardItemId = rewardItemId;
         this.rewardItemName = rewardItemName;
         this.selectedItemId = selectedItemId;
         this.selectedItemName = selectedItemName;
+        this.interactableId = interactableId;
     }
 
     public String getSuccessMessage() {
@@ -37,5 +40,9 @@ public class InteractOutputData {
 
     public String getSelectedItemName() {
         return selectedItemName;
+    }
+
+    public String getInteractableId() {
+        return interactableId;
     }
 }

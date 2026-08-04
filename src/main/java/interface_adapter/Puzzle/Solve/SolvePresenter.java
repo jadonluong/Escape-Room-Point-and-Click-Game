@@ -1,5 +1,7 @@
 package interface_adapter.Puzzle.Solve;
 
+import application.use_cases.Interactable.Zoom.ZoomInputData;
+import application.use_cases.Interactable.Zoom.ZoomInteractor;
 import application.use_cases.Puzzle.Solve.SolveOutputBoundary;
 import application.use_cases.Puzzle.Solve.SolveOutputData;
 import interface_adapter.Interactable.Interact.InteractState;
@@ -15,13 +17,15 @@ public class
 SolvePresenter implements SolveOutputBoundary {
     private final InteractViewModel interactViewModel;
     private final InventoryViewModel inventoryViewModel;
+    private final ZoomInteractor zoomInteractor;
     private final ViewManagerModel viewManagerModel;
     private final ViewManager viewManager;
 
     public SolvePresenter(InteractViewModel interactViewModel, InventoryViewModel inventoryViewModel,
-                          ViewManagerModel viewManagerModel, ViewManager viewManager) {
+                          ZoomInteractor zoomInteractor, ViewManagerModel viewManagerModel, ViewManager viewManager) {
         this.interactViewModel = interactViewModel;
         this.inventoryViewModel = inventoryViewModel;
+        this.zoomInteractor = zoomInteractor;
         this.viewManagerModel = viewManagerModel;
         this.viewManager = viewManager;
     }
@@ -45,6 +49,7 @@ SolvePresenter implements SolveOutputBoundary {
             inventoryViewModel.firePropertyChanged();
         }
 
+        zoomInteractor.zoomIn(new ZoomInputData(outputData.getInteractableId()));
         viewManagerModel.setState("Zoom"); // Bring back to ZoomView before opening InteractOverlay!
         viewManagerModel.firePropertyChanged();
 

@@ -13,6 +13,8 @@ public class EnterExitState {
     private String encrypted;
     private Map<String, String> cipher;
 
+    private String interactableId;
+
     public String getPuzzleId() {
         return puzzleId;
     }
@@ -67,5 +69,13 @@ public class EnterExitState {
 
     public void setCipher(Map<String, String> cipher) {
         this.cipher = cipher;
+    }
+
+    public String getInteractableId() {
+        return interactableId;
+    }
+
+    public void setInteractableId(String interactableId) {
+        this.interactableId = interactableId;
     }
 }

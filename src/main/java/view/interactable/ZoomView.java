@@ -97,8 +97,8 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         Label inventoryLabel = new Label("""
                 Inventory. A possible feature for extensions to this project.
                 
-                For now, please use the inventory hotbar to switch the currently selected item if the \
-                player wishes to use a specific item to interact with this object.
+                For now, please use the inventory hotbar (press ENTER in the room view) to switch the currently \
+                selected item if the player wishes to use a specific item to interact with this object.
                 """);
         inventoryLabel.setTextFill(Color.web("#ffffff"));
         inventoryLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
@@ -132,10 +132,10 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         interactButton.setOnAction(e -> {
             String interactLabel = zoomState.getInteractLabel();
             if (interactLabel != null) {
-                if (!interactLabel.equals("Enter Puzzle")) { //
+                if (!interactLabel.equals("Enter Puzzle")) {
                     interactController.interact(zoomState.getInteractableId());
                 } else {
-                    enterExitController.enter(zoomState.getPuzzleId());
+                    enterExitController.enter(zoomState.getPuzzleId(), zoomState.getInteractableId());
                 }
             }
         });
