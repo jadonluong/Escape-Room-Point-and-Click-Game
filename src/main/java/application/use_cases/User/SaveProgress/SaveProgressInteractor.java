@@ -23,12 +23,14 @@ public class SaveProgressInteractor implements SaveProgressInputBoundary{
     public void execute(SaveProgressInputData saveProgressInputData) {
         if (!saveProgressInputData.getUsername().equals(saveProgressUserSessionDataAccessObject.getCurrentUser().getUsername())) {
             saveProgressPresenter.prepareFailView("Invalid username provided.");
+            return;
         }
 
         User currentUser = saveProgressUserSessionDataAccessObject.getCurrentUser();
 
         if (!currentUser.isRegistered()) {
             saveProgressPresenter.prepareFailView("User is in Guest Mode, progress cannot be saved.");
+            return;
         }
 
         // Safety net
