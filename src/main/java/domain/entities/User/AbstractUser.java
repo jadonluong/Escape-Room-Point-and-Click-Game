@@ -47,19 +47,19 @@ public abstract class AbstractUser implements User {
 
     @Override
     public void unlockRoom(Room room) {
-        if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (!this.storyModeLiveRoomsUnlocked.contains(room)) {
-                storyModeLiveRoomsUnlocked.add(room);
-            }
-        }
-        else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (!quickModeLiveRoomsUnlocked.contains(room)) {
-                quickModeLiveRoomsUnlocked.add(room);
-            }
-        }
-        else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (!tutorialModeLiveRoomsUnlocked.contains(room)) {
-                tutorialModeLiveRoomsUnlocked.add(room);
+        if (room != null) {
+            if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
+                if (!this.storyModeLiveRoomsUnlocked.contains(room)) {
+                    storyModeLiveRoomsUnlocked.add(room);
+                }
+            } else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
+                if (!quickModeLiveRoomsUnlocked.contains(room)) {
+                    quickModeLiveRoomsUnlocked.add(room);
+                }
+            } else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
+                if (!tutorialModeLiveRoomsUnlocked.contains(room)) {
+                    tutorialModeLiveRoomsUnlocked.add(room);
+                }
             }
         }
     }
@@ -80,23 +80,23 @@ public abstract class AbstractUser implements User {
 
     @Override
     public void saveItem(Item item) {
-        if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (!this.storyModeLiveItemInventory.contains(item)) {
-                this.storyModeLiveItemInventory.add(item);
-            }
-        }
-        else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (this.currentRoomID != null) {
-                ArrayList<Item> items = this.quickModeLiveItemInventory
-                        .computeIfAbsent(this.currentRoomID, k -> new ArrayList<>());
-                if (!items.contains(item)) {
-                    items.add(item);
+        if (item != null) {
+            if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
+                if (!this.storyModeLiveItemInventory.contains(item)) {
+                    this.storyModeLiveItemInventory.add(item);
                 }
-            }
-        }
-        else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (!this.tutorialModeLiveItemInventory.contains(item)) {
-                this.tutorialModeLiveItemInventory.add(item);
+            } else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
+                if (this.currentRoomID != null) {
+                    ArrayList<Item> items = this.quickModeLiveItemInventory
+                            .computeIfAbsent(this.currentRoomID, k -> new ArrayList<>());
+                    if (!items.contains(item)) {
+                        items.add(item);
+                    }
+                }
+            } else if ("TutorialMode".equalsIgnoreCase(this.activeGameMode)) {
+                if (!this.tutorialModeLiveItemInventory.contains(item)) {
+                    this.tutorialModeLiveItemInventory.add(item);
+                }
             }
         }
     }
@@ -292,27 +292,29 @@ public abstract class AbstractUser implements User {
      */
     @Override
     public void switchRoom(Room newRoom) {
-        if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
-            // Check if the room has been unlocked before switching
-            if (this.quickModeLiveRoomsUnlocked.contains(newRoom)) {
+        if (newRoom != null) {
+            if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
+                // Check if the room has been unlocked before switching
+                if (this.quickModeLiveRoomsUnlocked.contains(newRoom)) {
 
-                saveCurrentRoomID(newRoom.getId());
+                    saveCurrentRoomID(newRoom.getId());
 
-                // Handel item inventory and hint
-                // If this room hasn't been visited in memory yet, initialize its item inventory and hintsWatched
-                if (!this.quickModeLiveItemInventory.containsKey(newRoom.getId())) {
-                    this.quickModeLiveItemInventory.put(newRoom.getId(), new ArrayList<>());
-                    this.quickModeHintsWatched.put(newRoom.getId(), new HashMap<>());
+                    // Handel item inventory and hint
+                    // If this room hasn't been visited in memory yet, initialize its item inventory and hintsWatched
+                    if (!this.quickModeLiveItemInventory.containsKey(newRoom.getId())) {
+                        this.quickModeLiveItemInventory.put(newRoom.getId(), new ArrayList<>());
+                        this.quickModeHintsWatched.put(newRoom.getId(), new HashMap<>());
+                    }
+                    // else newRoom has been visited and has item inventory and hints watched saved
+                    // so they can be accessed by getItemInventory and getHintsWatched
                 }
-                // else newRoom has been visited and has item inventory and hints watched saved
-                // so they can be accessed by getItemInventory and getHintsWatched
             }
-        }
 
-        // Check if the user can enter a room before switching
-        if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (this.storyModeLiveRoomsUnlocked.contains(newRoom)) {
-                saveCurrentRoomID(newRoom.getId());
+            // Check if the user can enter a room before switching
+            if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
+                if (this.storyModeLiveRoomsUnlocked.contains(newRoom)) {
+                    saveCurrentRoomID(newRoom.getId());
+                }
             }
         }
     }

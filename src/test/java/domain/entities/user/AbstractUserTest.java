@@ -150,6 +150,7 @@ public abstract class AbstractUserTest<T extends AbstractUser> {
         assertEquals(itemList, user.getItemInventory());
 
         user.removeItem(item);
+        itemList.remove(item);
         assertEquals(itemList, user.getItemInventory());
     }
 
@@ -193,6 +194,7 @@ public abstract class AbstractUserTest<T extends AbstractUser> {
         assertEquals(itemList, user.getItemInventory());
 
         user.removeItem(item);
+        itemList.remove(item);
         assertEquals(itemList, user.getItemInventory());
     }
 
@@ -216,8 +218,8 @@ public abstract class AbstractUserTest<T extends AbstractUser> {
 
         Item item = new CommonItem("1", "item1", "test item 1", false, "fake_path");
         user.saveItem(item);
-        assertFalse(user.hasItemID("1"));
-        assertFalse( user.hasItemID("2"));
+        assertTrue(user.hasItemID("1"));
+        assertFalse(user.hasItemID("2"));
 
         Item item2 = new CommonItem("2", "item2", "test item 2", false, "fake_path_2");
         user.saveItem(item2);

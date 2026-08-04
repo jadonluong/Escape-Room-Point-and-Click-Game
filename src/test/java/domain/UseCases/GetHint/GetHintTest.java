@@ -88,6 +88,7 @@ public class GetHintTest {
 
         this.runtimeUser = new CommonUser(validUserId, "password123");
         testUserDAO.setCurrentUser(runtimeUser);
+        runtimeUser.setActiveGameMode("StoryMode");
 
         List<String> hintMessages = new ArrayList<>();
         hintMessages.add("First basic hint message.");

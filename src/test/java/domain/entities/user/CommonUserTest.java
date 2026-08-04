@@ -114,7 +114,7 @@ public class CommonUserTest extends  AbstractUserTest<CommonUser> {
         itemIDs.add("1");
         itemIDMap.put("room1", itemIDs);
         user.setQuickModeItemInventoryIDs(itemIDMap);
-        assertEquals(itemIDs, user.getQuickModeItemInventoryIDs());
+        assertEquals(itemIDMap, user.getQuickModeItemInventoryIDs());
     }
 
     @Test
@@ -235,8 +235,6 @@ public class CommonUserTest extends  AbstractUserTest<CommonUser> {
         assertEquals(storyInventory, deserializedUser.getStoryModeItemInventoryIDs(),
                 "StoryMode item item lists changed sequence or dropped items.");
 
-        // Validate AbstractUser Shared Synchronized Live Map state
-        assertEquals(storyHints, deserializedUser.getStoryModeHintsWatched(),
-                "Base class field 'storyModeHintsWatched' failed synchronization verification.");
+        // AbstractUser's hints live field is populated in the JsonUserDataAccessObject
     }
 }

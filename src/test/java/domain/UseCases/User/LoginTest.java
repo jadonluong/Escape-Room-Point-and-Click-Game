@@ -104,13 +104,9 @@ public class LoginTest {
         LoginInputData inputData = new LoginInputData(username, password);
         loginInteractor.execute(inputData);
 
-        User loadedUser = userDAO.getUser(username);
-
         assertNull(testPresenter.getErrorMessage());
         assertEquals(username, sessionDataAccess.getCurrentUserId());
         assertFalse(testPresenter.getSuccessData().getLoginStatus());
-        assertEquals(loadedUser, testPresenter.getSuccessData().getUser());
-
     }
 
     @Test

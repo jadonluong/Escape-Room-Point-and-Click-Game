@@ -162,14 +162,15 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
     @Override
     public void unlockRoom(Room room) {
         super.unlockRoom(room);
-
-        if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (!getStoryModeRoomsUnlockedIDs().contains(room.getId())) {
-                getStoryModeRoomsUnlockedIDs().add(room.getId());
-            }
-        } else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (!getQuickModeRoomsUnlockedIDs().contains(room.getId())) {
-                getQuickModeRoomsUnlockedIDs().add(room.getId());
+        if (room != null) {
+            if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
+                if (!getStoryModeRoomsUnlockedIDs().contains(room.getId())) {
+                    getStoryModeRoomsUnlockedIDs().add(room.getId());
+                }
+            } else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
+                if (!getQuickModeRoomsUnlockedIDs().contains(room.getId())) {
+                    getQuickModeRoomsUnlockedIDs().add(room.getId());
+                }
             }
         }
     }
@@ -183,7 +184,7 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
                 getStoryModeItemInventoryIDs().add(item.getId());
             }
         } else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (this.currentRoomID != null){
+            if (this.currentRoomID != null) {
                 ArrayList<String> itemIDs = getQuickModeItemInventoryIDs()
                         .computeIfAbsent(this.currentRoomID, k -> new ArrayList<>());
                 if (!itemIDs.contains(item.getId())) {
@@ -285,6 +286,15 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
     @Override
     public void setStoryModeCurrentRoomID(String roomID) {
         ModeProgress.getStoryMode().setStoryModeCurrentRoomID(roomID);
+    }
+
+    @Override
+    public void saveCurrentRoomID(String roomID) {
+        super.saveCurrentRoomID(roomID); // Updates AbstractUser fields
+
+        if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
+            setStoryModeCurrentRoomID(roomID); // Updates ModeProgress field
+        }
     }
 
     @Override
