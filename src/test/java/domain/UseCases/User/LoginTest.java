@@ -47,15 +47,15 @@ public class LoginTest {
     }
 
     private static class  TestUserSessionDataAccess implements LoginUserSessionDataAccessInterface {
-        private User currentUser;
+        private String currentUsername;
 
         @Override
         public void setCurrentUser(User user) {
-            this.currentUser = user;
+            this.currentUsername = user.getUsername();
         }
 
         public String getCurrentUserId() {
-            return currentUser.getUsername();
+            return currentUsername;
         }
     }
 
@@ -114,6 +114,7 @@ public class LoginTest {
         LoginInputData inputData = new LoginInputData("Megumi", "Demon dog");
         loginInteractor.execute(inputData);
 
+        assertNull(sessionDataAccess.getCurrentUserId());
         assertNull(testPresenter.getSuccessData());
         assertEquals("User does not exist", testPresenter.getErrorMessage());
     }
@@ -123,6 +124,27 @@ public class LoginTest {
         LoginInputData inputData = new LoginInputData("", password);
         loginInteractor.execute(inputData);
 
+        assertNull(sessionDataAccess.getCurrentUserId());
+        assertNull(testPresenter.getSuccessData());
+        assertEquals("Username cannot be empty.", testPresenter.getErrorMessage());
+    }
+
+    @Test
+    void testNullUsername() {
+        LoginInputData inputData = new LoginInputData(null, password);
+        loginInteractor.execute(inputData);
+
+        assertNull(sessionDataAccess.getCurrentUserId());
+        assertNull(testPresenter.getSuccessData());
+        assertEquals("Username cannot be empty.", testPresenter.getErrorMessage());
+    }
+
+    @Test
+    void testWhiteSpaceOnlyUsername() {
+        LoginInputData inputData = new LoginInputData(" ", password);
+        loginInteractor.execute(inputData);
+
+        assertNull(sessionDataAccess.getCurrentUserId());
         assertNull(testPresenter.getSuccessData());
         assertEquals("Username cannot be empty.", testPresenter.getErrorMessage());
     }
@@ -132,6 +154,27 @@ public class LoginTest {
         LoginInputData inputData = new LoginInputData(username, "");
         loginInteractor.execute(inputData);
 
+        assertNull(sessionDataAccess.getCurrentUserId());
+        assertNull(testPresenter.getSuccessData());
+        assertEquals("Password cannot be empty.", testPresenter.getErrorMessage());
+    }
+
+    @Test
+    void testNullPassword() {
+        LoginInputData inputData = new LoginInputData(username, null);
+        loginInteractor.execute(inputData);
+
+        assertNull(sessionDataAccess.getCurrentUserId());
+        assertNull(testPresenter.getSuccessData());
+        assertEquals("Password cannot be empty.", testPresenter.getErrorMessage());
+    }
+
+    @Test
+    void testWhiteSpaceOnlyPassword() {
+        LoginInputData inputData = new LoginInputData(username, "  ");
+        loginInteractor.execute(inputData);
+
+        assertNull(sessionDataAccess.getCurrentUserId());
         assertNull(testPresenter.getSuccessData());
         assertEquals("Password cannot be empty.", testPresenter.getErrorMessage());
     }

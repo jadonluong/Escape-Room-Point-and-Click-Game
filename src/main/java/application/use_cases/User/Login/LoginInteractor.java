@@ -24,7 +24,7 @@ public class LoginInteractor implements LoginInputBoundary{
         final String username = loginInputData.getUsername();
         final String password = loginInputData.getPassword();
 
-        if (username.isEmpty()) {
+        if (username == null || username.isBlank()) {
             userPresenter.prepareFailView("Username cannot be empty.");
         }
 
@@ -32,7 +32,7 @@ public class LoginInteractor implements LoginInputBoundary{
             userPresenter.prepareFailView("User does not exist");
         }
 
-        else if (password.isEmpty()) {
+        else if (password == null || password.isBlank()) {
             userPresenter.prepareFailView("Password cannot be empty.");
         }
 

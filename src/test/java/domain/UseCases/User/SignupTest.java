@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SignupTest {
     private TestSignupPresenter testPresenter;
@@ -130,8 +131,44 @@ public class SignupTest {
     }
 
     @Test
+    void testWhitespaceOnlyUsername() {
+        SignupInputData inputData = new SignupInputData("  ", password, repeatedPassword);
+        interactor.executeSignup(inputData);
+
+        assertNull(testPresenter.getSuccessData());
+        assertEquals("Username cannot be empty.", testPresenter.getErrorMessage());
+    }
+
+    @Test
+    void testNullUsername() {
+        SignupInputData inputData = new SignupInputData(null, password, repeatedPassword);
+        interactor.executeSignup(inputData);
+
+        assertNull(testPresenter.getSuccessData());
+        assertEquals("Username cannot be empty.", testPresenter.getErrorMessage());
+    }
+
+    @Test
     void testEmptyPassword() {
         SignupInputData inputData = new SignupInputData(username, "", repeatedPassword);
+        interactor.executeSignup(inputData);
+
+        assertNull(testPresenter.getSuccessData());
+        assertEquals("Password cannot be empty.", testPresenter.getErrorMessage());
+    }
+
+    @Test
+    void testWhiteSpaceOnlyPassword() {
+        SignupInputData inputData = new SignupInputData(username, " ", repeatedPassword);
+        interactor.executeSignup(inputData);
+
+        assertNull(testPresenter.getSuccessData());
+        assertEquals("Password cannot be empty.", testPresenter.getErrorMessage());
+    }
+
+    @Test
+    void testNullPassword() {
+        SignupInputData inputData = new SignupInputData(username, null, repeatedPassword);
         interactor.executeSignup(inputData);
 
         assertNull(testPresenter.getSuccessData());
