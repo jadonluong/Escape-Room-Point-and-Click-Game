@@ -19,7 +19,7 @@ public class SolveInteractor implements SolveInputBoundary {
     public void solve(SolveInputData inputData) {
         Puzzle puzzle = dataAccess.getPuzzleById(inputData.getPuzzleId());
         if (puzzle.solve(inputData.getPlayerAnswer())) {
-            puzzle.setSolved(true);
+            puzzle.setSolved(true); // Ik solve already does this but just in case...
 
             User player = userDataAccess.getCurrentUser();
             String rewardItemId = puzzle.getRewardItemId();

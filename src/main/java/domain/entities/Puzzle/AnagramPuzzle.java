@@ -77,10 +77,12 @@ public class AnagramPuzzle implements Puzzle {
 
     @Override
     public boolean solve(String playerAnswer) {
-        for (String answer : answers) {
-            if (answer.equalsIgnoreCase(playerAnswer.trim())) {
-                isSolved = true;
-                return true;
+        if (playerAnswer != null) {
+            for (String answer : answers) {
+                if (answer.equalsIgnoreCase(playerAnswer.trim())) {
+                    isSolved = true;
+                    return true;
+                }
             }
         }
         return false;
