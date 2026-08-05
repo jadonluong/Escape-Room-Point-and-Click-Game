@@ -6,6 +6,7 @@ import application.use_cases.Puzzle.Solve.SolveOutputBoundary;
 import application.use_cases.Puzzle.Solve.SolveOutputData;
 import interface_adapter.Interactable.Interact.InteractState;
 import interface_adapter.Interactable.Interact.InteractViewModel;
+import interface_adapter.ViewManagerInterface;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.inventory.InventoryState;
 import interface_adapter.inventory.InventoryViewModel;
@@ -19,10 +20,10 @@ SolvePresenter implements SolveOutputBoundary {
     private final InventoryViewModel inventoryViewModel;
     private final ZoomInteractor zoomInteractor;
     private final ViewManagerModel viewManagerModel;
-    private final ViewManager viewManager;
+    private final ViewManagerInterface viewManager;
 
     public SolvePresenter(InteractViewModel interactViewModel, InventoryViewModel inventoryViewModel,
-                          ZoomInteractor zoomInteractor, ViewManagerModel viewManagerModel, ViewManager viewManager) {
+                          ZoomInteractor zoomInteractor, ViewManagerModel viewManagerModel, ViewManagerInterface viewManager) {
         this.interactViewModel = interactViewModel;
         this.inventoryViewModel = inventoryViewModel;
         this.zoomInteractor = zoomInteractor;

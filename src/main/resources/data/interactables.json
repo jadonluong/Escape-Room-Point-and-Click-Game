@@ -61,10 +61,10 @@
     "consumesItem": false,
     "needsItem": true,
     "requiredItemId": "prison_item_1",
-    "rewardItemId": "prison_item_2",
-    "linkedPuzzleId": null,
+    "rewardItemId": null,
+    "linkedPuzzleId": "prison_puzzle_1",
     "unlockedRoomId": null,
-    "successMessage": "You have obtained a spider."
+    "successMessage": "There's a puzzle in the locker."
   }
 }
 

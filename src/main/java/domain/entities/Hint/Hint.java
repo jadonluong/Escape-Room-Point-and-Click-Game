@@ -1,7 +1,5 @@
 package domain.entities.Hint;
 
-import java.util.List;
-
 /**
  * The representation of a hint in the program.
  */

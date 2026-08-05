@@ -42,7 +42,6 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
                       SolveController solveController) {
         this.enterExitViewModel = enterExitViewModel;
         this.enterExitViewModel.addPropertyChangeListener(this);
-
         EnterExitState enterExitState = enterExitViewModel.getState();
 
         // Background
@@ -58,8 +57,8 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         double gap = DESIGN_HEIGHT / 20.0; // Size of the gap between all the main boxes
 
         // Answer Field
-        double answerFieldWidth = DESIGN_WIDTH * (7.0 / 12.0) - (gap * 3);
         double answerFieldHeight = (DESIGN_HEIGHT - (gap * 2)) / 11.0;
+        double answerFieldWidth = DESIGN_WIDTH * (7.0 / 12.0) - ((gap * 2) * (1.0/3.0) + answerFieldHeight);
 
         TextField answerField = new TextField();
         answerField.setPromptText("Type your answer here...");
@@ -79,10 +78,9 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         // -------------
 
         // Answer Button
-        double answerButtonWidth = (gap * 2) * (2.0/3.0);
 
         Button answerButton = new Button("✓");
-        answerButton.setPrefSize(answerButtonWidth, answerFieldHeight);
+        answerButton.setPrefSize(answerFieldHeight, answerFieldHeight);
         answerButton.setStyle("-fx-background-color: #2a2a2a; " + "-fx-text-fill: #ffffff; " +
                 "-fx-font-size: 20px; " + "-fx-font-weight: bold; " + "-fx-cursor: hand; " +
                 "-fx-border-color: #ffffff; " + "-fx-border-width: 3;"
@@ -105,27 +103,30 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         puzzleBoxContainerBox.setLayoutX(gap);
         puzzleBoxContainerBox.setLayoutY(gap);
         puzzleBoxContainerBox.setPrefSize(puzzleBoxWidth, puzzleBoxHeight);
+        puzzleBoxContainerBox.setMaxSize(puzzleBoxWidth, puzzleBoxHeight);
 
         Rectangle puzzleBox = new Rectangle(puzzleBoxWidth, puzzleBoxHeight);
         puzzleBox.setFill(Color.web("#2a2a2a"));
         puzzleBox.setStroke(Color.WHITE);
         puzzleBox.setStrokeWidth(3);
 
-        lockImage.setFitWidth(puzzleBox.getWidth() - 100);
-        lockImage.setFitHeight(puzzleBox.getHeight() - 100);
+        lockImage.setImage(loadImage("/images/puzzleview/lock.png"));
+        lockImage.setFitWidth(puzzleBoxWidth * 0.25);
+        lockImage.setFitHeight(puzzleBoxHeight * 0.25);
         lockImage.setPreserveRatio(true);
 
         puzzleLabel.setTextFill(Color.WHITE);
-        puzzleLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 24));
+        puzzleLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 38));
         puzzleLabel.setWrapText(true);
         puzzleLabel.setAlignment(Pos.CENTER);
         puzzleLabel.setPrefWidth(puzzleBox.getWidth() - 50);
-        puzzleLabel.setPrefHeight(puzzleBox.getHeight() - 50);
         puzzleLabel.setMaxWidth(puzzleBox.getWidth() - 50);
-        puzzleLabel.setMaxHeight(puzzleBox.getHeight() - 50);
+        puzzleLabel.setPrefHeight(puzzleBox.getHeight() * 0.15);
+        puzzleLabel.setMaxHeight(puzzleBox.getHeight() * 0.15);
 
-        passwordBarImage.setFitWidth(puzzleBox.getWidth() - 100);
-        passwordBarImage.setFitHeight(puzzleBox.getHeight() - 100);
+        passwordBarImage.setImage(loadImage("/images/puzzleview/password_bar.png"));
+        passwordBarImage.setFitWidth(puzzleBoxWidth * 0.35);
+        passwordBarImage.setFitHeight(puzzleBoxHeight * 0.2);
         passwordBarImage.setPreserveRatio(true);
 
         puzzleBoxContainerBox.getChildren().addAll(lockImage, puzzleLabel, passwordBarImage);
@@ -229,6 +230,12 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         descriptionLabel.setLayoutY(descriptionBox.getLayoutY() + 15);
         fixedRoot.getChildren().add(descriptionLabel);
         // ---------------
+
+        getChildren().add(fixedRoot);
+        setAlignment(Pos.CENTER);
+
+        widthProperty().addListener((o, ov, nv) -> rescale());
+        heightProperty().addListener((o, ov, nv) -> rescale());
     }
 
     private Image loadImage(String resourcePath) {
@@ -240,6 +247,12 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
             throw new IllegalArgumentException("Resource not found: " + resourcePath);
         }
         return new Image(stream);
+    }
+
+    private void rescale() {
+        double scale = Math.min(getWidth() / DESIGN_WIDTH, getHeight() / DESIGN_HEIGHT);
+        fixedRoot.setScaleX(scale);
+        fixedRoot.setScaleY(scale);
     }
 
     @Override
@@ -255,9 +268,6 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
             puzzleType = "";
         }
 
-        lockImage.setImage(loadImage("/images/puzzleview/lock.png"));
-        passwordBarImage.setImage(loadImage("/images/puzzleview/password_bar.png"));
-
         nameLabel.setText(puzzleType + " Puzzle");
         descriptionLabel.setText(enterExitState.getDescription());
 
@@ -270,8 +280,8 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
                 puzzleLabel.setManaged(true);
                 lockImage.setVisible(true);
                 lockImage.setManaged(true);
-                passwordBarImage.setVisible(false);
-                passwordBarImage.setManaged(false);
+                passwordBarImage.setVisible(true);
+                passwordBarImage.setManaged(true);
                 break;
             case "Cryptogram":
                 Map<String, String> cipher = enterExitState.getCipher();
@@ -288,8 +298,8 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
                 puzzleLabel.setManaged(true);
                 lockImage.setVisible(true);
                 lockImage.setManaged(true);
-                passwordBarImage.setVisible(false);
-                passwordBarImage.setManaged(false);
+                passwordBarImage.setVisible(true);
+                passwordBarImage.setManaged(true);
                 break;
             case "CodeLock":
                 hintLabel.setText(enterExitState.getHint());
