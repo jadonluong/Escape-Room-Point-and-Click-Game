@@ -30,7 +30,7 @@ public class SolveInteractor implements SolveInputBoundary {
             }
 
             outputBoundary.prepareSuccessView(new SolveOutputData(puzzle.getSuccessMessage(), rewardItemId,
-                    rewardItemName, inputData.getPuzzleId()));
+                    rewardItemName, inputData.getInteractableId()));
         } else {
             outputBoundary.prepareFailureView("Your input was incorrect.");
         }

@@ -19,7 +19,7 @@ public class AnagramPuzzle implements Puzzle {
                          String unlockedRoomId) {
         this.id = id;
         this.isSolved = false;
-        this.description = "Unscramble the letters to make a word! The hint gives you the definition of the answer.";
+        this.description = "Unscramble the letters to make a word!";
         this.scrambled = scrambled;
         this.answers = answers;
         this.hint = "You can do it!";

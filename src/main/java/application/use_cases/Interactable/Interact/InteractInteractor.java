@@ -83,22 +83,20 @@ public class InteractInteractor implements InteractInputBoundary {
             Puzzle puzzle = dataAccess.getPuzzleById(linkedPuzzleId);
             String puzzleUnlockedRoomId = puzzle.getUnlockedRoomId();
 
-            if (puzzle.isSolved() && puzzleUnlockedRoomId != null) {
-                moveToRoom(player, puzzleUnlockedRoomId);
-            } else if (puzzle.isSolved()) {
-                outputBoundary.prepareSuccessView(new InteractOutputData(puzzle.getSuccessMessage(), null,
+            if (puzzle.isSolved()) {
+                if (puzzleUnlockedRoomId != null) {
+                    moveToRoom(player, puzzleUnlockedRoomId);
+                    return;
+                }
+
+                String puzzleSuccessMessage = makeSuccessMessage(puzzle.getRewardItemId(), puzzle.getSuccessMessage());
+                outputBoundary.prepareSuccessView(new InteractOutputData(puzzleSuccessMessage, null,
                         null, null, null, interactable.getId()));
             }
             return;
         }
 
-        String successMessage = interactable.getSuccessMessage();
-        if (interactable.getRewardItemId() != null) {
-            if (successMessage.endsWith(".") || successMessage.endsWith("!")) { // In case we forgot to add punctuation
-                successMessage = successMessage.substring(0, successMessage.length() - 1);
-            }
-            successMessage = successMessage.concat(" already!"); // "You have obtained a(n) __ already!"
-        }
+        String successMessage = makeSuccessMessage(interactable.getRewardItemId(), interactable.getSuccessMessage());
         outputBoundary.prepareSuccessView(new InteractOutputData(successMessage, null,
                 null, null, null, interactable.getId()));
     }
@@ -106,5 +104,16 @@ public class InteractInteractor implements InteractInputBoundary {
     private void moveToRoom(User player, String unlockedRoomId) {
         player.switchRoom(dataAccess.getRoomById(unlockedRoomId));
         outputBoundary.prepareRoomView(unlockedRoomId);
+    }
+
+    private String makeSuccessMessage(String rewardItemId, String successMessage) {
+        String result = successMessage;
+        if (rewardItemId != null) {
+            if (successMessage.endsWith(".") || successMessage.endsWith("!")) { // If we added punctuation.
+                result = successMessage.substring(0, successMessage.length() - 1);
+            }
+            result = result.concat(" already!"); // "You have obtained a(n) __ already!"
+        }
+        return result;
     }
 }

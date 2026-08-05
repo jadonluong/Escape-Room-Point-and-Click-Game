@@ -3,7 +3,7 @@
     "puzzleType": "Anagram",
     "scrambled": "SAMIETN",
     "answer": "INMATES",
-    "successMessage": null,
+    "successMessage": "You have obtained a spider!",
     "rewardItemId": "prison_item_2",
     "unlockedRoomId": null
   }
