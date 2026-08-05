@@ -10,8 +10,8 @@ public class EnterExitController {
         this.inputBoundary = inputBoundary;
     }
 
-    public void enter(String puzzleId) {
-        final EnterExitInputData inputData = new EnterExitInputData(puzzleId);
+    public void enter(String puzzleId, String interactableId) {
+        final EnterExitInputData inputData = new EnterExitInputData(puzzleId, interactableId);
         inputBoundary.enter(inputData);
     }
 

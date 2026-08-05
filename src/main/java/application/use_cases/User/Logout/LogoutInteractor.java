@@ -1,5 +1,7 @@
 package application.use_cases.User.Logout;
 
+import domain.entities.User.GuestUser;
+
 /**
  * The Logout Interactor.
  */
@@ -17,7 +19,7 @@ public class LogoutInteractor implements LogoutInputBoundary{
     public void execute(LogoutInputData logoutInputData) {
         final String username = logoutInputData.getUsername();
 
-        userDataAccessObject.setCurrentUser(null);
+        userDataAccessObject.setCurrentUser(new GuestUser()); // was: setCurrentUser(null)
         final LogoutOutputData logoutOutputData = new LogoutOutputData(username, false);
 
         logoutPresenter.prepareUnsavedSuccessView(logoutOutputData);

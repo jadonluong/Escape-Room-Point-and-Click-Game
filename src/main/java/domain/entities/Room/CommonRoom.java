@@ -56,7 +56,8 @@ public class CommonRoom implements Room{
 
     @Override
     public void removeInteractable(String interactable) {
-        for (Interactable interactable1 : this.interactables) {
+        List<Interactable> copy = new ArrayList<>(this.interactables);
+        for (Interactable interactable1 : copy) {
             if (interactable1.getId().equals(interactable)) {
                 this.interactables.remove(interactable1);
             }

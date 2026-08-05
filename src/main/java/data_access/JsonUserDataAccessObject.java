@@ -2,15 +2,9 @@ package data_access;
 
 import application.game_registry.ItemRegistry;
 import application.game_registry.RoomRegistry;
-import application.use_cases.GamePlay.ActionTrigger.ActionTriggerDataAccessInterface;
-import application.use_cases.Hint.GetHint.GetHintUserDataAccessInterface;
-import application.use_cases.Interactable.Interact.InteractUserDataAccessInterface;
-import application.use_cases.Puzzle.EnterExit.EnterExitUserDataAccessInterface;
-import application.use_cases.Puzzle.Solve.SolveUserDataAccessInterface;
 import application.use_cases.User.Login.LoginUserDataAccessInterface;
 import application.use_cases.User.SaveProgress.SaveProgressUserDataAccessInterface;
 import application.use_cases.User.SignUp.SignupUserDataAccessInterface;
-import application.use_cases.User.Logout.LogoutUserDataAccessInterface;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,13 +29,7 @@ import java.util.Map;
 public class JsonUserDataAccessObject implements
         LoginUserDataAccessInterface,
         SignupUserDataAccessInterface,
-        LogoutUserDataAccessInterface,
-        SaveProgressUserDataAccessInterface,
-        GetHintUserDataAccessInterface,
-        ActionTriggerDataAccessInterface,
-        InteractUserDataAccessInterface,
-        EnterExitUserDataAccessInterface,
-        SolveUserDataAccessInterface {
+        SaveProgressUserDataAccessInterface {
 
     private static final String FILE_PATH = "user_data/users.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -49,31 +37,11 @@ public class JsonUserDataAccessObject implements
 
     private final RoomRegistry roomRegistry;
     private final ItemRegistry itemRegistry;
-    private String currentUsername;
-    private User currentUser;
 
     public JsonUserDataAccessObject(RoomRegistry roomRegistry, ItemRegistry itemRegistry) {
         this.roomRegistry = roomRegistry;
         this.itemRegistry = itemRegistry;
         this.rawUsers = load();
-    }
-
-    @Override
-    public void setCurrentUser(User user) {
-        this.currentUser = user;
-        if (user != null) {
-            this.currentUsername = user.getUsername();
-        } else {
-            this.currentUsername = null;
-        }
-    }
-
-    @Override
-    public User getCurrentUser() {
-        if (currentUsername == null || currentUsername.isEmpty()) {
-            return null;
-        }
-        return this.currentUser; // Returns the live, in-memory updated User, guest or common user.
     }
 
 
@@ -349,11 +317,6 @@ public class JsonUserDataAccessObject implements
 
         return model;
     }
-
-    public UserDataModel getRawUserData(String username) {
-        return rawUsers.get(username);
-    }
-
 
     private static class UserDataModel {
         public String username;

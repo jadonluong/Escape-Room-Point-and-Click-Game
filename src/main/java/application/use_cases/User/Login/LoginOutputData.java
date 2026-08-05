@@ -17,4 +17,8 @@ public class LoginOutputData {
     public User getUser() {
         return this.commonUser;
     }
+
+    public Boolean getLoginStatus() {
+        return this.isLoginFailed;
+    }
 }

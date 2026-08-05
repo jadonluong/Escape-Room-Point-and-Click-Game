@@ -10,6 +10,4 @@ public interface SaveProgressUserDataAccessInterface {
      * @param user the Common user to be saved to database
      */
     void saveProgress(CommonUser user);
-
-    User getCurrentUser();
 }

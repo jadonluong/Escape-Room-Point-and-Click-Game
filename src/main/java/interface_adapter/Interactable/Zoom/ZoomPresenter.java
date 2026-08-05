@@ -32,7 +32,7 @@ public class ZoomPresenter implements ZoomOutputBoundary {
 
     @Override
     public void prepareZoomOutView() {
-        viewManagerModel.setState("Room");
+        viewManagerModel.setState("in-game");
         viewManagerModel.firePropertyChanged();
     }
 }
