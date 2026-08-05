@@ -4,6 +4,7 @@ import application.use_cases.Interactable.Interact.InteractOutputBoundary;
 import application.use_cases.Interactable.Interact.InteractOutputData;
 import application.use_cases.Interactable.Zoom.ZoomInputData;
 import application.use_cases.Interactable.Zoom.ZoomInteractor;
+import interface_adapter.ViewManagerInterface;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.inventory.InventoryState;
 import interface_adapter.inventory.InventoryViewModel;
@@ -16,10 +17,10 @@ public class InteractPresenter implements InteractOutputBoundary {
     private final InventoryViewModel inventoryViewModel;
     private final ZoomInteractor zoomInteractor;
     private final ViewManagerModel viewManagerModel;
-    private final ViewManager viewManager;
+    private final ViewManagerInterface viewManager;
 
     public InteractPresenter(InteractViewModel interactViewModel, InventoryViewModel inventoryViewModel,
-                             ZoomInteractor zoomInteractor, ViewManagerModel viewManagerModel, ViewManager viewManager) {
+                             ZoomInteractor zoomInteractor, ViewManagerModel viewManagerModel, ViewManagerInterface viewManager) {
         this.interactViewModel = interactViewModel;
         this.inventoryViewModel = inventoryViewModel;
         this.zoomInteractor = zoomInteractor;

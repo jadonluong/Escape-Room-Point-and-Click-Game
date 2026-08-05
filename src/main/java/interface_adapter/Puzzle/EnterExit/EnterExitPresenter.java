@@ -4,6 +4,7 @@ import application.use_cases.Puzzle.EnterExit.EnterExitOutputBoundary;
 import application.use_cases.Puzzle.EnterExit.EnterExitOutputData;
 import interface_adapter.Interactable.Interact.InteractState;
 import interface_adapter.Interactable.Interact.InteractViewModel;
+import interface_adapter.ViewManagerInterface;
 import interface_adapter.ViewManagerModel;
 import view.ViewManager;
 
@@ -11,10 +12,10 @@ public class EnterExitPresenter implements EnterExitOutputBoundary {
     private final EnterExitViewModel enterExitViewModel;
     private final InteractViewModel interactViewModel;
     private final ViewManagerModel viewManagerModel;
-    private final ViewManager viewManager;
+    private final ViewManagerInterface viewManager;
 
     public EnterExitPresenter(EnterExitViewModel enterExitViewModel, InteractViewModel interactViewModel,
-                              ViewManagerModel viewManagerModel, ViewManager viewManager) {
+                              ViewManagerModel viewManagerModel, ViewManagerInterface viewManager) {
         this.enterExitViewModel = enterExitViewModel;
         this.interactViewModel = interactViewModel;
         this.viewManagerModel = viewManagerModel;

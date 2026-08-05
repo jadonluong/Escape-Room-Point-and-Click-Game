@@ -1,5 +1,6 @@
 package view;
 
+import interface_adapter.ViewManagerInterface;
 import interface_adapter.ViewManagerModel;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class ViewManager implements PropertyChangeListener {
+public class ViewManager implements PropertyChangeListener, ViewManagerInterface{
     private static final double INITIAL_WIDTH = 1280;
     private static final double INITIAL_HEIGHT = 720;
 

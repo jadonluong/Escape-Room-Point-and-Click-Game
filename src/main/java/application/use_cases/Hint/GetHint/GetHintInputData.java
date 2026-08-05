@@ -1,7 +1,5 @@
 package application.use_cases.Hint.GetHint;
 
-import domain.entities.User.User;
-
 /**
  * The input data for the Get Hint use case.
  */
