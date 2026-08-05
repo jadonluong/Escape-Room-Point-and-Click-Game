@@ -2,13 +2,13 @@ package interface_adapter.Hint;
 
 import application.use_cases.Hint.GetHint.GetHintOutputBoundary;
 import application.use_cases.Hint.GetHint.GetHintOutputData;
-import view.ViewManager;
+import interface_adapter.ViewManagerInterface;
 
 public class GetHintPresenter implements GetHintOutputBoundary {
     private final GetHintViewModel getHintViewModel;
-    private final ViewManager viewManager;
+    private final ViewManagerInterface viewManager;
 
-    public GetHintPresenter(GetHintViewModel getHintViewModel, ViewManager viewManager) {
+    public GetHintPresenter(GetHintViewModel getHintViewModel, ViewManagerInterface viewManager) {
         this.getHintViewModel = getHintViewModel;
         this.viewManager = viewManager;
     }
