@@ -69,7 +69,7 @@ public class CodeLockPuzzle implements Puzzle {
 
     @Override
     public boolean solve(String playerAnswer) {
-        if (answer.equalsIgnoreCase(playerAnswer.trim())) {
+        if (playerAnswer != null && answer.equalsIgnoreCase(playerAnswer.trim())) {
             isSolved = true;
             return true;
         }

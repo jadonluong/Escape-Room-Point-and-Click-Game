@@ -1,5 +1,11 @@
 package interface_adapter.inventory;
 
+import application.use_cases.GamePlay.ObjectsInfo;
+import interface_adapter.GamePlay.InGameState;
+import interface_adapter.GamePlay.InGameViewModel;
+import application.use_cases.Item.PickUp.PickUpOutputBoundary;
+import application.use_cases.Item.PickUp.PickUpOutputData;
+
 import application.use_cases.Item.PickUp.PickUpOutputBoundary;
 import application.use_cases.Item.PickUp.PickUpOutputData;
 import application.use_cases.Item.Drop.DropOutputBoundary;
@@ -7,23 +13,41 @@ import application.use_cases.Item.Drop.DropOutputData;
 import application.use_cases.Crafting.CraftingOutputBoundary;
 import application.use_cases.Crafting.CraftingOutputData;
 
+import java.util.Map;
+
 public class InventoryPresenter implements PickUpOutputBoundary, DropOutputBoundary, CraftingOutputBoundary {
 
     private final InventoryViewModel viewModel;
+    private final InGameViewModel inGameViewModel;
 
-    public InventoryPresenter(InventoryViewModel viewModel) {
+    public InventoryPresenter(InventoryViewModel viewModel, InGameViewModel inGameViewModel) {
         this.viewModel = viewModel;
+        this.inGameViewModel = inGameViewModel;
     }
 
     @Override
     public void prepareSuccessView(PickUpOutputData outputData) {
-        InventoryState newState = new InventoryState(viewModel.getState());
-
-        newState.getItems().add(outputData.getItemName());
-        newState.setStatusMessage("Picked up: " + outputData.getItemName());
-
-        viewModel.setState(newState);
+        // 1. Update Inventory State (using 'viewModel' and 'state.getItems()')
+        InventoryState state = viewModel.getState();
+        state.getItems().add(outputData.getItemId() + ":" + outputData.getItemName()); // 👈 Stores item ID into inventory list
+        state.setStatusMessage("Picked up: " + outputData.getItemName());
         viewModel.firePropertyChanged();
+
+        // 2. Remove item from the active room floor map
+        if (inGameViewModel != null && inGameViewModel.getState() != null) {
+            InGameState roomState = inGameViewModel.getState();
+
+            if (roomState.getObjectsToDisplay() != null) {
+                Map<String, ObjectsInfo> map = roomState.getObjectsToDisplay();
+                map.remove(outputData.getItemId());
+                map.remove(outputData.getItemName());
+                map.keySet().removeIf(key -> key.equalsIgnoreCase(outputData.getItemId())
+                        || key.equalsIgnoreCase(outputData.getItemName()));
+            }
+
+            // 3. Re-render the room
+            inGameViewModel.firePropertyChanged();
+        }
     }
 
     @Override

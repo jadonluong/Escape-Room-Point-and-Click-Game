@@ -62,7 +62,6 @@ This file explains what the databases could potentially look like.
 
 ## Room DB
 - Note: only serves as the room inventory for the game, isUnlocked is not saved in DB since it's user-specific
-- TODO: find a way to store rooms in a sort of tree structure
 - format: JSON file
 - sample DB:
   - {"roomID_1/roomName_1": {

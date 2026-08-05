@@ -19,15 +19,18 @@ public class SolveInteractor implements SolveInputBoundary {
     public void solve(SolveInputData inputData) {
         Puzzle puzzle = dataAccess.getPuzzleById(inputData.getPuzzleId());
         if (puzzle.solve(inputData.getPlayerAnswer())) {
-            puzzle.setSolved(true);
+            puzzle.setSolved(true); // Ik solve already does this but just in case...
 
             User player = userDataAccess.getCurrentUser();
             String rewardItemId = puzzle.getRewardItemId();
+            String rewardItemName = null;
             if (rewardItemId != null) {
                 player.saveItem(dataAccess.getItemById(rewardItemId));
+                rewardItemName = dataAccess.getItemById(rewardItemId).getName();
             }
 
-            outputBoundary.prepareSuccessView(new SolveOutputData(puzzle.getSuccessMessage()));
+            outputBoundary.prepareSuccessView(new SolveOutputData(puzzle.getSuccessMessage(), rewardItemId,
+                    rewardItemName, inputData.getInteractableId()));
         } else {
             outputBoundary.prepareFailureView("Your input was incorrect.");
         }

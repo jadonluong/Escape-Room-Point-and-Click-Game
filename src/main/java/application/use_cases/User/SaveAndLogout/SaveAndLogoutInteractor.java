@@ -27,6 +27,7 @@ public class SaveAndLogoutInteractor implements SaveAndLogoutInputBoundary {
         User currentUser = logoutDataAccessObject.getCurrentUser();
         if (!inputData.getUsername().equals(currentUser.getUsername())) {
             saveAndLogoutPresenter.prepareFailView("You are not the current user"); // This should not happen
+            return;
         }
 
         if (!currentUser.isRegistered()) {
