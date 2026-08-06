@@ -23,13 +23,13 @@
     "interactedName": "unlocked door",
     "interactedDescription": "unlocked door",
     "interactedSprite": "/images/items/prison/door.png",
-    "isConsumed": true,
+    "isConsumed": false,
     "consumesItem": true,
     "needsItem": true,
     "requiredItemId": "prison_item_3",
     "rewardItemId": null,
     "linkedPuzzleId": null,
-    "unlockedRoomId": "study",
+    "unlockedRoomId": "main menu",
     "successMessage": "Quick! You have 3 minutes until the guard notices!"
   },
 
