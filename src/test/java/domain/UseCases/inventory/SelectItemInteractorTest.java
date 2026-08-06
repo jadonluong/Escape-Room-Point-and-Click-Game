@@ -1,5 +1,7 @@
 package domain.UseCases.inventory;
 
+import application.use_cases.Item.SelectItem.*;
+
 import domain.entities.User.CommonUser;
 import domain.entities.User.User;
 import org.junit.jupiter.api.BeforeEach;
