@@ -20,15 +20,13 @@ public class GameRenderer {
 
     private final ImgLoader imgLoader = new ImgLoader();
 
-    private final ZoomController zoomInController;
-    private final GetHintController getHintController;
-    private final PickUpController pickUpController;
+    private final GameObjectActionDispatcher actionDispatcher;
 
-    public GameRenderer(Pane objectPane, ZoomController zoomInController, GetHintController getHintController, PickUpController pickUpController) {
+    public GameRenderer(Pane objectPane, GameObjectActionDispatcher actionDispatcher) {
         this.gamePane = objectPane;
-        this.zoomInController = zoomInController;
-        this.getHintController = getHintController;
-        this.pickUpController = pickUpController;
+
+
+        this.actionDispatcher = actionDispatcher;
     }
 
     public void renderOne(InGameState state, String id){
@@ -63,28 +61,16 @@ public class GameRenderer {
 
     private void render(String id, ObjectsInfo info) {
 
-        Double x = info.position().x();
-        Double y = info.position().y();
-        ImageView imageView = new ImageView();
-        if (info.type().equals("Interactable")) {
-            imageView = makeButton(info.imgPath(), x, y,
-                    () -> zoomInController.zoomIn(id));
-        }
+        Runnable clickAction = actionDispatcher.getAction(id, info);
 
-        if (info.type().equals("Item")) {
-            imageView = makeButton(info.imgPath(), x, y,
-                    () -> pickUpController.execute(id));
-        }
-
-        if (info.type().equals("Hint")) {
-            imageView = makeButton(info.imgPath(), x, y,
-                    () -> getHintController.execute(id));
-        }
-
-        else{
+        // If it's not an interactive object type, skip rendering as a button
+        if (clickAction == null) {
             return;
         }
+        Double x = info.position().x();
+        Double y = info.position().y();
 
+        ImageView imageView = makeButton(info.imgPath(), x, y, clickAction);
 
         renderedObjects.put(id, imageView);
         gamePane.getChildren().add(imageView);

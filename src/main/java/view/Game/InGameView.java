@@ -20,6 +20,7 @@ public class InGameView extends StackPane implements PropertyChangeListener {
     private final InGameViewModel viewModel;
     private final GameMenuView gameMenuView;
     private final InventoryOverlay inventoryOverlay;
+    private final GameObjectActionDispatcher actionDispatcher;
 
     // Different layers
     private final Pane backgroundPane = new Pane();
@@ -34,14 +35,12 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
     public InGameView(InGameViewModel viewModel,
                       GameMenuView gameMenuView,
-                      InventoryOverlay inventoryOverlay,
-                      ZoomController zoomInController,
-    GetHintController getHintController,
-    PickUpController pickUpController) {
+                      InventoryOverlay inventoryOverlay, GameObjectActionDispatcher actionDispatcher) {
 
         this.viewModel = viewModel;
         this.gameMenuView = gameMenuView;
         this.inventoryOverlay = inventoryOverlay;
+        this.actionDispatcher = actionDispatcher;
         this.imgPath = "/images/items/prison/spider1.png";
 
         upDateBackgroundPane(imgPath);
@@ -56,7 +55,7 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
 
 
-        this.renderer = new GameRenderer(gamePane, zoomInController, getHintController, pickUpController);
+        this.renderer = new GameRenderer(gamePane, actionDispatcher);
 
         viewModel.addPropertyChangeListener(this);
 

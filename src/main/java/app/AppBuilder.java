@@ -83,6 +83,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import view.Game.BrowseRoomsView;
 import view.Game.GameMenuView;
+import view.Game.GameObjectActionDispatcher;
 import view.Game.InGameView;
 import view.Hint.HintOverlay;
 import view.ViewManager;
@@ -286,7 +287,8 @@ public class AppBuilder extends Application {
         PuzzleView puzzleView = new PuzzleView(enterExitViewModel, enterExitController, solveController);
 
         // --- In-game ---
-
+        GameObjectActionDispatcher gameObjectActionDispatcher = new GameObjectActionDispatcher(zoomController,
+                getHintController,pickUpController);
         // Create game menu view
         GameMenuView gameMenuView =
                 new GameMenuView(viewManager,
@@ -321,8 +323,7 @@ public class AppBuilder extends Application {
                 );
         InventoryOverlay inventoryOverlay = new InventoryOverlay(viewManager, inventoryViewModel);
         inventoryOverlay.setSelectItemController(selectItemController);
-        InGameView inGameView = new InGameView(inGameViewModel, gameMenuView, inventoryOverlay, zoomController,
-                getHintController, pickUpController);
+        InGameView inGameView = new InGameView(inGameViewModel, gameMenuView, inventoryOverlay,gameObjectActionDispatcher);
 
         // --- Register every top-level screen by name ---
         viewManager.registerView("main menu", mainMenu);
