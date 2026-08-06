@@ -74,7 +74,11 @@ public class InteractInteractor implements InteractInputBoundary {
     private void repeatedInteraction(User player, Interactable interactable) {
         String unlockedRoomId = interactable.getUnlockedRoomId();
         if (unlockedRoomId != null) {
-            moveToRoom(player, unlockedRoomId);
+            if (unlockedRoomId.equals("main menu")) {
+                outputBoundary.prepareMainMenuView();
+            } else {
+                moveToRoom(player, unlockedRoomId);
+            }
             return;
         }
 
@@ -85,7 +89,11 @@ public class InteractInteractor implements InteractInputBoundary {
 
             if (puzzle.isSolved()) {
                 if (puzzleUnlockedRoomId != null) {
-                    moveToRoom(player, puzzleUnlockedRoomId);
+                    if (puzzleUnlockedRoomId.equals("main menu")) {
+                        outputBoundary.prepareMainMenuView();
+                    } else {
+                        moveToRoom(player, puzzleUnlockedRoomId);
+                    }
                     return;
                 }
 
@@ -103,7 +111,7 @@ public class InteractInteractor implements InteractInputBoundary {
 
     private void moveToRoom(User player, String unlockedRoomId) {
         player.switchRoom(dataAccess.getRoomById(unlockedRoomId));
-        outputBoundary.prepareRoomView(unlockedRoomId);
+        outputBoundary.prepareRoomView();
     }
 
     private String makeSuccessMessage(String rewardItemId, String successMessage) {

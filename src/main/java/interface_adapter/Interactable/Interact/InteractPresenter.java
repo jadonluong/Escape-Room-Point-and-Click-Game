@@ -71,8 +71,22 @@ public class InteractPresenter implements InteractOutputBoundary {
     }
 
     @Override
-    public void prepareRoomView(String roomId) {
+    public void prepareRoomView() {
         viewManagerModel.setState("in-game");
         viewManagerModel.firePropertyChanged();
+    }
+
+    @Override
+    public void prepareMainMenuView() {
+        viewManagerModel.setState("main menu");
+        viewManagerModel.firePropertyChanged();
+
+        InteractState state = interactViewModel.getState();
+        state.setErrorMessage(null);
+        state.setSuccessMessage("Congratulations, you've escaped!");
+
+        interactViewModel.setState(state);
+        interactViewModel.firePropertyChanged();
+        viewManager.showOverlay("Interact");
     }
 }
