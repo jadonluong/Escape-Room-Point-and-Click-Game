@@ -58,7 +58,7 @@ public class LogoutTest {
         LogoutInputData logoutInputData = new LogoutInputData(commonUserName);
         interactor.execute(logoutInputData);
 
-        assertNull(dataAccess.getCurrentUser());
+        assertInstanceOf(GuestUser.class, dataAccess.getCurrentUser());
 
         assertNotNull(testPresenter.getSuccessData());
         assertFalse(testPresenter.getSuccessData().isLogoutFailed());
@@ -71,7 +71,7 @@ public class LogoutTest {
         LogoutInputData logoutInputData = new LogoutInputData(user.getUsername());
         interactor.execute(logoutInputData);
 
-        assertNull(dataAccess.getCurrentUser());
+        assertInstanceOf(GuestUser.class, dataAccess.getCurrentUser());
 
         assertNotNull(testPresenter.getSuccessData());
         assertFalse(testPresenter.getSuccessData().isLogoutFailed());
