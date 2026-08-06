@@ -1,5 +1,5 @@
 {
-  "QuickMode": ["prison"],
-  "StoryMode": ["prison"],
-  "TutorialMode": ["prison"]
+  "QuickMode": ["prison", "living_room", "astrology"],
+  "StoryMode": ["room_1", "room_2", "room_3"],
+  "TutorialMode": []
 }

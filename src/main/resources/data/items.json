@@ -18,5 +18,17 @@
     "description": "A spider that can eat metal",
     "craftable": true,
     "imagePath": "/images/items/prison/spider4.png"
+  },
+  "house_bottle": {
+    "name": "bottle",
+    "description": "A bottle",
+    "craftable": true,
+    "imagePath": "/images/items/storymode/room1/bottle.png"
+  },
+  "house_flower": {
+    "name": "flower",
+    "description": "A bundle of flowers",
+    "craftable": true,
+    "imagePath": "/images/items/storymode/room1/flower.png"
   }
 }
