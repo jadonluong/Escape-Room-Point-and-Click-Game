@@ -65,6 +65,22 @@
     "linkedPuzzleId": "prison_puzzle_1",
     "unlockedRoomId": null,
     "successMessage": "There's a puzzle in the locker."
+  },
+  "house_door": {
+    "defaultName": "door",
+    "defaultDescription": "locked door",
+    "defaultSprite": "/images/items/storymode/room1/door.png",
+    "interactedName": "unlocked door",
+    "interactedDescription": "door unlocked",
+    "interactedSprite": "/images/items/storymode/room1/door.png",
+    "isConsumed": false,
+    "consumesItem": false,
+    "needsItem": false,
+    "requiredItemId": null,
+    "rewardItemId": null,
+    "linkedPuzzleId": "house_puzzle_1",
+    "unlockedRoomId": null,
+    "successMessage": "Please enter the house."
   }
 }
 
