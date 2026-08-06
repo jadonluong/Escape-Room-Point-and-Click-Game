@@ -1,15 +1,13 @@
 package application.use_cases.Item.PickUp;
 
-import domain.entities.Item.Item;
-
 public class PickUpInputData {
-    private final Item item;
+    private final String itemId;
 
-    public PickUpInputData(Item item) {
-        this.item = item;
+    public PickUpInputData(String itemId) {
+        this.itemId = itemId;
     }
 
-    public Item getItem() {
-        return this.item;
+    public String getItemId() {
+        return this.itemId;
     }
 }

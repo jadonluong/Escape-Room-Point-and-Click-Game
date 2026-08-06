@@ -4,7 +4,7 @@ import domain.entities.Item.Item;
 import domain.entities.User.User;
 
 public class PickUpInteractor implements PickUpInputBoundary {
-    private final PickUpUserDataAccessInterface userSession; // 👈 Updated type
+    private final PickUpUserDataAccessInterface userSession;
     private final PickUpOutputBoundary presenter;
 
     public PickUpInteractor(PickUpUserDataAccessInterface userSession, PickUpOutputBoundary presenter) {
@@ -14,13 +14,16 @@ public class PickUpInteractor implements PickUpInputBoundary {
 
     @Override
     public void execute(PickUpInputData inputData) {
-        Item item = inputData.getItem();
+        String itemId = inputData.getItemId();
+
+        // Fetches the Item using the userSession data interface
+        Item item = userSession.getItemById(itemId);
 
         if (item == null) {
             return;
         }
 
-        User user = userSession.getCurrentUser(); // 👈 Calls userSession now
+        User user = userSession.getCurrentUser();
         if (user != null) {
             user.saveItem(item);
         }
