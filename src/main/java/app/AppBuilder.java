@@ -2,7 +2,6 @@ package app;
 
 import application.use_cases.Audio.ToggleMusic.ToggleMusicInteractor;
 import application.use_cases.Audio.ToggleSfx.ToggleSfxInteractor;
-import application.use_cases.game_play.action_trigger.ActionTriggerInteractor;
 import application.use_cases.game_play.QuickPlay.BrowseRooms.BrowseRoomsInteractor;
 import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpInteractor;
 import application.use_cases.game_play.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInteractor;
@@ -79,6 +78,7 @@ import interface_adapter.User.Signup.SignupViewModel;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.inventory.InventoryViewModel; // added
 import interface_adapter.inventory.InventoryPresenter; // added
+import interface_adapter.item.PickUpController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import view.Game.BrowseRoomsView;
@@ -221,6 +221,7 @@ public class AppBuilder extends Application {
         InventoryViewModel inventoryViewModel = new InventoryViewModel();
         InventoryPresenter inventoryPresenter = new InventoryPresenter(inventoryViewModel, inGameViewModel);
         PickUpInteractor pickUpInteractor = new PickUpInteractor(userSessionTracking, inventoryPresenter);
+        PickUpController pickUpController = new PickUpController(pickUpInteractor);
 
         // --- Select Item Chain ---
         SelectItemPresenter selectItemPresenter = new SelectItemPresenter();
@@ -284,10 +285,6 @@ public class AppBuilder extends Application {
         InteractOverlay interactOverlay = new InteractOverlay(interactViewModel, viewManager);
         PuzzleView puzzleView = new PuzzleView(enterExitViewModel, enterExitController, solveController);
 
-        // --- Action triggering ---
-        ActionTriggerInteractor actionTriggerInteractor = new ActionTriggerInteractor(zoomInteractor, pickUpInteractor, getHintInteractor, userSessionTracking, gameAssetManager);
-        ActionTriggerController actionTriggerController = new ActionTriggerController(actionTriggerInteractor);
-
         // --- In-game ---
 
         // Create game menu view
@@ -324,7 +321,8 @@ public class AppBuilder extends Application {
                 );
         InventoryOverlay inventoryOverlay = new InventoryOverlay(viewManager, inventoryViewModel);
         inventoryOverlay.setSelectItemController(selectItemController);
-        InGameView inGameView = new InGameView(inGameViewModel, gameMenuView, inventoryOverlay, actionTriggerController);
+        InGameView inGameView = new InGameView(inGameViewModel, gameMenuView, inventoryOverlay, zoomController,
+                getHintController, pickUpController);
 
         // --- Register every top-level screen by name ---
         viewManager.registerView("main menu", mainMenu);

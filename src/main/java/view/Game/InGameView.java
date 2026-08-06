@@ -3,6 +3,9 @@ package view.Game;
 import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
 import interface_adapter.GamePlay.InGameState;
 import interface_adapter.GamePlay.InGameViewModel;
+import interface_adapter.Hint.GetHintController;
+import interface_adapter.Interactable.Zoom.ZoomController;
+import interface_adapter.item.PickUpController;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
@@ -32,7 +35,9 @@ public class InGameView extends StackPane implements PropertyChangeListener {
     public InGameView(InGameViewModel viewModel,
                       GameMenuView gameMenuView,
                       InventoryOverlay inventoryOverlay,
-                      ActionTriggerController actionTriggerController) {
+                      ZoomController zoomInController,
+    GetHintController getHintController,
+    PickUpController pickUpController) {
 
         this.viewModel = viewModel;
         this.gameMenuView = gameMenuView;
@@ -51,7 +56,7 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
 
 
-        this.renderer = new GameRenderer(gamePane, actionTriggerController);
+        this.renderer = new GameRenderer(gamePane, zoomInController, getHintController, pickUpController);
 
         viewModel.addPropertyChangeListener(this);
 
