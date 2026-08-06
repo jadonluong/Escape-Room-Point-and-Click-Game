@@ -1,23 +1,19 @@
 package domain.UseCases.GamePlay.ActionTrigger;
 
-import application.use_cases.GamePlay.ActionTrigger.ActionTriggerDataAccessInterface;
-import application.use_cases.GamePlay.ActionTrigger.ActionTriggerGameDataAccessInterface;
-import application.use_cases.GamePlay.ActionTrigger.ActionTriggerInputData;
-import application.use_cases.GamePlay.ActionTrigger.ActionTriggerInteractor;
-import application.use_cases.GamePlay.UserDataAccessInterface;
+import application.use_cases.game_play.action_trigger.ActionTriggerDataAccessInterface;
+import application.use_cases.game_play.action_trigger.ActionTriggerGameDataAccessInterface;
+import application.use_cases.game_play.action_trigger.ActionTriggerInputData;
+import application.use_cases.game_play.action_trigger.ActionTriggerInteractor;
 import application.use_cases.Hint.GetHint.GetHintInputBoundary;
 import application.use_cases.Hint.GetHint.GetHintInputData;
 import application.use_cases.Interactable.Zoom.*;
 import application.use_cases.Item.PickUp.PickUpInputBoundary;
 import application.use_cases.Item.PickUp.PickUpInputData;
-import domain.entities.Interactable.Interactable;
 import domain.entities.Item.CommonItem;
 import domain.entities.Item.Item;
-import domain.entities.Puzzle.Puzzle;
 import domain.entities.User.CommonUserFactory;
 import domain.entities.User.CommonUserFactoryClass;
 import domain.entities.User.User;
-import interface_adapter.Interactable.Zoom.ZoomPresenter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

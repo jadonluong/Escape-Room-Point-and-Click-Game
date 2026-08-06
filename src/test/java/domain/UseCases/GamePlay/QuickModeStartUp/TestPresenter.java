@@ -1,7 +1,7 @@
 package domain.UseCases.GamePlay.QuickModeStartUp;
 
-import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputBoundary;
-import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputData;
+import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputBoundary;
+import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputData;
 
 class TestPresenter implements QuickModeStartUpOutputBoundary {
     private QuickModeStartUpOutputData successData;

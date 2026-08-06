@@ -1,7 +1,7 @@
 package interface_adapter.GamePlay.TutorialAndStoryModeStartUp;
 
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInputBoundary;
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInputData;
+import application.use_cases.game_play.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInputBoundary;
+import application.use_cases.game_play.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInputData;
 
 public class TutorialAndStoryModeStartUpController {
     private final TutorialAndStoryModeStartUpInputBoundary selectModeInteractor;

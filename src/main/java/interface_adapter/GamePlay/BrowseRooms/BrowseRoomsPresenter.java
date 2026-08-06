@@ -1,7 +1,7 @@
 package interface_adapter.GamePlay.BrowseRooms;
 
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsOutputBoundary;
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsOutputData;
+import application.use_cases.game_play.QuickPlay.BrowseRooms.BrowseRoomsOutputBoundary;
+import application.use_cases.game_play.QuickPlay.BrowseRooms.BrowseRoomsOutputData;
 import interface_adapter.ViewManagerModel; // Optional: if using a ViewManager
 
 public class BrowseRoomsPresenter implements BrowseRoomsOutputBoundary {

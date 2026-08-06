@@ -1,7 +1,7 @@
 package application.use_cases.User;
 
-import application.use_cases.GamePlay.ActionTrigger.ActionTriggerDataAccessInterface;
-import application.use_cases.GamePlay.UserDataAccessInterface;
+import application.use_cases.game_play.action_trigger.ActionTriggerDataAccessInterface;
+import application.use_cases.game_play.UserDataAccessInterface;
 import application.use_cases.Hint.GetHint.GetHintUserDataAccessInterface;
 import application.use_cases.Interactable.Interact.InteractUserDataAccessInterface;
 import application.use_cases.Item.PickUp.PickUpUserDataAccessInterface;

@@ -1,14 +1,12 @@
 package domain.UseCases.GamePlay.TutorialAndStoryModeStartUp;
 
-import application.use_cases.GamePlay.ObjectsInfo;
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.*;
-import application.use_cases.GamePlay.UserDataAccessInterface;
+import application.use_cases.game_play.ObjectsInfo;
+import application.use_cases.game_play.TutorialAndStoryModeStartUp.*;
+import application.use_cases.game_play.UserDataAccessInterface;
 import domain.UseCases.GamePlay.ObjectsSetUp;
-import domain.entities.Hint.CommonHint;
 import domain.entities.Hint.Hint;
 import domain.entities.Interactable.CommonInteractable;
 import domain.entities.Interactable.Interactable;
-import domain.entities.Item.CommonItem;
 import domain.entities.Item.Item;
 import domain.entities.Room.CommonRoom;
 import domain.entities.Room.Position;

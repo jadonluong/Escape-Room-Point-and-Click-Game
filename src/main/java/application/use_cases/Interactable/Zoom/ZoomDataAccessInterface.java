@@ -2,7 +2,6 @@ package application.use_cases.Interactable.Zoom;
 
 import domain.entities.Interactable.Interactable;
 import domain.entities.Puzzle.Puzzle;
-import domain.entities.User.User;
 
 public interface ZoomDataAccessInterface {
     Interactable getInteractableById(String interactableId);

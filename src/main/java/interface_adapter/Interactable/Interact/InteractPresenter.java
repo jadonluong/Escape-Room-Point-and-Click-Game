@@ -8,7 +8,6 @@ import interface_adapter.ViewManagerInterface;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.inventory.InventoryState;
 import interface_adapter.inventory.InventoryViewModel;
-import view.ViewManager;
 
 import java.util.List;
 

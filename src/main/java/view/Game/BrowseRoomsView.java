@@ -1,7 +1,6 @@
 package view.Game;
 
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.RoomInfo;
-import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsController;
+import application.use_cases.game_play.QuickPlay.BrowseRooms.RoomInfo;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsState;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsViewModel;
 import interface_adapter.GamePlay.QuickModeStartUp.QuickModeStartUpController;

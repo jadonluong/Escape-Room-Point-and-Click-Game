@@ -1,8 +1,7 @@
 package interface_adapter.GamePlay.ActionTrigger;
 
-import application.use_cases.GamePlay.ActionTrigger.ActionTriggerInputBoundary;
-import application.use_cases.GamePlay.ActionTrigger.ActionTriggerInputData;
-import application.use_cases.GamePlay.ActionTrigger.ActionTriggerInteractor;
+import application.use_cases.game_play.action_trigger.ActionTriggerInputBoundary;
+import application.use_cases.game_play.action_trigger.ActionTriggerInputData;
 
 public class ActionTriggerController {
 
