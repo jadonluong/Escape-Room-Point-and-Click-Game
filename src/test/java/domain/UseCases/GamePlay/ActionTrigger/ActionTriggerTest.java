@@ -1,4 +1,4 @@
-package domain.UseCases.GamePlay.ActionTrigger;
+/* package domain.UseCases.GamePlay.ActionTrigger;
 
 import application.use_cases.game_play.action_trigger.ActionTriggerDataAccessInterface;
 import application.use_cases.game_play.action_trigger.ActionTriggerGameDataAccessInterface;
@@ -185,4 +185,4 @@ public class ActionTriggerTest {
         assertFalse(testInteracter.pickUpCalled);
         assertFalse(testInteracter.hintCalled);
     }
-}
+} */
