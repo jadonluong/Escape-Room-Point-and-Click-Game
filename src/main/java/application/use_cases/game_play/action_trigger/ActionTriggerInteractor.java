@@ -1,3 +1,4 @@
+/*
 package application.use_cases.game_play.action_trigger;
 
 import application.use_cases.Hint.GetHint.GetHintInputBoundary;
@@ -59,3 +60,4 @@ public class ActionTriggerInteractor implements ActionTriggerInputBoundary {
         }
     }
 }
+ */

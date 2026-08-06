@@ -23,7 +23,6 @@ public class GetHintTest {
     private GetHintInteractor interactor;
 
     private String validObjectId;
-    private String validUserId;
     private CommonUser runtimeUser;
     private CommonHint sampleHint;
 
@@ -84,7 +83,7 @@ public class GetHintTest {
         interactor = new GetHintInteractor(testPresenter, testHintDAO, testUserDAO);
 
         this.validObjectId = "magic_want";
-        this.validUserId = "harry_potter";
+        String validUserId = "harry_potter";
 
         this.runtimeUser = new CommonUser(validUserId, "password123");
         testUserDAO.setCurrentUser(runtimeUser);
@@ -103,7 +102,7 @@ public class GetHintTest {
         hintsWatched.put(validObjectId, 1);
         runtimeUser.setStoryModeHintsWatched(hintsWatched);
 
-        GetHintInputData inputData = new GetHintInputData(validObjectId, validUserId);
+        GetHintInputData inputData = new GetHintInputData(validObjectId);
 
         interactor.execute(inputData);
 
@@ -117,7 +116,7 @@ public class GetHintTest {
 
     @Test
     void testObjectIsNotHintObject() {
-        GetHintInputData inputData = new GetHintInputData("invisibility_cloak", validUserId);
+        GetHintInputData inputData = new GetHintInputData("invisibility_cloak");
 
         interactor.execute(inputData);
 
@@ -127,7 +126,7 @@ public class GetHintTest {
 
     @Test
     void testCurrentUserMismatch() {
-        GetHintInputData inputData = new GetHintInputData(validObjectId, "batman");
+        GetHintInputData inputData = new GetHintInputData(validObjectId);
 
         interactor.execute(inputData);
 

@@ -29,13 +29,7 @@ public class GetHintInteractor implements GetHintInputBoundary {
             return;
         }
 
-        String userId = getHintInputData.getCurrentUserId();
         User currentUser = getHintUserDataAccessObject.getCurrentUser();
-
-        if (!userId.equals(currentUser.getUsername())) {
-            getHintPresenter.prepareFailView("You are not the current user"); // This should not happen.
-            return;
-        }
 
         Hint hintObject = getHintDataAccessObject.getHintForObjectID(objectID);
 
