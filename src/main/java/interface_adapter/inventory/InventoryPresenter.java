@@ -1,13 +1,11 @@
 package interface_adapter.inventory;
 
-import application.use_cases.GamePlay.ObjectsInfo;
+import application.use_cases.game_play.ObjectsInfo;
 import interface_adapter.GamePlay.InGameState;
 import interface_adapter.GamePlay.InGameViewModel;
 import application.use_cases.Item.PickUp.PickUpOutputBoundary;
 import application.use_cases.Item.PickUp.PickUpOutputData;
 
-import application.use_cases.Item.PickUp.PickUpOutputBoundary;
-import application.use_cases.Item.PickUp.PickUpOutputData;
 import application.use_cases.Item.Drop.DropOutputBoundary;
 import application.use_cases.Item.Drop.DropOutputData;
 import application.use_cases.Crafting.CraftingOutputBoundary;

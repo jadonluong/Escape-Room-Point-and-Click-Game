@@ -1,14 +1,15 @@
 package view.Game;
 
-import application.use_cases.GamePlay.ObjectsInfo;
+import application.use_cases.game_play.ObjectsInfo;
 import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
 import interface_adapter.GamePlay.InGameState;
+import interface_adapter.Hint.GetHintController;
+import interface_adapter.Interactable.Zoom.ZoomController;
+import interface_adapter.item.PickUpController;
 import javafx.scene.Cursor;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,11 +20,15 @@ public class GameRenderer {
 
     private final ImgLoader imgLoader = new ImgLoader();
 
-    private final ActionTriggerController actionTriggerController;
+    private final ZoomController zoomInController;
+    private final GetHintController getHintController;
+    private final PickUpController pickUpController;
 
-    public GameRenderer(Pane objectPane, ActionTriggerController actionTriggerController) {
+    public GameRenderer(Pane objectPane, ZoomController zoomInController, GetHintController getHintController, PickUpController pickUpController) {
         this.gamePane = objectPane;
-        this.actionTriggerController = actionTriggerController;
+        this.zoomInController = zoomInController;
+        this.getHintController = getHintController;
+        this.pickUpController = pickUpController;
     }
 
     public void renderOne(InGameState state, String id){
@@ -60,8 +65,26 @@ public class GameRenderer {
 
         Double x = info.position().x();
         Double y = info.position().y();
-        ImageView imageView = makeButton(info.imgPath(), x, y,
-                 () -> actionTriggerController.execute(id,info.type()));
+        ImageView imageView = new ImageView();
+        if (info.type().equals("Interactable")) {
+            imageView = makeButton(info.imgPath(), x, y,
+                    () -> zoomInController.zoomIn(id));
+        }
+
+        if (info.type().equals("Item")) {
+            imageView = makeButton(info.imgPath(), x, y,
+                    () -> pickUpController.execute(id));
+        }
+
+        if (info.type().equals("Hint")) {
+            imageView = makeButton(info.imgPath(), x, y,
+                    () -> getHintController.execute(id));
+        }
+
+        else{
+            return;
+        }
+
 
         renderedObjects.put(id, imageView);
         gamePane.getChildren().add(imageView);

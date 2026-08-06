@@ -1,6 +1,5 @@
 package interface_adapter.inventory;
 
-import application.use_cases.Item.SelectItem.SelectItemInputBoundary;
 import application.use_cases.Item.SelectItem.SelectItemOutputBoundary;
 import application.use_cases.Item.SelectItem.SelectItemOutputData;
 

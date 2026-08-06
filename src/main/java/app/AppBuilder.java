@@ -2,10 +2,10 @@ package app;
 
 import application.use_cases.Audio.ToggleMusic.ToggleMusicInteractor;
 import application.use_cases.Audio.ToggleSfx.ToggleSfxInteractor;
-import application.use_cases.GamePlay.ActionTrigger.ActionTriggerInteractor;
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsInteractor;
-import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpInteractor;
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInteractor;
+import application.use_cases.game_play.action_trigger.ActionTriggerInteractor;
+import application.use_cases.game_play.QuickPlay.BrowseRooms.BrowseRoomsInteractor;
+import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpInteractor;
+import application.use_cases.game_play.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInteractor;
 import application.use_cases.Hint.GetHint.GetHintInteractor;
 import application.use_cases.Interactable.Interact.InteractInteractor;
 import application.use_cases.Interactable.Zoom.ZoomInteractor;

@@ -1,7 +1,7 @@
 package domain.UseCases.GamePlay.TutorialAndStoryModeStartUp;
 
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpOutPutData;
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpOutputBoundary;
+import application.use_cases.game_play.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpOutPutData;
+import application.use_cases.game_play.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpOutputBoundary;
 
 // Fake Presenter (Output Boundary)
 public class TestPresenter implements TutorialAndStoryModeStartUpOutputBoundary {

@@ -5,18 +5,12 @@ package application.use_cases.Hint.GetHint;
  */
 public class GetHintInputData {
     private final String objectID;
-    private final String currentUserId;
 
-    public GetHintInputData(String objectID, String userId) {
+    public GetHintInputData(String objectID) {
         this.objectID = objectID;
-        this.currentUserId = userId;
     }
 
     public String getObjectID() {
         return this.objectID;
-    }
-
-    public String getCurrentUserId() {
-        return this.currentUserId;
     }
 }

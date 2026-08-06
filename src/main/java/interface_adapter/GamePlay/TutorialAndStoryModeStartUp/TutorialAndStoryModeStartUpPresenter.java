@@ -1,7 +1,7 @@
 package interface_adapter.GamePlay.TutorialAndStoryModeStartUp;
 
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpOutputBoundary;
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpOutPutData;
+import application.use_cases.game_play.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpOutputBoundary;
+import application.use_cases.game_play.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpOutPutData;
 import interface_adapter.GamePlay.InGameState;
 import interface_adapter.GamePlay.InGameViewModel;
 import interface_adapter.ViewManagerModel;

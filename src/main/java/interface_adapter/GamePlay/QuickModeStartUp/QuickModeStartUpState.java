@@ -1,6 +1,6 @@
 package interface_adapter.GamePlay.QuickModeStartUp;
 
-import application.use_cases.GamePlay.ObjectsInfo;
+import application.use_cases.game_play.ObjectsInfo;
 
 import java.util.HashMap;
 import java.util.Map;

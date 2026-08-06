@@ -1,7 +1,7 @@
 package interface_adapter.GamePlay.QuickModeStartUp;
 
-import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputBoundary;
-import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputData;
+import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputBoundary;
+import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputData;
 
 import interface_adapter.GamePlay.InGameState;
 import interface_adapter.GamePlay.InGameViewModel;

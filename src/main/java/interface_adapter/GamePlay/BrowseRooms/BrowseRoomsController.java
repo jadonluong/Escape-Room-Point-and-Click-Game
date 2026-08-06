@@ -1,6 +1,6 @@
 package interface_adapter.GamePlay.BrowseRooms;
 
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsInputBoundary;
+import application.use_cases.game_play.QuickPlay.BrowseRooms.BrowseRoomsInputBoundary;
 
 public class BrowseRoomsController {
     private BrowseRoomsInputBoundary browseRoomsInteractor;

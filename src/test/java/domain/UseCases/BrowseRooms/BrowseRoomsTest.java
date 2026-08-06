@@ -1,9 +1,8 @@
 package domain.UseCases.BrowseRooms;
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsDataAccessInterface;
+import application.use_cases.game_play.QuickPlay.BrowseRooms.BrowseRoomsDataAccessInterface;
 
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsInputBoundary;
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsInteractor;
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsOutputData;
+import application.use_cases.game_play.QuickPlay.BrowseRooms.BrowseRoomsInteractor;
+import application.use_cases.game_play.QuickPlay.BrowseRooms.BrowseRoomsOutputData;
 import domain.entities.Room.CommonRoom;
 import domain.entities.Room.Room;
 import org.junit.jupiter.api.BeforeEach;

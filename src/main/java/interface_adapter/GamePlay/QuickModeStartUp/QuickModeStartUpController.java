@@ -1,7 +1,7 @@
 package interface_adapter.GamePlay.QuickModeStartUp;
 
-import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpInputData;
-import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpInteractor;
+import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpInputData;
+import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpInteractor;
 
 public class QuickModeStartUpController {
     private QuickModeStartUpInteractor quickModeStartUpInteractor;

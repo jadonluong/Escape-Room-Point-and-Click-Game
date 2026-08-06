@@ -1,6 +1,6 @@
 package interface_adapter.GamePlay.ActionTrigger;
 
-import application.use_cases.GamePlay.ActionTrigger.ActionTriggerOutPutBoundary;
+import application.use_cases.game_play.action_trigger.ActionTriggerOutPutBoundary;
 import interface_adapter.GamePlay.InGameState;
 import interface_adapter.GamePlay.InGameViewModel;
 

@@ -6,7 +6,6 @@ import interface_adapter.Interactable.Interact.InteractState;
 import interface_adapter.Interactable.Interact.InteractViewModel;
 import interface_adapter.ViewManagerInterface;
 import interface_adapter.ViewManagerModel;
-import view.ViewManager;
 
 public class EnterExitPresenter implements EnterExitOutputBoundary {
     private final EnterExitViewModel enterExitViewModel;

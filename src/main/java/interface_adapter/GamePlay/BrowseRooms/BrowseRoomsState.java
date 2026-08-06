@@ -1,6 +1,6 @@
 package interface_adapter.GamePlay.BrowseRooms;
 
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.RoomInfo;
+import application.use_cases.game_play.QuickPlay.BrowseRooms.RoomInfo;
 import java.util.HashMap;
 import java.util.Map;
 

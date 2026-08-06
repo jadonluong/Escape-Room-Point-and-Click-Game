@@ -1,8 +1,7 @@
 package domain.UseCases.BrowseRooms;
 
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsOutputBoundary;
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsOutputData;
-import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputData;
+import application.use_cases.game_play.QuickPlay.BrowseRooms.BrowseRoomsOutputBoundary;
+import application.use_cases.game_play.QuickPlay.BrowseRooms.BrowseRoomsOutputData;
 
 public class TestPresenter implements BrowseRoomsOutputBoundary {
 
