@@ -1,7 +1,6 @@
 package view.mainmenu;
 
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsController;
-import interface_adapter.GamePlay.QuickModeStartUp.QuickModeStartUpController;
 import interface_adapter.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpController;
 import interface_adapter.User.LoggedIn.LoggedInViewModel;
 import interface_adapter.User.MainMenu.MainMenuViewModel;
@@ -17,7 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 import view.common.AudioControlView;
-import view.common.ModalOverlay;
+import view.common.AbstractModalOverlay;
 import view.common.OverlayFactory;
 
 import java.beans.PropertyChangeEvent;
@@ -213,7 +212,7 @@ public class MainMenuView extends StackPane implements PropertyChangeListener {
         fixedRoot.setScaleY(scale);
     }
 
-    private ModalOverlay currentOverlay;
+    private AbstractModalOverlay currentOverlay;
 
     private void onSignUp() {
         showOverlay(signupOverlayFactory.create(this::closeOverlay));
@@ -228,7 +227,7 @@ public class MainMenuView extends StackPane implements PropertyChangeListener {
         showOverlay(loginOverlayFactory.create(this::closeOverlay));
     }
 
-    private void showOverlay(ModalOverlay overlay) {
+    private void showOverlay(AbstractModalOverlay overlay) {
         if (currentOverlay != null) getChildren().remove(currentOverlay);
         currentOverlay = overlay;
         getChildren().add(currentOverlay);

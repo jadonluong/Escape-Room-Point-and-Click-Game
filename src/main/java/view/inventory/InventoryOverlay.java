@@ -11,7 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import view.ViewManager;
-import view.common.ModalOverlay;
+import view.common.AbstractModalOverlay;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.ArrayList;
 
-public class InventoryOverlay extends ModalOverlay implements PropertyChangeListener {
+public class InventoryOverlay extends AbstractModalOverlay implements PropertyChangeListener {
 
     private final InventoryViewModel viewModel;
     private final ViewManager viewManager;
@@ -144,23 +144,31 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
         return mainLayout;
     }
 
-    private void handleSlotClick(int index, String itemName) {
+    private void handleSlotClick(int slotIndex, String itemId) {
         InventoryState state = viewModel.getState();
-        if (state.getSelectedIndexA() == -1) {
-            state.setSelectedIndexA(index);
-        } else if (state.getSelectedIndexB() == -1 && index != state.getSelectedIndexA()) {
-            state.setSelectedIndexB(index);
-        } else {
-            state.setSelectedIndexA(index);
+        int idxA = state.getSelectedIndexA();
+        int idxB = state.getSelectedIndexB();
+
+        if (idxA == slotIndex && idxB == -1) {
+            // 1. Clicked the currently selected item -> Deselect it
+            state.setSelectedIndexA(-1);
             state.setSelectedIndexB(-1);
+            selectItemController.execute(null);
+        }
+        else if (idxA != -1 && idxB != -1) {
+            // 2. Both slots were active -> Collapse dual-selection back to ONLY this clicked item
+            state.setSelectedIndexA(slotIndex);
+            state.setSelectedIndexB(-1);
+            selectItemController.execute(itemId);
+        }
+        else {
+            // 3. Clicked a new item -> Immediately set as active item and clear slot B
+            state.setSelectedIndexA(slotIndex);
+            state.setSelectedIndexB(-1);
+            selectItemController.execute(itemId);
         }
 
-        // 1. Save the selected item ID into live user session tracking!
-        if (selectItemController != null) {
-            selectItemController.execute(itemName);
-        }
-
-        // 2. Refresh UI highlight state
+        // Refresh UI borders
         viewModel.firePropertyChanged();
     }
 }

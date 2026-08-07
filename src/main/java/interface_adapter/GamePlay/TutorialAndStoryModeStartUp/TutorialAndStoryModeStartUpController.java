@@ -15,7 +15,7 @@ public class TutorialAndStoryModeStartUpController {
      * @param mode The unique identifier of the mode being selected.
      */
     public void execute(String mode) {
-        TutorialAndStoryModeStartUpInputData inputData = new TutorialAndStoryModeStartUpInputData(mode);
+        final TutorialAndStoryModeStartUpInputData inputData = new TutorialAndStoryModeStartUpInputData(mode);
         selectModeInteractor.execute(inputData);
     }
 }

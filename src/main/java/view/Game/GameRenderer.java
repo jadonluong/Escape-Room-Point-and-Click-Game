@@ -1,7 +1,6 @@
 package view.Game;
 
 import application.use_cases.game_play.ObjectsInfo;
-import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
 import interface_adapter.GamePlay.InGameState;
 import interface_adapter.Hint.GetHintController;
 import interface_adapter.Interactable.Zoom.ZoomController;

@@ -4,13 +4,15 @@ import java.util.Map;
 
 public class BrowseRoomsOutputData {
 
-    public Map<String,RoomInfo> Info;
+    private final Map<String, RoomInfo> info;
 
-    public BrowseRoomsOutputData(Map<String,RoomInfo> Info) {
-        this.Info = Info;
+    public BrowseRoomsOutputData(Map<String, RoomInfo> info) {
+
+        this.info = info;
     }
 
-    public Map<String,RoomInfo> getInfo() {
-        return Info;
+    public Map<String, RoomInfo> getInfo() {
+
+        return info;
     }
 }

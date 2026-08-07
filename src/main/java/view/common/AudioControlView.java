@@ -1,5 +1,9 @@
 package view.common;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.InputStream;
+
 import interface_adapter.Audio.AudioViewModel;
 import interface_adapter.Audio.ToggleMusicController;
 import interface_adapter.Audio.ToggleSfxController;
@@ -10,13 +14,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.InputStream;
-
+/**
+ * A view containing buttons for toggling sound effects and background music.
+ * The displayed icons automatically update in response to changes in the
+ * audio state.
+ */
 public class AudioControlView extends HBox implements PropertyChangeListener {
 
     private static final double ICON_SIZE = 200;
+    private static final int SPACING = 25;
 
     private final AudioViewModel audioViewModel;
     private final Button sfxButton = new Button();
@@ -27,12 +33,19 @@ public class AudioControlView extends HBox implements PropertyChangeListener {
     private final Image musicOnImage = loadImage("/images/ui/buttons/MusicButtonOn.png");
     private final Image musicOffImage = loadImage("/images/ui/buttons/MusicButtonOff.png");
 
+    /**
+     * Constructs an audio control view.
+     *
+     * @param sfxController controller used to toggle sound effects
+     * @param musicController controller used to toggle background music
+     * @param audioViewModel the view model containing the current audio state
+     */
     public AudioControlView(ToggleSfxController sfxController,
                             ToggleMusicController musicController,
                             AudioViewModel audioViewModel) {
         this.audioViewModel = audioViewModel;
 
-        setSpacing(25);
+        setSpacing(SPACING);
         setAlignment(Pos.CENTER);
 
         sfxButton.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
@@ -40,8 +53,8 @@ public class AudioControlView extends HBox implements PropertyChangeListener {
         sfxButton.setCursor(Cursor.HAND);
         musicButton.setCursor(Cursor.HAND);
 
-        sfxButton.setOnAction(e -> sfxController.toggleSfx());
-        musicButton.setOnAction(e -> musicController.toggleMusic());
+        sfxButton.setOnAction(evt -> sfxController.toggleSfx());
+        musicButton.setOnAction(evt -> musicController.toggleMusic());
 
         getChildren().addAll(sfxButton, musicButton);
 
@@ -49,16 +62,41 @@ public class AudioControlView extends HBox implements PropertyChangeListener {
         render();
     }
 
+    /**
+     * Updates the displayed icons whenever the audio state changes.
+     *
+     * @param evt the property change event
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         render();
     }
 
+    /**
+     * Refreshes the button icons to reflect the current audio settings.
+     */
     private void render() {
-        sfxButton.setGraphic(makeIcon(audioViewModel.getState().isSfxOn() ? sfxOnImage : sfxOffImage));
-        musicButton.setGraphic(makeIcon(audioViewModel.getState().isMusicOn() ? musicOnImage : musicOffImage));
+        if (audioViewModel.getState().isSfxOn()) {
+            sfxButton.setGraphic(makeIcon(sfxOnImage));
+        }
+        else {
+            sfxButton.setGraphic(makeIcon(sfxOffImage));
+        }
+
+        if (audioViewModel.getState().isMusicOn()) {
+            musicButton.setGraphic(makeIcon(musicOnImage));
+        }
+        else {
+            musicButton.setGraphic(makeIcon(musicOffImage));
+        }
     }
 
+    /**
+     * Creates an image view for a button icon.
+     *
+     * @param image the image to display
+     * @return an image view with the configured icon size
+     */
     private ImageView makeIcon(Image image) {
         ImageView icon = new ImageView(image);
         icon.setFitWidth(ICON_SIZE);
@@ -66,6 +104,13 @@ public class AudioControlView extends HBox implements PropertyChangeListener {
         return icon;
     }
 
+    /**
+     * Loads an image from the application's resources.
+     *
+     * @param resourcePath the path to the image resource
+     * @return the loaded image
+     * @throws IllegalArgumentException if the resource cannot be found
+     */
     private Image loadImage(String resourcePath) {
         InputStream stream = getClass().getResourceAsStream(resourcePath);
         if (stream == null) {

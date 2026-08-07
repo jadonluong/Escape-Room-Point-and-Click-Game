@@ -13,5 +13,21 @@
       "One of us can smell gold!",
       "One of us can bite through metal - unbelivable, right?",
       "Bruh, my dinner moves faster than you. Seriously, chop chop."]
+  },
+  "house_cloud_1": {
+    "imagePath": "/images/items/storymode/room1/cloud1.png",
+    "hintMessages": ["Hit my friend, don't hit me!",
+      "Ouch! Oka - Okay - go put that anger on the locker!",
+      "One of us can smell gold!",
+      "One of us can bite through metal - unbelivable, right?",
+      "Bruh, my dinner moves faster than you. Seriously, chop chop."]
+  },
+  "house_cloud_2": {
+    "imagePath": "/images/items/storymode/room1/cloud2.png",
+    "hintMessages": ["Hit my friend, don't hit me!",
+      "Ouch! Oka - Okay - go put that anger on the locker!",
+      "One of us can smell gold!",
+      "One of us can bite through metal - unbelivable, right?",
+      "Bruh, my dinner moves faster than you. Seriously, chop chop."]
   }
 }

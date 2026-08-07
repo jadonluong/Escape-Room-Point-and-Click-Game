@@ -36,7 +36,6 @@ import domain.entities.User.*;
 import infrastructure.AnagramApiClient;
 import infrastructure.CryptogramApiClient;
 import interface_adapter.Audio.*;
-import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsController;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsPresenter;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsViewModel;
@@ -123,7 +122,7 @@ public class AppBuilder extends Application {
         GameAssetManager gameAssetManager = new GameAssetManager(itemFactory, interactableFactory, roomFactory, hintFactory, puzzleFactory);
 
         JsonUserDataAccessObject userDAO = new JsonUserDataAccessObject(gameAssetManager,gameAssetManager);
-        LiveUserSessionTracking userSessionTracking = new LiveUserSessionTracking();
+        LiveUserSessionTracking userSessionTracking = new LiveUserSessionTracking(gameAssetManager);// changed this to pass gameAssetManager
         CommonUserFactory userFactory = new CommonUserFactoryClass();
         GuestUserFactory guestUserFactory = new GuestUserFactoryClass();
         User defaultGuestUser = guestUserFactory.createGuestUser();

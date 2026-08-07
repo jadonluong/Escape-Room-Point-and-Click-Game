@@ -4,7 +4,7 @@ import application.use_cases.Item.PickUp.PickUpInputBoundary;
 import application.use_cases.Item.PickUp.PickUpInputData;
 
 public class PickUpController {
-    private PickUpInputBoundary pickUpInteractor;
+    private final PickUpInputBoundary pickUpInteractor;
     public PickUpController(PickUpInputBoundary pickUpInteractor) {
         this.pickUpInteractor = pickUpInteractor;
     }

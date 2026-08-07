@@ -1,18 +1,23 @@
 package interface_adapter.GamePlay.QuickModeStartUp;
 
-import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpInputBoundary;
 import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpInputData;
-import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpInputBoundary;
+import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpInteractor;
 
 public class QuickModeStartUpController {
+    private QuickModeStartUpInteractor quickModeStartUpInteractor;
 
-    private final QuickModeStartUpInputBoundary Interactor;
-
-    public QuickModeStartUpController(QuickModeStartUpInputBoundary interactor) {
-        this.Interactor = interactor;
+    public QuickModeStartUpController(QuickModeStartUpInteractor interactor) {
+        this.quickModeStartUpInteractor = interactor;
     }
+
+    /**
+     * Executes the quick mode startup process for the specified room.
+     *
+     * @param roomId the ID of the room to start the game in
+     */
     public void execute(String roomId) {
-        QuickModeStartUpInputData data = new QuickModeStartUpInputData(roomId);
-        Interactor.execute(data);
+
+        final QuickModeStartUpInputData data = new QuickModeStartUpInputData(roomId);
+        quickModeStartUpInteractor.execute(data);
     }
 }

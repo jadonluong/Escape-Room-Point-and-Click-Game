@@ -2,7 +2,6 @@ package interface_adapter.GamePlay.QuickModeStartUp;
 
 import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputBoundary;
 import application.use_cases.game_play.QuickPlay.QuickModeStartUp.QuickModeStartUpOutputData;
-
 import interface_adapter.GamePlay.InGameState;
 import interface_adapter.GamePlay.InGameViewModel;
 import interface_adapter.ViewManagerModel;
@@ -20,10 +19,10 @@ public class QuickModeStartUpPresenter implements QuickModeStartUpOutputBoundary
     @Override
     public void prepareGameStartView(QuickModeStartUpOutputData outputData) {
         // 1. Get current state and update it
-        InGameState currentState = viewModel.getState();
+        final InGameState currentState = viewModel.getState();
         currentState.setObjectsToDisplay(outputData.getObjectToDisplay());
         currentState.setImgPath(outputData.getRoomImgPath());
-        currentState.setErrorMessage(null); // Clear error on success
+        currentState.setErrorMessage(null);
 
         // 2. Notify ViewModel listeners
         viewModel.firePropertyChanged();
@@ -38,12 +37,9 @@ public class QuickModeStartUpPresenter implements QuickModeStartUpOutputBoundary
     @Override
     public void prepareFailView(String message) {
         // Update state with error details
-        InGameState currentState = viewModel.getState();
+        final InGameState currentState = viewModel.getState();
         currentState.setErrorMessage(message);
 
         viewModel.firePropertyChanged();
     }
 }
-
-
-
