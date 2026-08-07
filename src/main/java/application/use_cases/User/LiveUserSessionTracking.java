@@ -1,6 +1,5 @@
 package application.use_cases.User;
 
-import application.use_cases.game_play.action_trigger.ActionTriggerDataAccessInterface;
 import application.use_cases.game_play.UserDataAccessInterface;
 import application.use_cases.Hint.GetHint.GetHintUserDataAccessInterface;
 import application.use_cases.Interactable.Interact.InteractUserDataAccessInterface;
@@ -21,7 +20,6 @@ public class LiveUserSessionTracking implements GetHintUserDataAccessInterface,
         LogoutUserDataAccessInterface,
         SaveProgressUserSessionDataAccessInterface,
         UserDataAccessInterface,
-        ActionTriggerDataAccessInterface,
         InteractUserDataAccessInterface,
         EnterExitUserDataAccessInterface,
         SolveUserDataAccessInterface,

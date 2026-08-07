@@ -1,23 +1,26 @@
 package interface_adapter.GamePlay;
 
-import application.use_cases.game_play.ObjectsInfo;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import application.use_cases.game_play.ObjectsInfo;
+
 public class InGameState {
     private Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
-    private String errorMessage = null;
+    private String errorMessage;
     private String imgPath;
 
+    public InGameState() {
 
-    public InGameState() {}
+    }
 
     public Map<String, ObjectsInfo> getObjectsToDisplay() {
+
         return objectsToDisplay;
     }
 
-    public String getImgPath(){
+    public String getImgPath() {
+
         return imgPath;
     }
 
@@ -25,7 +28,7 @@ public class InGameState {
         this.objectsToDisplay = objectsToDisplay;
     }
 
-    public void setImgPath(String imgPath){
+    public void setImgPath(String imgPath) {
         this.imgPath = imgPath;
     }
 
@@ -37,9 +40,4 @@ public class InGameState {
         this.errorMessage = errorMessage;
     }
 
-    public void removeObject(String id) {
-        if (this.objectsToDisplay != null) {
-            this.objectsToDisplay.remove(id);
-        }
-    }
 }

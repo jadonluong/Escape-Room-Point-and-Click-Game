@@ -9,8 +9,15 @@ public class QuickModeStartUpController {
     public QuickModeStartUpController(QuickModeStartUpInteractor interactor) {
         this.quickModeStartUpInteractor = interactor;
     }
+
+    /**
+     * Executes the quick mode startup process for the specified room.
+     *
+     * @param roomId the ID of the room to start the game in
+     */
     public void execute(String roomId) {
-        QuickModeStartUpInputData data = new QuickModeStartUpInputData(roomId);
+
+        final QuickModeStartUpInputData data = new QuickModeStartUpInputData(roomId);
         quickModeStartUpInteractor.execute(data);
     }
 }

@@ -36,7 +36,6 @@ import domain.entities.User.*;
 import infrastructure.AnagramApiClient;
 import infrastructure.CryptogramApiClient;
 import interface_adapter.Audio.*;
-import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsController;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsPresenter;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsViewModel;
