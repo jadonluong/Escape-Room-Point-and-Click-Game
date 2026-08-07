@@ -11,7 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import view.ViewManager;
-import view.common.ModalOverlay;
+import view.common.AbstractModalOverlay;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.ArrayList;
 
-public class InventoryOverlay extends ModalOverlay implements PropertyChangeListener {
+public class InventoryOverlay extends AbstractModalOverlay implements PropertyChangeListener {
 
     private final InventoryViewModel viewModel;
     private final ViewManager viewManager;

@@ -11,9 +11,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import view.common.ModalOverlay;
+import view.common.AbstractModalOverlay;
 
-public class SignupOverlay extends ModalOverlay {
+public class SignupOverlay extends AbstractModalOverlay {
 
     private final TextField usernameField = new TextField();
     private final PasswordField passwordField = new PasswordField();

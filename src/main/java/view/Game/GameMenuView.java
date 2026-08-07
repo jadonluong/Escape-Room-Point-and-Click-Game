@@ -11,12 +11,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import view.ViewManager;
 import view.common.AudioControlView;
-import view.common.ModalOverlay;
+import view.common.AbstractModalOverlay;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class GameMenuView extends ModalOverlay implements PropertyChangeListener {
+public class GameMenuView extends AbstractModalOverlay implements PropertyChangeListener {
 
     private final LoggedInViewModel loggedInViewModel;
     private final AudioControlView audioControlView;

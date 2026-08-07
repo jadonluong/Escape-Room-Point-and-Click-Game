@@ -5,10 +5,9 @@ import interface_adapter.ViewManagerModel;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import view.common.ModalOverlay;
+import view.common.AbstractModalOverlay;
 import view.common.SoundPlayer;
 
 import java.beans.PropertyChangeEvent;
@@ -32,7 +31,7 @@ public class ViewManager implements PropertyChangeListener, ViewManagerInterface
     private Parent currentView; // In case someone wants to get this value (there is a getter!)
     private String currentViewName; // ^^
 
-    private final Map<String, ModalOverlay> overlays = new HashMap<>();
+    private final Map<String, AbstractModalOverlay> overlays = new HashMap<>();
     private final Set<String> topLayerOverlays = new HashSet<>(); // Overlays that sit on top when visible.
     private final Set<String> visibleOverlays = new HashSet<>();
 
@@ -56,7 +55,7 @@ public class ViewManager implements PropertyChangeListener, ViewManagerInterface
         views.put(viewName, view);
     }
 
-    public void registerOverlay(String viewName, ModalOverlay overlay, boolean topLayer) {
+    public void registerOverlay(String viewName, AbstractModalOverlay overlay, boolean topLayer) {
         overlays.put(viewName, overlay);
         if (topLayer) {
             topLayerOverlays.add(viewName);
@@ -65,7 +64,7 @@ public class ViewManager implements PropertyChangeListener, ViewManagerInterface
         overlay.setManaged(false);
     }
 
-    public void registerOverlay(String viewName, ModalOverlay overlay) {
+    public void registerOverlay(String viewName, AbstractModalOverlay overlay) {
         registerOverlay(viewName, overlay, false);
     }
 
@@ -119,7 +118,7 @@ public class ViewManager implements PropertyChangeListener, ViewManagerInterface
     }
 
     public void showOverlay(String overlayName) {
-        ModalOverlay overlay = overlays.get(overlayName);
+        AbstractModalOverlay overlay = overlays.get(overlayName);
         if (overlay == null) {
             return;
         }
@@ -146,7 +145,7 @@ public class ViewManager implements PropertyChangeListener, ViewManagerInterface
             overlay.toFront();
         } else {
             for (String topName : topLayerOverlays) {
-                ModalOverlay topOverlay = overlays.get(topName);
+                AbstractModalOverlay topOverlay = overlays.get(topName);
                 if (visibleOverlays.contains(topName)) {
                     topOverlay.toFront();
                 }
@@ -155,7 +154,7 @@ public class ViewManager implements PropertyChangeListener, ViewManagerInterface
     }
 
     public void hideOverlay(String overlayName) {
-        ModalOverlay overlay = overlays.get(overlayName);
+        AbstractModalOverlay overlay = overlays.get(overlayName);
         if (overlay == null) {
             return;
         }

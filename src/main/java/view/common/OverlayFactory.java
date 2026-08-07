@@ -2,5 +2,5 @@ package view.common;
 
 @FunctionalInterface
 public interface OverlayFactory {
-    ModalOverlay create(Runnable onClose);
+    AbstractModalOverlay create(Runnable onClose);
 }
