@@ -210,9 +210,13 @@ public class AppBuilder extends Application {
         final InGameViewModel inGameViewModel = new InGameViewModel();
 
         // --- Tutorial Mode & Story Mode start up chain ---
-        final TutorialAndStoryModeStartUpPresenter tutorialAndStoryModeStartUpPresenter = new TutorialAndStoryModeStartUpPresenter(inGameViewModel, viewManagerModel);
-        final TutorialAndStoryModeStartUpInteractor tutorialAndStoryModeStartUpInteractor = new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter, gameAssetManager, userSessionTracking);
-        final TutorialAndStoryModeStartUpController tutorialAndStoryModeStartUpController = new TutorialAndStoryModeStartUpController(tutorialAndStoryModeStartUpInteractor);
+        final TutorialAndStoryModeStartUpPresenter tutorialAndStoryModeStartUpPresenter =
+                new TutorialAndStoryModeStartUpPresenter(inGameViewModel, viewManagerModel);
+        final TutorialAndStoryModeStartUpInteractor tutorialAndStoryModeStartUpInteractor =
+                new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter,
+                        gameAssetManager, userSessionTracking);
+        final TutorialAndStoryModeStartUpController tutorialAndStoryModeStartUpController =
+                new TutorialAndStoryModeStartUpController(tutorialAndStoryModeStartUpInteractor);
 
         // --- Browse rooms chain ---
         final BrowseRoomsViewModel browseRoomsViewModel = new BrowseRoomsViewModel();
