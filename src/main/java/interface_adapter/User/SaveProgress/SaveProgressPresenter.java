@@ -13,9 +13,9 @@ public class SaveProgressPresenter implements SaveProgressOutputBoundary {
     // Note: success view can be pause view + success message at bottom.
     @Override
     public void prepareSuccessView(SaveProgressOutputData saveProgressOutputData) {
-        boolean isSaveFailed = saveProgressOutputData.isSaveFailed();
+        final boolean isSaveFailed = saveProgressOutputData.isSaveFailed();
         if (!isSaveFailed) {
-            SaveProgressState saveProgressState = saveProgressViewModel.getState();
+            final SaveProgressState saveProgressState = saveProgressViewModel.getState();
             saveProgressState.setSuccessMessage("Progress saved!");
             saveProgressViewModel.setState(saveProgressState);
             saveProgressViewModel.firePropertyChanged();

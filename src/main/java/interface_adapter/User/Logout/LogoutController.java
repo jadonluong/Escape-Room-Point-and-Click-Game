@@ -23,7 +23,7 @@ public class LogoutController {
      * @param username the username of the user logging out
      */
     public void executeLogoutWithoutSave(String username) {
-        LogoutInputData inputData = new LogoutInputData(username);
+        final LogoutInputData inputData = new LogoutInputData(username);
         logoutInteractor.execute(inputData);
     }
 
@@ -33,7 +33,7 @@ public class LogoutController {
      */
     public void executeLogoutWithSave(String username) {
 
-        SaveAndLogoutInputData inputData = new SaveAndLogoutInputData(username);
+        final SaveAndLogoutInputData inputData = new SaveAndLogoutInputData(username);
         saveAndLogoutInteractor.execute(inputData);
     }
 }

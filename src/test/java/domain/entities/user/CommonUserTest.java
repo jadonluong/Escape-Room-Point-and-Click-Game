@@ -47,17 +47,17 @@ public class CommonUserTest extends  AbstractUserTest<CommonUser> {
         user.unlockRoom(room);
         List<String> roomIdList = new ArrayList<>();
         roomIdList.add("room1");
-        assertEquals(roomIdList, user.getStoryModeRoomsUnlockedIDs());
+        assertEquals(roomIdList, user.getStoryModeRoomsUnlockedIds());
 
         user.unlockRoom(room);
-        assertEquals(roomIdList, user.getStoryModeRoomsUnlockedIDs());
+        assertEquals(roomIdList, user.getStoryModeRoomsUnlockedIds());
 
         user.setActiveGameMode("QuickMode");
         user.unlockRoom(room);
-        assertEquals(roomIdList, user.getQuickModeRoomsUnlockedIDs());
+        assertEquals(roomIdList, user.getQuickModeRoomsUnlockedIds());
 
         user.unlockRoom(room);
-        assertEquals(roomIdList, user.getQuickModeRoomsUnlockedIDs());
+        assertEquals(roomIdList, user.getQuickModeRoomsUnlockedIds());
     }
 
     @Test
@@ -66,25 +66,25 @@ public class CommonUserTest extends  AbstractUserTest<CommonUser> {
                 false, "fake_path");
 
         user.saveItem(item);
-        assertTrue(user.getStoryModeItemInventoryIDs().isEmpty());
-        assertTrue(user.getQuickModeItemInventoryIDs().isEmpty());
+        assertTrue(user.getStoryModeItemInventoryIds().isEmpty());
+        assertTrue(user.getQuickModeItemInventoryIds().isEmpty());
 
         user.setActiveGameMode("StoryMode");
         user.saveItem(item);
-        assertTrue(user.getStoryModeItemInventoryIDs().contains("1"));
+        assertTrue(user.getStoryModeItemInventoryIds().contains("1"));
 
         user.removeItem(item);
-        assertFalse(user.getStoryModeItemInventoryIDs().contains("1"));
+        assertFalse(user.getStoryModeItemInventoryIds().contains("1"));
 
         user.setActiveGameMode("QuickMode");
         user.saveCurrentRoomID("room1");
         user.saveItem(item);
-        assertTrue(user.getQuickModeItemInventoryIDs().containsKey("room1"));
-        assertTrue(user.getQuickModeItemInventoryIDs().get("room1").contains("1"));
+        assertTrue(user.getQuickModeItemInventoryIds().containsKey("room1"));
+        assertTrue(user.getQuickModeItemInventoryIds().get("room1").contains("1"));
 
         user.removeItem(item);
-        assertTrue(user.getQuickModeItemInventoryIDs().containsKey("room1"));
-        assertFalse(user.getQuickModeItemInventoryIDs().get("room1").contains("1"));
+        assertTrue(user.getQuickModeItemInventoryIds().containsKey("room1"));
+        assertFalse(user.getQuickModeItemInventoryIds().get("room1").contains("1"));
     }
 
     @Test
@@ -93,28 +93,28 @@ public class CommonUserTest extends  AbstractUserTest<CommonUser> {
         Room room = new CommonRoom("room1", "test room 1", "fake_room_path",
                 new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new HashMap<>());
         user.unlockRoom(room);
-        assertTrue(user.getQuickModeItemInventoryIDs().isEmpty());
+        assertTrue(user.getQuickModeItemInventoryIds().isEmpty());
         user.switchRoom(room);
-        assertTrue(user.getQuickModeItemInventoryIDs().containsKey(room.getId()));
-        assertTrue(user.getQuickModeItemInventoryIDs().get(room.getId()).isEmpty());
+        assertTrue(user.getQuickModeItemInventoryIds().containsKey(room.getId()));
+        assertTrue(user.getQuickModeItemInventoryIds().get(room.getId()).isEmpty());
     }
 
     @Test
-    void testSetAndGetQuickModeRoomsUnlockedIDs() {
+    void testSetAndGetQuickModeRoomsUnlockedIds() {
         List<String> roomsUnlockedIDs = new ArrayList<>();
         roomsUnlockedIDs.add("room1");
-        user.setQuickModeRoomsUnlockedIDs(roomsUnlockedIDs);
-        assertEquals(roomsUnlockedIDs, user.getQuickModeRoomsUnlockedIDs());
+        user.setQuickModeRoomsUnlockedIds(roomsUnlockedIDs);
+        assertEquals(roomsUnlockedIDs, user.getQuickModeRoomsUnlockedIds());
     }
 
     @Test
-    void testSetAndGetQuickModeItemInventoryIDs() {
+    void testSetAndGetQuickModeItemInventoryIds() {
         Map<String, ArrayList<String>> itemIDMap = new HashMap<>();
         ArrayList<String> itemIDs = new ArrayList<>();
         itemIDs.add("1");
         itemIDMap.put("room1", itemIDs);
-        user.setQuickModeItemInventoryIDs(itemIDMap);
-        assertEquals(itemIDMap, user.getQuickModeItemInventoryIDs());
+        user.setQuickModeItemInventoryIds(itemIDMap);
+        assertEquals(itemIDMap, user.getQuickModeItemInventoryIds());
     }
 
     @Test
@@ -128,19 +128,19 @@ public class CommonUserTest extends  AbstractUserTest<CommonUser> {
     }
 
     @Test
-    void testSetAndGetStoryModeRoomsUnlockedIDs() {
+    void testSetAndGetStoryModeRoomsUnlockedIds() {
         List<String> roomsUnlockedIDs = new ArrayList<>();
         roomsUnlockedIDs.add("room1");
-        user.setStoryModeRoomsUnlockedIDs(roomsUnlockedIDs);
-        assertEquals(roomsUnlockedIDs, user.getStoryModeRoomsUnlockedIDs());
+        user.setStoryModeRoomsUnlockedIds(roomsUnlockedIDs);
+        assertEquals(roomsUnlockedIDs, user.getStoryModeRoomsUnlockedIds());
     }
 
     @Test
-    void testSetAndGetStoryModeItemInventoryIDs() {
+    void testSetAndGetStoryModeItemInventoryIds() {
         List<String> itemList = new ArrayList<>();
         itemList.add("item1");
-        user.setStoryModeItemInventoryIDs(itemList);
-        assertEquals(itemList, user.getStoryModeItemInventoryIDs());
+        user.setStoryModeItemInventoryIds(itemList);
+        assertEquals(itemList, user.getStoryModeItemInventoryIds());
     }
 
     @Test
@@ -166,12 +166,12 @@ public class CommonUserTest extends  AbstractUserTest<CommonUser> {
     void testCommonUserGsonRoundTrip() {
         // --- Populate QuickMode Data using public wrapper methods ---
         List<String> quickRooms = List.of("room1", "room2");
-        this.user.setQuickModeRoomsUnlockedIDs(quickRooms);
+        this.user.setQuickModeRoomsUnlockedIds(quickRooms);
 
         Map<String, ArrayList<String>> quickInventory = new HashMap<>();
         ArrayList<String> room1Items = new ArrayList<>(List.of("RustyKey", "Flashlight"));
         quickInventory.put("room1", room1Items);
-        this.user.setQuickModeItemInventoryIDs(quickInventory);
+        this.user.setQuickModeItemInventoryIds(quickInventory);
 
         Map<String, HashMap<String, Integer>> quickHints = new HashMap<>();
         HashMap<String, Integer> room1Hints = new HashMap<>();
@@ -183,10 +183,10 @@ public class CommonUserTest extends  AbstractUserTest<CommonUser> {
         this.user.setStoryModeCurrentRoomID("room2");
 
         List<String> storyRooms = List.of("room2", "room3", "room4");
-        this.user.setStoryModeRoomsUnlockedIDs(storyRooms);
+        this.user.setStoryModeRoomsUnlockedIds(storyRooms);
 
         List<String> storyInventory = List.of("LabKeycard", "AcidVial");
-        this.user.setStoryModeItemInventoryIDs(storyInventory);
+        this.user.setStoryModeItemInventoryIds(storyInventory);
 
         HashMap<String, Integer> storyHints = new HashMap<>();
         storyHints.put("laser_grid_puzzle", 3);
@@ -222,17 +222,17 @@ public class CommonUserTest extends  AbstractUserTest<CommonUser> {
         assertNotNull(deserializedUser.getModeProgress(), "Nested ModeProgress object was not re-instantiated.");
 
         // Validate QuickMode field consistency
-        assertEquals(quickRooms, deserializedUser.getQuickModeRoomsUnlockedIDs(),
+        assertEquals(quickRooms, deserializedUser.getQuickModeRoomsUnlockedIds(),
                 "QuickMode room lists mismatched after parsing.");
-        assertEquals(quickInventory, deserializedUser.getQuickModeItemInventoryIDs(),
+        assertEquals(quickInventory, deserializedUser.getQuickModeItemInventoryIds(),
                 "QuickMode room inventory mappings changed after parsing.");
 
         // Validate StoryMode field consistency
         assertEquals("room2", deserializedUser.getStoryModeCurrentRoomID(),
                 "StoryMode room index identifier corrupted during extraction.");
-        assertEquals(storyRooms, deserializedUser.getStoryModeRoomsUnlockedIDs(),
+        assertEquals(storyRooms, deserializedUser.getStoryModeRoomsUnlockedIds(),
                 "StoryMode room historical lists mismatched.");
-        assertEquals(storyInventory, deserializedUser.getStoryModeItemInventoryIDs(),
+        assertEquals(storyInventory, deserializedUser.getStoryModeItemInventoryIds(),
                 "StoryMode item item lists changed sequence or dropped items.");
 
         // AbstractUser's hints live field is populated in the JsonUserDataAccessObject

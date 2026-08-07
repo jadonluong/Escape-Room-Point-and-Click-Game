@@ -7,7 +7,7 @@ import application.use_cases.User.Login.LoginInputData;
  * The controller for the Login Use Case.
  */
 public class LoginController {
-    final private LoginInputBoundary userLoginUseCaseInteractor;
+    private final LoginInputBoundary userLoginUseCaseInteractor;
 
     public LoginController(LoginInputBoundary userLoginUseCaseInteractor) {
         this.userLoginUseCaseInteractor = userLoginUseCaseInteractor;

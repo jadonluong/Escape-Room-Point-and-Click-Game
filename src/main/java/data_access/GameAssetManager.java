@@ -35,8 +35,6 @@ import domain.entities.Room.Position;
 import domain.entities.Room.Room;
 import domain.entities.Room.RoomFactory;
 
-// TODO: fix the complexity checkstyle error.
-
 /**
  * Manages game flow as the centralized data initialization engine and in-memory vault
  * for all static, read-only game assets.

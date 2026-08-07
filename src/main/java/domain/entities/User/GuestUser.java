@@ -6,7 +6,7 @@ import java.util.UUID;
  * The GuestUser class that extends the AbstractUser class.
  */
 public class GuestUser extends AbstractUser {
-    private String guestID;
+    private final String guestID;
 
     public GuestUser() {
         super();

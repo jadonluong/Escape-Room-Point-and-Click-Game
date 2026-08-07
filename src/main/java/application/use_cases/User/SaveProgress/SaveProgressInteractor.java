@@ -6,7 +6,7 @@ import domain.entities.User.User;
 /**
  * The interactor for the Save Progress Use Case.
  */
-public class SaveProgressInteractor implements SaveProgressInputBoundary{
+public class SaveProgressInteractor implements SaveProgressInputBoundary {
     private final SaveProgressOutputBoundary saveProgressPresenter;
     private final SaveProgressUserDataAccessInterface saveProgressUserDataAccessObject;
     private final SaveProgressUserSessionDataAccessInterface saveProgressUserSessionDataAccessObject;
@@ -21,12 +21,13 @@ public class SaveProgressInteractor implements SaveProgressInputBoundary{
 
     @Override
     public void execute(SaveProgressInputData saveProgressInputData) {
-        if (!saveProgressInputData.getUsername().equals(saveProgressUserSessionDataAccessObject.getCurrentUser().getUsername())) {
+        if (!saveProgressInputData.getUsername().equals(saveProgressUserSessionDataAccessObject.getCurrentUser()
+                .getUsername())) {
             saveProgressPresenter.prepareFailView("Invalid username provided.");
             return;
         }
 
-        User currentUser = saveProgressUserSessionDataAccessObject.getCurrentUser();
+        final User currentUser = saveProgressUserSessionDataAccessObject.getCurrentUser();
 
         if (!currentUser.isRegistered()) {
             saveProgressPresenter.prepareFailView("User is in Guest Mode, progress cannot be saved.");

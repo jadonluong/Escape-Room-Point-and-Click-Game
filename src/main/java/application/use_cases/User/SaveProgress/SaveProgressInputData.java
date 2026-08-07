@@ -6,7 +6,7 @@ package application.use_cases.User.SaveProgress;
 public class SaveProgressInputData {
     private String username;
 
-    public SaveProgressInputData(String username){
+    public SaveProgressInputData(String username) {
         this.username = username;
     }
 

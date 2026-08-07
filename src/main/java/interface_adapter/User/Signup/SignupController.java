@@ -9,7 +9,7 @@ import application.use_cases.User.SignUp.SignupInputData;
 public class SignupController {
     private final SignUpInputBoundary userSignupUseCaseInteractor;
 
-    public SignupController (SignUpInputBoundary userSignupUseCaseInteractor){
+    public SignupController(SignUpInputBoundary userSignupUseCaseInteractor) {
         this.userSignupUseCaseInteractor = userSignupUseCaseInteractor;
     }
 

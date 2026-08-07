@@ -44,7 +44,6 @@ public class JsonUserDataAccessObject implements
         this.rawUsers = load();
     }
 
-
     private Map<String, UserDataModel> load() {
         try {
             Path path = Paths.get(FILE_PATH);
@@ -123,14 +122,8 @@ public class JsonUserDataAccessObject implements
         CommonUser user = new CommonUser(userDTO.username, userDTO.password);
         // Safety check: ensure runtime memory fields are never null
         user.initializeRuntimeState();
-
         hydrateUserFromDataModel(user, userDTO);
 
-
-        /* syncRuntimeFromJSON(user); // Copy transient hint maps & room IDs from ModeProgress into AbstractUser
-        hydrateStoryModeLiveObjects(user);
-        hydrateQuickModeLiveObjects(user);
-         */
         return user;
     }
     
@@ -202,92 +195,6 @@ public class JsonUserDataAccessObject implements
         user.setActiveGameMode(null);
     }
 
-    // TODO: clean this up once we confirm everything is working
-    /**
-     * Syncs deserialized JSON data from ModeProgress into AbstractUser's transient fields.
-     */
-    private void syncRuntimeFromJSON(CommonUser user) {
-        if (user.getModeProgress() != null) {
-            // Sync Quick Mode Hints
-            if (user.getModeProgress().getQuickMode() != null) {
-                Map<String, HashMap<String, Integer>> qmHints = user.getQuickModeHintsWatched();
-                if (qmHints != null) {
-                    user.setQuickModeHintsWatched(qmHints);
-                }
-            }
-
-            // Sync Story Mode Hints & Saved Room ID
-            if (user.getModeProgress().getStoryMode() != null) {
-                HashMap<String, Integer> smHints = user.getStoryModeHintsWatched();
-                if (smHints != null) {
-                    user.setStoryModeHintsWatched(smHints);
-                }
-
-                String savedStoryRoomID = user.getStoryModeCurrentRoomID();
-                if (savedStoryRoomID != null) {
-                    user.setStoryModeCurrentRoomID(savedStoryRoomID);
-                }
-            }
-        }
-    }
-
-    private void hydrateQuickModeLiveObjects(CommonUser user) {
-        user.setActiveGameMode("QuickMode");
-
-        // Translate Room text IDs from the JSON file into active game Room objects
-        if (user.getQuickModeRoomsUnlockedIDs() != null) {
-            for (String roomId : user.getQuickModeRoomsUnlockedIDs()) {
-                Room room = roomRegistry.getRoomById(roomId);
-                if (room != null) {
-                    user.unlockRoom(room);
-                }
-            }
-        }
-
-        // Translate Item text IDs from the JSON file into active game Item objects
-        if (user.getQuickModeItemInventoryIDs() != null) {
-            for (Map.Entry<String, ArrayList<String>> entry : user.getQuickModeItemInventoryIDs().entrySet()) {
-                String roomID = entry.getKey();
-                user.saveCurrentRoomID(roomID);
-
-                // Instantiate every item collected in the room with roomID
-                for (String itemID : entry.getValue()) {
-                    Item item = itemRegistry.getItemById(itemID);
-                    if (item != null) {
-                        user.saveItem(item);
-                    }
-                }
-            }
-        }
-        // Hints require no work here; Gson has already restored the hintsWatched map safely
-        user.saveCurrentRoomID(null);
-        user.setActiveGameMode(null);
-    }
-
-    private void hydrateStoryModeLiveObjects(CommonUser user) {
-        user.setActiveGameMode("StoryMode");
-        if (user.getStoryModeRoomsUnlockedIDs() != null) {
-            for (String roomId : user.getStoryModeRoomsUnlockedIDs()) {
-                Room room = roomRegistry.getRoomById(roomId);
-                if (room != null) {
-                    user.unlockRoom(room);
-                }
-            }
-        }
-
-        if (user.getStoryModeItemInventoryIDs() != null) {
-            for (String itemId : user.getStoryModeItemInventoryIDs()) {
-                Item item = itemRegistry.getItemById(itemId);
-                if (item != null) {
-                    user.saveItem(item);
-                }
-            }
-        }
-        // No hint hydration needed.
-        // Gson already populated storyModeHintsWatched and quickModeHintsWatched directly into the user object.
-        user.setActiveGameMode(null);
-    }
-
     @Override
     public void saveProgress(CommonUser user) {
         if (user == null) {
@@ -307,12 +214,12 @@ public class JsonUserDataAccessObject implements
         model.modeProgress.storyMode = new UserDataModel.StoryModeDataDTO();
 
         model.modeProgress.storyMode.storyModeCurrentRoomID = user.getStoryModeCurrentRoomID();
-        model.modeProgress.storyMode.storyModeRoomsUnlocked = user.getStoryModeRoomsUnlockedIDs();
-        model.modeProgress.storyMode.storyModeItemInventory = user.getStoryModeItemInventoryIDs();
+        model.modeProgress.storyMode.storyModeRoomsUnlocked = user.getStoryModeRoomsUnlockedIds();
+        model.modeProgress.storyMode.storyModeItemInventory = user.getStoryModeItemInventoryIds();
         model.modeProgress.storyMode.storyModeHintsWatched = user.getStoryModeHintsWatched();
 
-        model.modeProgress.quickMode.quickModeRoomsUnlocked = user.getQuickModeRoomsUnlockedIDs();
-        model.modeProgress.quickMode.quickModeItemInventory = user.getQuickModeItemInventoryIDs();
+        model.modeProgress.quickMode.quickModeRoomsUnlocked = user.getQuickModeRoomsUnlockedIds();
+        model.modeProgress.quickMode.quickModeItemInventory = user.getQuickModeItemInventoryIds();
         model.modeProgress.quickMode.quickModeHintsWatched = user.getQuickModeHintsWatched();
 
         return model;
@@ -341,6 +248,4 @@ public class JsonUserDataAccessObject implements
             public HashMap<String, Integer> storyModeHintsWatched = new HashMap<>();
         }
     }
-
-
 }

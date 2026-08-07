@@ -9,8 +9,8 @@ public interface InteractableRegistry {
 
     /**
      * Returns the Interactable object with the given ID.
-     * @param ID the ID of the Interactable object to be retrieved
+     * @param id the ID of the Interactable object to be retrieved
      * @return the Interactable object
      */
-    Interactable getInteractableById(String ID);
+    Interactable getInteractableById(String id);
 }

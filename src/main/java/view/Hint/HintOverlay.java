@@ -1,9 +1,10 @@
 package view.Hint;
 
-import interface_adapter.Hint.GetHintState;
-import interface_adapter.Hint.GetHintViewModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import interface_adapter.Hint.GetHintState;
+import interface_adapter.Hint.GetHintViewModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -16,10 +17,21 @@ import javafx.scene.text.TextAlignment;
 import view.ViewManager;
 import view.common.AbstractModalOverlay;
 
-public class HintOverlay extends AbstractModalOverlay implements PropertyChangeListener{
-
+public class HintOverlay extends AbstractModalOverlay implements PropertyChangeListener {
     private final GetHintViewModel getHintViewModel;
     private Label messageLabel;
+
+    private final int modelBoxMaxWidth = 450;
+    private final int modelBoxMaxHeight = 85;
+    private final int stackPaneTopMargin = 10;
+    private final int contentBoxTopPadding = 10;
+    private final int contentBoxBottomPadding = 10;
+    private final int contentBoxRightPadding = 20;
+    private final int contentBoxLeftPadding = 10;
+    private final int modalBoxTopPadding = 8;
+    private final int modalBoxRightPadding = 12;
+    private final int modalBoxBottomPadding = 8;
+    private final int modalBoxLeftPadding = 12;
 
     public HintOverlay(GetHintViewModel getHintViewModel, ViewManager viewManager) {
         super(() -> viewManager.hideOverlay("get hint"));
@@ -38,7 +50,7 @@ public class HintOverlay extends AbstractModalOverlay implements PropertyChangeL
     @Override
     protected void initialize() {
         // Build the floating card container
-        VBox modalBox = buildModalBox();
+        final VBox modalBox = buildModalBox();
         modalBox.setOnMouseClicked(javafx.event.Event::consume);
 
         // Add ONLY the modal card to the layout — NO dark backdrop
@@ -51,12 +63,12 @@ public class HintOverlay extends AbstractModalOverlay implements PropertyChangeL
         setAlignment(modalBox, Pos.TOP_CENTER);
 
         // Add a top margin (20px) so the card doesn't stick directly to the top window edge
-        StackPane.setMargin(modalBox, new Insets(10, 0, 0, 0));
+        StackPane.setMargin(modalBox, new Insets(stackPaneTopMargin, 0, 0, 0));
 
         // Retain ESC key shortcut handling
         setFocusTraversable(true);
-        addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-            if (e.getCode() == KeyCode.ESCAPE) {
+        addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
                 onClose.run();
             }
         });
@@ -69,70 +81,73 @@ public class HintOverlay extends AbstractModalOverlay implements PropertyChangeL
         messageLabel.setWrapText(true);
         messageLabel.setTextAlignment(TextAlignment.CENTER);
         messageLabel.setStyle(
-                "-fx-font-size: 15px;" +
-                        "-fx-text-fill: #000000;"
+                "-fx-font-size: 15px;"
+                        + "-fx-text-fill: #000000;"
         );
 
         // Cross icon close button (no background, no border)
-        Button closeButton = new Button("✕");
+        final Button closeButton = new Button("✕");
         closeButton.setDefaultButton(true);
-        closeButton.setOnAction(e ->{
-            javafx.scene.Scene currentScene = getScene();
+        closeButton.setOnAction(event -> {
+            final javafx.scene.Scene currentScene = getScene();
 
             onClose.run();
 
             if (currentScene != null && currentScene.getRoot() != null) {
                 currentScene.getRoot().requestFocus();
-            }}
+            }
+        }
         );
 
-        String defaultCrossStyle =
-                "-fx-background-color: transparent;" +
-                        "-fx-border-color: transparent;" +
-                        "-fx-text-fill: #d32f2f;" +
-                        "-fx-font-size: 18px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-padding: 0 4 0 4;" +
-                        "-fx-cursor: hand;";
+        final String defaultCrossStyle =
+                "-fx-background-color: transparent;"
+                        + "-fx-border-color: transparent;"
+                        + "-fx-text-fill: #d32f2f;"
+                        + "-fx-font-size: 18px;"
+                        + "-fx-font-weight: bold;"
+                        + "-fx-padding: 0 4 0 4;"
+                        + "-fx-cursor: hand;";
 
-        String hoverCrossStyle =
-                "-fx-background-color: transparent;" +
-                        "-fx-border-color: transparent;" +
-                        "-fx-text-fill: #b71c1c;" +
-                        "-fx-font-size: 18px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-padding: 0 4 0 4;" +
-                        "-fx-cursor: hand;";
+        final String hoverCrossStyle =
+                "-fx-background-color: transparent;"
+                        + "-fx-border-color: transparent;"
+                        + "-fx-text-fill: #b71c1c;"
+                        + "-fx-font-size: 18px;"
+                        + "-fx-font-weight: bold;"
+                        + "-fx-padding: 0 4 0 4;"
+                        + "-fx-cursor: hand;";
 
         closeButton.setStyle(defaultCrossStyle);
-        closeButton.setOnMouseEntered(e -> closeButton.setStyle(hoverCrossStyle));
-        closeButton.setOnMouseExited(e -> closeButton.setStyle(defaultCrossStyle));
+        closeButton.setOnMouseEntered(event -> closeButton.setStyle(hoverCrossStyle));
+        closeButton.setOnMouseExited(event -> closeButton.setStyle(defaultCrossStyle));
 
         // Position the cross icon in the top-right corner of the white card
         StackPane.setAlignment(closeButton, Pos.TOP_RIGHT);
 
         // Content box holding the message
-        VBox contentBox = new VBox(messageLabel);
+        final VBox contentBox = new VBox(messageLabel);
         contentBox.setAlignment(Pos.CENTER);
-        contentBox.setPadding(new Insets(10, 20, 10, 10));
+        contentBox.setPadding(new Insets(contentBoxTopPadding, contentBoxRightPadding,
+                contentBoxBottomPadding, contentBoxLeftPadding));
 
         // Main modal container
-        VBox modalBox = new VBox();
-        StackPane cardLayout = new StackPane(contentBox, closeButton);
+        final VBox modalBox = new VBox();
+        final StackPane cardLayout = new StackPane(contentBox, closeButton);
         modalBox.getChildren().add(cardLayout);
 
         modalBox.setAlignment(Pos.CENTER);
-        modalBox.setPadding(new Insets(8, 12, 8, 12));
-        modalBox.setMaxWidth(450);
-        modalBox.setMaxHeight(85);
+        modalBox.setPadding(new Insets(modalBoxTopPadding, modalBoxRightPadding,
+                modalBoxBottomPadding, modalBoxLeftPadding));
+        modalBox.setMaxWidth(modelBoxMaxWidth);
+        modalBox.setMaxHeight(modelBoxMaxHeight);
 
         // Solid white card with crisp border
         modalBox.setStyle(
-                "-fx-background-color: #ffffff;" +
-                        "-fx-background-radius: 8px;" +
-                        "-fx-border-color: #cccccc;" +
-                        "-fx-border-radius: 8px;" +
-                        "-fx-border-width: 1px;"
+                "-fx-background-color: #ffffff;"
+                        + "-fx-background-radius: 8px;"
+                        + "-fx-border-color: #cccccc;"
+                        + "-fx-border-radius: 8px;"
+                        + "-fx-border-width: 1px;"
         );
 
         return modalBox;

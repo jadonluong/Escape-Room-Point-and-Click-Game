@@ -200,41 +200,41 @@
     "rewardItemId": null,
     "linkedPuzzleId": null,
     "unlockedRoomId": null,
-    "successMessage": null
+    "successMessage": "I think you just broke me. Give me $1000, then I won't press charges."
   },
 
   "living_portrait_1": {
-    "defaultName": "portrait 1",
-    "defaultDescription": "pattern made with blood",
+    "defaultName": "crowd",
+    "defaultDescription": "A portrait of the crowd",
     "defaultSprite": "/images/items/livingroom/portrait1.png",
-    "interactedName": "touched blood",
-    "interactedDescription": "touched blood",
+    "interactedName": "crowd",
+    "interactedDescription": "A portrait of the crowd",
     "interactedSprite": "/images/items/livingroom/portrait1.png",
     "isConsumed": false,
     "consumesItem": false,
-    "needsItem": true,
+    "needsItem": false,
     "requiredItemId": null,
     "rewardItemId": null,
-    "linkedPuzzleId": "sac_puzzle_1",
+    "linkedPuzzleId": null,
     "unlockedRoomId": null,
-    "successMessage": null
+    "successMessage": "Are you swaying with the crowd?"
   },
 
   "living_portrait_2": {
-    "defaultName": "blood",
-    "defaultDescription": "pattern made with blood",
+    "defaultName": "landscape",
+    "defaultDescription": "A landscape portrait",
     "defaultSprite": "/images/items/livingroom/portrait2.png",
-    "interactedName": "touched blood",
-    "interactedDescription": "touched blood",
+    "interactedName": "landscape",
+    "interactedDescription": "A landscape portrait",
     "interactedSprite": "/images/items/livingroom/portrait2.png",
     "isConsumed": false,
     "consumesItem": false,
-    "needsItem": true,
+    "needsItem": false,
     "requiredItemId": null,
     "rewardItemId": null,
-    "linkedPuzzleId": "sac_puzzle_1",
+    "linkedPuzzleId": null,
     "unlockedRoomId": null,
-    "successMessage": null
+    "successMessage": "It's my dream to live in the mountains, hidden from the rest of the world."
   },
 
   "living_computer": {
