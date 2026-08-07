@@ -1,8 +1,8 @@
 package domain.entities.User;
 
-import domain.entities.Item.Item;
-
 import java.util.ArrayList;
+
+import domain.entities.Item.Item;
 
 /**
  * The interface manages the user's item inventory.
@@ -11,6 +11,7 @@ public interface UserInventory {
 
     /**
      * Returns the items this user collected.
+     * @return the item inventory of the user containing item objects
      */
     ArrayList<Item> getItemInventory();
 
@@ -29,7 +30,7 @@ public interface UserInventory {
 
     /**
      * Saves the item the user has selected.
-     * @param itemSelected
+     * @param itemSelected the item the user has selected
      */
     void saveSelectedItemID(String itemSelected);
 

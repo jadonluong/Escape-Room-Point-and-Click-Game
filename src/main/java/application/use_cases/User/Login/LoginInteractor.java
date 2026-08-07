@@ -6,7 +6,7 @@ import domain.entities.User.CommonUser;
  * The Login interactor.
  */
 
-public class LoginInteractor implements LoginInputBoundary{
+public class LoginInteractor implements LoginInputBoundary {
     private final LoginUserDataAccessInterface userDataAccessObject;
     private final LoginUserSessionDataAccessInterface userSessionDataAccessObject;
     private final LoginOutputBoundary userPresenter;
@@ -37,17 +37,18 @@ public class LoginInteractor implements LoginInputBoundary{
         }
 
         else {
-            String pwdRegistered = userDataAccessObject.getUserPassword(username).getPassword();
+            final String pwdRegistered = userDataAccessObject.getUserPassword(username).getPassword();
             if (!pwdRegistered.equals(password)) {
                 userPresenter.prepareFailView("Password incorrect");
-                return;
             }
 
-            CommonUser loadedUser = userDataAccessObject.getUser(username);
-            userSessionDataAccessObject.setCurrentUser(loadedUser);
+            else {
+                final CommonUser loadedUser = userDataAccessObject.getUser(username);
+                userSessionDataAccessObject.setCurrentUser(loadedUser);
 
-            final LoginOutputData outputData = new LoginOutputData(loadedUser, false);
-            userPresenter.prepareSuccessView(outputData);
+                final LoginOutputData outputData = new LoginOutputData(loadedUser, false);
+                userPresenter.prepareSuccessView(outputData);
+            }
         }
     }
 }

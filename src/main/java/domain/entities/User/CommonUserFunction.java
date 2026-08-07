@@ -18,15 +18,15 @@ public interface CommonUserFunction {
 
     /**
      * Sets the list of rooms (as their IDs) the user unlocked in quick mode.
-     * @param roomIDs the IDs of the rooms the user unlocked
+     * @param roomIds the IDs of the rooms the user unlocked
      */
-    void setQuickModeRoomsUnlockedIDs(List<String> roomIDs);
+    void setQuickModeRoomsUnlockedIds(List<String> roomIds);
 
     /**
      * Sets the list of items (as their IDs) the user collected in each unlocked room in quick mode.
-     * @param itemIDs the list of items (as their IDs) the user collected in each unlocked room in quick mode
+     * @param itemIds the list of items (as their IDs) the user collected in each unlocked room in quick mode
      */
-    void setQuickModeItemInventoryIDs(Map<String, ArrayList<String>> itemIDs);
+    void setQuickModeItemInventoryIds(Map<String, ArrayList<String>> itemIds);
 
     /**
      * Sets the hints the user watched in each room in quick mode.
@@ -36,15 +36,15 @@ public interface CommonUserFunction {
 
     /**
      * Sets the list  of rooms (as their IDs) the user unlocked in story mode.
-     * @param roomIDs the list  of rooms (as their IDs) the user unlocked in story mode
+     * @param roomIds the list  of rooms (as their IDs) the user unlocked in story mode
      */
-    void setStoryModeRoomsUnlockedIDs(List<String> roomIDs);
+    void setStoryModeRoomsUnlockedIds(List<String> roomIds);
 
     /**
      * Sets the list of items (as their IDs) the user collected in story mode.
-     * @param itemIDs the IDs of the items the user collected
+     * @param itemIds the IDs of the items the user collected
      */
-    void setStoryModeItemInventoryIDs(List<String> itemIDs);
+    void setStoryModeItemInventoryIds(List<String> itemIds);
 
     /**
      * Sets the hints the user has watched in story mode.
@@ -56,25 +56,25 @@ public interface CommonUserFunction {
      * Returns the list of unlocked room IDs in quick mode.
      * @return the list of unlocked room IDs
      */
-    List<String> getQuickModeRoomsUnlockedIDs();
+    List<String> getQuickModeRoomsUnlockedIds();
 
     /**
      * Returns the list of collected item IDs of each unlocked room in quick mode.
      * @return the map of collected item IDs of each unlocked room
      */
-    Map<String, ArrayList<String>> getQuickModeItemInventoryIDs();
+    Map<String, ArrayList<String>> getQuickModeItemInventoryIds();
 
     /**
      * Returns the list of unlocked room IDs in story mode.
      * @return the list of unlocked room IDs
      */
-    List<String> getStoryModeRoomsUnlockedIDs();
+    List<String> getStoryModeRoomsUnlockedIds();
 
     /**
      * Returns the list of item IDs in story mode.
      * @return the list of item IDs
      */
-    List<String> getStoryModeItemInventoryIDs();
+    List<String> getStoryModeItemInventoryIds();
 
     /**
      * Saves the ID of the room the user is currently in as they play in story mode.

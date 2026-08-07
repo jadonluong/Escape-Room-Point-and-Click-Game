@@ -1,8 +1,8 @@
 package domain.entities.User;
 
-import domain.entities.Room.Room;
-
 import java.util.ArrayList;
+
+import domain.entities.Room.Room;
 
 /**
  * The interface with methods that tracks and records the user's progress.
@@ -11,6 +11,7 @@ public interface UserProgress {
 
     /**
      * Returns the rooms the user has unlocked.
+     * @return the list of rooms the user unlocked
      */
     ArrayList<Room> getRoomsUnlocked();
 

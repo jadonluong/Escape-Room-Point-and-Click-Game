@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Factory for creating Hint objects.
  */
-public class CommonHintFactory implements HintFactory{
+public class CommonHintFactory implements HintFactory {
 
     @Override
     public Hint createHint(String ID, String imagePath, List<String> messages) {

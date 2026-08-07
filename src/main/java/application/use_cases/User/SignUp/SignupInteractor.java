@@ -6,13 +6,13 @@ import domain.entities.User.User;
 /**
  * The Signup interactor.
  */
-public class SignupInteractor implements SignUpInputBoundary{
+public class SignupInteractor implements SignUpInputBoundary {
     private final SignupUserDataAccessInterface userDataAccessObject;
     private final SignupOutputBoundary userPresenter;
     private final CommonUserFactory commonUserFactory;
     private final ProfanityCheck profanityCheckInterface;
 
-    public SignupInteractor (SignupUserDataAccessInterface signupDataAccessInterface,
+    public SignupInteractor(SignupUserDataAccessInterface signupDataAccessInterface,
                              SignupOutputBoundary signupOutputBoundary,
                              CommonUserFactory userFactory,
                              ProfanityCheck profanityCheckInterface) {
@@ -27,17 +27,17 @@ public class SignupInteractor implements SignUpInputBoundary{
 
         System.out.println("Signup called with: " + signupInputData.getUsername());
 
-        if (signupInputData.getUsername() == null ||
-                signupInputData.getUsername().isEmpty() ||
-                signupInputData.getUsername().isBlank()) {
+        if (signupInputData.getUsername() == null
+                || signupInputData.getUsername().isEmpty()
+                || signupInputData.getUsername().isBlank()) {
 
             System.out.println("EMPTY USERNAME");
             userPresenter.prepareFailView("Username cannot be empty.");
         }
 
-        else if (signupInputData.getPassword() == null ||
-                signupInputData.getPassword().isEmpty() ||
-                signupInputData.getPassword().isBlank()) {
+        else if (signupInputData.getPassword() == null
+                || signupInputData.getPassword().isEmpty()
+                || signupInputData.getPassword().isBlank()) {
 
             System.out.println("EMPTY PASSWORD");
             userPresenter.prepareFailView("Password cannot be empty.");

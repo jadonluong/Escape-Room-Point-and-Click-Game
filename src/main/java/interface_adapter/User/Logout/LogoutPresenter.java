@@ -52,16 +52,15 @@ public class LogoutPresenter implements LogoutOutputBoundary, SaveAndLogoutOutpu
         saveProgressViewModel.firePropertyChanged();
     }
 
-
     private void clearLoggedInState() {
-        LoggedInState loggedInState = loggedInViewModel.getState();
+        final LoggedInState loggedInState = loggedInViewModel.getState();
         loggedInState.setUsername("");
         loggedInViewModel.setState(loggedInState);
         loggedInViewModel.firePropertyChanged();
     }
 
     private void changeMainMenuState(String message) {
-        MainMenuState mainMenuState = mainMenuViewModel.getState();
+        final MainMenuState mainMenuState = mainMenuViewModel.getState();
         mainMenuState.setStatusMessage(message);
         mainMenuViewModel.setState(mainMenuState);
         mainMenuViewModel.firePropertyChanged();

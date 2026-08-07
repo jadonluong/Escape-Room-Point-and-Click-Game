@@ -18,7 +18,7 @@ public class SaveProgressController {
      * @param username the username of the user clicking save or save&logout
      */
     public void execute(String username) {
-        SaveProgressInputData inputData = new SaveProgressInputData(username);
+        final SaveProgressInputData inputData = new SaveProgressInputData(username);
         this.saveProgressInteractor.execute(inputData);
     }
 }

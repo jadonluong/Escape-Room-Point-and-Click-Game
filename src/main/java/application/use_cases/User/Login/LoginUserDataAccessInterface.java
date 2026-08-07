@@ -9,7 +9,8 @@ import domain.entities.User.CommonUserFunction;
 public interface LoginUserDataAccessInterface {
 
     /**
-     * Returns the function interface that gets the password of the user with the given username
+     * Returns the function interface that gets the password of the user with the given username.
+     * @param username the username entered
      * @return the function interface that gets the user's password
      */
     CommonUserFunction getUserPassword(String username);

@@ -15,8 +15,8 @@ public class GetHintPresenter implements GetHintOutputBoundary {
 
     @Override
     public void prepareSuccessView(GetHintOutputData getHintOutputData) {
-        String message = getHintOutputData.getMessage();
-        GetHintState state = getHintViewModel.getState();
+        final String message = getHintOutputData.getMessage();
+        final GetHintState state = getHintViewModel.getState();
         state.setSuccessMessage(message);
         getHintViewModel.setState(state);
         getHintViewModel.firePropertyChanged();

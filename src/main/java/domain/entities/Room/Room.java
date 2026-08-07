@@ -28,6 +28,7 @@ public interface Room {
     void setHint(Hint hint);
 
     String getImagePath();
+    String getImgComplete();
     void setPosition(String Id, Position position);
     void setPositions(Map<String,Position> positions);
     Position getPosition(String Id);

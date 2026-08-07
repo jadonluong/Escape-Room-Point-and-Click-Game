@@ -24,9 +24,10 @@ public class SaveAndLogoutInteractor implements SaveAndLogoutInputBoundary {
     @Override
     public void execute(SaveAndLogoutInputData inputData) {
         // 1. Core Rule Validation
-        User currentUser = logoutDataAccessObject.getCurrentUser();
+        final User currentUser = logoutDataAccessObject.getCurrentUser();
         if (!inputData.getUsername().equals(currentUser.getUsername())) {
-            saveAndLogoutPresenter.prepareFailView("You are not the current user"); // This should not happen
+            saveAndLogoutPresenter.prepareFailView("You are not the current user");
+            // This should not happen
             return;
         }
 
@@ -47,7 +48,7 @@ public class SaveAndLogoutInteractor implements SaveAndLogoutInputBoundary {
         logoutDataAccessObject.setCurrentUser(null);
 
         // 4. Trigger the Saved Logout Success View Cleanly
-        SaveAndLogoutOutputData outputData = new SaveAndLogoutOutputData(commonUser.getUsername(), false);
+        final SaveAndLogoutOutputData outputData = new SaveAndLogoutOutputData(commonUser.getUsername(), false);
         saveAndLogoutPresenter.prepareSavedSuccessView(outputData);
     }
 }

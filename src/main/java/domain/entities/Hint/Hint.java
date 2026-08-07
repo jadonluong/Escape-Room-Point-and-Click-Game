@@ -13,6 +13,7 @@ public interface Hint {
 
     /**
      * Returns the message of the hint.
+     * @param requestCount the number of request the player has
      * @return the hint message
      */
     String getHintMessageForRequestCount(int requestCount);
