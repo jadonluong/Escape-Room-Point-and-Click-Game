@@ -1,7 +1,5 @@
 package application.use_cases.User;
 
-import application.game_registry.ItemRegistry;
-import application.use_cases.game_play.action_trigger.ActionTriggerDataAccessInterface;
 import application.use_cases.game_play.UserDataAccessInterface;
 import application.use_cases.Hint.GetHint.GetHintUserDataAccessInterface;
 import application.use_cases.Interactable.Interact.InteractUserDataAccessInterface;
@@ -22,7 +20,6 @@ public class LiveUserSessionTracking implements GetHintUserDataAccessInterface,
         LogoutUserDataAccessInterface,
         SaveProgressUserSessionDataAccessInterface,
         UserDataAccessInterface,
-        ActionTriggerDataAccessInterface,
         InteractUserDataAccessInterface,
         EnterExitUserDataAccessInterface,
         SolveUserDataAccessInterface,
@@ -30,12 +27,6 @@ public class LiveUserSessionTracking implements GetHintUserDataAccessInterface,
         SelectItemUserDataAccessInterface {
 
     private User currentUser;
-    private final ItemRegistry itemRegistry;
-
-    // added
-    public LiveUserSessionTracking(ItemRegistry itemRegistry) {
-        this.itemRegistry = itemRegistry;
-    }
 
     @Override
     public User getCurrentUser() {
@@ -53,10 +44,18 @@ public class LiveUserSessionTracking implements GetHintUserDataAccessInterface,
             return null;
         }
 
-        // Clean any formatted "id:name" string down to raw ID
+        // 1. Extract raw ID and display name (handles "itemId:itemName" formats)
         String cleanId = id.contains(":") ? id.split(":")[0] : id;
+        String displayName = id.contains(":") ? id.split(":")[1] : cleanId;
 
-        // Fetch the real domain Item entity loaded from items.json!
-        return itemRegistry.getItemById(cleanId);
+        // 2. Rebuild and return the Item entity
+        ItemFactory itemFactory = new CommonItemFactory();
+        return itemFactory.restoreItem(
+                cleanId,
+                displayName,
+                "",                  // description
+                true,                // craftable
+                "assets/" + cleanId  // image path
+        );
     }
 }

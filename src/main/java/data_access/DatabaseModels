@@ -58,7 +58,7 @@ This file explains what the databases could potentially look like.
 
      "itemID_2": {...}
     }
-
+- TODO: add image path once we have it for crafted items.
 
 ## Room DB
 - Note: only serves as the room inventory for the game, isUnlocked is not saved in DB since it's user-specific

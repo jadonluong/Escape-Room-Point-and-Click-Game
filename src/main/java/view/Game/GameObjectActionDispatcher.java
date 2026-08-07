@@ -20,20 +20,25 @@ public class GameObjectActionDispatcher {
     }
 
     /**
-     * Executes the appropriate controller action based on the object's type.
-     * @return true if an action was handled, false if the type is unrecognized/non-interactive.
+     * Retrieves the action associated with a game object based on its type.
+     *
+     * @param id the ID of the object
+     * @param info the information of the object used to determine its type
+     * @return a runnable action for the specified object, or {@code null} if the object is not interactive
      */
     public Runnable getAction(String id, ObjectsInfo info) {
-        String type = info.type();
+        final String type = info.type();
 
         if ("Interactable".equals(type)) {
             return () -> zoomInController.zoomIn(id);
-        } else if ("Item".equals(type)) {
+        }
+        else if ("Item".equals(type)) {
             return () -> pickUpController.execute(id);
-        } else if ("Hint".equals(type)) {
+        }
+        else if ("Hint".equals(type)) {
             return () -> getHintController.execute(id);
         }
 
-        return null; // Non-interactive type
+        return null;
     }
 }
