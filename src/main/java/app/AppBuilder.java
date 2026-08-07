@@ -122,7 +122,7 @@ public class AppBuilder extends Application {
         GameAssetManager gameAssetManager = new GameAssetManager(itemFactory, interactableFactory, roomFactory, hintFactory, puzzleFactory);
 
         JsonUserDataAccessObject userDAO = new JsonUserDataAccessObject(gameAssetManager,gameAssetManager);
-        LiveUserSessionTracking userSessionTracking = new LiveUserSessionTracking();
+        LiveUserSessionTracking userSessionTracking = new LiveUserSessionTracking(gameAssetManager);// changed this to pass gameAssetManager
         CommonUserFactory userFactory = new CommonUserFactoryClass();
         GuestUserFactory guestUserFactory = new GuestUserFactoryClass();
         User defaultGuestUser = guestUserFactory.createGuestUser();

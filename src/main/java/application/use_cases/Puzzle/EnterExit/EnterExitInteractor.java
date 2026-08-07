@@ -20,15 +20,21 @@ public class EnterExitInteractor implements EnterExitInputBoundary {
 
     @Override
     public void enter(EnterExitInputData inputData) {
-        Puzzle puzzle = dataAccess.getPuzzleById(inputData.getPuzzleId());
-        User player = userDataAccess.getCurrentUser();
+        final Puzzle puzzle = dataAccess.getPuzzleById(inputData.getPuzzleId());
+        final User player = userDataAccess.getCurrentUser();
 
-        if (puzzle instanceof CryptogramPuzzle && !player.hasItemID(((CryptogramPuzzle) puzzle).getCipherKeyId())) {
-            outputBoundary.prepareFailureView("You need a cipher key to decode this!");
-            return;
+        if (puzzle instanceof CryptogramPuzzle) {
+            final String cipherKeyId = ((CryptogramPuzzle) puzzle).getCipherKeyId();
+            if (cipherKeyId != null && !player.hasItemID(cipherKeyId)) {
+                outputBoundary.prepareFailureView("You need a cipher key to decode this!");
+            }
+            else {
+                outputBoundary.prepareEnterView(makeOutputData(puzzle, inputData.getInteractableId()));
+            }
         }
-
-        outputBoundary.prepareEnterView(makeOutputData(puzzle, inputData.getInteractableId()));
+        else {
+            outputBoundary.prepareEnterView(makeOutputData(puzzle, inputData.getInteractableId()));
+        }
     }
 
     @Override

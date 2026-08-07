@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AnagramApiClient {
-    private static final String API_URL = "https://api.apiverve.com/v1/anagrampuzzle?difficulty=medium";
+    private static final String API_URL = "https://api.apiverve.com/v1/anagrampuzzle?difficulty=easy";
     private final String apiKey;
     private final OkHttpClient client;
     private final Gson gson;

@@ -80,20 +80,20 @@ public class SelectItemInteractorTest {
 
     @Test
     void testExecuteSuccessSavesItemIdAndUpdatesPresenter() {
-        SelectItemInputData inputData = new SelectItemInputData("prisonitem_1:stick");
+        SelectItemInputData inputData = new SelectItemInputData("prison_item_1:stick");
 
         interactor.execute(inputData);
 
-        assertEquals("prisonitem_1:stick", testUser.getSavedItemId());
+        assertEquals("prison_item_1:stick", testUser.getSavedItemId());
         assertNotNull(testPresenter.getSuccessData());
-        assertEquals("prisonitem_1:stick", testPresenter.getSuccessData().getSelectedItemId());
+        assertEquals("prison_item_1:stick", testPresenter.getSuccessData().getSelectedItemId());
         assertNull(testPresenter.getErrorMessage());
     }
 
     @Test
     void testExecuteWhenNoUserLoggedInDoesNothing() {
         userSession.setCurrentUser(null);
-        SelectItemInputData inputData = new SelectItemInputData("prisonitem_1:stick");
+        SelectItemInputData inputData = new SelectItemInputData("prison_item_1:stick");
 
         interactor.execute(inputData);
 

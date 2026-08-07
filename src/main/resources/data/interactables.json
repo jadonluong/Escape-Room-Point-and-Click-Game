@@ -23,13 +23,13 @@
     "interactedName": "unlocked door",
     "interactedDescription": "unlocked door",
     "interactedSprite": "/images/items/prison/door.png",
-    "isConsumed": true,
+    "isConsumed": false,
     "consumesItem": true,
     "needsItem": true,
     "requiredItemId": "prison_item_3",
     "rewardItemId": null,
     "linkedPuzzleId": null,
-    "unlockedRoomId": "study",
+    "unlockedRoomId": "main menu",
     "successMessage": "Quick! You have 3 minutes until the guard notices!"
   },
 
@@ -65,6 +65,22 @@
     "linkedPuzzleId": "prison_puzzle_1",
     "unlockedRoomId": null,
     "successMessage": "There's a puzzle in the locker."
+  },
+  "house_door": {
+    "defaultName": "door",
+    "defaultDescription": "locked door",
+    "defaultSprite": "/images/items/storymode/room1/door.png",
+    "interactedName": "unlocked door",
+    "interactedDescription": "door unlocked",
+    "interactedSprite": "/images/items/storymode/room1/door.png",
+    "isConsumed": false,
+    "consumesItem": false,
+    "needsItem": false,
+    "requiredItemId": null,
+    "rewardItemId": null,
+    "linkedPuzzleId": "house_puzzle_1",
+    "unlockedRoomId": null,
+    "successMessage": "Please enter the house."
   }
 }
 
