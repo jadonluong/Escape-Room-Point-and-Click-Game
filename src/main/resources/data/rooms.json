@@ -92,10 +92,7 @@
       "cheese_stairs",
       "cheese_back_door"
     ],
-    "items": [
-      "cheese_matches",
-      "house_flower"
-    ],
+    "items": [],
     "hints": [
       "cheese_dot",
       "cheese_carpet"
@@ -176,7 +173,7 @@
       "living_clock",
       "living_portrait_1",
       "living_portrait_2",
-      "living_puzzle"
+      "living_computer"
     ],
     "items": [
     ],
@@ -230,16 +227,15 @@
     "description": "The astrology professor's office.",
     "interactables": [
       "astrology_box",
-      "astrology_switch",
       "astrology_door"
     ],
     "items": [
-      "astrology_key",
       "astrology_star"
     ],
     "hints": [
       "astrology_paper",
-      "astrology_calender"
+      "astrology_calender",
+      "astrology_window"
     ],
     "imagePath": "/images/rooms/astrology/astrology_office.JPG",
     "imageThumbnail": "/images/rooms/astrology/astrology_office_complete.jpeg",
@@ -263,6 +259,10 @@
       "astrology_window": [
         154,
         3
+      ],
+      "astrology_star": [
+        600,
+        120
       ]
     }
   }

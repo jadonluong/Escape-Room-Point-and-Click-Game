@@ -14,20 +14,83 @@
       "One of us can bite through metal - unbelivable, right?",
       "Bruh, my dinner moves faster than you. Seriously, chop chop."]
   },
+
   "house_cloud_1": {
     "imagePath": "/images/items/storymode/room1/cloud1.png",
-    "hintMessages": ["Hit my friend, don't hit me!",
-      "Ouch! Oka - Okay - go put that anger on the locker!",
-      "One of us can smell gold!",
-      "One of us can bite through metal - unbelivable, right?",
-      "Bruh, my dinner moves faster than you. Seriously, chop chop."]
+    "hintMessages": ["First we need to enter the house"]
   },
+
   "house_cloud_2": {
     "imagePath": "/images/items/storymode/room1/cloud2.png",
-    "hintMessages": ["Hit my friend, don't hit me!",
-      "Ouch! Oka - Okay - go put that anger on the locker!",
-      "One of us can smell gold!",
-      "One of us can bite through metal - unbelivable, right?",
-      "Bruh, my dinner moves faster than you. Seriously, chop chop."]
+    "hintMessages": ["Remember to grab something beautiful before you leave!"]
+  },
+
+  "cheese_dot": {
+    "imagePath": "/images/items/storymode/room2/dot.png",
+    "hintMessages": ["Want a hint? Look around you, what's in the room?",
+    "Focus on what's in the centre."]
+  },
+
+  "cheese_carpet": {
+    "imagePath": "/images/items/storymode/room2/carpet.png",
+    "hintMessages": ["Solve a puzzle to go up the stairs!"]
+  },
+
+  "sac_window": {
+    "imagePath": "/images/items/storymode/room2/carpet.png",
+    "hintMessages": ["Solve a puzzle to go up the stairs!"]
+  },
+
+  "sac_banner": {
+    "imagePath": "/images/items/storymode/room3/banner.png",
+    "hintMessages": ["It's a bit dark in here. EMMM, what should we do...",
+    "Maybe we could use something in the inventory.",
+      "Try lighting the candle.",
+      "Light the candle with the matches for more light."]
+  },
+
+  "sac_hand": {
+    "imagePath": "/images/items/storymode/room3/hand.png",
+    "hintMessages": ["Jokes on you, I'm useless, hahaha!"]
+  },
+
+  "sac_graffiti": {
+    "imagePath": "/images/items/storymode/room3/graffiti.png",
+    "hintMessages": ["I like yellow."]
+  },
+
+  "living_black_cat": {
+    "imagePath": "/images/items/livingroom/black_cat.png",
+    "hintMessages": ["Don't you have some studying to do?"]
+  },
+
+  "living_globe": {
+    "imagePath": "/images/items/livingroom/globe.png",
+    "hintMessages": ["Some say math is a universal language.",
+    "What theorem in calculus does every uni math student needs to learn?",
+      "What can be thought of as the inverse of differentiation?"]
+  },
+
+  "living_portrait_3": {
+    "imagePath": "/images/items/livingroom/portrait3.png",
+    "hintMessages": ["The age of the portraits has ended, the age of the computers has begun.",
+    "I wonder what's so special about the computers..."]
+  },
+
+  "astrology_paper": {
+    "imagePath": "/images/items/astrology/paper.PNG",
+    "hintMessages": ["Title: Beyond the Myth: Fate and Constellations",
+      "Zodiac signs are widely believe to shape our core personality traits.",
+      "Most common zodiac signs: Virgo: August 23–September 22; Cancer: June 21–July 22; Leo: July 23–August 22"]
+  },
+
+  "astrology_calender": {
+    "imagePath": "/images/items/astrology/calendar.PNG",
+    "hintMessages": ["Take a closer look at the date."]
+  },
+
+  "astrology_window": {
+    "imagePath": "/images/items/astrology/window.PNG",
+    "hintMessages": ["How boring the night will be without stars!"]
   }
 }
