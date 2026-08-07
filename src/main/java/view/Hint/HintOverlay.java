@@ -14,9 +14,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import view.ViewManager;
-import view.common.ModalOverlay;
+import view.common.AbstractModalOverlay;
 
-public class HintOverlay extends ModalOverlay implements PropertyChangeListener{
+public class HintOverlay extends AbstractModalOverlay implements PropertyChangeListener{
 
     private final GetHintViewModel getHintViewModel;
     private Label messageLabel;

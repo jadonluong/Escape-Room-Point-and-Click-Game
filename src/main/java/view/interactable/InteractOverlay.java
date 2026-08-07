@@ -13,14 +13,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import view.ViewManager;
-import view.common.ModalOverlay;
+import view.common.AbstractModalOverlay;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class InteractOverlay extends ModalOverlay implements ActionListener, PropertyChangeListener {
+public class InteractOverlay extends AbstractModalOverlay implements ActionListener, PropertyChangeListener {
     private final InteractViewModel interactViewModel;
 
     private Label messageLabel = new Label();
