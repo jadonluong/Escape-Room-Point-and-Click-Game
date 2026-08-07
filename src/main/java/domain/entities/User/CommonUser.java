@@ -1,27 +1,29 @@
 package domain.entities.User;
 
-import domain.entities.Item.Item;
-import domain.entities.Room.Room;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import domain.entities.Item.Item;
+import domain.entities.Room.Room;
+
 /**
  * The CommonUser class that extends the AbstractUser class and implements the CommonUserFunction interface.
  */
-public class CommonUser extends AbstractUser implements CommonUserFunction{
+public class CommonUser extends AbstractUser implements CommonUserFunction {
     private final String username;
     private final String password;
+    private final ModeProgress modeProgress;
 
-    private final ModeProgress ModeProgress;
+    private final String storyModeString = "StoryMode";
+    private final String quickModeString = "QuickMode";
 
     public CommonUser(String username, String password) {
         super();
         this.username = username;
         this.password = password;
-        this.ModeProgress = new ModeProgress(this);
+        this.modeProgress = new ModeProgress(this);
     }
 
     // Default constructor for Gson reflection
@@ -29,7 +31,7 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
         super();
         this.username = "";
         this.password = "";
-        this.ModeProgress = new ModeProgress(this);
+        this.modeProgress = new ModeProgress(this);
     }
 
     // ==========================================
@@ -37,20 +39,25 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
     // ==========================================
 
     public static class ModeProgress {
-        private QuickModeData QuickMode;
-        private StoryModeData StoryMode;
+        private QuickModeData quickMode;
+        private StoryModeData storyMode;
 
         public ModeProgress(CommonUser user) {
-            this.QuickMode = new QuickModeData(user);
-            this.StoryMode = new StoryModeData(user);
+            this.quickMode = new QuickModeData(user);
+            this.storyMode = new StoryModeData(user);
         }
 
-        public QuickModeData getQuickMode() { return QuickMode; }
-        public StoryModeData getStoryMode() { return StoryMode; }
+        public QuickModeData getQuickMode() {
+            return quickMode;
+        }
+
+        public StoryModeData getStoryMode() {
+            return storyMode;
+        }
     }
 
     public static class QuickModeData {
-        private  transient CommonUser user;
+        private transient CommonUser user;
         private List<String> quickModeRoomsUnlocked = new ArrayList<>();
         private Map<String, ArrayList<String>> quickModeItemInventory = new HashMap<>();
         private Map<String, HashMap<String, Integer>> quickModeHintsWatched;
@@ -69,13 +76,17 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
             this.quickModeHintsWatched = new HashMap<>();
         }
 
-        public List<String> getQuickModeRoomsUnlocked() { return quickModeRoomsUnlocked; }
+        public List<String> getQuickModeRoomsUnlocked() {
+            return quickModeRoomsUnlocked;
+        }
 
         public void setQuickModeRoomsUnlocked(List<String> quickModeRoomsUnlocked) {
             this.quickModeRoomsUnlocked = quickModeRoomsUnlocked;
         }
 
-        public Map<String, ArrayList<String>> getQuickModeItemInventory() { return quickModeItemInventory; }
+        public Map<String, ArrayList<String>> getQuickModeItemInventory() {
+            return quickModeItemInventory;
+        }
 
         public void setQuickModeItemInventory(Map<String, ArrayList<String>> quickModeItemInventory) {
             this.quickModeItemInventory = quickModeItemInventory;
@@ -163,13 +174,14 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
     public void unlockRoom(Room room) {
         super.unlockRoom(room);
         if (room != null) {
-            if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
-                if (!getStoryModeRoomsUnlockedIDs().contains(room.getId())) {
-                    getStoryModeRoomsUnlockedIDs().add(room.getId());
+            if (storyModeString.equalsIgnoreCase(this.activeGameMode)) {
+                if (!getStoryModeRoomsUnlockedIds().contains(room.getId())) {
+                    getStoryModeRoomsUnlockedIds().add(room.getId());
                 }
-            } else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
-                if (!getQuickModeRoomsUnlockedIDs().contains(room.getId())) {
-                    getQuickModeRoomsUnlockedIDs().add(room.getId());
+            }
+            else if (quickModeString.equalsIgnoreCase(this.activeGameMode)) {
+                if (!getQuickModeRoomsUnlockedIds().contains(room.getId())) {
+                    getQuickModeRoomsUnlockedIds().add(room.getId());
                 }
             }
         }
@@ -179,16 +191,17 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
     public void saveItem(Item item) {
         super.saveItem(item);
 
-        if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
-            if (!getStoryModeItemInventoryIDs().contains(item.getId())) {
-                getStoryModeItemInventoryIDs().add(item.getId());
+        if (storyModeString.equalsIgnoreCase(this.activeGameMode)) {
+            if (!getStoryModeItemInventoryIds().contains(item.getId())) {
+                getStoryModeItemInventoryIds().add(item.getId());
             }
-        } else if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
+        }
+        else if (quickModeString.equalsIgnoreCase(this.activeGameMode)) {
             if (this.currentRoomID != null) {
-                ArrayList<String> itemIDs = getQuickModeItemInventoryIDs()
-                        .computeIfAbsent(this.currentRoomID, k -> new ArrayList<>());
-                if (!itemIDs.contains(item.getId())) {
-                    itemIDs.add(item.getId());
+                final ArrayList<String> itemIds = getQuickModeItemInventoryIds()
+                        .computeIfAbsent(this.currentRoomID, string -> new ArrayList<>());
+                if (!itemIds.contains(item.getId())) {
+                    itemIds.add(item.getId());
                 }
             }
         }
@@ -196,20 +209,25 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
 
     @Override
     public boolean removeItem(Item item) {
-        boolean removed = super.removeItem(item);
+        final boolean removed = super.removeItem(item);
 
         if (removed) {
             // Sync String ID removal for Database persistence
-            if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
-                getStoryModeItemInventoryIDs().remove(item.getId());
-            } else if ("QuickMode".equalsIgnoreCase(this.activeGameMode) && this.currentRoomID != null) {
-                ArrayList<String> itemIDs = getQuickModeItemInventoryIDs().get(this.currentRoomID);
-                if (itemIDs != null) {
-                    itemIDs.remove(item.getId());
+            if (storyModeString.equalsIgnoreCase(this.activeGameMode)) {
+                getStoryModeItemInventoryIds().remove(item.getId());
+            }
+            else if (quickModeString.equalsIgnoreCase(this.activeGameMode) && this.currentRoomID != null) {
+                final ArrayList<String> itemIds = getQuickModeItemInventoryIds().get(this.currentRoomID);
+                if (itemIds != null) {
+                    itemIds.remove(item.getId());
                 }
             }
         }
         return removed;
+    }
+
+    public ModeProgress getModeProgress() {
+        return modeProgress;
     }
 
     /**
@@ -219,86 +237,86 @@ public class CommonUser extends AbstractUser implements CommonUserFunction{
     @Override
     public void switchRoom(Room newRoom) {
         super.switchRoom(newRoom);
-        if ("QuickMode".equalsIgnoreCase(this.activeGameMode)) {
+        if (quickModeString.equalsIgnoreCase(this.activeGameMode)) {
             // Ensure QuickMode JSON structures exist for the newly switched room
             if (this.currentRoomID != null) {
-                getQuickModeItemInventoryIDs().putIfAbsent(this.currentRoomID, new ArrayList<>());
+                getQuickModeItemInventoryIds().putIfAbsent(this.currentRoomID, new ArrayList<>());
             }
         }
     }
 
-    public ModeProgress getModeProgress() {
-        return ModeProgress;
+    @Override
+    public void setQuickModeRoomsUnlockedIds(List<String> roomIDs) {
+            modeProgress.getQuickMode().setQuickModeRoomsUnlocked(roomIDs);
     }
 
     @Override
-    public void setQuickModeRoomsUnlockedIDs(List<String> roomIDs) {
-            ModeProgress.getQuickMode().setQuickModeRoomsUnlocked(roomIDs);
-    }
-
-    @Override
-    public void setQuickModeItemInventoryIDs(Map<String, ArrayList<String>> itemIDs) {
-        ModeProgress.getQuickMode().setQuickModeItemInventory(itemIDs);
+    public void setQuickModeItemInventoryIds(Map<String, ArrayList<String>> itemIDs) {
+        modeProgress.getQuickMode().setQuickModeItemInventory(itemIDs);
     }
 
     @Override
     public void setQuickModeHintsWatched(Map<String, HashMap<String, Integer>> hints) {
-        quickModeHintsWatched = hints; // Updates AbstractUser live runtime field
-        ModeProgress.getQuickMode().setQuickModeHintsWatched(hints);
+        // Updates AbstractUser live runtime field
+        quickModeHintsWatched = hints;
+        modeProgress.getQuickMode().setQuickModeHintsWatched(hints);
     }
 
     @Override
-    public void setStoryModeRoomsUnlockedIDs(List<String> roomIDs) {
-        ModeProgress.getStoryMode().setStoryModeRoomsUnlocked(roomIDs);
+    public void setStoryModeRoomsUnlockedIds(List<String> roomIDs) {
+        modeProgress.getStoryMode().setStoryModeRoomsUnlocked(roomIDs);
     }
 
     @Override
-    public void setStoryModeItemInventoryIDs(List<String> itemIDs) {
-        ModeProgress.getStoryMode().setStoryModeItemInventory(itemIDs);
+    public void setStoryModeItemInventoryIds(List<String> itemIDs) {
+        modeProgress.getStoryMode().setStoryModeItemInventory(itemIDs);
     }
 
     @Override
     public void setStoryModeHintsWatched(HashMap<String, Integer> hints) {
-        storyModeHintsWatched = hints; // Updates AbstractUser live runtime field
-        ModeProgress.getStoryMode().setStoryModeHintsWatched(hints);
+        // Updates AbstractUser live runtime field
+        storyModeHintsWatched = hints;
+        modeProgress.getStoryMode().setStoryModeHintsWatched(hints);
     }
 
     @Override
-    public List<String> getQuickModeRoomsUnlockedIDs() {
-        return ModeProgress.getQuickMode().getQuickModeRoomsUnlocked();
+    public List<String> getQuickModeRoomsUnlockedIds() {
+        return modeProgress.getQuickMode().getQuickModeRoomsUnlocked();
     }
 
     @Override
-    public Map<String, ArrayList<String>> getQuickModeItemInventoryIDs() {
-        return ModeProgress.getQuickMode().getQuickModeItemInventory();
+    public Map<String, ArrayList<String>> getQuickModeItemInventoryIds() {
+        return modeProgress.getQuickMode().getQuickModeItemInventory();
     }
 
     @Override
-    public List<String> getStoryModeRoomsUnlockedIDs() {
-        return ModeProgress.getStoryMode().getStoryModeRoomsUnlocked();
+    public List<String> getStoryModeRoomsUnlockedIds() {
+        return modeProgress.getStoryMode().getStoryModeRoomsUnlocked();
     }
 
     @Override
-    public List<String> getStoryModeItemInventoryIDs() {
-        return ModeProgress.getStoryMode().getStoryModeItemInventory();
+    public List<String> getStoryModeItemInventoryIds() {
+        return modeProgress.getStoryMode().getStoryModeItemInventory();
     }
 
     @Override
     public void setStoryModeCurrentRoomID(String roomID) {
-        ModeProgress.getStoryMode().setStoryModeCurrentRoomID(roomID);
+        modeProgress.getStoryMode().setStoryModeCurrentRoomID(roomID);
     }
 
     @Override
     public void saveCurrentRoomID(String roomID) {
-        super.saveCurrentRoomID(roomID); // Updates AbstractUser fields
+        // Updates AbstractUser fields
+        super.saveCurrentRoomID(roomID);
 
-        if ("StoryMode".equalsIgnoreCase(this.activeGameMode)) {
-            setStoryModeCurrentRoomID(roomID); // Updates ModeProgress field
+        if (storyModeString.equalsIgnoreCase(this.activeGameMode)) {
+            // Updates ModeProgress field
+            setStoryModeCurrentRoomID(roomID);
         }
     }
 
     @Override
     public String getStoryModeCurrentRoomID() {
-        return ModeProgress.getStoryMode().getStoryModeCurrentRoomID();
+        return modeProgress.getStoryMode().getStoryModeCurrentRoomID();
     }
 }

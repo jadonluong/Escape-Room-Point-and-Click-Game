@@ -11,6 +11,7 @@ public interface UserHints {
     /**
      * Saves the hint the user has clicked on.
      * @param objectID the ID of the object the hint is related to
+     * @param maxHintsAvailable the maximum number of hints this hint object has
      */
     void saveHint(String objectID, int maxHintsAvailable);
 
@@ -18,7 +19,7 @@ public interface UserHints {
      * Returns the hints the user has watched, the keys are the object IDs the hints is related to
      * and the values are the request count.
      * @return the map with objectID as keys and the number of times the user has watched
-     * the hint (starting at 0) as values
+     *      the hint (starting at 0) as values
      */
     HashMap<String, Integer> getHintsWatched();
 

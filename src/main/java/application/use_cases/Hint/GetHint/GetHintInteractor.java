@@ -22,23 +22,26 @@ public class GetHintInteractor implements GetHintInputBoundary {
 
     @Override
     public void execute(GetHintInputData getHintInputData) {
-        String objectID = getHintInputData.getObjectID();
+        final String objectID = getHintInputData.getObjectID();
 
         if (!getHintDataAccessObject.existByObjectID(objectID)) {
             getHintPresenter.prepareFailView("No hints available");
             return;
         }
 
-        User currentUser = getHintUserDataAccessObject.getCurrentUser();
+        final User currentUser = getHintUserDataAccessObject.getCurrentUser();
 
-        Hint hintObject = getHintDataAccessObject.getHintForObjectID(objectID);
+        final Hint hintObject = getHintDataAccessObject.getHintForObjectID(objectID);
 
-        currentUser.saveHint(objectID, hintObject.getHintMessageCount()); // saves the hint request in-memory.
+        // saves the hint request in-memory.
+        currentUser.saveHint(objectID, hintObject.getHintMessageCount());
 
-        int calculatedIndex = (currentUser.getHintsWatched() != null) ? currentUser.getHintsWatched().getOrDefault(objectID, 0) : 0;
-        String finalHintMessage = hintObject.getHintMessageForRequestCount(calculatedIndex);
+        final int calculatedIndex = (currentUser.getHintsWatched() != null) ? currentUser
+                                                                        .getHintsWatched()
+                                                                        .getOrDefault(objectID, 0) : 0;
+        final String finalHintMessage = hintObject.getHintMessageForRequestCount(calculatedIndex);
 
-        GetHintOutputData outputData = new GetHintOutputData(finalHintMessage);
+        final GetHintOutputData outputData = new GetHintOutputData(finalHintMessage);
         getHintPresenter.prepareSuccessView(outputData);
     }
 }

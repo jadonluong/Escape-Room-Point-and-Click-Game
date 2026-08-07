@@ -3,7 +3,7 @@ package domain.entities.User;
 /**
  * Factory for creating CommonUser objects.
  */
-public class CommonUserFactoryClass implements CommonUserFactory{
+public class CommonUserFactoryClass implements CommonUserFactory {
 
     @Override
     public User createCommonUser(String username, String password) {

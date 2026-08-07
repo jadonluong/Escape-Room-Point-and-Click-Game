@@ -10,5 +10,7 @@ public class SaveAndLogoutInputData {
         this.username = username;
     }
 
-    public String getUsername() { return this.username; }
+    public String getUsername() {
+        return this.username;
+    }
 }
