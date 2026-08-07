@@ -27,7 +27,7 @@ public class InventoryPresenter implements PickUpOutputBoundary, DropOutputBound
     public void prepareSuccessView(PickUpOutputData outputData) {
         // 1. Update Inventory State (using 'viewModel' and 'state.getItems()')
         InventoryState state = viewModel.getState();
-        state.getItems().add(outputData.getItemId() + ":" + outputData.getItemName()); // 👈 Stores item ID into inventory list
+        state.getItems().add(outputData.getItemId() + ":" + outputData.getItemName()); //Stores item ID into inventory list
         state.setStatusMessage("Picked up: " + outputData.getItemName());
         viewModel.firePropertyChanged();
 
