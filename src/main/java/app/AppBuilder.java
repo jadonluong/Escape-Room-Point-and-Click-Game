@@ -237,7 +237,14 @@ public class AppBuilder extends Application {
         // --- Items & Inventory Chain ---
         final InventoryViewModel inventoryViewModel = new InventoryViewModel();
         final InventoryPresenter inventoryPresenter = new InventoryPresenter(inventoryViewModel, inGameViewModel);
-        final PickUpInteractor pickUpInteractor = new PickUpInteractor(userSessionTracking, inventoryPresenter);
+
+        // Updated to include itemRegistry as the 2nd argument
+        final PickUpInteractor pickUpInteractor = new PickUpInteractor(
+                userSessionTracking,
+                gameAssetManager,
+                inventoryPresenter
+        );
+
         final PickUpController pickUpController = new PickUpController(pickUpInteractor);
 
         // --- Select Item Chain ---

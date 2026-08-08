@@ -38,24 +38,24 @@ public class LiveUserSessionTracking implements GetHintUserDataAccessInterface,
         this.currentUser = currentUser;
     }
 
-    @Override
-    public Item getItemById(String id) {
-        if (id == null || id.isEmpty()) {
-            return null;
-        }
+    // @Override
+    // public Item getItemById(String id) {
+    //     if (id == null || id.isEmpty()) {
+    //         return null;
+    //     }
 
         // 1. Extract raw ID and display name (handles "itemId:itemName" formats)
-        String cleanId = id.contains(":") ? id.split(":")[0] : id;
-        String displayName = id.contains(":") ? id.split(":")[1] : cleanId;
+    //    String cleanId = id.contains(":") ? id.split(":")[0] : id;
+    //    String displayName = id.contains(":") ? id.split(":")[1] : cleanId;
 
         // 2. Rebuild and return the Item entity
-        ItemFactory itemFactory = new CommonItemFactory();
-        return itemFactory.restoreItem(
-                cleanId,
-                displayName,
-                "",                  // description
-                true,                // craftable
-                "assets/" + cleanId  // image path
-        );
-    }
+    //    ItemFactory itemFactory = new CommonItemFactory();
+    //    return itemFactory.restoreItem(
+    //            cleanId,
+    //            displayName,
+    //            "",                  // description
+    //            true,                // craftable
+    //            "assets/" + cleanId  // image path
+    //    );
+    // }
 }

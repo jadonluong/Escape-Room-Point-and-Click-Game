@@ -7,6 +7,5 @@ import domain.entities.User.User;
 
 public interface PickUpUserDataAccessInterface {
     User getCurrentUser();
-    Item getItemById(String id);
 
 }

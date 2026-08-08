@@ -1,23 +1,26 @@
 package application.use_cases.Crafting;
 
+import application.game_registry.ItemRegistry;
 import domain.entities.Item.Item;
 import domain.entities.Item.ItemFactory;
 import domain.entities.User.User;
 
 public class CraftingInteractor implements CraftingInputBoundary {
     private final CraftingOutputBoundary presenter;
-    private final User user; // Or LiveUserSessionTracking.getActiveUser()
+    private final User user;
     private final ItemFactory itemFactory;
+    private final ItemRegistry itemRegistry; // Injected to handle recipe domain lookups
 
-    public CraftingInteractor(CraftingOutputBoundary presenter, User user, ItemFactory itemFactory) {
+    public CraftingInteractor(CraftingOutputBoundary presenter, User user,
+                              ItemFactory itemFactory, ItemRegistry itemRegistry) {
         this.presenter = presenter;
         this.user = user;
         this.itemFactory = itemFactory;
+        this.itemRegistry = itemRegistry;
     }
 
     @Override
     public void execute(CraftingInputData inputData) {
-        // 1. Extract itemA and itemB from inputData
         Item itemA = inputData.getItemA();
         Item itemB = inputData.getItemB();
 
@@ -26,18 +29,18 @@ public class CraftingInteractor implements CraftingInputBoundary {
             return;
         }
 
-        // 2. Check recipe match using item names
-        String craftedName = checkRecipe(itemA.getName(), itemB.getName());
+        // 1. Delegate recipe evaluation to ItemRegistry
+        String craftedName = itemRegistry.getRecipeResult(itemA.getName(), itemB.getName());
         if (craftedName == null) {
             presenter.prepareFailView("These items cannot be combined.");
             return;
         }
 
-        // 3. Remove raw ingredient Item objects from user inventory
+        // 2. Remove raw materials from inventory
         user.removeItem(itemA);
         user.removeItem(itemB);
 
-        // 4. Create new Item entity matching ItemFactory's signature
+        // 3. Instantiate crafted Item entity via ItemFactory
         Item newItem = itemFactory.createItem(
                 craftedName,
                 "A crafted item made by combining ingredients.",
@@ -45,27 +48,12 @@ public class CraftingInteractor implements CraftingInputBoundary {
                 "crafted_" + System.currentTimeMillis()
         );
 
-        // 5. Save the new Item directly to user inventory
+        // 4. Save new item to user inventory
         user.saveItem(newItem);
 
-        // 6. Format as "itemId:itemName" for the presenter layer
+        // 5. Notify presenter with formatted payload
         String formattedNewItem = newItem.getId() + ":" + newItem.getName();
         CraftingOutputData outputData = new CraftingOutputData(formattedNewItem, true);
         presenter.prepareSuccessView(outputData);
-    }
-
-    private String extractName(String rawItem) {
-        if (rawItem.contains(":")) {
-            return rawItem.split(":")[1]; // Takes the "itemName" portion
-        }
-        return rawItem;
-    }
-
-    private String checkRecipe(String nameA, String nameB) {
-        if ((nameA.equalsIgnoreCase("stick") && nameB.equalsIgnoreCase("rock")) ||
-                (nameA.equalsIgnoreCase("rock") && nameB.equalsIgnoreCase("stick"))) {
-            return "hammer";
-        }
-        return null;
     }
 }
