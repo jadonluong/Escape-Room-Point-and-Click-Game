@@ -5,18 +5,27 @@ import domain.entities.Item.Item;
 import domain.entities.Item.ItemFactory;
 import domain.entities.User.User;
 
+import java.util.Map;
+import java.util.Set;
+
 public class CraftingInteractor implements CraftingInputBoundary {
     private final CraftingOutputBoundary presenter;
     private final User user;
     private final ItemFactory itemFactory;
     private final ItemRegistry itemRegistry; // Injected to handle recipe domain lookups
+    private final CraftingDataAccessInterface craftingDataAccess;
 
-    public CraftingInteractor(CraftingOutputBoundary presenter, User user,
-                              ItemFactory itemFactory, ItemRegistry itemRegistry) {
+    public CraftingInteractor(CraftingOutputBoundary presenter,
+                              User user,
+                              ItemFactory itemFactory,
+                              ItemRegistry itemRegistry,
+                              CraftingDataAccessInterface craftingDataAccess)
+    {
         this.presenter = presenter;
         this.user = user;
         this.itemFactory = itemFactory;
         this.itemRegistry = itemRegistry;
+        this.craftingDataAccess = craftingDataAccess;
     }
 
     @Override
@@ -29,26 +38,34 @@ public class CraftingInteractor implements CraftingInputBoundary {
             return;
         }
 
-        // 1. Delegate recipe evaluation to ItemRegistry
-        String craftedName = itemRegistry.getRecipeResult(itemA.getName(), itemB.getName());
-        if (craftedName == null) {
+        // 1. Fetch active recipe map from data access
+        Map<Set<String>, String> recipes = craftingDataAccess.getCraftingRecipes();
+
+        // 2. Query recipe match using ingredient IDs
+        Set<String> ingredientIds = Set.of(itemA.getId(), itemB.getId());
+        String craftedItemId = recipes.get(ingredientIds);
+
+        // Fallback lookup using ingredient names if keys store lower-case names
+        if (craftedItemId == null) {
+            Set<String> ingredientNames = Set.of(itemA.getName().toLowerCase(), itemB.getName().toLowerCase());
+            craftedItemId = recipes.get(ingredientNames);
+        }
+
+        if (craftedItemId == null) {
             presenter.prepareFailView("These items cannot be combined.");
             return;
         }
 
-        // 2. Remove raw materials from inventory
+        // 3. Fetch authentic Item entity from ItemRegistry using the DB ID
+        Item newItem = itemRegistry.getItemById(craftedItemId);
+        if (newItem == null) {
+            presenter.prepareFailView("Crafted item not found in registry.");
+            return;
+        }
+
+        // 4. Update user inventory
         user.removeItem(itemA);
         user.removeItem(itemB);
-
-        // 3. Instantiate crafted Item entity via ItemFactory
-        Item newItem = itemFactory.createItem(
-                craftedName,
-                "A crafted item made by combining ingredients.",
-                true,
-                "crafted_" + System.currentTimeMillis()
-        );
-
-        // 4. Save new item to user inventory
         user.saveItem(newItem);
 
         // 5. Notify presenter with formatted payload
