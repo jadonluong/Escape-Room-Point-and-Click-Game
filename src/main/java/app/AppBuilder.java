@@ -311,9 +311,7 @@ public class AppBuilder extends Application {
         final GameMenuView gameMenuView =
                 new GameMenuView(viewManager,
                 loggedInViewModel,
-                sfxController,
-                musicController,
-                audioViewModel,
+                audioControlView,
                         () -> {
                             if (userSessionTracking.getCurrentUser() != null) {
                                 final String username = loggedInViewModel.getState().getUsername();

@@ -1,5 +1,13 @@
 package view;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
+
 import interface_adapter.ViewManagerInterface;
 import interface_adapter.ViewManagerModel;
 import javafx.scene.Parent;
@@ -10,15 +18,14 @@ import javafx.stage.Stage;
 import view.common.AbstractModalOverlay;
 import view.common.SoundPlayer;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Supplier;
-
-public class ViewManager implements PropertyChangeListener, ViewManagerInterface{
+/**
+ * Manages the application's views and modal overlays.
+ *
+ * <p>The ViewManager listens for changes to the ViewManagerModel and updates
+ * the displayed view accordingly. It also manages the registration, display,
+ * and hiding of modal overlays.</p>
+ */
+public class ViewManager implements PropertyChangeListener, ViewManagerInterface {
     private static final double INITIAL_WIDTH = 1280;
     private static final double INITIAL_HEIGHT = 720;
 
@@ -28,17 +35,31 @@ public class ViewManager implements PropertyChangeListener, ViewManagerInterface
     private final Supplier<Boolean> sfxEnabledSupplier;
 
     private final Map<String, Parent> views = new HashMap<>();
-    private Parent currentView; // In case someone wants to get this value (there is a getter!)
-    private String currentViewName; // ^^
+
+    private Parent currentView;
+    private String currentViewName;
 
     private final Map<String, AbstractModalOverlay> overlays = new HashMap<>();
-    private final Set<String> topLayerOverlays = new HashSet<>(); // Overlays that sit on top when visible.
+
+    private final Set<String> topLayerOverlays = new HashSet<>();
     private final Set<String> visibleOverlays = new HashSet<>();
 
     private Scene scene;
 
-    public ViewManager(Stage stage, ViewManagerModel viewManagerModel,
-                       SoundPlayer soundPlayer, Supplier<Boolean> sfxEnabledSupplier) {
+    /**
+     * Creates a ViewManager with the specified stage, model, sound player,
+     * and sound effects setting supplier.
+     *
+     * @param stage the JavaFX stage on which views are displayed
+     * @param viewManagerModel the model used to communicate view changes
+     * @param soundPlayer the sound player used to play interface sounds
+     * @param sfxEnabledSupplier supplies whether sound effects are enabled
+     */
+    public ViewManager(
+            Stage stage,
+            ViewManagerModel viewManagerModel,
+            SoundPlayer soundPlayer,
+            Supplier<Boolean> sfxEnabledSupplier) {
         this.stage = stage;
         this.viewManagerModel = viewManagerModel;
         this.soundPlayer = soundPlayer;
@@ -48,157 +69,241 @@ public class ViewManager implements PropertyChangeListener, ViewManagerInterface
     }
 
     /**
-     * Registers a view under a name so ViewManagerModel state changes can find it later.
-     * Call this for every top-level screen during app startup, before triggering the first navigation.
+     * Registers a view under a specified name.
+     *
+     * <p>The registered view can later be displayed when the corresponding
+     * view name is provided by the ViewManagerModel.</p>
+     *
+     * @param viewName the name used to identify the view
+     * @param view the JavaFX parent representing the view
      */
     public void registerView(String viewName, Parent view) {
         views.put(viewName, view);
     }
 
-    public void registerOverlay(String viewName, AbstractModalOverlay overlay, boolean topLayer) {
+    /**
+     * Registers a modal overlay under a specified name.
+     *
+     * <p>The overlay is initially hidden and unmanaged.</p>
+     *
+     * @param viewName the name used to identify the overlay
+     * @param overlay the modal overlay to register
+     * @param topLayer whether the overlay should remain above other overlays
+     */
+    public void registerOverlay(
+            String viewName, AbstractModalOverlay overlay, boolean topLayer) {
         overlays.put(viewName, overlay);
+
         if (topLayer) {
             topLayerOverlays.add(viewName);
         }
+
         overlay.setVisible(false);
         overlay.setManaged(false);
     }
 
+    /**
+     * Registers a modal overlay that is not designated as a top-layer overlay.
+     *
+     * @param viewName the name used to identify the overlay
+     * @param overlay the modal overlay to register
+     */
     public void registerOverlay(String viewName, AbstractModalOverlay overlay) {
         registerOverlay(viewName, overlay, false);
     }
 
+    /**
+     * Responds to a change in the current view.
+     *
+     * <p>The selected view is retrieved from the registered views, all visible
+     * overlays are hidden, and the selected view is displayed. The JavaFX
+     * scene is created when the first view is displayed.</p>
+     *
+     * @param evt the property change event containing the new view name
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String viewName = (String) evt.getNewValue();
 
         Parent view = views.get(viewName);
+
         if (view == null) {
             System.err.println("No view registered for name: " + viewName);
-            return;
         }
+        else {
+            hideAllOverlays();
+            this.currentView = view;
+            this.currentViewName = viewName;
 
-        hideAllOverlays(); // was hideAllNonTopLayerOverlays() — every overlay is orphaned by a root swap regardless of layer, so bookkeeping needs to match
-        this.currentView = view;
-        this.currentViewName = viewName;
-
-        if (scene == null) {
-            scene = new Scene(view, INITIAL_WIDTH, INITIAL_HEIGHT);
-            scene.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
-                if (sfxEnabledSupplier.get()) {
-                    soundPlayer.playClick();
-                }
-            });
-            stage.setScene(scene);
-            stage.setResizable(true);
-            stage.centerOnScreen();
-            stage.setTitle("Escapists");
-            stage.show();
-        } else {
-            scene.setRoot(view);
+            if (scene == null) {
+                scene = new Scene(view, INITIAL_WIDTH, INITIAL_HEIGHT);
+                scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+                    if (sfxEnabledSupplier.get()) {
+                        soundPlayer.playClick();
+                    }
+                });
+                stage.setScene(scene);
+                stage.setResizable(true);
+                stage.centerOnScreen();
+                stage.setTitle("Escapists");
+                stage.show();
+            }
+            else {
+                scene.setRoot(view);
+            }
         }
     }
 
+    /**
+     * Displays the specified view on the stage.
+     *
+     * @param view the JavaFX parent representing the view to display
+     */
     public void show(Parent view) {
-        Scene scene = stage.getScene();
-        if (scene == null) {
-            scene = new Scene(view, INITIAL_WIDTH, INITIAL_HEIGHT);
-            scene.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+        Scene currentScene = stage.getScene();
+
+        if (currentScene == null) {
+            currentScene = new Scene(view, INITIAL_WIDTH, INITIAL_HEIGHT);
+            currentScene.addEventFilter(MouseEvent.MOUSE_CLICKED, evt -> {
                 if (sfxEnabledSupplier.get()) {
                     soundPlayer.playClick();
                 }
             });
-            stage.setScene(scene);
+            stage.setScene(currentScene);
             stage.setResizable(true);
             stage.centerOnScreen();
-        } else {
-            scene.setRoot(view);
         }
+        else {
+            currentScene.setRoot(view);
+        }
+
         stage.show();
     }
 
+    /**
+     * Displays a registered modal overlay.
+     *
+     * @param overlayName the name of the overlay to display
+     */
     public void showOverlay(String overlayName) {
-        AbstractModalOverlay overlay = overlays.get(overlayName);
-        if (overlay == null) {
-            return;
-        }
+        if (canShowOverlay(overlayName)) {
+            AbstractModalOverlay overlay = overlays.get(overlayName);
+            Parent root = scene.getRoot();
 
-        if (visibleOverlays.contains(overlayName)) {
-            return;
-        }
+            ((StackPane) root).getChildren().add(overlay);
 
-        if (scene == null) {
-            return;
-        }
+            overlay.setVisible(true);
+            overlay.setManaged(true);
+            visibleOverlays.add(overlayName);
 
-        Parent root = scene.getRoot();
-        if (!(root instanceof StackPane)) {
-            return;
-        }
-        ((StackPane) root).getChildren().add(overlay);
-
-        overlay.setVisible(true);
-        overlay.setManaged(true);
-        visibleOverlays.add(overlayName);
-
-        if (topLayerOverlays.contains(overlayName)) {
-            overlay.toFront();
-        } else {
-            for (String topName : topLayerOverlays) {
-                AbstractModalOverlay topOverlay = overlays.get(topName);
-                if (visibleOverlays.contains(topName)) {
-                    topOverlay.toFront();
-                }
+            if (topLayerOverlays.contains(overlayName)) {
+                overlay.toFront();
+            }
+            else {
+                bringTopLayerOverlaysToFront();
             }
         }
     }
 
-    public void hideOverlay(String overlayName) {
+    /**
+     * Determines whether an overlay can be displayed.
+     *
+     * @param overlayName the name of the overlay to check
+     * @return true if the overlay can be displayed; false otherwise
+     */
+    private boolean canShowOverlay(String overlayName) {
         AbstractModalOverlay overlay = overlays.get(overlayName);
-        if (overlay == null) {
-            return;
-        }
 
-        if (!visibleOverlays.contains(overlayName)) { // Already hidden...
-            return;
-        }
-
-        if (scene == null) {
-            return;
-        }
-
-        Parent root = scene.getRoot();
-        if (!(root instanceof StackPane)) {
-            return;
-        }
-        ((StackPane) root).getChildren().remove(overlay);
-
-        overlay.setVisible(false);
-        overlay.setManaged(false);
-        visibleOverlays.remove(overlayName);
+        return overlay != null
+                && !visibleOverlays.contains(overlayName)
+                && scene != null
+                && scene.getRoot() instanceof StackPane;
     }
 
+    /**
+     * Brings all currently visible top-layer overlays to the front.
+     */
+    private void bringTopLayerOverlaysToFront() {
+        for (String topName : topLayerOverlays) {
+            AbstractModalOverlay topOverlay = overlays.get(topName);
+
+            if (visibleOverlays.contains(topName)) {
+                topOverlay.toFront();
+            }
+        }
+    }
+
+    /**
+     * Hides a registered modal overlay.
+     *
+     * @param overlayName the name of the overlay to hide
+     */
+    public void hideOverlay(String overlayName) {
+        if (canHideOverlay(overlayName)) {
+            AbstractModalOverlay overlay = overlays.get(overlayName);
+            StackPane root = (StackPane) scene.getRoot();
+
+            root.getChildren().remove(overlay);
+
+            overlay.setVisible(false);
+            overlay.setManaged(false);
+            visibleOverlays.remove(overlayName);
+        }
+    }
+
+    /**
+     * Determines whether an overlay can be hidden.
+     *
+     * @param overlayName the name of the overlay to check
+     * @return true if the overlay can be hidden; false otherwise
+     */
+    private boolean canHideOverlay(String overlayName) {
+        AbstractModalOverlay overlay = overlays.get(overlayName);
+
+        return overlay != null
+                && visibleOverlays.contains(overlayName)
+                && scene != null
+                && scene.getRoot() instanceof StackPane;
+    }
+
+    /**
+     * Hides all visible overlays that are not designated as top-layer overlays.
+     */
     private void hideAllNonTopLayerOverlays() {
         Set<String> visibleCopy = new HashSet<>(visibleOverlays);
+
         for (String overlayName : visibleCopy) {
-            if (topLayerOverlays.contains(overlayName)) {
-                continue;
+            if (!topLayerOverlays.contains(overlayName)) {
+                hideOverlay(overlayName);
             }
-            hideOverlay(overlayName); // Removes the overlay from visibleOverlays, so iterate over a copy!
         }
     }
 
+    /**
+     * Hides all currently visible overlays.
+     */
     private void hideAllOverlays() {
         Set<String> visibleCopy = new HashSet<>(visibleOverlays);
+
         for (String overlayName : visibleCopy) {
             hideOverlay(overlayName);
         }
     }
 
+    /**
+     * Returns the currently displayed view.
+     *
+     * @return the current JavaFX view
+     */
     public Parent getCurrentView() {
         return currentView;
     }
 
+    /**
+     * Returns the name of the currently displayed view.
+     *
+     * @return the current view name
+     */
     public String getCurrentViewName() {
         return currentViewName;
     }

@@ -13,30 +13,61 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import view.common.AbstractModalOverlay;
 
+/**
+ * Modal overlay that provides the user interface for logging into an account.
+ *
+ * <p>The overlay collects a username and password and delegates the login
+ * operation to the LoginController. Validation errors are displayed using
+ * the associated LoginViewModel.</p>
+ */
 public class LoginOverlay extends AbstractModalOverlay {
+
+    private static final double SPACING_H = 20;
+    private static final double SPACING_V = 16;
+    private static final int PADDING = 24;
+    private static final int MAX_WIDTH = 400;
+    private static final int MAX_HEIGHT = 300;
 
     private final TextField usernameField = new TextField();
     private final PasswordField passwordField = new PasswordField();
     private final Label errorLabel = new Label();
 
     private final LoginController controller;
-    LoginViewModel loginViewModel;
+    private final LoginViewModel loginViewModel;
 
-    public LoginOverlay(Runnable onClose, LoginController controller, LoginViewModel loginViewModel) {
+    /**
+     * Creates a login overlay.
+     *
+     * @param onClose the action to perform when the overlay is closed
+     * @param controller the controller responsible for login actions
+     * @param loginViewModel the view model containing login state and errors
+     */
+    public LoginOverlay(
+            Runnable onClose,
+            LoginController controller,
+            LoginViewModel loginViewModel) {
         super(onClose);
         this.controller = controller;
         this.loginViewModel = loginViewModel;
         initialize();
     }
 
+    /**
+     * Builds the modal box containing the login form.
+     *
+     * @return the VBox containing the login form and controls
+     */
     @Override
     protected VBox buildModalBox() {
         Label title = new Label("LOG-IN");
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;");
+        title.setStyle(
+                "-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;");
 
         Button closeButton = new Button("\u00D7");
-        closeButton.setStyle("-fx-font-size: 20px; -fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;");
-        closeButton.setOnAction(e -> onClose.run());
+        closeButton.setStyle(
+                "-fx-font-size: 20px; -fx-background-color: transparent; "
+                        + "-fx-text-fill: white; -fx-cursor: hand;");
+        closeButton.setOnAction(evt -> onClose.run());
 
         HBox header = new HBox(title, closeButton);
         header.setAlignment(Pos.CENTER_LEFT);
@@ -51,10 +82,10 @@ public class LoginOverlay extends AbstractModalOverlay {
         errorLabel.setManaged(false);
 
         Button cancelButton = new Button("CANCEL");
-        cancelButton.setOnAction(e -> onClose.run());
+        cancelButton.setOnAction(evt -> onClose.run());
 
         Button confirmButton = new Button("CONFIRM");
-        confirmButton.setOnAction(e -> {
+        confirmButton.setOnAction(evt -> {
             controller.execute(
                     usernameField.getText(),
                     passwordField.getText()
@@ -63,30 +94,43 @@ public class LoginOverlay extends AbstractModalOverlay {
             updateView();
         });
 
-        HBox buttonRow = new HBox(20, cancelButton, confirmButton);
+        HBox buttonRow = new HBox(SPACING_H, cancelButton, confirmButton);
         buttonRow.setAlignment(Pos.CENTER);
 
-        VBox box = new VBox(16, header,
+        VBox box = new VBox(
+                SPACING_V,
+                header,
                 new Label("Username:"), usernameField,
                 new Label("Password:"), passwordField,
-                errorLabel, buttonRow);
-        box.setPadding(new Insets(24));
-        box.setMaxWidth(400);
-        box.setMaxHeight(300);
+                errorLabel, buttonRow
+        );
+        box.setPadding(new Insets(PADDING));
+        box.setMaxWidth(MAX_WIDTH);
+        box.setMaxHeight(MAX_HEIGHT);
         box.setStyle("-fx-background-color: #a6389e; -fx-background-radius: 16;");
+
         return box;
     }
 
+    /**
+     * Updates the overlay based on the current login state.
+     *
+     * <p>If an error is present, the error message is displayed. If no error
+     * is present, the login is considered successful and the overlay is
+     * closed.</p>
+     */
     public void updateView() {
         String error = loginViewModel.getState().getErrorMessage();
+
         if (!error.isEmpty()) {
             errorLabel.setText(error);
             errorLabel.setVisible(true);
             errorLabel.setManaged(true);
-        } else {
+        }
+        else {
             errorLabel.setVisible(false);
             errorLabel.setManaged(false);
-            onClose.run(); // success - close the modal
+            onClose.run();
         }
     }
 }
