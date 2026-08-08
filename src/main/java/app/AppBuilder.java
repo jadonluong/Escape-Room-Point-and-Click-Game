@@ -102,6 +102,7 @@ import view.common.SoundPlayer;
 import view.interactable.InteractOverlay;
 import view.interactable.ZoomView;
 import view.inventory.InventoryOverlay;
+import view.mainmenu.AuthOverlayFactories;
 import view.mainmenu.MainMenuView;
 import view.puzzle.PuzzleView;
 import view.user.LoginOverlay;
@@ -147,7 +148,12 @@ public class AppBuilder extends Application {
         final ToggleMusicPresenter musicPresenter = new ToggleMusicPresenter(audioViewModel);
         final ToggleMusicInteractor musicInteractor = new ToggleMusicInteractor(musicPresenter);
         final ToggleMusicController musicController = new ToggleMusicController(musicInteractor);
-        final AudioControlView audioControlView = new AudioControlView(sfxController, musicController, audioViewModel);
+
+        // Repeated on purpose otherwise it only shows in one place
+        final AudioControlView audioControlViewForMainMenu = new AudioControlView(sfxController, musicController,
+                audioViewModel);
+        final AudioControlView audioControlViewForPause = new AudioControlView(sfxController, musicController,
+                audioViewModel);
 
         final SoundPlayer soundPlayer = new SoundPlayer("/audio/sfx/click.wav");
         final ViewManager viewManager = new ViewManager(
@@ -254,9 +260,13 @@ public class AppBuilder extends Application {
         final SelectItemController selectItemController = new SelectItemController(selectItemInteractor);
 
         // --- Main menu ---
+        final AuthOverlayFactories authOverlayFactories =
+                new AuthOverlayFactories(loginOverlayFactory, signupOverlayFactory);
+
         final MainMenuView mainMenu = new MainMenuView(
-                viewManagerModel, mainMenuViewModel, loggedInViewModel,
-                loginOverlayFactory, signupOverlayFactory,
+                mainMenuViewModel,
+                loggedInViewModel,
+                authOverlayFactories,
                 () -> {
                     if (loggedInViewModel.getState().isLoggedIn()) {
                         logoutController.executeLogoutWithoutSave(loggedInViewModel.getState().getUsername());
@@ -267,7 +277,7 @@ public class AppBuilder extends Application {
                         viewManagerModel.firePropertyChanged();
                     }
                 },
-                audioControlView,
+                audioControlViewForMainMenu,
                 tutorialAndStoryModeStartUpController,
                 browseRoomsController);
 
@@ -318,7 +328,7 @@ public class AppBuilder extends Application {
         final GameMenuView gameMenuView =
                 new GameMenuView(viewManager,
                 loggedInViewModel,
-                audioControlView,
+                audioControlViewForPause,
                         () -> {
                             if (userSessionTracking.getCurrentUser() != null) {
                                 final String username = loggedInViewModel.getState().getUsername();
