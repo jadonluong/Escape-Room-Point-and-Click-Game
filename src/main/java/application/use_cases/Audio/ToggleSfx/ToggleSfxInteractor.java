@@ -1,30 +1,19 @@
 package application.use_cases.Audio.ToggleSfx;
 
-/**
- * Interactor responsible for toggling the sound effects state and
- * presenting the updated state to the output boundary.
- */
+import domain.entities.Audio.AudioSettings;
+
 public class ToggleSfxInteractor implements ToggleSfxInputBoundary {
-
     private final ToggleSfxOutputBoundary presenter;
-    private boolean sfxOn = true;
+    private final AudioSettings audioSettings;
 
-    /**
-     * Creates a {@code ToggleSfxInteractor} with the specified presenter.
-     *
-     * @param presenter the output boundary used to present the updated
-     *                  sound effects state
-     */
-    public ToggleSfxInteractor(ToggleSfxOutputBoundary presenter) {
+    public ToggleSfxInteractor(ToggleSfxOutputBoundary presenter, AudioSettings audioSettings) {
         this.presenter = presenter;
+        this.audioSettings = audioSettings;
     }
 
-    /**
-     * Toggles the sound effects state and presents the updated state.
-     */
     @Override
     public void toggleSfx() {
-        sfxOn = !sfxOn;
-        presenter.presentSfxState(new ToggleSfxOutputData(sfxOn));
+        audioSettings.toggleSfx();
+        presenter.presentSfxState(new ToggleSfxOutputData(audioSettings.isSfxOn()));
     }
 }

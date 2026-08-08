@@ -24,6 +24,7 @@ import application.use_cases.game_play.TutorialAndStoryModeStartUp.TutorialAndSt
 import data_access.GameAssetManager;
 import data_access.JsonUserDataAccessObject;
 import data_access.PuzzleGenerator;
+import domain.entities.Audio.AudioSettings;
 import domain.entities.Hint.CommonHintFactory;
 import domain.entities.Hint.HintFactory;
 import domain.entities.Interactable.CommonInteractableFactory;
@@ -141,12 +142,13 @@ public class AppBuilder extends Application {
         userSessionTracking.setCurrentUser(defaultGuestUser);
 
         // --- Audio chain (built before ViewManager, which needs the sfx state) ---
+        final AudioSettings audioSettings = new AudioSettings();
         final AudioViewModel audioViewModel = new AudioViewModel();
         final ToggleSfxPresenter sfxPresenter = new ToggleSfxPresenter(audioViewModel);
-        final ToggleSfxInteractor sfxInteractor = new ToggleSfxInteractor(sfxPresenter);
+        final ToggleSfxInteractor sfxInteractor = new ToggleSfxInteractor(sfxPresenter, audioSettings);
         final ToggleSfxController sfxController = new ToggleSfxController(sfxInteractor);
         final ToggleMusicPresenter musicPresenter = new ToggleMusicPresenter(audioViewModel);
-        final ToggleMusicInteractor musicInteractor = new ToggleMusicInteractor(musicPresenter);
+        final ToggleMusicInteractor musicInteractor = new ToggleMusicInteractor(musicPresenter, audioSettings);
         final ToggleMusicController musicController = new ToggleMusicController(musicInteractor);
 
         // Repeated on purpose otherwise it only shows in one place

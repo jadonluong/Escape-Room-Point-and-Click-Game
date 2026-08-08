@@ -1,5 +1,7 @@
 package application.use_cases.Audio.ToggleMusic;
 
+import domain.entities.Audio.AudioSettings;
+
 /**
  * Interactor responsible for toggling the application's music state.
  *
@@ -10,15 +12,16 @@ package application.use_cases.Audio.ToggleMusic;
 public class ToggleMusicInteractor implements ToggleMusicInputBoundary {
 
     private final ToggleMusicOutputBoundary presenter;
-    private boolean musicOn = true;
+    private AudioSettings audioSettings;
 
     /**
      * Creates a new toggle music interactor.
      *
      * @param presenter output boundary used to present the updated music state
      */
-    public ToggleMusicInteractor(ToggleMusicOutputBoundary presenter) {
+    public ToggleMusicInteractor(ToggleMusicOutputBoundary presenter, AudioSettings audioSettings) {
         this.presenter = presenter;
+        this.audioSettings = audioSettings;
     }
 
     /**
@@ -26,7 +29,7 @@ public class ToggleMusicInteractor implements ToggleMusicInputBoundary {
      */
     @Override
     public void toggleMusic() {
-        musicOn = !musicOn;
-        presenter.presentMusicState(new ToggleMusicOutputData(musicOn));
+        audioSettings.toggleSfx();
+        presenter.presentMusicState(new ToggleMusicOutputData(audioSettings.isSfxOn()));
     }
 }

@@ -28,17 +28,16 @@ public class GameObjectActionDispatcher {
      */
     public Runnable getAction(String id, ObjectsInfo info) {
         final String type = info.type();
+        Runnable action = null;
 
         if ("Interactable".equals(type)) {
-            return () -> zoomInController.zoomIn(id);
-        }
-        else if ("Item".equals(type)) {
-            return () -> pickUpController.execute(id);
-        }
-        else if ("Hint".equals(type)) {
-            return () -> getHintController.execute(id);
+            action = () -> zoomInController.zoomIn(id);
+        } else if ("Item".equals(type)) {
+            action = () -> pickUpController.execute(id);
+        } else if ("Hint".equals(type)) {
+            action = () -> getHintController.execute(id);
         }
 
-        return null;
+        return action;
     }
 }
