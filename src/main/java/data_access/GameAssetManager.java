@@ -5,14 +5,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import application.game_registry.InteractableRegistry;
 import application.game_registry.ItemRegistry;
 import application.game_registry.RoomRegistry;
+import application.use_cases.Crafting.CraftingDataAccessInterface;
 import application.use_cases.Hint.GetHint.GetHintDataAccessInterface;
 import application.use_cases.Interactable.Interact.InteractDataAccessInterface;
 import application.use_cases.Interactable.Zoom.ZoomDataAccessInterface;
@@ -43,7 +41,8 @@ public class GameAssetManager implements
         RoomRegistry, ItemRegistry, InteractableRegistry,
         GetHintDataAccessInterface,
         BrowseRoomsDataAccessInterface, StartUpDataAccessInterface,
-        InteractDataAccessInterface, EnterExitDataAccessInterface, SolveDataAccessInterface, ZoomDataAccessInterface {
+        InteractDataAccessInterface, EnterExitDataAccessInterface, SolveDataAccessInterface, ZoomDataAccessInterface,
+        CraftingDataAccessInterface {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final ItemFactory itemFactory;
@@ -60,6 +59,7 @@ public class GameAssetManager implements
     private final Map<String, Hint> masterHints = new HashMap<>();
     private final Map<String, List<Room>> masterModes = new HashMap<>();
     private final Map<String, Puzzle> masterPuzzles = new HashMap<>();
+    private final Map<Set<String>, String> masterCraftingRecipes = new HashMap<>();
 
     public GameAssetManager(ItemFactory itemFactory,
                             InteractableFactory interactableFactory,
@@ -84,6 +84,7 @@ public class GameAssetManager implements
             loadRooms();
             // Must run after rooms to populate Room lists for each mode:
             loadModes();
+            loadCraftingRecipes();
         }
         catch (IOException exception) {
             throw new RuntimeException("Static game assets initialization crashed: ", exception);
@@ -311,6 +312,27 @@ public class GameAssetManager implements
         }
     }
 
+    private void loadCraftingRecipes() throws IOException {
+        try (InputStream stream = getClass().getResourceAsStream("/data/crafting.json")) {
+            if (stream != null) {
+                try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+                    final Type type = new TypeToken<Map<String, JsonCraftingData>>() {
+                    }.getType();
+                    final Map<String, JsonCraftingData> rawData = gson.fromJson(reader, type);
+
+                    if (rawData != null) {
+                        for (JsonCraftingData recipe : rawData.values()) {
+                            if (recipe.components != null && recipe.product != null) {
+                                final Set<String> componentSet = new HashSet<>(recipe.components);
+                                masterCraftingRecipes.put(componentSet, recipe.product);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // =========================================================================
     // Registry implementations (DBs only saves text IDs)
     // =========================================================================
@@ -338,6 +360,7 @@ public class GameAssetManager implements
     // =========================================================================
     // GetHintDataAccessInterface implementation
     // =========================================================================
+
     @Override
     public Hint getHintForObjectID(String objectID) {
         return masterHints.get(objectID);
@@ -351,6 +374,7 @@ public class GameAssetManager implements
     // =========================================================================
     // BrowseRoomsDataAccessInterface implementation
     // =========================================================================
+
     @Override
     public List<Room> getRoomsForQuickMode() {
         return masterModes.get("QuickMode");
@@ -371,8 +395,18 @@ public class GameAssetManager implements
     }
 
     // =========================================================================
+    // CraftingDataAccessInterface implementation
+    // =========================================================================
+
+    @Override
+    public Map<Set<String>, String> getCraftingRecipes() {
+        return masterCraftingRecipes;
+    }
+
+    // =========================================================================
     // Private Schema Mapping DTO Classes (Kept Isolated from Business Rules)
     // =========================================================================
+
     private static final class JsonItemData {
         private String name;
         private String description;
@@ -393,6 +427,19 @@ public class GameAssetManager implements
 
         public String getImagePath() {
             return imagePath;
+        }
+    }
+
+    private static final class JsonCraftingData {
+        private List<String> components;
+        private String product;
+
+        public List<String> getComponents() {
+            return components;
+        }
+
+        public String getProduct() {
+            return product;
         }
     }
 

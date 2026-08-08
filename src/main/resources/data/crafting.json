@@ -1,0 +1,11 @@
+{
+  "crafted_1": {
+    "components": ["cheese_matches", "sac_candle"],
+    "product": "sac_crafted_lit_candle"
+  },
+
+  "crafted_2": {
+    "components": ["house_bottle", "house_flower"],
+    "product": "house_crafted_flower_pot"
+  }
+}
