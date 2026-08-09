@@ -1,9 +1,5 @@
 package domain.entities.user;
 
-import domain.entities.User.CommonUser;
-import domain.entities.User.CommonUserFactory;
-import domain.entities.User.CommonUserFactoryClass;
-import domain.entities.User.User;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

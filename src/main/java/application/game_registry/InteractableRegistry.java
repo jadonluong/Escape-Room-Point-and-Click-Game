@@ -1,6 +1,6 @@
 package application.game_registry;
 
-import domain.entities.Interactable.Interactable;
+import domain.entities.interactable.Interactable;
 
 /**
  * Registry for getting Interactable objects using their IDs.

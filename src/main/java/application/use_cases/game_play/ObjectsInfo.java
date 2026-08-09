@@ -1,6 +1,6 @@
 package application.use_cases.game_play;
 
-import domain.entities.Room.Position;
+import domain.entities.room.Position;
 
 /**
  * Contains the information required to display an object in a room.

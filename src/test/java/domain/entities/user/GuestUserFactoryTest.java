@@ -1,9 +1,5 @@
 package domain.entities.user;
 
-import domain.entities.User.GuestUser;
-import domain.entities.User.GuestUserFactory;
-import domain.entities.User.GuestUserFactoryClass;
-import domain.entities.User.User;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
