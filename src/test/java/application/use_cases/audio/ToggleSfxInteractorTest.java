@@ -1,4 +1,4 @@
-package application.use_cases.audio;
+package application.use_cases.audio.toggle_sfx;
 
 import domain.entities.audio.AudioSettings;
 import org.junit.jupiter.api.BeforeEach;
