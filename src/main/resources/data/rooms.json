@@ -265,5 +265,82 @@
         438
       ]
     }
+  },
+  "magic": {
+    "description": "A young mage's study.",
+    "interactables": [
+      "magic_carpet",
+      "magic_cauldron",
+      "magic_circle",
+      "magic_lectern",
+      "magic_letter",
+      "magic_painting",
+      "magic_sticky_note",
+      "magic_suitcase",
+      "magic_table",
+      "magic_wand_stand"
+    ],
+    "items": [
+      "magic_cipher_key",
+      "magic_newspaper",
+      "magic_potion",
+      "magic_wand"
+    ],
+    "hints": [
+      "magic_chair",
+      "magic_hat"
+    ],
+    "imagePath": "/images/rooms/magic/magic_room_background.png",
+    "imageThumbnail": "/images/rooms/magic/magic_room_thumbnail.png",
+    "positions": {
+      "magic_carpet": [
+        720,
+        1336
+      ],
+      "magic_cauldron": [
+        1776,
+        1136
+      ],
+      "magic_circle": [
+        712,
+        616
+      ],
+      "magic_lectern": [
+        992,
+        960
+      ],
+      "magic_letter": [
+        1664,
+        1224
+      ],
+      "magic_painting": [
+        1160,
+        944
+      ],
+      "magic_sticky_note": [
+        848,
+        1136
+      ],
+      "magic_suitcase": [
+        416,
+        1392
+      ],
+      "magic_table": [
+        216,
+        1024
+      ],
+      "magic_wand_stand": [
+        1408,
+        1032
+      ],
+      "magic_chair": [
+        768,
+        1064
+      ],
+      "magic_hat": [
+        1360,
+        832
+      ]
+    }
   }
 }

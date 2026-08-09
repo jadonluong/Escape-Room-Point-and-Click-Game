@@ -248,7 +248,7 @@ public class MainMenuView extends StackPane implements PropertyChangeListener {
         return makeButton(
                 "/images/ui/buttons/TutorialButton.png",
                 MAIN_BUTTON_WIDTH, MAIN_BUTTON_HEIGHT, MAIN_BUTTON_X_POS, TUTORIAL_Y_POS,
-                () -> tutorialAndStoryModeStartUpController.execute("STORY"));
+                () -> tutorialAndStoryModeStartUpController.execute("TUTORIAL"));
     }
 
     /**
