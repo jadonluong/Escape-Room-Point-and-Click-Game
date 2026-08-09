@@ -17,11 +17,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PuzzleView extends StackPane implements ActionListener, PropertyChangeListener {
@@ -117,12 +121,11 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
 
         puzzleLabel.setTextFill(Color.WHITE);
         puzzleLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 38));
+        puzzleLabel.setTextAlignment(TextAlignment.CENTER);
         puzzleLabel.setWrapText(true);
         puzzleLabel.setAlignment(Pos.CENTER);
         puzzleLabel.setPrefWidth(puzzleBox.getWidth() - 50);
         puzzleLabel.setMaxWidth(puzzleBox.getWidth() - 50);
-        puzzleLabel.setPrefHeight(puzzleBox.getHeight() * 0.15);
-        puzzleLabel.setMaxHeight(puzzleBox.getHeight() * 0.15);
 
         passwordBarImage.setImage(loadImage("/images/puzzleview/password_bar.png"));
         passwordBarImage.setFitWidth(puzzleBoxWidth * 0.35);
@@ -287,8 +290,28 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
                 Map<String, String> cipher = enterExitState.getCipher();
                 StringBuilder hintText = new StringBuilder();
                 if (cipher != null) {
+                    // Need to switch the mapping so that it's more intuitive for the player to use.
+                    Map<String, String> reversed = new HashMap<>();
                     for (Map.Entry<String, String> entry : cipher.entrySet()) {
-                        hintText.append(entry.getKey()).append(" → ").append(entry.getValue()).append("   ");
+                        reversed.put(entry.getValue(), entry.getKey());
+                    }
+
+                    // Sort the keys now so that the cipher presented is in alphabetical order :)
+                    List<Map.Entry<String, String>> sortedReversed = new ArrayList<>(reversed.entrySet());
+                    sortedReversed.sort(Map.Entry.comparingByKey());
+
+                    int count = 0;
+                    for (Map.Entry<String, String> entry : sortedReversed) {
+                        hintText.append(entry.getKey()).append(" → ").append(entry.getValue());
+                        count++;
+
+                        // Only show four letters per line so none of them are cut off.
+                        if (count % 4 == 0) {
+                            hintText.append("\n\n");
+                        }
+                        else {
+                            hintText.append("      ");
+                        }
                     }
                     hintLabel.setText(hintText.toString());
                 }

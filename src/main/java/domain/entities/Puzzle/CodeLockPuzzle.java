@@ -44,10 +44,6 @@ public class CodeLockPuzzle implements Puzzle {
         return description;
     }
 
-    public String getAnswer() {
-        return answer;
-    }
-
     public String getHint() {
         return hint;
     }
@@ -69,10 +65,14 @@ public class CodeLockPuzzle implements Puzzle {
 
     @Override
     public boolean solve(String playerAnswer) {
+        final boolean result;
         if (playerAnswer != null && answer.equalsIgnoreCase(playerAnswer.trim())) {
             isSolved = true;
-            return true;
+            result = true;
         }
-        return false;
+        else {
+            result = false;
+        }
+        return result;
     }
 }

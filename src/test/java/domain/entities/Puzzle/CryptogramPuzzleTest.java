@@ -65,7 +65,6 @@ class CryptogramPuzzleTest {
     void cryptogramPuzzleTestNormal() {
         assertEquals(ID, puzzle.getId());
         assertEquals(ENCRYPTED, puzzle.getEncrypted());
-        assertEquals(ANSWER, puzzle.getAnswer());
         assertEquals(CIPHER, puzzle.getCipher());
         assertEquals(CIPHER_KEY_ID, puzzle.getCipherKeyId());
         assertFalse(puzzle.isSolved());
@@ -92,7 +91,6 @@ class CryptogramPuzzleTest {
         assertNotNull(nullPuzzle);
         assertNull(nullPuzzle.getId());
         assertNull(nullPuzzle.getEncrypted());
-        assertNull(nullPuzzle.getAnswer());
         assertTrue(nullPuzzle.getCipher().isEmpty());
         assertNull(nullPuzzle.getCipherKeyId());
         assertNull(nullPuzzle.getSuccessMessage());
@@ -162,11 +160,6 @@ class CryptogramPuzzleTest {
     @Test
     void getEncryptedTest() {
         assertEquals(ENCRYPTED, puzzle.getEncrypted());
-    }
-
-    @Test
-    void getAnswerTest() {
-        assertEquals(ANSWER, puzzle.getAnswer());
     }
 
     @Test

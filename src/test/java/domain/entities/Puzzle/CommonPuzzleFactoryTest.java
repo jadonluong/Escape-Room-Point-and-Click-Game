@@ -2,9 +2,7 @@ package domain.entities.Puzzle;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,10 +15,8 @@ class CommonPuzzleFactoryTest {
     void createAnagramTestNormal() {
         String id = "creative_id";
         String scrambled = "PDAISRE";
-        List<String> answers = new ArrayList<>();
-        answers.add("DESPAIR");
-        answers.add("DIAPERS");
-        answers.add("ASPIRED");
+        String answer = "DESPAIR";
+        String hint = "Utter loss of hope.";
         String successMessage = "YAY!";
         String rewardItem = "reward_item";
         String unlockedRoom = "unlocked_room";
@@ -28,7 +24,8 @@ class CommonPuzzleFactoryTest {
         AnagramPuzzle puzzle = factory.createAnagram(
                 id,
                 scrambled,
-                answers,
+                answer,
+                hint,
                 successMessage,
                 rewardItem,
                 unlockedRoom
@@ -37,7 +34,6 @@ class CommonPuzzleFactoryTest {
         assertNotNull(puzzle);
         assertEquals(id, puzzle.getId());
         assertEquals(scrambled, puzzle.getScrambled());
-        assertEquals(answers, puzzle.getAnswers());
         assertEquals(successMessage, puzzle.getSuccessMessage());
         assertEquals(rewardItem, puzzle.getRewardItemId());
         assertEquals(unlockedRoom, puzzle.getUnlockedRoomId());
@@ -99,7 +95,6 @@ class CommonPuzzleFactoryTest {
         assertNotNull(puzzle);
         assertEquals(id, puzzle.getId());
         assertEquals(encrypted, puzzle.getEncrypted());
-        assertEquals(answer, puzzle.getAnswer());
         assertEquals(cipher, puzzle.getCipher());
         assertEquals(cipherKeyId, puzzle.getCipherKeyId());
         assertEquals(successMessage, puzzle.getSuccessMessage());
@@ -134,7 +129,6 @@ class CommonPuzzleFactoryTest {
         assertNotNull(puzzle);
         assertEquals(id, puzzle.getId());
         assertEquals(description, puzzle.getDescription());
-        assertEquals(answer, puzzle.getAnswer());
         assertEquals(hint, puzzle.getHint());
         assertEquals(successMessage, puzzle.getSuccessMessage());
         assertEquals(rewardItem, puzzle.getRewardItemId());
@@ -143,11 +137,12 @@ class CommonPuzzleFactoryTest {
     }
 
     @Test
-    void createAnagramTestNullAndEmpty() {
+    void createAnagramTestNull() {
         AnagramPuzzle puzzle = factory.createAnagram(
                 null,
                 null,
-                new ArrayList<>(),
+                null,
+                null,
                 null,
                 null,
                 null
@@ -155,7 +150,6 @@ class CommonPuzzleFactoryTest {
         assertNotNull(puzzle);
         assertNull(puzzle.getId());
         assertNull(puzzle.getScrambled());
-        assertTrue(puzzle.getAnswers().isEmpty());
         assertNull(puzzle.getSuccessMessage());
         assertNull(puzzle.getRewardItemId());
         assertNull(puzzle.getUnlockedRoomId());
@@ -176,7 +170,6 @@ class CommonPuzzleFactoryTest {
         assertNotNull(puzzle);
         assertNull(puzzle.getId());
         assertNull(puzzle.getEncrypted());
-        assertNull(puzzle.getAnswer());
         assertTrue(puzzle.getCipher().isEmpty());
         assertNull(puzzle.getCipherKeyId());
         assertNull(puzzle.getSuccessMessage());
@@ -198,7 +191,6 @@ class CommonPuzzleFactoryTest {
         assertNotNull(puzzle);
         assertNull(puzzle.getId());
         assertNull(puzzle.getDescription());
-        assertNull(puzzle.getAnswer());
         assertNull(puzzle.getHint());
         assertNull(puzzle.getSuccessMessage());
         assertNull(puzzle.getRewardItemId());
