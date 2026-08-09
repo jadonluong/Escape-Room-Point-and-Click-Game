@@ -1,6 +1,6 @@
-package application.use_cases.Audio.ToggleMusic;
+package application.use_cases.audio;
 
-import domain.entities.Audio.AudioSettings;
+import domain.entities.audio.AudioSettings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
