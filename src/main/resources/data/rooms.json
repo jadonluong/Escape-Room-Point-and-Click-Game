@@ -280,12 +280,7 @@
       "magic_table",
       "magic_wand_stand"
     ],
-    "items": [
-      "magic_cipher_key",
-      "magic_newspaper",
-      "magic_potion",
-      "magic_wand"
-    ],
+    "items": [],
     "hints": [
       "magic_chair",
       "magic_hat"
