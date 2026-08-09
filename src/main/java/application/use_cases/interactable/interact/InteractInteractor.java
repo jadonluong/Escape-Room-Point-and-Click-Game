@@ -1,9 +1,13 @@
 package application.use_cases.interactable.interact;
 
+import application.use_cases.game_play.ObjectsInfo;
 import domain.entities.interactable.Interactable;
 import domain.entities.puzzle.Puzzle;
 import domain.entities.room.Room;
 import domain.entities.user.User;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class InteractInteractor implements InteractInputBoundary {
     private InteractDataAccessInterface dataAccess;
@@ -144,8 +148,34 @@ public class InteractInteractor implements InteractInputBoundary {
 
     private void moveToRoom(User player, String unlockedRoomId) {
         player.unlockRoom(dataAccess.getRoomById(unlockedRoomId));
-        player.switchRoom(dataAccess.getRoomById(unlockedRoomId));
-        outputBoundary.prepareRoomView();
+        final Room unlockedRoom = dataAccess.getRoomById(unlockedRoomId);
+        player.unlockRoom(unlockedRoom);
+        player.switchRoom(unlockedRoom);
+
+        final Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
+        unlockedRoom.getInteractables().forEach(interactable -> {
+            objectsToDisplay.put(interactable.getId(),
+                    new ObjectsInfo(interactable.getSprite(),
+                            unlockedRoom.getPosition(interactable.getId()),
+                            "Interactable"));
+        });
+
+        unlockedRoom.getItems().forEach(item -> {
+            if (!player.hasItemID(item.getId())) {
+                objectsToDisplay.put(item.getId(),
+                        new ObjectsInfo(item.getImagePath(),
+                                unlockedRoom.getPosition(item.getId()),
+                                "Item"));
+            }
+        });
+
+        unlockedRoom.getHints().forEach(hint -> {
+            objectsToDisplay.put(hint.getObjectID(),
+                    new ObjectsInfo(hint.getImagePath(),
+                            unlockedRoom.getPosition(hint.getObjectID()),
+                            "Hint"));
+        });
+        outputBoundary.prepareRoomView(unlockedRoom.getImagePath(), objectsToDisplay);
     }
 
     private String makeSuccessMessage(String rewardItemId, String successMessage) {

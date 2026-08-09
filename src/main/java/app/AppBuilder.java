@@ -316,7 +316,7 @@ public class AppBuilder extends Application {
         // --- Interactable Interact Chain ---
         final InteractViewModel interactViewModel = new InteractViewModel();
         final InteractPresenter interactPresenter = new InteractPresenter(interactViewModel, inventoryViewModel,
-                zoomInteractor, viewManagerModel, viewManager);
+                zoomInteractor, inGameViewModel, viewManagerModel, viewManager);
         final InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter,
                 userSessionTracking);
         final InteractController interactController = new InteractController(interactInteractor);
