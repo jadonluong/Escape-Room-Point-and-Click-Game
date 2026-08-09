@@ -74,5 +74,33 @@
     "description": "A key to freedom",
     "craftable": false,
     "imagePath": "/images/items/astrology/key.PNG"
+  },
+
+  "magic_potion": {
+    "name": "potion",
+    "description": "A potion",
+    "craftable": false,
+    "imagePath": null
+  },
+
+  "magic_wand": {
+    "name": "wand",
+    "description": "The mage's wand",
+    "craftable": false,
+    "imagePath": null
+  },
+
+  "magic_cipher_key": {
+    "name": "cipher key",
+    "description": "A cipher key",
+    "craftable": false,
+    "imagePath": null
+  },
+
+  "magic_newspaper": {
+    "name": "newspaper",
+    "description": "A newspaper from 2026",
+    "craftable": false,
+    "imagePath": null
   }
 }

@@ -130,8 +130,7 @@ public class GameAssetManager implements
                             final JsonPuzzleData data = entry.getValue();
 
                             if ("Anagram".equalsIgnoreCase(data.getPuzzleType())) {
-                                final Puzzle puzzle = puzzleFactory.createAnagram(puzzleId,
-                                        data.getScrambled(),
+                                final Puzzle puzzle = puzzleGenerator.generateAnagramPuzzle(puzzleId,
                                         data.getAnswer(),
                                         data.getHint(),
                                         data.getSuccessMessage(),
@@ -139,13 +138,24 @@ public class GameAssetManager implements
                                         data.getUnlockedRoomId());
                                 masterPuzzles.put(puzzleId, puzzle);
                             }
-                            else {
+                            else if ("Cryptogram".equalsIgnoreCase(data.getPuzzleType())) {
                                 final Puzzle puzzle = puzzleGenerator.generateCryptogramPuzzle(puzzleId,
                                         data.getAnswer(),
                                         data.getCipherKeyId(),
                                         data.getSuccessMessage(),
                                         data.getRewardItemId(),
                                         data.getUnlockedRoomId());
+                                masterPuzzles.put(puzzleId, puzzle);
+                            }
+                            else if ("CodeLock".equalsIgnoreCase(data.getPuzzleType())) {
+                                final Puzzle puzzle = puzzleFactory.createCodeLock(puzzleId,
+                                        data.getDescription(),
+                                        data.getAnswer(),
+                                        data.getHint(),
+                                        data.getSuccessMessage(),
+                                        data.getRewardItemId(),
+                                        data.getUnlockedRoomId()
+                                );
                                 masterPuzzles.put(puzzleId, puzzle);
                             }
                         }
@@ -564,7 +574,7 @@ public class GameAssetManager implements
 
     private static final class JsonPuzzleData {
         private String puzzleType;
-        private String scrambled;
+        private String description;
         private String answer;
         private String hint;
         private String successMessage;
@@ -572,36 +582,36 @@ public class GameAssetManager implements
         private String unlockedRoomId;
         private String cipherKeyId;
 
-        public String getSuccessMessage() {
-            return successMessage;
+        public String getPuzzleType() {
+            return puzzleType;
+        }
+
+        public String getDescription() {
+            return description;
         }
 
         public String getAnswer() {
             return answer;
         }
 
-        public String getPuzzleType() {
-            return puzzleType;
+        public String getHint() {
+            return hint;
         }
 
-        public String getScrambled() {
-            return scrambled;
+        public String getSuccessMessage() {
+            return successMessage;
         }
 
         public String getRewardItemId() {
             return rewardItemId;
         }
 
-        public String getHint() {
-            return hint;
+        public String getUnlockedRoomId() {
+            return unlockedRoomId;
         }
 
         public String getCipherKeyId() {
             return cipherKeyId;
-        }
-
-        public String getUnlockedRoomId() {
-            return unlockedRoomId;
         }
     }
 }
