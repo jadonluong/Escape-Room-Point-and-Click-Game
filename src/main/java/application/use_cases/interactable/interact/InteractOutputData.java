@@ -16,6 +16,7 @@ public class InteractOutputData {
     private final String selectedItemName;
 
     private final String interactableId;
+    private final String interactableSprite;
 
     /**
      * Creates output data for an interaction.
@@ -33,13 +34,15 @@ public class InteractOutputData {
             String rewardItemName,
             String selectedItemId,
             String selectedItemName,
-            String interactableId) {
+            String interactableId,
+            String interactableSprite) {
         this.successMessage = successMessage;
         this.rewardItemId = rewardItemId;
         this.rewardItemName = rewardItemName;
         this.selectedItemId = selectedItemId;
         this.selectedItemName = selectedItemName;
         this.interactableId = interactableId;
+        this.interactableSprite = interactableSprite;
     }
 
     /**
@@ -94,5 +97,14 @@ public class InteractOutputData {
      */
     public String getInteractableId() {
         return interactableId;
+    }
+
+    /**
+     * Returns the sprite of the interactable involved in the interaction.
+     *
+     * @return the interactable sprite
+     */
+    public String getInteractableSprite() {
+        return interactableSprite;
     }
 }

@@ -63,7 +63,7 @@ public class InteractInteractor implements InteractInputBoundary {
         }
 
         outputBoundary.prepareSuccessView(new InteractOutputData(interactable.getSuccessMessage(), rewardItemId,
-                rewardItemName, selectedItemId, selectedItemName, interactable.getId()));
+                rewardItemName, selectedItemId, selectedItemName, interactable.getId(), interactable.getSprite()));
     }
 
     private void itemRequiredFirstInteraction(User player, Interactable interactable) {
@@ -109,7 +109,8 @@ public class InteractInteractor implements InteractInputBoundary {
                                 null,
                                 null,
                                 null,
-                                interactable.getId()));
+                                interactable.getId(),
+                                interactable.getSprite()));
             }
         }
     }
@@ -140,7 +141,8 @@ public class InteractInteractor implements InteractInputBoundary {
                                 null,
                                 null,
                                 null,
-                                interactable.getId()));
+                                interactable.getId(),
+                                interactable.getSprite()));
             }
         }
     }
