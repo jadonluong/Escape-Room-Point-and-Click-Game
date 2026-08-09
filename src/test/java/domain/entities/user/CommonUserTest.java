@@ -2,11 +2,10 @@ package domain.entities.user;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import domain.entities.Item.CommonItem;
-import domain.entities.Item.Item;
-import domain.entities.Room.CommonRoom;
-import domain.entities.Room.Room;
-import domain.entities.User.CommonUser;
+import domain.entities.item.CommonItem;
+import domain.entities.item.Item;
+import domain.entities.room.CommonRoom;
+import domain.entities.room.Room;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

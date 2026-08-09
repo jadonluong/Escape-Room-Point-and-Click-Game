@@ -1,7 +1,7 @@
 package interface_adapter.inventory;
 
-import application.use_cases.Item.SelectItem.SelectItemOutputBoundary;
-import application.use_cases.Item.SelectItem.SelectItemOutputData;
+import application.use_cases.item.select_item.SelectItemOutputBoundary;
+import application.use_cases.item.select_item.SelectItemOutputData;
 
 public class SelectItemPresenter implements SelectItemOutputBoundary {
     @Override

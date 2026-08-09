@@ -1,13 +1,12 @@
 package data_access;
 
-import domain.entities.Puzzle.AnagramPuzzle;
-import domain.entities.Puzzle.CryptogramPuzzle;
-import domain.entities.Puzzle.PuzzleFactory;
+import domain.entities.puzzle.AnagramPuzzle;
+import domain.entities.puzzle.CryptogramPuzzle;
+import domain.entities.puzzle.PuzzleFactory;
 import infrastructure.AnagramApiClient;
 import infrastructure.CryptogramApiClient;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public class PuzzleGenerator {

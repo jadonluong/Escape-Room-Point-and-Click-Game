@@ -1,10 +1,9 @@
 package domain.entities.user;
 
-import domain.entities.Item.CommonItem;
-import domain.entities.Item.Item;
-import domain.entities.Room.CommonRoom;
-import domain.entities.Room.Room;
-import domain.entities.User.AbstractUser;
+import domain.entities.item.CommonItem;
+import domain.entities.item.Item;
+import domain.entities.room.CommonRoom;
+import domain.entities.room.Room;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

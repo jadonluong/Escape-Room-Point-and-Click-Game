@@ -1,6 +1,6 @@
 package application.use_cases.game_play;
 
-import domain.entities.User.User;
+import domain.entities.user.User;
 
 public interface UserDataAccessInterface {
 

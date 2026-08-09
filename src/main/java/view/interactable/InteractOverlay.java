@@ -1,7 +1,7 @@
 package view.interactable;
 
-import interface_adapter.Interactable.Interact.InteractState;
-import interface_adapter.Interactable.Interact.InteractViewModel;
+import interface_adapter.interactable.interact.InteractState;
+import interface_adapter.interactable.interact.InteractViewModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

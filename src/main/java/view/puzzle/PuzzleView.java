@@ -1,9 +1,9 @@
 package view.puzzle;
 
-import interface_adapter.Puzzle.EnterExit.EnterExitController;
-import interface_adapter.Puzzle.EnterExit.EnterExitState;
-import interface_adapter.Puzzle.EnterExit.EnterExitViewModel;
-import interface_adapter.Puzzle.Solve.SolveController;
+import interface_adapter.puzzle.enter_exit.EnterExitController;
+import interface_adapter.puzzle.enter_exit.EnterExitState;
+import interface_adapter.puzzle.enter_exit.EnterExitViewModel;
+import interface_adapter.puzzle.solve.SolveController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -114,7 +114,7 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         puzzleBox.setStroke(Color.WHITE);
         puzzleBox.setStrokeWidth(3);
 
-        lockImage.setImage(loadImage("/images/puzzleview/lock.png"));
+        lockImage.setImage(loadImage("/images/puzzle_view/lock.png"));
         lockImage.setFitWidth(puzzleBoxWidth * 0.25);
         lockImage.setFitHeight(puzzleBoxHeight * 0.25);
         lockImage.setPreserveRatio(true);
@@ -127,7 +127,7 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         puzzleLabel.setPrefWidth(puzzleBox.getWidth() - 50);
         puzzleLabel.setMaxWidth(puzzleBox.getWidth() - 50);
 
-        passwordBarImage.setImage(loadImage("/images/puzzleview/password_bar.png"));
+        passwordBarImage.setImage(loadImage("/images/puzzle_view/password_bar.png"));
         passwordBarImage.setFitWidth(puzzleBoxWidth * 0.35);
         passwordBarImage.setFitHeight(puzzleBoxHeight * 0.2);
         passwordBarImage.setPreserveRatio(true);

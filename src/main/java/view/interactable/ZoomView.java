@@ -5,11 +5,11 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import interface_adapter.Interactable.Interact.InteractController;
-import interface_adapter.Interactable.Zoom.ZoomController;
-import interface_adapter.Interactable.Zoom.ZoomState;
-import interface_adapter.Interactable.Zoom.ZoomViewModel;
-import interface_adapter.Puzzle.EnterExit.EnterExitController;
+import interface_adapter.interactable.interact.InteractController;
+import interface_adapter.interactable.zoom.ZoomController;
+import interface_adapter.interactable.zoom.ZoomState;
+import interface_adapter.interactable.zoom.ZoomViewModel;
+import interface_adapter.puzzle.enter_exit.EnterExitController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -112,7 +112,7 @@ public class ZoomView extends StackPane
         double rightSideBoxesLayoutX = spriteBoxWidth + (gap * 2);
         double rightSideBoxesWidth = DESIGN_WIDTH - (spriteBoxWidth + (gap * 3));
 
-        // User Inventory Box
+        // user Inventory Box
         double inventoryBoxHeight = rightSideBoxesWidth; // inventoryBox is a Square
 
         Rectangle inventoryBox = new Rectangle(rightSideBoxesWidth, inventoryBoxHeight);

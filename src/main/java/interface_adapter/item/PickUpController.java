@@ -1,7 +1,7 @@
 package interface_adapter.item;
 
-import application.use_cases.Item.PickUp.PickUpInputBoundary;
-import application.use_cases.Item.PickUp.PickUpInputData;
+import application.use_cases.item.pick_up.PickUpInputBoundary;
+import application.use_cases.item.pick_up.PickUpInputData;
 
 public class PickUpController {
     private final PickUpInputBoundary pickUpInteractor;

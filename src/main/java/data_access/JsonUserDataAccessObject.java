@@ -2,18 +2,18 @@ package data_access;
 
 import application.game_registry.ItemRegistry;
 import application.game_registry.RoomRegistry;
-import application.use_cases.User.Login.LoginUserDataAccessInterface;
-import application.use_cases.User.SaveProgress.SaveProgressUserDataAccessInterface;
-import application.use_cases.User.SignUp.SignupUserDataAccessInterface;
+import application.use_cases.user.login.LoginUserDataAccessInterface;
+import application.use_cases.user.save_progress.SaveProgressUserDataAccessInterface;
+import application.use_cases.user.signup.SignupUserDataAccessInterface;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import domain.entities.Item.Item;
-import domain.entities.Room.Room;
-import domain.entities.User.CommonUser;
-import domain.entities.User.CommonUserFunction;
-import domain.entities.User.User;
+import domain.entities.item.Item;
+import domain.entities.room.Room;
+import domain.entities.user.CommonUser;
+import domain.entities.user.CommonUserFunction;
+import domain.entities.user.User;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -87,7 +87,7 @@ public class JsonUserDataAccessObject implements
             throw new IllegalArgumentException("Cannot save a user with no password.");
         }
         if (!(user instanceof CommonUser incomingUser)) {
-            throw new IllegalArgumentException("Unsupported User implementation type.");
+            throw new IllegalArgumentException("Unsupported user implementation type.");
         }
 
         UserDataModel model = convertEntityToDataModel(incomingUser);

@@ -1,7 +1,7 @@
 package view.user;
 
-import interface_adapter.User.Login.LoginController;
-import interface_adapter.User.Login.LoginViewModel;
+import interface_adapter.user.login.LoginController;
+import interface_adapter.user.login.LoginViewModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

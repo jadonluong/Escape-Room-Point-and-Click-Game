@@ -1,7 +1,7 @@
 package view.user;
 
-import interface_adapter.User.Signup.SignupController;
-import interface_adapter.User.Signup.SignupViewModel;
+import interface_adapter.user.signup.SignupController;
+import interface_adapter.user.signup.SignupViewModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

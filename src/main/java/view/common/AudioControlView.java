@@ -4,9 +4,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.InputStream;
 
-import interface_adapter.Audio.AudioViewModel;
-import interface_adapter.Audio.ToggleMusicController;
-import interface_adapter.Audio.ToggleSfxController;
+import interface_adapter.audio.AudioViewModel;
+import interface_adapter.audio.ToggleMusicController;
+import interface_adapter.audio.ToggleSfxController;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;

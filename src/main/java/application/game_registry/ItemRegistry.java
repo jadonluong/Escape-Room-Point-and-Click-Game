@@ -1,6 +1,6 @@
 package application.game_registry;
 
-import domain.entities.Item.Item;
+import domain.entities.item.Item;
 
 public interface ItemRegistry {
 
