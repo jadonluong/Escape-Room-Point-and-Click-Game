@@ -78,6 +78,11 @@ public class PickUpInteractorTest {
             this.successData = outputData;
         }
 
+        @Override
+        public void prepareFailView(String error) {
+
+        }
+
         public PickUpOutputData getSuccessData() {
             return successData;
         }
