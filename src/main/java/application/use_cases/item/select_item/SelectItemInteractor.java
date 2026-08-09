@@ -18,10 +18,10 @@ public class SelectItemInteractor implements SelectItemInputBoundary{
 
         if (currentUser != null) {
             // Save the selected item ID into the active user session!
-            currentUser.saveSelectedItemID(inputData.getItemId());
+            currentUser.saveSelectedItemID(inputData.itemId());
 
             // Send output data to presenter if you need to update UI state
-            outputBoundary.prepareSuccessView(new SelectItemOutputData(inputData.getItemId()));
+            outputBoundary.prepareSuccessView(new SelectItemOutputData(inputData.itemId()));
         }
     }
 }

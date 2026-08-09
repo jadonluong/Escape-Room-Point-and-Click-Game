@@ -80,8 +80,8 @@ public class InventoryPresenter implements PickUpOutputBoundary, DropOutputBound
             if (minIdx < newState.getItems().size()) newState.getItems().remove(minIdx);
         }
 
-        newState.getItems().add(outputData.getCraftedItemName());
-        newState.setStatusMessage("Crafted: " + outputData.getCraftedItemName() + "!");
+        newState.getItems().add(outputData.craftedItemName());
+        newState.setStatusMessage("Crafted: " + outputData.craftedItemName() + "!");
 
         newState.setSelectedIndexA(-1);
         newState.setSelectedIndexB(-1);

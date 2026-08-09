@@ -24,16 +24,6 @@ public class CraftingInputData {
         this.itemB = null;
     }
 
-    /**
-     * Constructor for Item entities.
-     */
-    public CraftingInputData(Item itemA, Item itemB) {
-        this.itemA = itemA;
-        this.itemB = itemB;
-        this.itemAId = itemA != null ? itemA.getId() : null;
-        this.itemBId = itemB != null ? itemB.getId() : null;
-    }
-
     public String getItemAId() {
         return itemAId;
     }

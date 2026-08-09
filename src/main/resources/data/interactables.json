@@ -87,7 +87,7 @@
   "cheese_table": {
     "defaultName": "table",
     "defaultDescription": "locked door",
-    "defaultSprite": "/images/items/storymode/room1/door.png",
+    "defaultSprite": "/images/items/storymode/room2/table.png",
     "interactedName": "unlocked door",
     "interactedDescription": "door unlocked",
     "interactedSprite": "/images/items/storymode/room1/door.png",
