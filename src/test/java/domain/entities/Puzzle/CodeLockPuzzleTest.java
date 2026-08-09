@@ -33,7 +33,6 @@ class CodeLockPuzzleTest {
     void codeLockPuzzleTestNormal() {
         assertEquals(ID, puzzle.getId());
         assertEquals(DESCRIPTION, puzzle.getDescription());
-        assertEquals(ANSWER, puzzle.getAnswer());
         assertEquals(HINT, puzzle.getHint());
         assertFalse(puzzle.isSolved());
         assertEquals(SUCCESS_MESSAGE, puzzle.getSuccessMessage());
@@ -55,7 +54,6 @@ class CodeLockPuzzleTest {
         assertNotNull(nullPuzzle);
         assertNull(nullPuzzle.getId());
         assertNull(nullPuzzle.getDescription());
-        assertNull(nullPuzzle.getAnswer());
         assertNull(nullPuzzle.getHint());
         assertNull(nullPuzzle.getSuccessMessage());
         assertNull(nullPuzzle.getRewardItemId());
@@ -109,11 +107,6 @@ class CodeLockPuzzleTest {
     @Test
     void getDescriptionTest() {
         assertEquals(DESCRIPTION, puzzle.getDescription());
-    }
-
-    @Test
-    void getAnswerTest() {
-        assertEquals(ANSWER, puzzle.getAnswer());
     }
 
     @Test

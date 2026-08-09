@@ -3,9 +3,6 @@ package domain.entities.Puzzle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class AnagramPuzzleTest {
@@ -13,20 +10,19 @@ class AnagramPuzzleTest {
     private AnagramPuzzle puzzle;
     private final String ID = "creative_id";
     private final String SCRAMBLED = "PDAISRE";
-    private final List<String> ANSWERS = new ArrayList<>();
+    private final String ANSWER = "DESPAIR";
+    private final String HINT = "Utter loss of hope.";
     private final String SUCCESS_MESSAGE = "YAY!";
     private final String REWARD_ITEM = "reward_item";
     private final String UNLOCKED_ROOM = "unlocked_room";
 
     @BeforeEach
     void setup() {
-        ANSWERS.add("DESPAIR");
-        ANSWERS.add("DIAPERS");
-        ANSWERS.add("ASPIRED");
         this.puzzle = new AnagramPuzzle(
                 ID,
                 SCRAMBLED,
-                ANSWERS,
+                ANSWER,
+                HINT,
                 SUCCESS_MESSAGE,
                 REWARD_ITEM,
                 UNLOCKED_ROOM
@@ -37,7 +33,6 @@ class AnagramPuzzleTest {
     void anagramPuzzleTestNormal() {
         assertEquals(ID, puzzle.getId());
         assertEquals(SCRAMBLED, puzzle.getScrambled());
-        assertEquals(ANSWERS, puzzle.getAnswers());
         assertFalse(puzzle.isSolved());
         assertEquals(SUCCESS_MESSAGE, puzzle.getSuccessMessage());
         assertEquals(REWARD_ITEM, puzzle.getRewardItemId());
@@ -49,11 +44,12 @@ class AnagramPuzzleTest {
     }
 
     @Test
-    void anagramPuzzleTestNullAndEmpty() {
+    void anagramPuzzleTestNull() {
         AnagramPuzzle nullPuzzle = new AnagramPuzzle(
                 null,
                 null,
-                new ArrayList<>(),
+                null,
+                null,
                 null,
                 null,
                 null
@@ -61,7 +57,6 @@ class AnagramPuzzleTest {
         assertNotNull(nullPuzzle);
         assertNull(nullPuzzle.getId());
         assertNull(nullPuzzle.getScrambled());
-        assertTrue(nullPuzzle.getAnswers().isEmpty());
         assertNull(nullPuzzle.getSuccessMessage());
         assertNull(nullPuzzle.getRewardItemId());
         assertNull(nullPuzzle.getUnlockedRoomId());
@@ -82,12 +77,6 @@ class AnagramPuzzleTest {
     @Test
     void solveTestCorrectAnswerWithSpaces() {
         assertTrue(puzzle.solve("  DESPAIR  "));
-        assertTrue(puzzle.isSolved());
-    }
-
-    @Test
-    void solveTestAnotherCorrectAnswer() {
-        assertTrue(puzzle.solve("DIAPERS"));
         assertTrue(puzzle.isSolved());
     }
 
@@ -120,11 +109,6 @@ class AnagramPuzzleTest {
     @Test
     void getScrambledTest() {
         assertEquals(SCRAMBLED, puzzle.getScrambled());
-    }
-
-    @Test
-    void getAnswersTest() {
-        assertEquals(ANSWERS, puzzle.getAnswers());
     }
 
     @Test

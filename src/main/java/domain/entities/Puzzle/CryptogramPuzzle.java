@@ -2,7 +2,7 @@ package domain.entities.Puzzle;
 
 import java.util.Map;
 
-public class CryptogramPuzzle implements Puzzle{
+public class CryptogramPuzzle implements Puzzle {
     private String id;
     private boolean isSolved;
     private String description;
@@ -54,10 +54,6 @@ public class CryptogramPuzzle implements Puzzle{
         return encrypted;
     }
 
-    public String getAnswer() {
-        return answer;
-    }
-
     public Map<String, String> getCipher() {
         return cipher;
     }
@@ -83,10 +79,14 @@ public class CryptogramPuzzle implements Puzzle{
 
     @Override
     public boolean solve(String playerAnswer) {
+        final boolean result;
         if (playerAnswer != null && answer.equalsIgnoreCase(playerAnswer.trim())) {
             isSolved = true;
-            return true;
+            result = true;
         }
-        return false;
+        else {
+            result = false;
+        }
+        return result;
     }
 }

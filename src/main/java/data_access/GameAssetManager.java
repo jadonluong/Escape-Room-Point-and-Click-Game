@@ -130,11 +130,10 @@ public class GameAssetManager implements
                             final JsonPuzzleData data = entry.getValue();
 
                             if ("Anagram".equalsIgnoreCase(data.getPuzzleType())) {
-                                final List<String> answers = new ArrayList<>();
-                                answers.add(data.getAnswer());
                                 final Puzzle puzzle = puzzleFactory.createAnagram(puzzleId,
                                         data.getScrambled(),
-                                        answers,
+                                        data.getAnswer(),
+                                        data.getHint(),
                                         data.getSuccessMessage(),
                                         data.getRewardItemId(),
                                         data.getUnlockedRoomId());
@@ -142,6 +141,7 @@ public class GameAssetManager implements
                             }
                             else {
                                 final Puzzle puzzle = puzzleGenerator.generateCryptogramPuzzle(puzzleId,
+                                        data.getAnswer(),
                                         data.getCipherKeyId(),
                                         data.getSuccessMessage(),
                                         data.getRewardItemId(),

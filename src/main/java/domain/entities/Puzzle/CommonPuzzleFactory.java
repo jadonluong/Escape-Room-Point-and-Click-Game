@@ -1,13 +1,12 @@
 package domain.entities.Puzzle;
 
-import java.util.List;
 import java.util.Map;
 
 public class CommonPuzzleFactory implements PuzzleFactory {
     @Override
-    public AnagramPuzzle createAnagram(String id, String scrambled, List<String> answers, String successMessage,
+    public AnagramPuzzle createAnagram(String id, String scrambled, String answer, String hint, String successMessage,
                                        String rewardItemId, String unlockedRoomId) {
-        return new AnagramPuzzle(id, scrambled, answers, successMessage, rewardItemId, unlockedRoomId);
+        return new AnagramPuzzle(id, scrambled, answer, hint, successMessage, rewardItemId, unlockedRoomId);
     }
 
     @Override
