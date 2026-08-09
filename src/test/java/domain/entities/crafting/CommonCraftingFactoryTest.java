@@ -19,7 +19,8 @@ class CommonCraftingFactoryTest {
     @Test
     void createRecipe() {
         // Creates the recipe via CommonCraftingFactory
-        Crafting recipe = factory.createRecipe("stick", "stone", "hammer", "A heavy hammer", true);
+        Crafting recipe = factory.createRecipe("stick",
+                "stone", "hammer", "A heavy hammer", true);
 
         assertNotNull(recipe);
 
