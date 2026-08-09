@@ -4,6 +4,7 @@ import java.net.http.HttpClient;
 
 import application.use_cases.audio.toggle_music.ToggleMusicInteractor;
 import application.use_cases.audio.toggle_sfx.ToggleSfxInteractor;
+import application.use_cases.crafting.CraftingInteractor;
 import application.use_cases.hint.get_hint.GetHintInteractor;
 import application.use_cases.interactable.interact.InteractInteractor;
 import application.use_cases.interactable.zoom.ZoomInteractor;
@@ -64,6 +65,7 @@ import interface_adapter.interactable.interact.InteractViewModel;
 import interface_adapter.interactable.zoom.ZoomController;
 import interface_adapter.interactable.zoom.ZoomPresenter;
 import interface_adapter.interactable.zoom.ZoomViewModel;
+import interface_adapter.inventory.*;
 import interface_adapter.puzzle.enter_exit.EnterExitController;
 import interface_adapter.puzzle.enter_exit.EnterExitPresenter;
 import interface_adapter.puzzle.enter_exit.EnterExitViewModel;
@@ -84,10 +86,6 @@ import interface_adapter.user.signup.SignupController;
 import interface_adapter.user.signup.SignupPresenter;
 import interface_adapter.user.signup.SignupViewModel;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.inventory.InventoryPresenter;
-import interface_adapter.inventory.InventoryViewModel;
-import interface_adapter.inventory.SelectItemController;
-import interface_adapter.inventory.SelectItemPresenter;
 import interface_adapter.item.PickUpController;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -256,6 +254,17 @@ public class AppBuilder extends Application {
 
         final PickUpController pickUpController = new PickUpController(pickUpInteractor);
 
+        // --- Crafting Chain ---
+        final CraftingInteractor craftingInteractor = new CraftingInteractor(
+                inventoryPresenter,                      // CraftingOutputBoundary
+                userSessionTracking.getCurrentUser(),    // Active User domain entity
+                itemFactory,                             // ItemFactory
+                gameAssetManager,                        // ItemRegistry
+                gameAssetManager                         // CraftingDataAccessInterface
+        );
+
+        final CraftController craftController = new CraftController(craftingInteractor);
+
         // --- Select Item Chain ---
         final SelectItemPresenter selectItemPresenter = new SelectItemPresenter();
         final SelectItemInteractor selectItemInteractor = new SelectItemInteractor(userSessionTracking,
@@ -358,6 +367,7 @@ public class AppBuilder extends Application {
                 );
         final InventoryOverlay inventoryOverlay = new InventoryOverlay(viewManager, inventoryViewModel);
         inventoryOverlay.setSelectItemController(selectItemController);
+        inventoryOverlay.setCraftController(craftController);
         final InGameView inGameView = new InGameView(inGameViewModel, gameMenuView, inventoryOverlay,
                 gameObjectActionDispatcher);
 

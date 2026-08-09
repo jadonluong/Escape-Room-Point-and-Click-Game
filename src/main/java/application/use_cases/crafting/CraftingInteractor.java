@@ -30,22 +30,28 @@ public class CraftingInteractor implements CraftingInputBoundary {
 
     @Override
     public void execute(CraftingInputData inputData) {
-        Item itemA = inputData.getItemA();
-        Item itemB = inputData.getItemB();
+        // 1. Resolve Item entities from registry (supports both raw IDs and Item objects)
+        Item itemA = inputData.getItemA() != null
+                ? inputData.getItemA()
+                : (inputData.getItemAId() != null ? itemRegistry.getItemById(inputData.getItemAId()) : null);
+
+        Item itemB = inputData.getItemB() != null
+                ? inputData.getItemB()
+                : (inputData.getItemBId() != null ? itemRegistry.getItemById(inputData.getItemBId()) : null);
 
         if (itemA == null || itemB == null) {
             presenter.prepareFailView("Select two valid items to craft!");
             return;
         }
 
-        // 1. Fetch active recipe map from data access
+        // 2. Fetch active recipe map from data access
         Map<Set<String>, String> recipes = craftingDataAccess.getCraftingRecipes();
 
-        // 2. Query recipe match using ingredient IDs
+        // 3. Query recipe match using ingredient IDs
         Set<String> ingredientIds = Set.of(itemA.getId(), itemB.getId());
         String craftedItemId = recipes.get(ingredientIds);
 
-        // Fallback lookup using ingredient names if keys store lower-case names
+        // Fallback lookup using ingredient names
         if (craftedItemId == null) {
             Set<String> ingredientNames = Set.of(itemA.getName().toLowerCase(), itemB.getName().toLowerCase());
             craftedItemId = recipes.get(ingredientNames);
@@ -56,19 +62,19 @@ public class CraftingInteractor implements CraftingInputBoundary {
             return;
         }
 
-        // 3. Fetch authentic Item entity from ItemRegistry using the DB ID
+        // 4. Fetch authentic Item entity from ItemRegistry using the DB ID
         Item newItem = itemRegistry.getItemById(craftedItemId);
         if (newItem == null) {
             presenter.prepareFailView("Crafted item not found in registry.");
             return;
         }
 
-        // 4. Update user inventory
+        // 5. Update user inventory
         user.removeItem(itemA);
         user.removeItem(itemB);
         user.saveItem(newItem);
 
-        // 5. Notify presenter with formatted payload
+        // 6. Notify presenter
         String formattedNewItem = newItem.getId() + ":" + newItem.getName();
         CraftingOutputData outputData = new CraftingOutputData(formattedNewItem, true);
         presenter.prepareSuccessView(outputData);

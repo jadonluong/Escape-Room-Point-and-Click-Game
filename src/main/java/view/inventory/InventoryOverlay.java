@@ -1,5 +1,6 @@
 package view.inventory;
 
+import interface_adapter.inventory.CraftController;
 import interface_adapter.inventory.InventoryState;
 import interface_adapter.inventory.InventoryViewModel;
 import interface_adapter.inventory.SelectItemController;
@@ -29,6 +30,7 @@ public class InventoryOverlay extends AbstractModalOverlay implements PropertyCh
     private final Button craftButton = new Button("Craft Selected");
     private final Button dropButton = new Button("Drop Selected");
     private SelectItemController selectItemController;
+    private CraftController craftController;
 
     public InventoryOverlay(ViewManager viewManager, InventoryViewModel viewModel) {
         super(() -> viewManager.hideOverlay("inventory"));
@@ -43,6 +45,10 @@ public class InventoryOverlay extends AbstractModalOverlay implements PropertyCh
 
     public void setSelectItemController(SelectItemController selectItemController) {
         this.selectItemController = selectItemController;
+    }
+
+    public void setCraftController(CraftController craftController) {
+        this.craftController = craftController;
     }
 
     public void show() {
@@ -137,6 +143,8 @@ public class InventoryOverlay extends AbstractModalOverlay implements PropertyCh
         scrollPane.setPrefHeight(110);
         scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
+        craftButton.setOnAction(e -> handleCraftClick());
+
         HBox actionBox = new HBox(10, craftButton, dropButton);
         actionBox.setAlignment(Pos.CENTER);
 
@@ -149,26 +157,81 @@ public class InventoryOverlay extends AbstractModalOverlay implements PropertyCh
         int idxA = state.getSelectedIndexA();
         int idxB = state.getSelectedIndexB();
 
-        if (idxA == slotIndex && idxB == -1) {
-            // 1. Clicked the currently selected item -> Deselect it
-            state.setSelectedIndexA(-1);
+        // 1. Update selection index states
+        if (idxA == slotIndex) {
+            // Deselect Slot A; promote Slot B to Slot A if present
+            state.setSelectedIndexA(idxB);
             state.setSelectedIndexB(-1);
-            selectItemController.execute(null);
-        }
-        else if (idxA != -1 && idxB != -1) {
-            // 2. Both slots were active -> Collapse dual-selection back to ONLY this clicked item
+        } else if (idxB == slotIndex) {
+            // Deselect Slot B
+            state.setSelectedIndexB(-1);
+        } else if (idxA == -1) {
+            // Select first item as Slot A
+            state.setSelectedIndexA(slotIndex);
+        } else if (idxB == -1) {
+            // Select second item as Slot B
+            state.setSelectedIndexB(slotIndex);
+        } else {
+            // Replace selection with newly clicked item
             state.setSelectedIndexA(slotIndex);
             state.setSelectedIndexB(-1);
-            selectItemController.execute(itemId);
-        }
-        else {
-            // 3. Clicked a new item -> Immediately set as active item and clear slot B
-            state.setSelectedIndexA(slotIndex);
-            state.setSelectedIndexB(-1);
-            selectItemController.execute(itemId);
         }
 
-        // Refresh UI borders
+        // 2. Resolve the active item ID corresponding to the NEW SelectedIndexA
+        String activeItemId = null;
+        int newIdxA = state.getSelectedIndexA();
+
+        if (newIdxA != -1) {
+            List<String> items = state.getItems();
+            if (items != null && !items.isEmpty()) {
+                Map<String, Integer> itemCounts = new LinkedHashMap<>();
+                for (String item : items) {
+                    itemCounts.put(item, itemCounts.getOrDefault(item, 0) + 1);
+                }
+                List<String> uniqueItems = new ArrayList<>(itemCounts.keySet());
+
+                if (newIdxA < uniqueItems.size()) {
+                    String rawItem = uniqueItems.get(newIdxA);
+                    activeItemId = rawItem.contains(":") ? rawItem.split(":")[0] : rawItem;
+                }
+            }
+        }
+
+        // 3. Update active item in game world
+        if (selectItemController != null) {
+            selectItemController.execute(activeItemId);
+        }
+
         viewModel.firePropertyChanged();
+    }
+
+    private void handleCraftClick() {
+        InventoryState state = viewModel.getState();
+        int idxA = state.getSelectedIndexA();
+        int idxB = state.getSelectedIndexB();
+
+        if (idxA != -1 && idxB != -1 && craftController != null) {
+            List<String> items = state.getItems();
+            if (items != null) {
+                Map<String, Integer> itemCounts = new LinkedHashMap<>();
+                for (String item : items) {
+                    itemCounts.put(item, itemCounts.getOrDefault(item, 0) + 1);
+                }
+                List<String> uniqueItems = new ArrayList<>(itemCounts.keySet());
+
+                if (idxA < uniqueItems.size() && idxB < uniqueItems.size()) {
+                    String rawItemA = uniqueItems.get(idxA);
+                    String rawItemB = uniqueItems.get(idxB);
+
+                    String idA = rawItemA.contains(":") ? rawItemA.split(":")[0] : rawItemA;
+                    String idB = rawItemB.contains(":") ? rawItemB.split(":")[0] : rawItemB;
+
+                    craftController.execute(idA, idB);
+                }
+            }
+        } else {
+            state.setStatusMessage("Select two items to craft!");
+            viewModel.firePropertyChanged();
+        }
     }
 }
