@@ -149,7 +149,7 @@ public class InteractInteractor implements InteractInputBoundary {
 
     private String makeSuccessMessage(String rewardItemId, String successMessage) {
         String result = successMessage;
-        if (rewardItemId != null) {
+        if (rewardItemId != null && successMessage != null && successMessage.contains("You have obtained")) {
             // If we added punctuation.
             if (successMessage.endsWith(".") || successMessage.endsWith("!")) {
                 result = successMessage.substring(0, successMessage.length() - 1);

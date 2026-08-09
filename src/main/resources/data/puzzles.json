@@ -51,5 +51,44 @@
     "successMessage": "Time to continue our journey.",
     "rewardItemId": "astrology_key",
     "unlockedRoomId": null
+  },
+
+  "magic_carpet_puzzle": {
+    "puzzleType": "CodeLock",
+    "description": "The lock on the trapdoor requires an eight letter code.",
+    "answer": "TDROAOPR",
+    "hint": "The wooden trapdoor was old when the mage got it. One day, he decided to Paint it. The News that day was certainly interesting.",
+    "successMessage": "You have obtained a potion.",
+    "rewardItemId": "magic_potion",
+    "unlockedRoomId": null
+  },
+
+  "magic_cauldron_puzzle": {
+    "puzzleType": "CodeLock",
+    "description": "The glowing liquid churns, almost as if calling for a spell.",
+    "answer": "IANAURIM",
+    "hint": "Perhaps one of the mage's spellbooks contains the answer.",
+    "successMessage": "The liquid swirls violently. It beckons you in.",
+    "rewardItemId": null,
+    "unlockedRoomId": "main menu"
+  },
+
+  "magic_painting_puzzle": {
+    "puzzleType": "Cryptogram",
+    "answer": "LIFE IS MAGIC",
+    "cipherKeyId": "magic_cipher_key",
+    "successMessage": "Dimensional storage pocket. How neat. Remember: DOOR.",
+    "rewardItemId": null,
+    "unlockedRoomId": null
+  },
+
+  "magic_suitcase_puzzle": {
+    "puzzleType": "CodeLock",
+    "description": "The lock on the suitcase requires a six letter code.",
+    "answer": "VALIRE",
+    "hint": "Maybe there's a spell to open suitcases. Btw, did you know the word for 'suitcase' in Vietnamese is 'vali'?",
+    "successMessage": "You have obtained a newspaper.",
+    "rewardItemId": "magic_newspaper",
+    "unlockedRoomId": null
   }
 }
