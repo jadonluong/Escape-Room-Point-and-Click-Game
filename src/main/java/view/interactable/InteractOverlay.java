@@ -1,7 +1,7 @@
 package view.interactable;
 
-import interface_adapter.Interactable.Interact.InteractState;
-import interface_adapter.Interactable.Interact.InteractViewModel;
+import interface_adapter.interactable.interact.InteractState;
+import interface_adapter.interactable.interact.InteractViewModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -13,14 +13,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import view.ViewManager;
-import view.common.ModalOverlay;
+import view.common.AbstractModalOverlay;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class InteractOverlay extends ModalOverlay implements ActionListener, PropertyChangeListener {
+public class InteractOverlay extends AbstractModalOverlay implements ActionListener, PropertyChangeListener {
     private final InteractViewModel interactViewModel;
 
     private Label messageLabel = new Label();
@@ -43,14 +43,14 @@ public class InteractOverlay extends ModalOverlay implements ActionListener, Pro
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         InteractState state = interactViewModel.getState();
-        if (state.getSuccessMessage() != null) {
+        if (state.getSuccessMessage() != null && state.getErrorMessage() == null) {
             messageLabel.setText(state.getSuccessMessage());
             messageLabel.setTextFill(Color.web("#80EF80"));
-        } else if (state.getErrorMessage() != null) {
+        } else if (state.getSuccessMessage() == null && state.getErrorMessage() != null) {
             messageLabel.setText(state.getErrorMessage());
             messageLabel.setTextFill(Color.web("#E54C38"));
-        } else { // In case there's no successMessage or errorMessage.
-            this.onClose.run();
+        } else {
+            onClose.run();
         }
     }
 

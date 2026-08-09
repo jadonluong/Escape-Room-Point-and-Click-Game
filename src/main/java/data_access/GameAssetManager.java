@@ -1,40 +1,37 @@
 package data_access;
 
-import application.game_registry.InteractableRegistry;
-import application.game_registry.ItemRegistry;
-import application.game_registry.RoomRegistry;
-import application.use_cases.GamePlay.ActionTrigger.ActionTriggerGameDataAccessInterface;
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsDataAccessInterface;
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.StartUpDataAccessInterface;
-import application.use_cases.Hint.GetHint.GetHintDataAccessInterface;
-import application.use_cases.Interactable.Interact.InteractDataAccessInterface;
-import application.use_cases.Interactable.Zoom.ZoomDataAccessInterface;
-import application.use_cases.Puzzle.EnterExit.EnterExitDataAccessInterface;
-import application.use_cases.Puzzle.Solve.SolveDataAccessInterface;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import domain.entities.Hint.Hint;
-import domain.entities.Hint.HintFactory;
-import domain.entities.Interactable.Interactable;
-import domain.entities.Interactable.InteractableFactory;
-import domain.entities.Item.Item;
-import domain.entities.Item.ItemFactory;
-import domain.entities.Puzzle.Puzzle;
-import domain.entities.Puzzle.PuzzleFactory;
-import domain.entities.Room.Position;
-import domain.entities.Room.Room;
-import domain.entities.Room.RoomFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import application.game_registry.InteractableRegistry;
+import application.game_registry.ItemRegistry;
+import application.game_registry.RoomRegistry;
+import application.use_cases.crafting.CraftingDataAccessInterface;
+import application.use_cases.hint.get_hint.GetHintDataAccessInterface;
+import application.use_cases.interactable.interact.InteractDataAccessInterface;
+import application.use_cases.interactable.zoom.ZoomDataAccessInterface;
+import application.use_cases.puzzle.enter_exit.EnterExitDataAccessInterface;
+import application.use_cases.puzzle.solve.SolveDataAccessInterface;
+import application.use_cases.game_play.quick_play.browse_rooms.BrowseRoomsDataAccessInterface;
+import application.use_cases.game_play.tutorial_and_story_mode_start_up.StartUpDataAccessInterface;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import domain.entities.hint.Hint;
+import domain.entities.hint.HintFactory;
+import domain.entities.interactable.Interactable;
+import domain.entities.interactable.InteractableFactory;
+import domain.entities.item.Item;
+import domain.entities.item.ItemFactory;
+import domain.entities.puzzle.Puzzle;
+import domain.entities.puzzle.PuzzleFactory;
+import domain.entities.room.Position;
+import domain.entities.room.Room;
+import domain.entities.room.RoomFactory;
 
 /**
  * Manages game flow as the centralized data initialization engine and in-memory vault
@@ -43,8 +40,9 @@ import java.util.Map;
 public class GameAssetManager implements
         RoomRegistry, ItemRegistry, InteractableRegistry,
         GetHintDataAccessInterface,
-        BrowseRoomsDataAccessInterface, StartUpDataAccessInterface, ActionTriggerGameDataAccessInterface,
-        InteractDataAccessInterface, EnterExitDataAccessInterface, SolveDataAccessInterface, ZoomDataAccessInterface {
+        BrowseRoomsDataAccessInterface, StartUpDataAccessInterface,
+        InteractDataAccessInterface, EnterExitDataAccessInterface, SolveDataAccessInterface, ZoomDataAccessInterface,
+        CraftingDataAccessInterface {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final ItemFactory itemFactory;
@@ -52,57 +50,66 @@ public class GameAssetManager implements
     private final RoomFactory roomFactory;
     private final HintFactory hintFactory;
     private final PuzzleFactory puzzleFactory;
+    private final PuzzleGenerator puzzleGenerator;
 
     // Master in-memory static template lookups
     private final Map<String, Room> masterRooms = new HashMap<>();
     private final Map<String, Item> masterItems = new HashMap<>();
     private final Map<String, Interactable> masterInteractables = new HashMap<>();
     private final Map<String, Hint> masterHints = new HashMap<>();
-    private final Map<String,List<Room>> masterModes = new HashMap<>();
+    private final Map<String, List<Room>> masterModes = new HashMap<>();
     private final Map<String, Puzzle> masterPuzzles = new HashMap<>();
+    private final Map<Set<String>, String> masterCraftingRecipes = new HashMap<>();
 
     public GameAssetManager(ItemFactory itemFactory,
                             InteractableFactory interactableFactory,
                             RoomFactory roomFactory,
                             HintFactory hintFactory,
+                            PuzzleGenerator puzzleGenerator,
                             PuzzleFactory puzzleFactory) {
 
         this.itemFactory = itemFactory;
         this.interactableFactory = interactableFactory;
         this.roomFactory = roomFactory;
         this.hintFactory = hintFactory;
+        this.puzzleGenerator = puzzleGenerator;
         this.puzzleFactory = puzzleFactory;
         try {
             loadItems();
             loadPuzzles();
-            loadInteractables(); // Must run before rooms to populate dependencies
+            // Must run before rooms to populate dependencies:
+            loadInteractables();
             loadHints();
-            loadRooms();         // Instantiates rooms and links child interactables
-            loadModes();         // Must run after rooms to populate Room lists for each mode
-        } catch (IOException e) {
-            throw new RuntimeException("Static game assets initialization crashed: ", e);
+            // Instantiates rooms and links child interactables:
+            loadRooms();
+            // Must run after rooms to populate Room lists for each mode:
+            loadModes();
+            loadCraftingRecipes();
+        }
+        catch (IOException exception) {
+            throw new RuntimeException("Static game assets initialization crashed: ", exception);
         }
     }
 
     private void loadItems() throws IOException {
         // Read from the classpath resources
         try (InputStream stream = getClass().getResourceAsStream("/data/items.json")) {
-            if (stream == null) {
-                return;
-            } // File not found on classpath
+            if (stream != null) {
+                try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+                    final Type type = new TypeToken<Map<String, JsonItemData>>() {
+                    }.getType();
+                    final Map<String, JsonItemData> rawData = gson.fromJson(reader, type);
 
-            try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-                Type type = new TypeToken<Map<String, JsonItemData>>() {}.getType();
-                Map<String, JsonItemData> rawData = gson.fromJson(reader, type);
+                    if (rawData != null) {
+                        for (Map.Entry<String, JsonItemData> entry : rawData.entrySet()) {
+                            final String stringId = entry.getKey();
+                            final JsonItemData data = entry.getValue();
 
-                if (rawData != null) {
-                    for (Map.Entry<String, JsonItemData> entry : rawData.entrySet()) {
-                        String stringId = entry.getKey();
-                        JsonItemData data = entry.getValue();
-
-                        // Pass the string ID directly to restoreItem
-                        Item item = itemFactory.restoreItem(stringId, data.name, data.description, data.craftable, data.imagePath);
-                        masterItems.put(stringId, item);
+                            // Pass the string ID directly to restoreItem
+                            final Item item = itemFactory.restoreItem(stringId,
+                                    data.getName(), data.getDescription(), data.isCraftable(), data.getImagePath());
+                            masterItems.put(stringId, item);
+                        }
                     }
                 }
             }
@@ -111,30 +118,36 @@ public class GameAssetManager implements
 
     private void loadPuzzles() throws IOException {
         try (InputStream stream = getClass().getResourceAsStream("/data/puzzles.json")) {
-            if (stream == null) {
-                return;
-            }
+            if (stream != null) {
+                try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+                    final Type type = new TypeToken<Map<String, JsonPuzzleData>>() {
+                    }.getType();
+                    final Map<String, JsonPuzzleData> rawData = gson.fromJson(reader, type);
 
-            try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-                Type type = new TypeToken<Map<String, JsonPuzzleData>>() {}.getType();
-                Map<String, JsonPuzzleData> rawData = gson.fromJson(reader, type);
+                    if (rawData != null) {
+                        for (Map.Entry<String, JsonPuzzleData> entry : rawData.entrySet()) {
+                            final String puzzleId = entry.getKey();
+                            final JsonPuzzleData data = entry.getValue();
 
-                if (rawData != null) {
-                    for (Map.Entry<String, JsonPuzzleData> entry : rawData.entrySet()) {
-                        String puzzleId = entry.getKey();
-                        JsonPuzzleData data = entry.getValue();
-
-                        List<String> answers = new ArrayList<>();
-                        answers.add(data.answer);
-
-                        if ("Anagram".equalsIgnoreCase(data.puzzleType)) {
-                            Puzzle puzzle = puzzleFactory.createAnagram(puzzleId,
-                                    data.scrambled,
-                                    answers,
-                                    data.successMessage,
-                                    data.rewardItemId,
-                                    data.unlockedRoomId);
-                            masterPuzzles.put(puzzleId, puzzle);
+                            if ("Anagram".equalsIgnoreCase(data.getPuzzleType())) {
+                                final Puzzle puzzle = puzzleFactory.createAnagram(puzzleId,
+                                        data.getScrambled(),
+                                        data.getAnswer(),
+                                        data.getHint(),
+                                        data.getSuccessMessage(),
+                                        data.getRewardItemId(),
+                                        data.getUnlockedRoomId());
+                                masterPuzzles.put(puzzleId, puzzle);
+                            }
+                            else {
+                                final Puzzle puzzle = puzzleGenerator.generateCryptogramPuzzle(puzzleId,
+                                        data.getAnswer(),
+                                        data.getCipherKeyId(),
+                                        data.getSuccessMessage(),
+                                        data.getRewardItemId(),
+                                        data.getUnlockedRoomId());
+                                masterPuzzles.put(puzzleId, puzzle);
+                            }
                         }
                     }
                 }
@@ -144,38 +157,37 @@ public class GameAssetManager implements
 
     private void loadInteractables() throws IOException {
         try (InputStream stream = getClass().getResourceAsStream("/data/interactables.json")) {
-            if (stream == null) {
-                return;
-            }
+            if (stream != null) {
+                try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+                    final Type type = new TypeToken<Map<String, JsonInteractableData>>() {
+                    }.getType();
+                    final Map<String, JsonInteractableData> rawData = gson.fromJson(reader, type);
 
-            try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-                Type type = new TypeToken<Map<String, JsonInteractableData>>() {}.getType();
-                Map<String, JsonInteractableData> rawData = gson.fromJson(reader, type);
+                    if (rawData != null) {
+                        for (Map.Entry<String, JsonInteractableData> entry : rawData.entrySet()) {
+                            final String id = entry.getKey();
+                            final JsonInteractableData data = entry.getValue();
 
-                if (rawData != null) {
-                    for (Map.Entry<String, JsonInteractableData> entry : rawData.entrySet()) {
-                        String id = entry.getKey();
-                        JsonInteractableData data = entry.getValue();
-
-                        // Construct using the factory contract
-                        Interactable interactable = interactableFactory.create(
-                                id,
-                                data.defaultName,
-                                data.defaultDescription,
-                                data.defaultSprite,
-                                data.interactedName,
-                                data.interactedDescription,
-                                data.interactedSprite,
-                                data.isConsumed,
-                                data.consumesItem,
-                                data.needsItem,
-                                data.requiredItemId,
-                                data.rewardItemId,
-                                data.linkedPuzzleId,
-                                data.unlockedRoomId,
-                                data.successMessage
-                        );
-                        masterInteractables.put(id, interactable);
+                            // Construct using the factory contract
+                            final Interactable interactable = interactableFactory.create(
+                                    id,
+                                    data.getDefaultName(),
+                                    data.getDefaultDescription(),
+                                    data.getDefaultSprite(),
+                                    data.getInteractedName(),
+                                    data.getInteractedDescription(),
+                                    data.getInteractedSprite(),
+                                    data.isConsumed(),
+                                    data.isConsumesItem(),
+                                    data.isNeedsItem(),
+                                    data.getRequiredItemId(),
+                                    data.getRewardItemId(),
+                                    data.getLinkedPuzzleId(),
+                                    data.getUnlockedRoomId(),
+                                    data.getSuccessMessage()
+                            );
+                            masterInteractables.put(id, interactable);
+                        }
                     }
                 }
             }
@@ -184,47 +196,45 @@ public class GameAssetManager implements
 
     private void loadRooms() throws IOException {
         try (InputStream stream = getClass().getResourceAsStream("/data/rooms.json")) {
-            if (stream == null) {
-                return;
-            }
+            if (stream != null) {
+                try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+                    final Type type = new TypeToken<Map<String, JsonRoomData>>() {
+                    }.getType();
+                    final Map<String, JsonRoomData> rawData = gson.fromJson(reader, type);
 
-            try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-                Type type = new TypeToken<Map<String, JsonRoomData>>() {}.getType();
-                Map<String, JsonRoomData> rawData = gson.fromJson(reader, type);
+                    if (rawData != null) {
+                        for (Map.Entry<String, JsonRoomData> entry : rawData.entrySet()) {
+                            final String roomId = entry.getKey();
+                            final JsonRoomData data = entry.getValue();
 
-                if (rawData != null) {
-                    for (Map.Entry<String, JsonRoomData> entry : rawData.entrySet()) {
-                        String roomId = entry.getKey();
-                        JsonRoomData data = entry.getValue();
+                            // Create a list of Interactable objects to add to Room object
+                            final List<Interactable> interactableList = new ArrayList<>();
+                            for (String interactableId : data.getInteractables()) {
+                                final Interactable interactable = getInteractableById(interactableId);
+                                interactableList.add(interactable);
+                            }
 
-                        // Create a list of Interactable objects to add to Room object
-                        List<Interactable> interactableList = new ArrayList<>();
-                        for (String interactableId : data.interactables) {
-                            Interactable interactable = getInteractableById(interactableId);
-                            interactableList.add(interactable);
+                            // Create a list of Item objects to add to Room object
+                            final List<Item> itemList = new ArrayList<>();
+                            for (String itemId : data.getItems()) {
+                                final Item item = getItemById(itemId);
+                                itemList.add(item);
+                            }
+
+                            // Create a list of Hint objects to add to Room object
+                            final List<Hint> hintList = new ArrayList<>();
+                            for (String objectId : data.getHints()) {
+                                final Hint hint = getHintForObjectID(objectId);
+                                hintList.add(hint);
+                            }
+
+                            final Map<String, Position> posMap = getPositionMap(data);
+
+                            final Room room = roomFactory.createRoom(roomId, data.getDescription(), data.getImagePath(),
+                                    interactableList, itemList, hintList, posMap);
+
+                            masterRooms.put(roomId, room);
                         }
-
-                        // Create a list of Item objects to add to Room object
-                        List<Item> itemList = new ArrayList<>();
-                        for (String itemId : data.items) {
-                            Item item = getItemById(itemId);
-                            itemList.add(item);
-                        }
-
-                        // Create a list of Hint objects to add to Room object
-                        List<Hint> hintList = new ArrayList<>();
-                        for (String objectId : data.hints) {
-                            Hint hint = getHintForObjectID(objectId);
-                            hintList.add(hint);
-                        }
-
-                        Map<String, Position> posMap = getPositionMap(data);
-
-                        Room room = roomFactory.createRoom(roomId, data.description, data.imagePath,
-                                interactableList, itemList, hintList, posMap);
-
-
-                        masterRooms.put(roomId, room);
                     }
                 }
             }
@@ -232,14 +242,14 @@ public class GameAssetManager implements
     }
 
     private static Map<String, Position> getPositionMap(JsonRoomData data) {
-        Map<String, Position> posMap = new HashMap<>();
-        if (data.positions != null) {
-            for (Map.Entry<String, List<Double>> positionEntry : data.positions.entrySet()){
-                String objectID = positionEntry.getKey();
-                List<Double> coordinates = positionEntry.getValue();
+        final Map<String, Position> posMap = new HashMap<>();
+        if (data.getPositions() != null) {
+            for (Map.Entry<String, List<Double>> positionEntry : data.getPositions().entrySet()) {
+                final String objectID = positionEntry.getKey();
+                final List<Double> coordinates = positionEntry.getValue();
 
                 if (coordinates != null && coordinates.size() >= 2) {
-                    Position pos = new Position(coordinates.get(0), coordinates.get(1));
+                    final Position pos = new Position(coordinates.get(0), coordinates.get(1));
                     posMap.put(objectID, pos);
                 }
             }
@@ -249,61 +259,79 @@ public class GameAssetManager implements
 
     private void loadModes() throws IOException {
         try (InputStream stream = getClass().getResourceAsStream("/data/modes.json")) {
-            if (stream == null) {
-                return;
-            }
+            if (stream != null) {
+                try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+                    final Type type = new TypeToken<Map<String, List<String>>>() {
+                    }.getType();
+                    final Map<String, List<String>> result = gson.fromJson(reader, type);
 
-            try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-                Type type = new TypeToken<Map<String, List<String>>>() {}.getType();
-                Map<String, List<String>> result = gson.fromJson(reader, type);
+                    if (result != null) {
+                        for (Map.Entry<String, List<String>> entry : result.entrySet()) {
+                            final String mode = entry.getKey();
+                            final List<String> roomIds = entry.getValue();
+                            // For each mode, create a new list to populate with Room objects
+                            final List<Room> roomList = new ArrayList<>();
 
-                if (result != null) {
-                    for (Map.Entry<String, List<String>> entry : result.entrySet()) {
-                        String mode = entry.getKey();
-                        List<String> roomIDs = entry.getValue();
-                        // For each mode, create a new list to populate with Room objects
-                        List<Room> roomList = new ArrayList<>();
+                            // For each roomID saved in database,
+                            // get a Room object with that ID and add it to the Room object list.
+                            for (String roomID : roomIds) {
+                                final Room roomObject = getRoomById(roomID);
+                                roomList.add(roomObject);
+                            }
 
-                        // For each roomID saved in database, get a Room object with that ID and add it to the Room object list.
-                        for (String roomID : roomIDs) {
-                            Room roomObject = getRoomById(roomID);
-                            roomList.add(roomObject);
+                            // Put the mode and its Rooms to masterModes variable
+                            masterModes.put(mode, roomList);
                         }
-
-                        // Put the mode and its Rooms to masterModes variable
-                        masterModes.put(mode, roomList);
                     }
                 }
             }
         }
-
     }
 
     private void loadHints() throws IOException {
         try (InputStream stream = getClass().getResourceAsStream("/data/hints.json")) {
-            if (stream == null) {
-                return;
-            }
+            if (stream != null) {
+                try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+                    final Type type = new TypeToken<Map<String, JsonHintData>>() {
+                    }.getType();
+                    final Map<String, JsonHintData> rawData = gson.fromJson(reader, type);
 
-            try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-                Type type = new TypeToken<Map<String, JsonHintData>>() {
-                }.getType();
-                Map<String, JsonHintData> rawData = gson.fromJson(reader, type);
+                    if (rawData != null) {
+                        for (Map.Entry<String, JsonHintData> entry : rawData.entrySet()) {
+                            final String hintId = entry.getKey();
+                            final JsonHintData data = entry.getValue();
 
-                if (rawData != null) {
-                    for (Map.Entry<String, JsonHintData> entry : rawData.entrySet()) {
-                        String hintId = entry.getKey();
-                        JsonHintData data = entry.getValue();
+                            final Hint hintObject = hintFactory.createHint(hintId,
+                                    data.getImagePath(), data.getHintMessages());
 
-                        Hint hintObject = hintFactory.createHint(hintId, data.imagePath, data.hintMessages);
-
-                        masterHints.put(hintId, hintObject);
+                            masterHints.put(hintId, hintObject);
+                        }
                     }
                 }
             }
         }
     }
 
+    private void loadCraftingRecipes() throws IOException {
+        try (InputStream stream = getClass().getResourceAsStream("/data/crafting.json")) {
+            if (stream != null) {
+                try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+                    final Type type = new TypeToken<Map<String, JsonCraftingData>>() {
+                    }.getType();
+                    final Map<String, JsonCraftingData> rawData = gson.fromJson(reader, type);
+
+                    if (rawData != null) {
+                        for (JsonCraftingData recipe : rawData.values()) {
+                            if (recipe.components != null && recipe.product != null) {
+                                final Set<String> componentSet = new HashSet<>(recipe.components);
+                                masterCraftingRecipes.put(componentSet, recipe.product);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     // =========================================================================
     // Registry implementations (DBs only saves text IDs)
@@ -329,10 +357,10 @@ public class GameAssetManager implements
         return masterPuzzles.get(puzzleId);
     }
 
-
     // =========================================================================
     // GetHintDataAccessInterface implementation
     // =========================================================================
+
     @Override
     public Hint getHintForObjectID(String objectID) {
         return masterHints.get(objectID);
@@ -343,10 +371,10 @@ public class GameAssetManager implements
         return masterHints.containsKey(objectID);
     }
 
-
     // =========================================================================
     // BrowseRoomsDataAccessInterface implementation
     // =========================================================================
+
     @Override
     public List<Room> getRoomsForQuickMode() {
         return masterModes.get("QuickMode");
@@ -366,55 +394,214 @@ public class GameAssetManager implements
         return masterModes.get("StoryMode").getFirst();
     }
 
+    // =========================================================================
+    // CraftingDataAccessInterface implementation
+    // =========================================================================
+
+    @Override
+    public Map<Set<String>, String> getCraftingRecipes() {
+        return masterCraftingRecipes;
+    }
 
     // =========================================================================
     // Private Schema Mapping DTO Classes (Kept Isolated from Business Rules)
     // =========================================================================
-    private static class JsonItemData {
-        String name;
-        String description;
-        boolean craftable = false;
-        String imagePath;
+
+    private static final class JsonItemData {
+        private String name;
+        private String description;
+        private boolean craftable;
+        private String imagePath;
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public boolean isCraftable() {
+            return craftable;
+        }
+
+        public String getImagePath() {
+            return imagePath;
+        }
     }
 
-    private static class JsonRoomData {
-        String description;
-        String imagePath;
-        List<String> interactables;
-        List<String> items;
-        List<String> hints;
-        Map<String, List<Double>> positions;
+    private static final class JsonCraftingData {
+        private List<String> components;
+        private String product;
+
+        public List<String> getComponents() {
+            return components;
+        }
+
+        public String getProduct() {
+            return product;
+        }
     }
 
-    private static class JsonInteractableData {
-        String defaultName;
-        String defaultDescription;
-        String defaultSprite;
-        String interactedName;
-        String interactedDescription;
-        String interactedSprite;
-        boolean isConsumed;
-        boolean consumesItem;
-        boolean needsItem;
-        String requiredItemId;
-        String rewardItemId;
-        String linkedPuzzleId;
-        String unlockedRoomId;
-        String successMessage;
+    private static final class JsonRoomData {
+        private String description;
+        private String imagePath;
+        private List<String> interactables;
+        private List<String> items;
+        private List<String> hints;
+        private Map<String, List<Double>> positions;
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getImagePath() {
+            return imagePath;
+        }
+
+        public List<String> getInteractables() {
+            return interactables;
+        }
+
+        public List<String> getItems() {
+            return items;
+        }
+
+        public List<String> getHints() {
+            return hints;
+        }
+
+        public Map<String, List<Double>> getPositions() {
+            return positions;
+        }
     }
 
-    private static class JsonHintData {
-        String imagePath;
-        List<String> hintMessages;
+    private static final class JsonInteractableData {
+        private String defaultName;
+        private String defaultDescription;
+        private String defaultSprite;
+        private String interactedName;
+        private String interactedDescription;
+        private String interactedSprite;
+        private boolean isConsumed;
+        private boolean consumesItem;
+        private boolean needsItem;
+        private String requiredItemId;
+        private String rewardItemId;
+        private String linkedPuzzleId;
+        private String unlockedRoomId;
+        private String successMessage;
+
+        public String getDefaultName() {
+            return defaultName;
+        }
+
+        public String getDefaultDescription() {
+            return defaultDescription;
+        }
+
+        public String getDefaultSprite() {
+            return defaultSprite;
+        }
+
+        public String getInteractedName() {
+            return interactedName;
+        }
+
+        public String getInteractedDescription() {
+            return interactedDescription;
+        }
+
+        public String getRewardItemId() {
+            return rewardItemId;
+        }
+
+        public boolean isConsumed() {
+            return isConsumed;
+        }
+
+        public boolean isConsumesItem() {
+            return consumesItem;
+        }
+
+        public boolean isNeedsItem() {
+            return needsItem;
+        }
+
+        public String getUnlockedRoomId() {
+            return unlockedRoomId;
+        }
+
+        public String getInteractedSprite() {
+            return interactedSprite;
+        }
+
+        public String getRequiredItemId() {
+            return requiredItemId;
+        }
+
+        public String getLinkedPuzzleId() {
+            return linkedPuzzleId;
+        }
+
+        public String getSuccessMessage() {
+            return successMessage;
+        }
     }
 
-    private static class JsonPuzzleData {
-        String puzzleType;
-        String scrambled;
-        String answer;
-        String hint;
-        String successMessage;
-        String rewardItemId;
-        String unlockedRoomId;
+    private static final class JsonHintData {
+        private String imagePath;
+        private List<String> hintMessages;
+
+        public String getImagePath() {
+            return imagePath;
+        }
+
+        public List<String> getHintMessages() {
+            return hintMessages;
+        }
+    }
+
+    private static final class JsonPuzzleData {
+        private String puzzleType;
+        private String scrambled;
+        private String answer;
+        private String hint;
+        private String successMessage;
+        private String rewardItemId;
+        private String unlockedRoomId;
+        private String cipherKeyId;
+
+        public String getSuccessMessage() {
+            return successMessage;
+        }
+
+        public String getAnswer() {
+            return answer;
+        }
+
+        public String getPuzzleType() {
+            return puzzleType;
+        }
+
+        public String getScrambled() {
+            return scrambled;
+        }
+
+        public String getRewardItemId() {
+            return rewardItemId;
+        }
+
+        public String getHint() {
+            return hint;
+        }
+
+        public String getCipherKeyId() {
+            return cipherKeyId;
+        }
+
+        public String getUnlockedRoomId() {
+            return unlockedRoomId;
+        }
     }
 }

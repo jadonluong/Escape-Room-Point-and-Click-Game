@@ -1,11 +1,15 @@
 package view.interactable;
 
-import interface_adapter.Interactable.Interact.InteractController;
-import interface_adapter.Interactable.Zoom.ZoomController;
-import interface_adapter.Interactable.Zoom.ZoomState;
-import interface_adapter.Interactable.Zoom.ZoomViewModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import interface_adapter.Puzzle.EnterExit.EnterExitController;
+import interface_adapter.interactable.interact.InteractController;
+import interface_adapter.interactable.zoom.ZoomController;
+import interface_adapter.interactable.zoom.ZoomState;
+import interface_adapter.interactable.zoom.ZoomViewModel;
+import interface_adapter.puzzle.enter_exit.EnterExitController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,27 +22,52 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+/**
+ * Displays detailed information about an interactable object and allows the
+ * player to interact with it or exit the zoomed view.
+ *
+ * <p>The view displays the interactable's name, description, sprite, and
+ * available interaction. The layout is maintained at a fixed design size and
+ * scaled to fit the available window.</p>
+ */
+public class ZoomView extends StackPane
+        implements ActionListener, PropertyChangeListener {
 
-public class ZoomView extends StackPane implements ActionListener, PropertyChangeListener {
-    private static final double DESIGN_WIDTH = 959; // Roughly same scale as dimensions in MainMenuView
+    private static final double DESIGN_WIDTH = 959;
     private static final double DESIGN_HEIGHT = 673;
+
+    // DARK GRAY: "#2a2a2a"
+    private static final String BG_COLOR = "#2a2a2a";
+
 
     private ZoomViewModel zoomViewModel;
 
     private final Pane fixedRoot = new Pane();
+
     private Label nameLabel = new Label();
     private Label descriptionLabel = new Label();
+
     private ImageView spriteImage = new ImageView();
+
     private Button interactButton = new Button();
+
     private Rectangle interactBox = new Rectangle();
+
     private Label interactBoxLabel = new Label();
 
-    public ZoomView(ZoomController zoomController, ZoomViewModel zoomViewModel, InteractController interactController,
-                    EnterExitController enterExitController) {
+    /**
+     * Creates a zoom view for displaying and interacting with an interactable.
+     *
+     * @param zoomController controller used to leave the zoomed view
+     * @param zoomViewModel view model containing the current interactable state
+     * @param interactController controller used to interact with objects
+     * @param enterExitController controller used to enter puzzles
+     */
+    public ZoomView(
+            ZoomController zoomController,
+            ZoomViewModel zoomViewModel,
+            InteractController interactController,
+            EnterExitController enterExitController) {
         this.zoomViewModel = zoomViewModel;
         this.zoomViewModel.addPropertyChangeListener(this);
         ZoomState zoomState = zoomViewModel.getState();
@@ -49,7 +78,7 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         fixedRoot.setMaxSize(DESIGN_WIDTH, DESIGN_HEIGHT);
 
         Rectangle background = new Rectangle(DESIGN_WIDTH, DESIGN_HEIGHT);
-        background.setFill(Color.web("#2a2a2a")); // Dark gray
+        background.setFill(Color.web(BG_COLOR));
         fixedRoot.getChildren().add(background);
         // -----------
 
@@ -60,7 +89,7 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         double spriteBoxHeight = DESIGN_HEIGHT - (gap * 2);
 
         Rectangle spriteBox = new Rectangle(spriteBoxWidth, spriteBoxHeight);
-        spriteBox.setFill(Color.web("#2a2a2a"));
+        spriteBox.setFill(Color.web(BG_COLOR));
         spriteBox.setStroke(Color.web("#ffffff")); // White
         spriteBox.setStrokeWidth(3);
         spriteBox.setLayoutX(gap);
@@ -83,11 +112,11 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         double rightSideBoxesLayoutX = spriteBoxWidth + (gap * 2);
         double rightSideBoxesWidth = DESIGN_WIDTH - (spriteBoxWidth + (gap * 3));
 
-        // User Inventory Box
+        // user Inventory Box
         double inventoryBoxHeight = rightSideBoxesWidth; // inventoryBox is a Square
 
         Rectangle inventoryBox = new Rectangle(rightSideBoxesWidth, inventoryBoxHeight);
-        inventoryBox.setFill(Color.web("#2a2a2a"));
+        inventoryBox.setFill(Color.web(BG_COLOR));
         inventoryBox.setStroke(Color.web("#ffffff"));
         inventoryBox.setStrokeWidth(3);
         inventoryBox.setLayoutX(rightSideBoxesLayoutX);
@@ -114,35 +143,58 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         // ----------------
 
         // Interact Button
-        double interactButtonHeight = (2.0 / 7.0) * (DESIGN_HEIGHT - (inventoryBoxHeight + (gap * 5)));
+        double interactButtonHeight =
+                (2.0 / 7.0)
+                        * (DESIGN_HEIGHT
+                        - (inventoryBoxHeight + (gap * 5)));
 
         StackPane interactContainer = new StackPane();
-        interactContainer.setPrefSize(rightSideBoxesWidth, interactButtonHeight);
-        interactContainer.setMaxSize(rightSideBoxesWidth, interactButtonHeight);
+        interactContainer.setPrefSize(
+                rightSideBoxesWidth,
+                interactButtonHeight);
+        interactContainer.setMaxSize(
+                rightSideBoxesWidth,
+                interactButtonHeight);
         interactContainer.setLayoutX(rightSideBoxesLayoutX);
-        interactContainer.setLayoutY(DESIGN_HEIGHT - (inventoryBoxHeight + interactButtonHeight + (gap * 2)));
+        interactContainer.setLayoutY(
+                DESIGN_HEIGHT
+                        - (inventoryBoxHeight
+                        + interactButtonHeight
+                        + (gap * 2)));
 
-        interactButton.setPrefSize(rightSideBoxesWidth, interactButtonHeight);
-        interactButton.setMaxSize(rightSideBoxesWidth, interactButtonHeight);
-        interactButton.setStyle("-fx-background-color: #2a2a2a; " + "-fx-text-fill: #ffffff; " +
-                "-fx-font-size: 20px; " + "-fx-font-weight: bold; " + "-fx-cursor: hand; " +
-                "-fx-border-color: #ffffff; " + "-fx-border-width: 3;"
+        interactButton.setPrefSize(
+                rightSideBoxesWidth,
+                interactButtonHeight);
+        interactButton.setMaxSize(
+                rightSideBoxesWidth,
+                interactButtonHeight);
+        interactButton.setStyle(
+                "-fx-background-color: #2a2a2a; "
+                        + "-fx-text-fill: #ffffff; "
+                        + "-fx-font-size: 20px; "
+                        + "-fx-font-weight: bold; "
+                        + "-fx-cursor: hand; "
+                        + "-fx-border-color: #ffffff; "
+                        + "-fx-border-width: 3;"
         );
 
         interactButton.setOnAction(e -> {
             String interactLabel = zoomState.getInteractLabel();
             if (interactLabel != null) {
                 if (!interactLabel.equals("Enter Puzzle")) {
-                    interactController.interact(zoomState.getInteractableId());
+                    interactController.interact(
+                            zoomState.getInteractableId());
                 } else {
-                    enterExitController.enter(zoomState.getPuzzleId(), zoomState.getInteractableId());
+                    enterExitController.enter(
+                            zoomState.getPuzzleId(),
+                            zoomState.getInteractableId());
                 }
             }
         });
 
         interactBox.setWidth(rightSideBoxesWidth);
         interactBox.setHeight(interactButtonHeight);
-        interactBox.setFill(Color.web("#2a2a2a"));
+        interactBox.setFill(Color.web(BG_COLOR));
         interactBox.setStroke(Color.web("#ffffff"));
         interactBox.setStrokeWidth(3);
 
@@ -151,20 +203,32 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         interactBoxLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 20));
         interactBoxLabel.setWrapText(true);
 
-        interactContainer.getChildren().addAll(interactButton, interactBox, interactBoxLabel);
+        interactContainer.getChildren().addAll(
+                interactButton,
+                interactBox,
+                interactBoxLabel);
         fixedRoot.getChildren().add(interactContainer);
         // ----------------------------
 
         // Interactable Description
-        double descriptionBoxHeight = (3.5 / 7.0) * (DESIGN_HEIGHT - (inventoryBoxHeight + (gap * 5)));
+        double descriptionBoxHeight =
+                (3.5 / 7.0)
+                        * (DESIGN_HEIGHT
+                        - (inventoryBoxHeight + (gap * 5)));
 
-        Rectangle descriptionBox = new Rectangle(rightSideBoxesWidth, descriptionBoxHeight);
-        descriptionBox.setFill(Color.web("#2a2a2a"));
+        Rectangle descriptionBox = new Rectangle(
+                rightSideBoxesWidth,
+                descriptionBoxHeight);
+        descriptionBox.setFill(Color.web(BG_COLOR));
         descriptionBox.setStroke(Color.web("#ffffff"));
         descriptionBox.setStrokeWidth(3);
         descriptionBox.setLayoutX(rightSideBoxesLayoutX);
-        descriptionBox.setLayoutY(DESIGN_HEIGHT - (inventoryBoxHeight + interactButtonHeight +
-                descriptionBoxHeight + (gap * 3)));
+        descriptionBox.setLayoutY(
+                DESIGN_HEIGHT
+                        - (inventoryBoxHeight
+                        + interactButtonHeight
+                        + descriptionBoxHeight
+                        + (gap * 3)));
         fixedRoot.getChildren().add(descriptionBox);
 
         descriptionLabel.setTextFill(Color.web("#ffffff"));
@@ -181,11 +245,16 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         // ---------------
 
         // Interactable Name
-        double nameBoxHeight = (1.5 / 7.0) * (DESIGN_HEIGHT - (inventoryBoxHeight + (gap * 5)));
-        double nameBoxWidth = rightSideBoxesWidth - (nameBoxHeight + (gap * (3.0 / 4.0)));
+        double nameBoxHeight =
+                (1.5 / 7.0)
+                        * (DESIGN_HEIGHT
+                        - (inventoryBoxHeight + (gap * 5)));
+        double nameBoxWidth =
+                rightSideBoxesWidth
+                        - (nameBoxHeight + (gap * (3.0 / 4.0)));
 
         Rectangle nameBox = new Rectangle(nameBoxWidth, nameBoxHeight);
-        nameBox.setFill(Color.web("#2a2a2a"));
+        nameBox.setFill(Color.web(BG_COLOR));
         nameBox.setStroke(Color.web("#ffffff"));
         nameBox.setStrokeWidth(3);
         nameBox.setLayoutX(rightSideBoxesLayoutX);
@@ -207,12 +276,18 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         // ZoomOut Button
         Button zoomOutButton = new Button("X");
         zoomOutButton.setPrefSize(nameBoxHeight, nameBoxHeight);
-        zoomOutButton.setStyle("-fx-background-color: #2a2a2a; " + "-fx-text-fill: #ffffff; " +
-                "-fx-font-size: 20px; " + "-fx-font-weight: bold; " + "-fx-cursor: hand; " +
-                "-fx-border-color: #ffffff; " + "-fx-border-width: 3;"
+        zoomOutButton.setStyle(
+                "-fx-background-color: #2a2a2a; "
+                        + "-fx-text-fill: #ffffff; "
+                        + "-fx-font-size: 20px; "
+                        + "-fx-font-weight: bold; "
+                        + "-fx-cursor: hand; "
+                        + "-fx-border-color: #ffffff; "
+                        + "-fx-border-width: 3;"
         );
 
-        zoomOutButton.setLayoutX(DESIGN_WIDTH - (gap + nameBoxHeight));
+        zoomOutButton.setLayoutX(
+                DESIGN_WIDTH - (gap + nameBoxHeight));
         zoomOutButton.setLayoutY(gap);
 
         zoomOutButton.setOnAction(e -> zoomController.zoomOut());
@@ -227,28 +302,55 @@ public class ZoomView extends StackPane implements ActionListener, PropertyChang
         heightProperty().addListener((o, ov, nv) -> rescale());
     }
 
+    /**
+     * Loads an image from the application's resources.
+     *
+     * @param resourcePath path to the image resource
+     * @return the loaded image, or {@code null} if the resource path is null
+     * @throws IllegalArgumentException if the resource cannot be found
+     */
     private Image loadImage(String resourcePath) {
         if (resourcePath == null) {
             return null;
         }
-        java.io.InputStream stream = getClass().getResourceAsStream(resourcePath);
+        java.io.InputStream stream =
+                getClass().getResourceAsStream(resourcePath);
         if (stream == null) {
-            throw new IllegalArgumentException("Resource not found: " + resourcePath);
+            throw new IllegalArgumentException(
+                    "Resource not found: " + resourcePath);
         }
         return new Image(stream);
     }
 
+    /**
+     * Rescales the fixed-size root pane to fit the available view dimensions.
+     */
     private void rescale() {
-        double scale = Math.min(getWidth() / DESIGN_WIDTH, getHeight() / DESIGN_HEIGHT);
+        double scale = Math.min(
+                getWidth() / DESIGN_WIDTH,
+                getHeight() / DESIGN_HEIGHT);
         fixedRoot.setScaleX(scale);
         fixedRoot.setScaleY(scale);
     }
 
+    /**
+     * Handles an AWT action event.
+     *
+     * <p>This method is required by the {@link ActionListener} interface but
+     * is not used by this JavaFX view.</p>
+     *
+     * @param e the action event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         // Not used.
     }
 
+    /**
+     * Updates the view when the zoom view model changes.
+     *
+     * @param evt the property change event
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         ZoomState zoomState = zoomViewModel.getState();

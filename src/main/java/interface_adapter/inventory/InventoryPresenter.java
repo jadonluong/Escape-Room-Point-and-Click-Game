@@ -1,17 +1,15 @@
 package interface_adapter.inventory;
 
-import application.use_cases.GamePlay.ObjectsInfo;
-import interface_adapter.GamePlay.InGameState;
-import interface_adapter.GamePlay.InGameViewModel;
-import application.use_cases.Item.PickUp.PickUpOutputBoundary;
-import application.use_cases.Item.PickUp.PickUpOutputData;
+import application.use_cases.game_play.ObjectsInfo;
+import interface_adapter.game_play.InGameState;
+import interface_adapter.game_play.InGameViewModel;
+import application.use_cases.item.pick_up.PickUpOutputBoundary;
+import application.use_cases.item.pick_up.PickUpOutputData;
 
-import application.use_cases.Item.PickUp.PickUpOutputBoundary;
-import application.use_cases.Item.PickUp.PickUpOutputData;
-import application.use_cases.Item.Drop.DropOutputBoundary;
-import application.use_cases.Item.Drop.DropOutputData;
-import application.use_cases.Crafting.CraftingOutputBoundary;
-import application.use_cases.Crafting.CraftingOutputData;
+import application.use_cases.item.drop.DropOutputBoundary;
+import application.use_cases.item.drop.DropOutputData;
+import application.use_cases.crafting.CraftingOutputBoundary;
+import application.use_cases.crafting.CraftingOutputData;
 
 import java.util.Map;
 
@@ -29,7 +27,7 @@ public class InventoryPresenter implements PickUpOutputBoundary, DropOutputBound
     public void prepareSuccessView(PickUpOutputData outputData) {
         // 1. Update Inventory State (using 'viewModel' and 'state.getItems()')
         InventoryState state = viewModel.getState();
-        state.getItems().add(outputData.getItemId() + ":" + outputData.getItemName()); // 👈 Stores item ID into inventory list
+        state.getItems().add(outputData.getItemId() + ":" + outputData.getItemName()); //Stores item ID into inventory list
         state.setStatusMessage("Picked up: " + outputData.getItemName());
         viewModel.firePropertyChanged();
 

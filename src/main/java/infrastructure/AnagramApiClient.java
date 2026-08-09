@@ -7,11 +7,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AnagramApiClient {
-    private static final String API_URL = "https://api.apiverve.com/v1/anagrampuzzle?difficulty=medium";
+    private static final String API_BASE_URL = "https://api.apiverve.com/v1/anagrampuzzle?";
     private final String apiKey;
     private final OkHttpClient client;
     private final Gson gson;
@@ -25,9 +24,12 @@ public class AnagramApiClient {
         this.gson = new GsonBuilder().create();
     }
 
-    public AnagramApiResponse generateAnagram() throws IOException {
+    public AnagramApiResponse generateAnagram(String answer) throws IOException {
+        final String cleanAnswer = answer.trim();
+        final String apiUrl = API_BASE_URL + "word=" + cleanAnswer + "&difficulty=easy&count=1";
+
         Request request = new Request.Builder()
-                .url(API_URL)
+                .url(apiUrl)
                 .addHeader("x-api-key", apiKey)
                 .get()
                 .build();
@@ -52,17 +54,10 @@ public class AnagramApiClient {
                 throw new IOException("API error: " + apiResponse.error);
             }
 
-            PuzzleData puzzle = apiResponse.data.puzzles.get(0); // Only need one puzzle!
+            // We only need one puzzle.
+            PuzzleData puzzle = apiResponse.data.puzzles.get(0);
 
-            if (puzzle.anagrams == null) {
-                puzzle.anagrams = new ArrayList<>();
-            }
-            puzzle.anagrams.add(puzzle.original);
-
-            return new AnagramApiResponse(
-                    puzzle.scrambled,
-                    puzzle.anagrams
-            );
+            return new AnagramApiResponse(puzzle.scrambled);
         }
     }
 
@@ -77,21 +72,18 @@ public class AnagramApiClient {
     }
 
     private static class PuzzleData {
-        String original;
         String scrambled;
-        List<String> anagrams;
     }
 
     public static class AnagramApiResponse {
         private final String scrambled;
-        private final List<String> answers;
 
-        public AnagramApiResponse(String scrambled, List<String> answers) {
+        public AnagramApiResponse(String scrambled) {
             this.scrambled = scrambled;
-            this.answers = answers;
         }
 
-        public String getScrambled() { return scrambled; }
-        public List<String> getAnswers() { return answers; }
+        public String getScrambled() {
+            return scrambled;
+        }
     }
 }

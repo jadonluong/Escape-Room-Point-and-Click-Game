@@ -1,13 +1,12 @@
 package data_access;
 
-import domain.entities.Puzzle.AnagramPuzzle;
-import domain.entities.Puzzle.CryptogramPuzzle;
-import domain.entities.Puzzle.PuzzleFactory;
+import domain.entities.puzzle.AnagramPuzzle;
+import domain.entities.puzzle.CryptogramPuzzle;
+import domain.entities.puzzle.PuzzleFactory;
 import infrastructure.AnagramApiClient;
 import infrastructure.CryptogramApiClient;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public class PuzzleGenerator {
@@ -22,23 +21,33 @@ public class PuzzleGenerator {
         this.puzzleFactory = puzzleFactory;
     }
 
-    public AnagramPuzzle generateAnagramPuzzle(String id, String successMessage, String rewardItemId,
-                                               String unlockedRoomId) throws IOException {
-        AnagramApiClient.AnagramApiResponse anagramApiResponse = anagramApi.generateAnagram();
+    public AnagramPuzzle generateAnagramPuzzle(String id, String answer, String hint, String successMessage,
+                                               String rewardItemId, String unlockedRoomId) throws IOException {
+        final AnagramPuzzle result;
 
-        String scrambled = anagramApiResponse.getScrambled();
-        List<String> answers = anagramApiResponse.getAnswers();
+        if (answer == null) {
+            result = null;
+        }
+        else {
+            final AnagramApiClient.AnagramApiResponse anagramApiResponse = anagramApi.generateAnagram(answer);
 
-        return puzzleFactory.createAnagram(id, scrambled, answers, successMessage, rewardItemId, unlockedRoomId);
+            final String scrambled = anagramApiResponse.getScrambled();
+
+            result = puzzleFactory.createAnagram(id, scrambled, answer, hint, successMessage, rewardItemId,
+                    unlockedRoomId);
+        }
+
+        return result;
     }
 
-    public CryptogramPuzzle generateCryptogramPuzzle(String id, String cipherKeyId, String successMessage,
-                                                     String rewardItemId, String unlockedRoomId) throws IOException {
-        CryptogramApiClient.CryptogramApiResponse cryptogramApiResponse = cryptogramApi.generateCryptogram();
+    public CryptogramPuzzle generateCryptogramPuzzle(String id, String answer, String cipherKeyId,
+                                                     String successMessage, String rewardItemId,
+                                                     String unlockedRoomId) throws IOException {
+        final CryptogramApiClient.CryptogramApiResponse cryptogramApiResponse = cryptogramApi
+                .generateCryptogram(answer);
 
-        String encrypted = cryptogramApiResponse.getEncrypted();
-        String answer = cryptogramApiResponse.getAnswer();
-        Map<String, String> cipher = cryptogramApiResponse.getCipher();
+        final String encrypted = cryptogramApiResponse.getEncrypted();
+        final Map<String, String> cipher = cryptogramApiResponse.getCipher();
 
         return puzzleFactory.createCryptogram(id, encrypted, answer, cipher, cipherKeyId, successMessage,
                 rewardItemId, unlockedRoomId);

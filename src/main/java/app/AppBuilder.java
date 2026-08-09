@@ -1,333 +1,378 @@
 package app;
 
-import application.use_cases.Audio.ToggleMusic.ToggleMusicInteractor;
-import application.use_cases.Audio.ToggleSfx.ToggleSfxInteractor;
-import application.use_cases.GamePlay.ActionTrigger.ActionTriggerInteractor;
-import application.use_cases.GamePlay.QuickPlay.BrowseRooms.BrowseRoomsInteractor;
-import application.use_cases.GamePlay.QuickPlay.QuickModeStartUp.QuickModeStartUpInteractor;
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInteractor;
-import application.use_cases.Hint.GetHint.GetHintInteractor;
-import application.use_cases.Interactable.Interact.InteractInteractor;
-import application.use_cases.Interactable.Zoom.ZoomInteractor;
-import application.use_cases.User.LiveUserSessionTracking;
-import application.use_cases.Puzzle.EnterExit.EnterExitInteractor;
-import application.use_cases.Puzzle.Solve.SolveInteractor;
-import application.use_cases.User.Login.LoginInteractor;
-import application.use_cases.User.Logout.LogoutInteractor;
-import application.use_cases.User.SaveAndLogout.SaveAndLogoutInteractor;
-import application.use_cases.User.SaveProgress.SaveProgressInteractor;
-import application.use_cases.User.SignUp.ProfanityCheck;
-import application.use_cases.User.SignUp.SignupInteractor;
-import application.use_cases.Item.PickUp.PickUpInteractor;
-import application.use_cases.Item.SelectItem.SelectItemInteractor;
+import java.net.http.HttpClient;
+
+import application.use_cases.audio.toggle_music.ToggleMusicInteractor;
+import application.use_cases.audio.toggle_sfx.ToggleSfxInteractor;
+import application.use_cases.crafting.CraftingInteractor;
+import application.use_cases.hint.get_hint.GetHintInteractor;
+import application.use_cases.interactable.interact.InteractInteractor;
+import application.use_cases.interactable.zoom.ZoomInteractor;
+import application.use_cases.item.pick_up.PickUpInteractor;
+import application.use_cases.item.select_item.SelectItemInteractor;
+import application.use_cases.puzzle.enter_exit.EnterExitInteractor;
+import application.use_cases.puzzle.solve.SolveInteractor;
+import application.use_cases.user.LiveUserSessionTracking;
+import application.use_cases.user.login.LoginInteractor;
+import application.use_cases.user.logout.LogoutInteractor;
+import application.use_cases.user.save_and_logout.SaveAndLogoutInteractor;
+import application.use_cases.user.save_progress.SaveProgressInteractor;
+import application.use_cases.user.signup.ProfanityCheck;
+import application.use_cases.user.signup.SignupInteractor;
+import application.use_cases.game_play.quick_play.browse_rooms.BrowseRoomsInteractor;
+import application.use_cases.game_play.quick_play.quick_mode_start_up.QuickModeStartUpInteractor;
+import application.use_cases.game_play.tutorial_and_story_mode_start_up.TutorialAndStoryModeStartUpInteractor;
 import data_access.GameAssetManager;
 import data_access.JsonUserDataAccessObject;
 import data_access.PuzzleGenerator;
-import domain.entities.Hint.CommonHintFactory;
-import domain.entities.Hint.HintFactory;
-import domain.entities.Interactable.CommonInteractableFactory;
-import domain.entities.Interactable.InteractableFactory;
-import domain.entities.Item.CommonItemFactory;
-import domain.entities.Item.ItemFactory;
-import domain.entities.Puzzle.CommonPuzzleFactory;
-import domain.entities.Puzzle.PuzzleFactory;
-import domain.entities.Room.CommonRoomFactory;
-import domain.entities.Room.RoomFactory;
-import domain.entities.User.*;
+import domain.entities.audio.AudioSettings;
+import domain.entities.hint.CommonHintFactory;
+import domain.entities.hint.HintFactory;
+import domain.entities.interactable.CommonInteractableFactory;
+import domain.entities.interactable.InteractableFactory;
+import domain.entities.item.CommonItemFactory;
+import domain.entities.item.ItemFactory;
+import domain.entities.puzzle.CommonPuzzleFactory;
+import domain.entities.puzzle.PuzzleFactory;
+import domain.entities.room.CommonRoomFactory;
+import domain.entities.room.RoomFactory;
+import domain.entities.user.CommonUserFactory;
+import domain.entities.user.CommonUserFactoryClass;
+import domain.entities.user.GuestUserFactory;
+import domain.entities.user.GuestUserFactoryClass;
+import domain.entities.user.User;
 import infrastructure.AnagramApiClient;
 import infrastructure.CryptogramApiClient;
-import interface_adapter.Audio.*;
-import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
-import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsController;
-import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsPresenter;
-import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsViewModel;
-import interface_adapter.GamePlay.InGameViewModel;
-import interface_adapter.GamePlay.QuickModeStartUp.QuickModeStartUpController;
-import interface_adapter.GamePlay.QuickModeStartUp.QuickModeStartUpPresenter;
-import interface_adapter.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpController;
-import interface_adapter.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpPresenter;
-import interface_adapter.Hint.GetHintController;
-import interface_adapter.Hint.GetHintPresenter;
-import interface_adapter.Hint.GetHintViewModel;
-import interface_adapter.Interactable.Interact.InteractController;
-import interface_adapter.Interactable.Interact.InteractPresenter;
-import interface_adapter.Interactable.Interact.InteractViewModel;
-import interface_adapter.Interactable.Zoom.ZoomController;
-import interface_adapter.Interactable.Zoom.ZoomPresenter;
-import interface_adapter.Interactable.Zoom.ZoomViewModel;
-import interface_adapter.inventory.SelectItemController;
-import interface_adapter.inventory.SelectItemPresenter;
-import interface_adapter.Puzzle.EnterExit.EnterExitController;
-import interface_adapter.Puzzle.EnterExit.EnterExitPresenter;
-import interface_adapter.Puzzle.EnterExit.EnterExitViewModel;
-import interface_adapter.Puzzle.Solve.SolveController;
-import interface_adapter.Puzzle.Solve.SolvePresenter;
-import interface_adapter.User.LoggedIn.LoggedInViewModel;
-import interface_adapter.User.Login.LoginController;
-import interface_adapter.User.Login.LoginPresenter;
-import interface_adapter.User.Login.LoginViewModel;
-import interface_adapter.User.Logout.LogoutController;
-import interface_adapter.User.Logout.LogoutPresenter;
-import interface_adapter.User.MainMenu.MainMenuViewModel;
-import interface_adapter.User.SaveProgress.SaveProgressController;
-import interface_adapter.User.SaveProgress.SaveProgressPresenter;
-import interface_adapter.User.SaveProgress.SaveProgressViewModel;
-import interface_adapter.User.Signup.ProfanityCheckGateway;
-import interface_adapter.User.Signup.SignupController;
-import interface_adapter.User.Signup.SignupPresenter;
-import interface_adapter.User.Signup.SignupViewModel;
+import interface_adapter.audio.AudioViewModel;
+import interface_adapter.audio.ToggleMusicController;
+import interface_adapter.audio.ToggleMusicPresenter;
+import interface_adapter.audio.ToggleSfxController;
+import interface_adapter.audio.ToggleSfxPresenter;
+import interface_adapter.game_play.browse_rooms.BrowseRoomsController;
+import interface_adapter.game_play.browse_rooms.BrowseRoomsPresenter;
+import interface_adapter.game_play.browse_rooms.BrowseRoomsViewModel;
+import interface_adapter.game_play.InGameViewModel;
+import interface_adapter.game_play.quick_mode_start_up.QuickModeStartUpController;
+import interface_adapter.game_play.quick_mode_start_up.QuickModeStartUpPresenter;
+import interface_adapter.game_play.tutorial_and_story_mode_start_up.TutorialAndStoryModeStartUpController;
+import interface_adapter.game_play.tutorial_and_story_mode_start_up.TutorialAndStoryModeStartUpPresenter;
+import interface_adapter.hint.GetHintController;
+import interface_adapter.hint.GetHintPresenter;
+import interface_adapter.hint.GetHintViewModel;
+import interface_adapter.interactable.interact.InteractController;
+import interface_adapter.interactable.interact.InteractPresenter;
+import interface_adapter.interactable.interact.InteractViewModel;
+import interface_adapter.interactable.zoom.ZoomController;
+import interface_adapter.interactable.zoom.ZoomPresenter;
+import interface_adapter.interactable.zoom.ZoomViewModel;
+import interface_adapter.inventory.*;
+import interface_adapter.puzzle.enter_exit.EnterExitController;
+import interface_adapter.puzzle.enter_exit.EnterExitPresenter;
+import interface_adapter.puzzle.enter_exit.EnterExitViewModel;
+import interface_adapter.puzzle.solve.SolveController;
+import interface_adapter.puzzle.solve.SolvePresenter;
+import interface_adapter.user.logged_in.LoggedInViewModel;
+import interface_adapter.user.login.LoginController;
+import interface_adapter.user.login.LoginPresenter;
+import interface_adapter.user.login.LoginViewModel;
+import interface_adapter.user.logout.LogoutController;
+import interface_adapter.user.logout.LogoutPresenter;
+import interface_adapter.user.main_menu.MainMenuViewModel;
+import interface_adapter.user.save_progress.SaveProgressController;
+import interface_adapter.user.save_progress.SaveProgressPresenter;
+import interface_adapter.user.save_progress.SaveProgressViewModel;
+import interface_adapter.user.signup.ProfanityCheckGateway;
+import interface_adapter.user.signup.SignupController;
+import interface_adapter.user.signup.SignupPresenter;
+import interface_adapter.user.signup.SignupViewModel;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.inventory.InventoryViewModel; // added
-import interface_adapter.inventory.InventoryPresenter; // added
+import interface_adapter.item.PickUpController;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import view.Game.BrowseRoomsView;
-import view.Game.GameMenuView;
-import view.Game.InGameView;
-import view.Hint.HintOverlay;
+import view.game.BrowseRoomsView;
+import view.game.GameMenuView;
+import view.game.GameObjectActionDispatcher;
+import view.game.InGameView;
+import view.hint.HintOverlay;
 import view.ViewManager;
 import view.common.AudioControlView;
 import view.common.OverlayFactory;
 import view.common.SoundPlayer;
 import view.interactable.InteractOverlay;
 import view.interactable.ZoomView;
-import view.mainmenu.MainMenuView;
+import view.inventory.InventoryOverlay;
+import view.main_menu.AuthOverlayFactories;
+import view.main_menu.MainMenuView;
 import view.puzzle.PuzzleView;
 import view.user.LoginOverlay;
 import view.user.SignupOverlay;
-import view.inventory.InventoryOverlay; // added
-
-import java.net.http.HttpClient;
 
 public class AppBuilder extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
-        ViewManagerModel viewManagerModel = new ViewManagerModel();
+        final String mainMenuString = "main menu";
+        final ViewManagerModel viewManagerModel = new ViewManagerModel();
 
         // --- JSON information chain ---
-        ItemFactory itemFactory = new CommonItemFactory();
-        InteractableFactory interactableFactory = new CommonInteractableFactory();
-        RoomFactory roomFactory = new CommonRoomFactory();
-        HintFactory hintFactory = new CommonHintFactory();
-        PuzzleFactory puzzleFactory = new CommonPuzzleFactory();
+        final ItemFactory itemFactory = new CommonItemFactory();
+        final InteractableFactory interactableFactory = new CommonInteractableFactory();
+        final RoomFactory roomFactory = new CommonRoomFactory();
+        final HintFactory hintFactory = new CommonHintFactory();
+        final PuzzleFactory puzzleFactory = new CommonPuzzleFactory();
 
         // --- Puzzle Generator chain ---
-        AnagramApiClient anagramApiClient = new AnagramApiClient("apv_7700ad64-d8be-4591-8f67-607ed21edcce");
-        CryptogramApiClient cryptogramApiClient = new CryptogramApiClient(
+        final AnagramApiClient anagramApiClient = new AnagramApiClient(
                 "apv_7700ad64-d8be-4591-8f67-607ed21edcce");
-        PuzzleGenerator puzzleGenerator = new PuzzleGenerator(anagramApiClient, cryptogramApiClient, puzzleFactory);
+        final CryptogramApiClient cryptogramApiClient = new CryptogramApiClient(
+                "apv_7700ad64-d8be-4591-8f67-607ed21edcce");
+        final PuzzleGenerator puzzleGenerator = new PuzzleGenerator(anagramApiClient, cryptogramApiClient,
+                puzzleFactory);
 
-        GameAssetManager gameAssetManager = new GameAssetManager(itemFactory, interactableFactory, roomFactory, hintFactory, puzzleFactory);
+        final GameAssetManager gameAssetManager = new GameAssetManager(itemFactory, interactableFactory, roomFactory,
+                hintFactory, puzzleGenerator, puzzleFactory);
 
-        JsonUserDataAccessObject userDAO = new JsonUserDataAccessObject(gameAssetManager,gameAssetManager);
-        LiveUserSessionTracking userSessionTracking = new LiveUserSessionTracking();
-        CommonUserFactory userFactory = new CommonUserFactoryClass();
-        GuestUserFactory guestUserFactory = new GuestUserFactoryClass();
-        User defaultGuestUser = guestUserFactory.createGuestUser();
+        final JsonUserDataAccessObject userDataAccessObject = new JsonUserDataAccessObject(gameAssetManager,
+                gameAssetManager);
+        final LiveUserSessionTracking userSessionTracking = new LiveUserSessionTracking();
+        final CommonUserFactory userFactory = new CommonUserFactoryClass();
+        final GuestUserFactory guestUserFactory = new GuestUserFactoryClass();
+        final User defaultGuestUser = guestUserFactory.createGuestUser();
         userSessionTracking.setCurrentUser(defaultGuestUser);
 
         // --- Audio chain (built before ViewManager, which needs the sfx state) ---
-        AudioViewModel audioViewModel = new AudioViewModel();
-        ToggleSfxPresenter sfxPresenter = new ToggleSfxPresenter(audioViewModel);
-        ToggleSfxInteractor sfxInteractor = new ToggleSfxInteractor(sfxPresenter);
-        ToggleSfxController sfxController = new ToggleSfxController(sfxInteractor);
-        ToggleMusicPresenter musicPresenter = new ToggleMusicPresenter(audioViewModel);
-        ToggleMusicInteractor musicInteractor = new ToggleMusicInteractor(musicPresenter);
-        ToggleMusicController musicController = new ToggleMusicController(musicInteractor);
-        AudioControlView audioControlView = new AudioControlView(sfxController, musicController, audioViewModel);
+        final AudioSettings audioSettings = new AudioSettings();
+        final AudioViewModel audioViewModel = new AudioViewModel();
+        final ToggleSfxPresenter sfxPresenter = new ToggleSfxPresenter(audioViewModel);
+        final ToggleSfxInteractor sfxInteractor = new ToggleSfxInteractor(sfxPresenter, audioSettings);
+        final ToggleSfxController sfxController = new ToggleSfxController(sfxInteractor);
+        final ToggleMusicPresenter musicPresenter = new ToggleMusicPresenter(audioViewModel);
+        final ToggleMusicInteractor musicInteractor = new ToggleMusicInteractor(musicPresenter, audioSettings);
+        final ToggleMusicController musicController = new ToggleMusicController(musicInteractor);
 
-        SoundPlayer soundPlayer = new SoundPlayer("/audio/sfx/click.wav");
-        ViewManager viewManager = new ViewManager(
+        // Repeated on purpose otherwise it only shows in one place
+        final AudioControlView audioControlViewForMainMenu = new AudioControlView(sfxController, musicController,
+                audioViewModel);
+        final AudioControlView audioControlViewForPause = new AudioControlView(sfxController, musicController,
+                audioViewModel);
+
+        final SoundPlayer soundPlayer = new SoundPlayer("/audio/sfx/click.wav");
+        final ViewManager viewManager = new ViewManager(
                 primaryStage, viewManagerModel, soundPlayer,
                 () -> audioViewModel.getState().isSfxOn());
 
         // --- Login chain ---
-        LoginViewModel loginViewModel = new LoginViewModel();
-        LoggedInViewModel  loggedInViewModel = new LoggedInViewModel();
-        LoginPresenter loginPresenter = new LoginPresenter(loginViewModel, loggedInViewModel);
-        LoginInteractor loginInteractor = new LoginInteractor(userDAO, userSessionTracking, loginPresenter);
-        LoginController loginController = new LoginController(loginInteractor);
-
-
+        final LoginViewModel loginViewModel = new LoginViewModel();
+        final LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
+        final LoginPresenter loginPresenter = new LoginPresenter(loginViewModel, loggedInViewModel);
+        final LoginInteractor loginInteractor = new LoginInteractor(userDataAccessObject,
+                userSessionTracking, loginPresenter);
+        final LoginController loginController = new LoginController(loginInteractor);
 
         // --- Logout chain ---
-        MainMenuViewModel mainMenuViewModel = new MainMenuViewModel();
-        SaveProgressViewModel saveProgressViewModel = new SaveProgressViewModel();
+        final MainMenuViewModel mainMenuViewModel = new MainMenuViewModel();
+        final SaveProgressViewModel saveProgressViewModel = new SaveProgressViewModel();
 
-            // --- Save progress chain ---
-            SaveProgressPresenter saveProgressPresenter = new SaveProgressPresenter(saveProgressViewModel);
-            SaveProgressInteractor saveProgressInteractor = new SaveProgressInteractor(saveProgressPresenter, userDAO, userSessionTracking);
-            SaveProgressController saveProgressController = new SaveProgressController(saveProgressInteractor);
+        // --- Save progress chain ---
+        final SaveProgressPresenter saveProgressPresenter = new SaveProgressPresenter(saveProgressViewModel);
+        final SaveProgressInteractor saveProgressInteractor = new SaveProgressInteractor(saveProgressPresenter,
+                userDataAccessObject, userSessionTracking);
+        final SaveProgressController saveProgressController = new SaveProgressController(saveProgressInteractor);
 
-        LogoutPresenter logoutPresenter = new LogoutPresenter(viewManagerModel, mainMenuViewModel, loggedInViewModel, saveProgressViewModel);
-        LogoutInteractor logoutInteractor = new LogoutInteractor(userSessionTracking, logoutPresenter);
+        final LogoutPresenter logoutPresenter = new LogoutPresenter(viewManagerModel, mainMenuViewModel,
+                loggedInViewModel, saveProgressViewModel);
+        final LogoutInteractor logoutInteractor = new LogoutInteractor(userSessionTracking, logoutPresenter);
 
-        SaveAndLogoutInteractor saveAndLogoutInteractor = new SaveAndLogoutInteractor(userDAO, userSessionTracking, logoutPresenter); // Note: save & logout chain uses logout controller
+        final SaveAndLogoutInteractor saveAndLogoutInteractor = new SaveAndLogoutInteractor(userDataAccessObject,
+                userSessionTracking, logoutPresenter);
+        // Note: save & logout chain uses logout controller
 
-        LogoutController logoutController = new LogoutController(logoutInteractor, saveAndLogoutInteractor);
+        final LogoutController logoutController = new LogoutController(logoutInteractor, saveAndLogoutInteractor);
 
         // --- Signup chain ---
-        ProfanityCheck profanityCheck = new ProfanityCheckGateway(HttpClient.newHttpClient());
-        SignupViewModel signupViewModel = new SignupViewModel();
-        SignupPresenter signupPresenter = new SignupPresenter(signupViewModel);
-        SignupInteractor signupInteractor =
-                new SignupInteractor(userDAO, signupPresenter, userFactory, profanityCheck);
-        SignupController signupController = new SignupController(signupInteractor);
+        final ProfanityCheck profanityCheck = new ProfanityCheckGateway(HttpClient.newHttpClient());
+        final SignupViewModel signupViewModel = new SignupViewModel();
+        final SignupPresenter signupPresenter = new SignupPresenter(signupViewModel);
+        final SignupInteractor signupInteractor =
+                new SignupInteractor(userDataAccessObject, signupPresenter, userFactory, profanityCheck);
+        final SignupController signupController = new SignupController(signupInteractor);
 
-        OverlayFactory loginOverlayFactory =
+        final OverlayFactory loginOverlayFactory =
                 onClose -> new LoginOverlay(onClose, loginController, loginViewModel);
-        OverlayFactory signupOverlayFactory =
+        final OverlayFactory signupOverlayFactory =
                 onClose -> new SignupOverlay(onClose, signupController, signupViewModel);
 
         // --- Get hint chain ---
-        GetHintViewModel getHintViewModel = new GetHintViewModel();
-        GetHintPresenter getHintPresenter = new GetHintPresenter(getHintViewModel, viewManager);
-        GetHintInteractor getHintInteractor = new GetHintInteractor(getHintPresenter, gameAssetManager, userSessionTracking);
-        GetHintController getHintController = new GetHintController(getHintInteractor);
+        final GetHintViewModel getHintViewModel = new GetHintViewModel();
+        final GetHintPresenter getHintPresenter = new GetHintPresenter(getHintViewModel, viewManager);
+        final GetHintInteractor getHintInteractor = new GetHintInteractor(getHintPresenter, gameAssetManager,
+                userSessionTracking);
+        final GetHintController getHintController = new GetHintController(getHintInteractor);
 
         // --- Get hint overlay ---
         // OverlayFactory getHintOverlayFactory = onClose -> new HintOverlay(getHintViewModel, onClose);
-        HintOverlay hintOverlay = new HintOverlay (getHintViewModel,viewManager);
+        final HintOverlay hintOverlay = new HintOverlay(getHintViewModel, viewManager);
 
+        // --- View Model for starting game ---
+        final InGameViewModel inGameViewModel = new InGameViewModel();
 
-        //--- View Model for starting game ---
-        InGameViewModel inGameViewModel = new InGameViewModel();
+        // --- Tutorial Mode & Story Mode start up chain ---
+        final TutorialAndStoryModeStartUpPresenter tutorialAndStoryModeStartUpPresenter =
+                new TutorialAndStoryModeStartUpPresenter(inGameViewModel, viewManagerModel);
+        final TutorialAndStoryModeStartUpInteractor tutorialAndStoryModeStartUpInteractor =
+                new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter,
+                        gameAssetManager, userSessionTracking);
+        final TutorialAndStoryModeStartUpController tutorialAndStoryModeStartUpController =
+                new TutorialAndStoryModeStartUpController(tutorialAndStoryModeStartUpInteractor);
 
-        //--- Tutorial Mode & Story Mode start up chain ---
-        TutorialAndStoryModeStartUpPresenter tutorialAndStoryModeStartUpPresenter
-                = new TutorialAndStoryModeStartUpPresenter(inGameViewModel, viewManagerModel);
-        TutorialAndStoryModeStartUpInteractor tutorialAndStoryModeStartUpInteractor
-                = new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter, gameAssetManager, userSessionTracking);
-        TutorialAndStoryModeStartUpController tutorialAndStoryModeStartUpController
-                = new TutorialAndStoryModeStartUpController(tutorialAndStoryModeStartUpInteractor);
+        // --- Browse rooms chain ---
+        final BrowseRoomsViewModel browseRoomsViewModel = new BrowseRoomsViewModel();
+        final BrowseRoomsPresenter browseRoomsPresenter = new BrowseRoomsPresenter(browseRoomsViewModel,
+                viewManagerModel);
+        final BrowseRoomsInteractor browseRoomsInteractor = new BrowseRoomsInteractor(gameAssetManager,
+                browseRoomsPresenter);
+        final BrowseRoomsController browseRoomsController = new BrowseRoomsController(browseRoomsInteractor);
 
-        //--- Browse rooms chain ---
-        BrowseRoomsViewModel browseRoomsViewModel = new BrowseRoomsViewModel();
-        BrowseRoomsPresenter browseRoomsPresenter = new BrowseRoomsPresenter(browseRoomsViewModel, viewManagerModel);
-        BrowseRoomsInteractor browseRoomsInteractor = new BrowseRoomsInteractor(gameAssetManager, browseRoomsPresenter);
-        BrowseRoomsController browseRoomsController = new BrowseRoomsController(browseRoomsInteractor);
-
-        //--- Quick Mode chain ---
-        QuickModeStartUpPresenter quickModeStartUpPresenter
-                = new QuickModeStartUpPresenter(inGameViewModel, viewManagerModel);
-        QuickModeStartUpInteractor quickModeStartUpInteractor
-                = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager, userSessionTracking);
-        QuickModeStartUpController quickModeStartUpController
-                = new QuickModeStartUpController(quickModeStartUpInteractor);
+        // --- Quick Mode chain ---
+        final QuickModeStartUpPresenter quickModeStartUpPresenter = new QuickModeStartUpPresenter(inGameViewModel,
+                viewManagerModel);
+        final QuickModeStartUpInteractor quickModeStartUpInteractor = new QuickModeStartUpInteractor(
+                quickModeStartUpPresenter, gameAssetManager, userSessionTracking);
+        final QuickModeStartUpController quickModeStartUpController = new QuickModeStartUpController(
+                quickModeStartUpInteractor);
 
         // --- Items & Inventory Chain ---
-        InventoryViewModel inventoryViewModel = new InventoryViewModel();
-        InventoryPresenter inventoryPresenter = new InventoryPresenter(inventoryViewModel, inGameViewModel);
-        PickUpInteractor pickUpInteractor = new PickUpInteractor(userSessionTracking, inventoryPresenter);
+        final InventoryViewModel inventoryViewModel = new InventoryViewModel();
+        final InventoryPresenter inventoryPresenter = new InventoryPresenter(inventoryViewModel, inGameViewModel);
+
+        // Updated to include itemRegistry as the 2nd argument
+        final PickUpInteractor pickUpInteractor = new PickUpInteractor(
+                userSessionTracking,
+                gameAssetManager,
+                inventoryPresenter
+        );
+
+        final PickUpController pickUpController = new PickUpController(pickUpInteractor);
+
+        // --- Crafting Chain ---
+        final CraftingInteractor craftingInteractor = new CraftingInteractor(
+                inventoryPresenter,                      // CraftingOutputBoundary
+                userSessionTracking.getCurrentUser(),    // Active User domain entity
+                itemFactory,                             // ItemFactory
+                gameAssetManager,                        // ItemRegistry
+                gameAssetManager                         // CraftingDataAccessInterface
+        );
+
+        final CraftController craftController = new CraftController(craftingInteractor);
 
         // --- Select Item Chain ---
-        SelectItemPresenter selectItemPresenter = new SelectItemPresenter();
-        SelectItemInteractor selectItemInteractor = new SelectItemInteractor(userSessionTracking, selectItemPresenter);
-        SelectItemController selectItemController = new SelectItemController(selectItemInteractor);
+        final SelectItemPresenter selectItemPresenter = new SelectItemPresenter();
+        final SelectItemInteractor selectItemInteractor = new SelectItemInteractor(userSessionTracking,
+                selectItemPresenter);
+        final SelectItemController selectItemController = new SelectItemController(selectItemInteractor);
 
         // --- Main menu ---
-        MainMenuView mainMenu = new MainMenuView(
-                viewManagerModel, mainMenuViewModel, loggedInViewModel,
-                loginOverlayFactory, signupOverlayFactory,
+        final AuthOverlayFactories authOverlayFactories =
+                new AuthOverlayFactories(loginOverlayFactory, signupOverlayFactory);
+
+        final MainMenuView mainMenu = new MainMenuView(
+                mainMenuViewModel,
+                loggedInViewModel,
+                authOverlayFactories,
                 () -> {
                     if (loggedInViewModel.getState().isLoggedIn()) {
                         logoutController.executeLogoutWithoutSave(loggedInViewModel.getState().getUsername());
                     }
                     else {
                         // Guest was never logged in — just navigate home, no logout flow, no message.
-                        viewManagerModel.setState("main menu");
+                        viewManagerModel.setState(mainMenuString);
                         viewManagerModel.firePropertyChanged();
                     }
                 },
-                audioControlView,
+                audioControlViewForMainMenu,
                 tutorialAndStoryModeStartUpController,
                 browseRoomsController);
 
         signupPresenter.setSwitchToLoginCallback(mainMenu::switchFromSignupToLogin);
 
         // --- Browse Rooms ---
-        BrowseRoomsView browseRoomsView = new BrowseRoomsView(viewManager,
-                mainMenu, browseRoomsViewModel,  quickModeStartUpController);
+        final BrowseRoomsView browseRoomsView = new BrowseRoomsView(viewManager,
+                mainMenu, browseRoomsViewModel, quickModeStartUpController);
 
         // --- Interactable Zoom Chain ---
-        ZoomViewModel zoomViewModel = new ZoomViewModel();
-        ZoomPresenter zoomPresenter = new ZoomPresenter(zoomViewModel, viewManagerModel);
-        ZoomInteractor zoomInteractor = new ZoomInteractor(gameAssetManager, zoomPresenter);
-        ZoomController zoomController = new ZoomController(zoomInteractor);
+        final ZoomViewModel zoomViewModel = new ZoomViewModel();
+        final ZoomPresenter zoomPresenter = new ZoomPresenter(zoomViewModel, viewManagerModel);
+        final ZoomInteractor zoomInteractor = new ZoomInteractor(gameAssetManager, zoomPresenter);
+        final ZoomController zoomController = new ZoomController(zoomInteractor);
 
         // --- Interactable Interact Chain ---
-        InteractViewModel interactViewModel = new InteractViewModel();
-        InteractPresenter interactPresenter = new InteractPresenter(interactViewModel, inventoryViewModel,
+        final InteractViewModel interactViewModel = new InteractViewModel();
+        final InteractPresenter interactPresenter = new InteractPresenter(interactViewModel, inventoryViewModel,
                 zoomInteractor, viewManagerModel, viewManager);
-        InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter,
+        final InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter,
                 userSessionTracking);
-        InteractController interactController = new InteractController(interactInteractor);
+        final InteractController interactController = new InteractController(interactInteractor);
 
         // --- Puzzle EnterExit Chain ---
-        EnterExitViewModel enterExitViewModel = new EnterExitViewModel();
-        EnterExitPresenter enterExitPresenter = new EnterExitPresenter(enterExitViewModel, interactViewModel,
+        final EnterExitViewModel enterExitViewModel = new EnterExitViewModel();
+        final EnterExitPresenter enterExitPresenter = new EnterExitPresenter(enterExitViewModel, interactViewModel,
                 viewManagerModel, viewManager);
-        EnterExitInteractor enterExitInteractor = new EnterExitInteractor(gameAssetManager, enterExitPresenter,
+        final EnterExitInteractor enterExitInteractor = new EnterExitInteractor(gameAssetManager, enterExitPresenter,
                 userSessionTracking);
-        EnterExitController enterExitController = new EnterExitController(enterExitInteractor);
+        final EnterExitController enterExitController = new EnterExitController(enterExitInteractor);
 
         // --- Puzzle Solve Chain ---
-        SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, inventoryViewModel, zoomInteractor,
+        final SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, inventoryViewModel, zoomInteractor,
                 viewManagerModel, viewManager);
-        SolveInteractor solveInteractor = new SolveInteractor(gameAssetManager, solvePresenter, userSessionTracking);
-        SolveController solveController = new SolveController(solveInteractor);
+        final SolveInteractor solveInteractor = new SolveInteractor(gameAssetManager, solvePresenter,
+                userSessionTracking);
+        final SolveController solveController = new SolveController(solveInteractor);
 
         // --- Interactable and Puzzle Views ---
-        ZoomView zoomView = new ZoomView(zoomController, zoomViewModel, interactController, enterExitController);
-        InteractOverlay interactOverlay = new InteractOverlay(interactViewModel, viewManager);
-        PuzzleView puzzleView = new PuzzleView(enterExitViewModel, enterExitController, solveController);
-
-        // --- Action triggering ---
-        ActionTriggerInteractor actionTriggerInteractor = new ActionTriggerInteractor(zoomInteractor, pickUpInteractor, getHintInteractor, userSessionTracking, gameAssetManager);
-        ActionTriggerController actionTriggerController = new ActionTriggerController(actionTriggerInteractor);
+        final ZoomView zoomView = new ZoomView(zoomController, zoomViewModel, interactController, enterExitController);
+        final InteractOverlay interactOverlay = new InteractOverlay(interactViewModel, viewManager);
+        final PuzzleView puzzleView = new PuzzleView(enterExitViewModel, enterExitController, solveController);
 
         // --- In-game ---
-
+        final GameObjectActionDispatcher gameObjectActionDispatcher = new GameObjectActionDispatcher(zoomController,
+                getHintController, pickUpController);
         // Create game menu view
-        GameMenuView gameMenuView =
+        final GameMenuView gameMenuView =
                 new GameMenuView(viewManager,
                 loggedInViewModel,
-                sfxController,
-                musicController,
-                audioViewModel,
+                audioControlViewForPause,
                         () -> {
                             if (userSessionTracking.getCurrentUser() != null) {
-                                String username = loggedInViewModel.getState().getUsername();
+                                final String username = loggedInViewModel.getState().getUsername();
                                 saveProgressController.execute(username);
                             }
                         },
-
                         // --- On save & quit ---
                         () -> {
                             if (userSessionTracking.getCurrentUser() != null) {
-                                String username = loggedInViewModel.getState().getUsername();
+                                final String username = loggedInViewModel.getState().getUsername();
                                 logoutController.executeLogoutWithSave(username);
                             }
                         },
-
                         // --- On quit ---
                         () -> {
                             if (loggedInViewModel.getState().isLoggedIn()) {
                                 logoutController.executeLogoutWithoutSave(loggedInViewModel.getState().getUsername());
-                            } else {
-                                viewManagerModel.setState("main menu");
+                            }
+                            else {
+                                viewManagerModel.setState(mainMenuString);
                                 viewManagerModel.firePropertyChanged();
                             }
                         }
                 );
-        InventoryOverlay inventoryOverlay = new InventoryOverlay(viewManager, inventoryViewModel);
+        final InventoryOverlay inventoryOverlay = new InventoryOverlay(viewManager, inventoryViewModel);
         inventoryOverlay.setSelectItemController(selectItemController);
-        InGameView inGameView = new InGameView(inGameViewModel, gameMenuView, inventoryOverlay, actionTriggerController);
+        inventoryOverlay.setCraftController(craftController);
+        final InGameView inGameView = new InGameView(inGameViewModel, gameMenuView, inventoryOverlay,
+                gameObjectActionDispatcher);
 
         // --- Register every top-level screen by name ---
-        viewManager.registerView("main menu", mainMenu);
+        viewManager.registerView(mainMenuString, mainMenu);
         viewManager.registerView("browse rooms", browseRoomsView);
         viewManager.registerView("in-game", inGameView);
 
@@ -338,7 +383,7 @@ public class AppBuilder extends Application {
         viewManager.registerOverlay("get hint", hintOverlay, true);
 
         // --- Register In-game menu ---
-        viewManager.registerOverlay("in-game menu" ,gameMenuView);
+        viewManager.registerOverlay("in-game menu", gameMenuView);
 
         viewManager.registerOverlay("inventory", inventoryOverlay);
 

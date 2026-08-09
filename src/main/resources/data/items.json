@@ -18,5 +18,61 @@
     "description": "A spider that can eat metal",
     "craftable": true,
     "imagePath": "/images/items/prison/spider4.png"
+  },
+
+  "house_bottle": {
+    "name": "bottle",
+    "description": "A bottle",
+    "craftable": true,
+    "imagePath": "/images/items/storymode/room1/bottle.png"
+  },
+
+  "house_flower": {
+    "name": "flower",
+    "description": "A bundle of flowers",
+    "craftable": true,
+    "imagePath": "/images/items/storymode/room1/flower.png"
+  },
+
+  "house_crafted_flower_pot": {
+    "name": "a flower pot",
+    "description": "A pot of flowers",
+    "craftable": false,
+    "imagePath": "/images/items/storymode/room1/flower.png"
+  },
+
+  "cheese_matches": {
+    "name": "matches",
+    "description": "Cheesy matches",
+    "craftable": false,
+    "imagePath": "/images/items/storymode/room2/matches.png"
+  },
+
+  "sac_candle": {
+    "name": "candle",
+    "description": "Cheesy candle",
+    "craftable": true,
+    "imagePath": "/images/items/storymode/room3/candle.png"
+  },
+
+  "sac_crafted_lit_candle": {
+    "name": "lit candle",
+    "description": "A lit cheesy candle",
+    "craftable": false,
+    "imagePath": "/images/items/storymode/room3/candle.png"
+  },
+
+  "astrology_star": {
+    "name": "star",
+    "description": "A star in the night sky",
+    "craftable": false,
+    "imagePath": "/images/items/astrology/star_2.png"
+  },
+
+  "astrology_key": {
+    "name": "key",
+    "description": "A key to freedom",
+    "craftable": false,
+    "imagePath": "/images/items/astrology/key.PNG"
   }
 }

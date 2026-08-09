@@ -1,6 +1,6 @@
 package application.game_registry;
 
-import domain.entities.Room.Room;
+import domain.entities.room.Room;
 
 /**
  * The registry for getting Room objects with their roomIDs.

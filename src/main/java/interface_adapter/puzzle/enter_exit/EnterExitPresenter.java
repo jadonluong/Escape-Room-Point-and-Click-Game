@@ -1,0 +1,60 @@
+package interface_adapter.puzzle.enter_exit;
+
+import application.use_cases.puzzle.enter_exit.EnterExitOutputBoundary;
+import application.use_cases.puzzle.enter_exit.EnterExitOutputData;
+import interface_adapter.interactable.interact.InteractState;
+import interface_adapter.interactable.interact.InteractViewModel;
+import interface_adapter.ViewManagerInterface;
+import interface_adapter.ViewManagerModel;
+
+public class EnterExitPresenter implements EnterExitOutputBoundary {
+    private final EnterExitViewModel enterExitViewModel;
+    private final InteractViewModel interactViewModel;
+    private final ViewManagerModel viewManagerModel;
+    private final ViewManagerInterface viewManager;
+
+    public EnterExitPresenter(EnterExitViewModel enterExitViewModel, InteractViewModel interactViewModel,
+                              ViewManagerModel viewManagerModel, ViewManagerInterface viewManager) {
+        this.enterExitViewModel = enterExitViewModel;
+        this.interactViewModel = interactViewModel;
+        this.viewManagerModel = viewManagerModel;
+        this.viewManager = viewManager;
+    }
+
+    @Override
+    public void prepareEnterView(EnterExitOutputData outputData) {
+        EnterExitState state = enterExitViewModel.getState();
+        state.setPuzzleId(outputData.getPuzzleId());
+        state.setPuzzleType(outputData.getPuzzleType());
+        state.setDescription(outputData.getDescription());
+        state.setHint(outputData.getHint());
+        state.setScrambled(outputData.getScrambled());
+        state.setEncrypted(outputData.getEncrypted());
+        state.setCipher(outputData.getCipher());
+        state.setInteractableId(outputData.getInteractableId());
+
+        enterExitViewModel.setState(state);
+        enterExitViewModel.firePropertyChanged();
+
+        viewManagerModel.setState("Puzzle");
+        viewManagerModel.firePropertyChanged();
+    }
+
+    @Override
+    public void prepareExitView() {
+        viewManagerModel.setState("Zoom"); // No need to do anything since the current ZoomState is already correct!
+        viewManagerModel.firePropertyChanged();
+    }
+
+    @Override
+    public void prepareFailureView(String errorMessage) {
+        InteractState state = interactViewModel.getState(); // Reuse the InteractOverlay for this :)
+        state.setSuccessMessage(null);
+        state.setErrorMessage(errorMessage);
+
+        interactViewModel.setState(state);
+        interactViewModel.firePropertyChanged();
+
+        viewManager.showOverlay("Interact");
+    }
+}

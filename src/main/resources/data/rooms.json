@@ -1,19 +1,269 @@
 {
   "prison": {
     "description": "Escape the prison or die trying",
-    "interactables": ["prison_interact_1", "prison_interact_2", "prison_interact_3", "prison_interact_4"],
-    "items": ["prison_item_1"],
-    "hints": ["prison_hint_1", "prison_hint_2"],
-    "imagePath": "/images/rooms/PrisonBackground.png",
+    "interactables": [
+      "prison_interact_1",
+      "prison_interact_2",
+      "prison_interact_3",
+      "prison_interact_4"
+    ],
+    "items": [
+      "prison_item_1"
+    ],
+    "hints": [
+      "prison_hint_1",
+      "prison_hint_2"
+    ],
+    "imagePath": "/images/rooms/prison/PrisonBackground.png",
     "imageThumbnail": "/images/rooms/PrisonComplete.png",
     "positions": {
-      "prison_interact_2": [840, 615],
-      "prison_interact_4": [79, 540],
-      "prison_interact_3": [1544, 399],
-      "prison_item_1": [1292, 1520],
-      "prison_hint_1": [2372, 271],
-      "prison_hint_2": [470, 1467],
-      "prison_interact_1": [2142, 907]
+      "prison_interact_2": [
+        840,
+        615
+      ],
+      "prison_interact_4": [
+        79,
+        540
+      ],
+      "prison_interact_3": [
+        1544,
+        399
+      ],
+      "prison_item_1": [
+        1292,
+        1520
+      ],
+      "prison_hint_1": [
+        2372,
+        271
+      ],
+      "prison_hint_2": [
+        470,
+        1467
+      ],
+      "prison_interact_1": [
+        2142,
+        907
+      ]
+    }
+  },
+  "sunny": {
+    "description": "A golden house under the sun.",
+    "interactables": [
+      "house_door"
+    ],
+    "items": [
+      "house_bottle",
+      "house_flower"
+    ],
+    "hints": [
+      "house_cloud_1",
+      "house_cloud_2"
+    ],
+    "imagePath": "/images/rooms/storymode/room1/Room1Background.png",
+    "imageThumbnail": "/images/rooms/storymode/room1/Room1Complete.png",
+    "positions": {
+      "house_door": [
+        1187,
+        1324
+      ],
+      "house_bottle": [
+        177,
+        1746
+      ],
+      "house_flower": [
+        2430,
+        1653
+      ],
+      "house_cloud_1": [
+        105,
+        14
+      ],
+      "house_cloud_2": [
+        2287,
+        1330
+      ]
+    }
+  },
+  "cheesy": {
+    "description": "A very cheesy room.",
+    "interactables": [
+      "cheese_table",
+      "cheese_stairs",
+      "cheese_back_door"
+    ],
+    "items": [],
+    "hints": [
+      "cheese_dot",
+      "cheese_carpet"
+    ],
+    "imagePath": "/images/rooms/storymode/room2/Room2Background.png",
+    "imageThumbnail": "/images/rooms/storymode/room2/Room2Complete.png",
+    "positions": {
+      "house_door": [
+        131,
+        762
+      ],
+      "house_bottle": [
+        674,
+        432
+      ],
+      "house_flower": [
+        1015,
+        1085
+      ],
+      "house_cloud_1": [
+        1200,
+        1120
+      ],
+      "house_cloud_2": [
+        612,
+        1411
+      ]
+    }
+  },
+  "sac": {
+    "description": "A bloody room.",
+    "interactables": [
+      "sac_blood"
+    ],
+    "items": [
+      "sac_candle"
+    ],
+    "hints": [
+      "sac_window",
+      "sac_banner",
+      "sac_hand",
+      "sac_graffiti"
+    ],
+    "imagePath": "/images/rooms/storymode/room3/Room3Background.png",
+    "imageThumbnail": "/images/rooms/storymode/room3/Room3Complete.png",
+    "positions": {
+      "sac_window": [
+        1800,
+        358
+      ],
+      "sac_graffiti": [
+        48,
+        91
+      ],
+      "sac_banner": [
+        2451,
+        412
+      ],
+      "sac_blood": [
+        795,
+        1577
+      ],
+      "sac_handle": [
+        337,
+        1720
+      ],
+      "sac_hand": [
+        2101,
+        1026
+      ]
+    }
+  },
+  "living_room": {
+    "description": "A living room.",
+    "interactables": [
+      "living_books",
+      "living_white_cat",
+      "living_clock",
+      "living_portrait_1",
+      "living_portrait_2",
+      "living_computer"
+    ],
+    "items": [
+    ],
+    "hints": [
+      "living_black_cat",
+      "living_globe",
+      "living_portrait_3"
+    ],
+    "imagePath": "/images/rooms/livingroom/living_room_background.png",
+    "imageThumbnail": "/images/rooms/livingroom/living_room_complete.png",
+    "positions": {
+      "living_clock": [
+        596,
+        154
+      ],
+      "living_portrait_1": [
+        1030,
+        158
+      ],
+      "living_portrait_2": [
+        1268,
+        189
+      ],
+      "living_portrait_3": [
+        1264,
+        422
+      ],
+      "living_globe": [
+        1650,
+        166
+      ],
+      "living_books": [
+        1571,
+        427
+      ],
+      "living_black_cat": [
+        950,
+        575
+      ],
+      "living_white_cat": [
+        246,
+        1054
+      ],
+      "living_computer": [
+        223,
+        542
+      ]
+    }
+  },
+  "astrology": {
+    "description": "The astrology professor's office.",
+    "interactables": [
+      "astrology_box",
+      "astrology_door"
+    ],
+    "items": [
+      "astrology_star"
+    ],
+    "hints": [
+      "astrology_paper",
+      "astrology_calender",
+      "astrology_window"
+    ],
+    "imagePath": "/images/rooms/astrology/astrology_office.JPG",
+    "imageThumbnail": "/images/rooms/astrology/astrology_office_complete.jpeg",
+    "positions": {
+      "astrology_box": [
+        985,
+        1055
+      ],
+      "astrology_paper": [
+        1435,
+        1065
+      ],
+      "astrology_calender": [
+        2368,
+        196
+      ],
+      "astrology_door": [
+        2455,
+        700
+      ],
+      "astrology_window": [
+        810,
+        159
+      ],
+      "astrology_star": [
+        1200,
+        438
+      ]
     }
   }
 }

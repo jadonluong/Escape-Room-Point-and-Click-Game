@@ -1,16 +1,16 @@
 package application.game_registry;
 
-import domain.entities.Item.Item;
+import domain.entities.item.Item;
 
-/**
- * The registry for getting Item objects with their itemIDs.
- */
 public interface ItemRegistry {
 
+    Item getItemById(String id);
+
     /**
-     * Returns the Item object with the given ID.
-     * @param itemID the item ID
-     * @return the Item object with itemID
+     * Evaluates whether two items can be crafted together.
+     * Provides a default fallback so all implementing registries compile.
      */
-    Item getItemById(String itemID);
+    default String getRecipeResult(String nameA, String nameB) {
+        return null;
+    }
 }

@@ -1,6 +1,5 @@
 package domain.entities.user;
 
-import domain.entities.User.GuestUser;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

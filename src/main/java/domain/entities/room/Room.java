@@ -1,0 +1,34 @@
+package domain.entities.room;
+
+import domain.entities.hint.Hint;
+import domain.entities.interactable.Interactable;
+import domain.entities.item.Item;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Core domain interface representing a Room entity.
+ */
+public interface Room {
+    String getId();
+    String getDescription();
+
+    // Content management
+    List<Interactable> getInteractables();
+    void addInteractable(Interactable interactable);
+    void  removeInteractable(String interactableId);
+    Interactable getInteractableById(String id);
+
+    List<Item> getItems();
+    void addItem(Item item);
+    void removeItem(Item item);
+
+    List<Hint> getHints();
+    void setHint(Hint hint);
+
+    void setPosition(String Id, Position position);
+    String getImagePath();
+    void setPositions(Map<String,Position> positions);
+    Position getPosition(String Id);
+}

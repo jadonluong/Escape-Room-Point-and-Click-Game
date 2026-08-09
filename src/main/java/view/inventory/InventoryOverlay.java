@@ -1,5 +1,6 @@
 package view.inventory;
 
+import interface_adapter.inventory.CraftController;
 import interface_adapter.inventory.InventoryState;
 import interface_adapter.inventory.InventoryViewModel;
 import interface_adapter.inventory.SelectItemController;
@@ -11,7 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import view.ViewManager;
-import view.common.ModalOverlay;
+import view.common.AbstractModalOverlay;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -20,7 +21,7 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.ArrayList;
 
-public class InventoryOverlay extends ModalOverlay implements PropertyChangeListener {
+public class InventoryOverlay extends AbstractModalOverlay implements PropertyChangeListener {
 
     private final InventoryViewModel viewModel;
     private final ViewManager viewManager;
@@ -29,6 +30,7 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
     private final Button craftButton = new Button("Craft Selected");
     private final Button dropButton = new Button("Drop Selected");
     private SelectItemController selectItemController;
+    private CraftController craftController;
 
     public InventoryOverlay(ViewManager viewManager, InventoryViewModel viewModel) {
         super(() -> viewManager.hideOverlay("inventory"));
@@ -43,6 +45,10 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
 
     public void setSelectItemController(SelectItemController selectItemController) {
         this.selectItemController = selectItemController;
+    }
+
+    public void setCraftController(CraftController craftController) {
+        this.craftController = craftController;
     }
 
     public void show() {
@@ -137,6 +143,8 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
         scrollPane.setPrefHeight(110);
         scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
+        craftButton.setOnAction(e -> handleCraftClick());
+
         HBox actionBox = new HBox(10, craftButton, dropButton);
         actionBox.setAlignment(Pos.CENTER);
 
@@ -144,23 +152,86 @@ public class InventoryOverlay extends ModalOverlay implements PropertyChangeList
         return mainLayout;
     }
 
-    private void handleSlotClick(int index, String itemName) {
+    private void handleSlotClick(int slotIndex, String itemId) {
         InventoryState state = viewModel.getState();
-        if (state.getSelectedIndexA() == -1) {
-            state.setSelectedIndexA(index);
-        } else if (state.getSelectedIndexB() == -1 && index != state.getSelectedIndexA()) {
-            state.setSelectedIndexB(index);
+        int idxA = state.getSelectedIndexA();
+        int idxB = state.getSelectedIndexB();
+
+        // 1. Update selection index states
+        if (idxA == slotIndex) {
+            // Deselect Slot A; promote Slot B to Slot A if present
+            state.setSelectedIndexA(idxB);
+            state.setSelectedIndexB(-1);
+        } else if (idxB == slotIndex) {
+            // Deselect Slot B
+            state.setSelectedIndexB(-1);
+        } else if (idxA == -1) {
+            // Select first item as Slot A
+            state.setSelectedIndexA(slotIndex);
+        } else if (idxB == -1) {
+            // Select second item as Slot B
+            state.setSelectedIndexB(slotIndex);
         } else {
-            state.setSelectedIndexA(index);
+            // Replace selection with newly clicked item
+            state.setSelectedIndexA(slotIndex);
             state.setSelectedIndexB(-1);
         }
 
-        // 1. Save the selected item ID into live user session tracking!
-        if (selectItemController != null) {
-            selectItemController.execute(itemName);
+        // 2. Resolve the active item ID corresponding to the NEW SelectedIndexA
+        String activeItemId = null;
+        int newIdxA = state.getSelectedIndexA();
+
+        if (newIdxA != -1) {
+            List<String> items = state.getItems();
+            if (items != null && !items.isEmpty()) {
+                Map<String, Integer> itemCounts = new LinkedHashMap<>();
+                for (String item : items) {
+                    itemCounts.put(item, itemCounts.getOrDefault(item, 0) + 1);
+                }
+                List<String> uniqueItems = new ArrayList<>(itemCounts.keySet());
+
+                if (newIdxA < uniqueItems.size()) {
+                    String rawItem = uniqueItems.get(newIdxA);
+                    activeItemId = rawItem.contains(":") ? rawItem.split(":")[0] : rawItem;
+                }
+            }
         }
 
-        // 2. Refresh UI highlight state
+        // 3. Update active item in game world
+        if (selectItemController != null) {
+            selectItemController.execute(activeItemId);
+        }
+
         viewModel.firePropertyChanged();
+    }
+
+    private void handleCraftClick() {
+        InventoryState state = viewModel.getState();
+        int idxA = state.getSelectedIndexA();
+        int idxB = state.getSelectedIndexB();
+
+        if (idxA != -1 && idxB != -1 && craftController != null) {
+            List<String> items = state.getItems();
+            if (items != null) {
+                Map<String, Integer> itemCounts = new LinkedHashMap<>();
+                for (String item : items) {
+                    itemCounts.put(item, itemCounts.getOrDefault(item, 0) + 1);
+                }
+                List<String> uniqueItems = new ArrayList<>(itemCounts.keySet());
+
+                if (idxA < uniqueItems.size() && idxB < uniqueItems.size()) {
+                    String rawItemA = uniqueItems.get(idxA);
+                    String rawItemB = uniqueItems.get(idxB);
+
+                    String idA = rawItemA.contains(":") ? rawItemA.split(":")[0] : rawItemA;
+                    String idB = rawItemB.contains(":") ? rawItemB.split(":")[0] : rawItemB;
+
+                    craftController.execute(idA, idB);
+                }
+            }
+        } else {
+            state.setStatusMessage("Select two items to craft!");
+            viewModel.firePropertyChanged();
+        }
     }
 }

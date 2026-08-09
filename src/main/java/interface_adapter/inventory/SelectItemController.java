@@ -1,7 +1,7 @@
 package interface_adapter.inventory;
 
-import application.use_cases.Item.SelectItem.SelectItemInputBoundary;
-import application.use_cases.Item.SelectItem.SelectItemInputData;
+import application.use_cases.item.select_item.SelectItemInputBoundary;
+import application.use_cases.item.select_item.SelectItemInputData;
 
 public class SelectItemController {
     private final SelectItemInputBoundary selectItemInteractor;

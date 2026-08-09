@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CryptogramApiClient {
-    private static final String API_URL = "https://api.apiverve.com/v1/cryptogram?random=true";
+    private static final String API_BASE_URL = "https://api.apiverve.com/v1/cryptogram?";
     private final String apiKey;
     private final OkHttpClient client;
     private final Gson gson;
@@ -25,9 +25,18 @@ public class CryptogramApiClient {
         this.gson = new GsonBuilder().create();
     }
 
-    public CryptogramApiResponse generateCryptogram() throws IOException {
+    public CryptogramApiResponse generateCryptogram(String answer) throws IOException {
+        final String apiUrl;
+        if (answer == null) {
+            apiUrl = API_BASE_URL + "random=true";
+        }
+        else {
+            final String encodedAnswer = answer.replace(" ", "%20").trim();
+            apiUrl = API_BASE_URL + "text=" + encodedAnswer + "&random=false";
+        }
+
         Request request = new Request.Builder()
-                .url(API_URL)
+                .url(apiUrl)
                 .addHeader("x-api-key", apiKey)
                 .get()
                 .build();

@@ -6,5 +6,50 @@
     "successMessage": "You have obtained a spider!",
     "rewardItemId": "prison_item_2",
     "unlockedRoomId": null
+  },
+
+  "house_puzzle_1": {
+    "puzzleType": "Cryptogram",
+    "id": "house_puzzle_1",
+    "cipherKeyId": null,
+    "successMessage": "You now have permission to enter the house.",
+    "rewardItemId": null,
+    "unlockedRoomId": "cheesy"
+  },
+
+  "cheese_puzzle_1": {
+    "puzzleType": "Anagram",
+    "scrambled": "RED CHAD",
+    "answer": "CHEDDAR",
+    "successMessage": "You have conquered the cheese room! Enjoy the cheese!",
+    "rewardItemId": null,
+    "unlockedRoomId": "sac"
+  },
+
+  "sac_puzzle_1": {
+    "puzzleType": "Cryptogram",
+    "id": "sac_puzzle_1",
+    "cipherKeyId": null,
+    "successMessage": "Hurray! You have survived!",
+    "rewardItemId": null,
+    "unlockedRoomId": null
+  },
+
+  "living_puzzle_1": {
+    "puzzleType": "Anagram",
+    "scrambled": "TRIANGLE",
+    "answer": "INTEGRAL",
+    "successMessage": "Looks like you've mastered integrals! Good job!",
+    "rewardItemId": null,
+    "unlockedRoomId": null
+  },
+
+  "astrology_puzzle_1": {
+    "puzzleType": "Cryptogram",
+    "id": "astrology_puzzle_1",
+    "cipherKeyId": null,
+    "successMessage": "Time to continue our journey.",
+    "rewardItemId": "astrology_key",
+    "unlockedRoomId": null
   }
 }
