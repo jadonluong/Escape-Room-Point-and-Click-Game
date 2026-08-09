@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import view.ViewManager;
 import view.common.ModalOverlay;
 
@@ -41,16 +42,23 @@ public class InteractOverlay extends ModalOverlay implements ActionListener, Pro
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        // Nothing needs to be done.
+        InteractState state = interactViewModel.getState();
+        if (state.getSuccessMessage() != null) {
+            messageLabel.setText(state.getSuccessMessage());
+            messageLabel.setTextFill(Color.web("#80EF80"));
+        } else if (state.getErrorMessage() != null) {
+            messageLabel.setText(state.getErrorMessage());
+            messageLabel.setTextFill(Color.web("#E54C38"));
+        } else { // In case there's no successMessage or errorMessage.
+            this.onClose.run();
+        }
     }
 
     @Override
     protected VBox buildModalBox() {
-        InteractState interactState = interactViewModel.getState();
-
         VBox modalBox = new VBox(10);
         modalBox.setAlignment(Pos.CENTER);
-        modalBox.setPadding(new Insets(40, 40, 30, 40));
+        modalBox.setPadding(new Insets(40, 30, 30, 30));
         modalBox.setStyle(
                 "-fx-background-color: #2a2a2a; " +
                         "-fx-border-color: #ffffff; " +
@@ -62,14 +70,8 @@ public class InteractOverlay extends ModalOverlay implements ActionListener, Pro
         modalBox.setMaxSize(450, 450);
 
         // Message Label
-        if (interactState.getSuccessMessage() != null) { // Recall: exactly one of successMessage & errorMessage !null
-            messageLabel.setText(interactState.getSuccessMessage());
-            messageLabel.setTextFill(Color.web("#80EF80"));
-        } else {
-            messageLabel.setText(interactState.getErrorMessage());
-            messageLabel.setTextFill(Color.web("#E54C38"));
-        }
         messageLabel.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+        messageLabel.setTextAlignment(TextAlignment.CENTER);
         messageLabel.setWrapText(true);
         messageLabel.setAlignment(Pos.CENTER);
         // -------------

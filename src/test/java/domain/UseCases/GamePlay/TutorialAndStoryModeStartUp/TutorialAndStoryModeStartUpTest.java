@@ -1,10 +1,9 @@
 package domain.UseCases.GamePlay.TutorialAndStoryModeStartUp;
 
 import application.use_cases.GamePlay.ObjectsInfo;
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.StartUpDataAccessInterface;
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInputData;
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpInteractor;
-import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndStoryModeStartUpOutPutData;
+import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.*;
+import application.use_cases.GamePlay.UserDataAccessInterface;
+import domain.UseCases.GamePlay.ObjectsSetUp;
 import domain.entities.Hint.CommonHint;
 import domain.entities.Hint.Hint;
 import domain.entities.Interactable.CommonInteractable;
@@ -14,6 +13,9 @@ import domain.entities.Item.Item;
 import domain.entities.Room.CommonRoom;
 import domain.entities.Room.Position;
 import domain.entities.Room.Room;
+import domain.entities.User.CommonUserFactory;
+import domain.entities.User.CommonUserFactoryClass;
+import domain.entities.User.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,6 +30,7 @@ class TutorialAndStoryModeStartUpTest {
 
     private TestPresenter testPresenter;
     private TestDataAccess testDataAccess;
+    private TestUserDataAccess testUserDataAccess;
     private TutorialAndStoryModeStartUpInteractor interactor;
 
     private Room tutorialRoom;
@@ -59,42 +62,41 @@ class TutorialAndStoryModeStartUpTest {
         }
     }
 
+    private static class TestUserDataAccess implements UserDataAccessInterface {
+        private User currentUser;
+
+        public void setCurrentUser(User currentUser) {
+            this.currentUser = currentUser;
+        }
+
+        @Override
+        public User getCurrentUser(){
+            return currentUser;
+        }
+    }
+
     @BeforeEach
     void setUp() {
+        CommonUserFactory factory = new CommonUserFactoryClass();
+        String username = "test_user";
+        String password = "secure_password";
+
+        User user = factory.createCommonUser(username, password);
         testPresenter = new TestPresenter();
         testDataAccess = new TestDataAccess();
-        interactor = new TutorialAndStoryModeStartUpInteractor(testPresenter, testDataAccess);
+        testUserDataAccess =  new TestUserDataAccess();
+        interactor = new TutorialAndStoryModeStartUpInteractor(testPresenter, testDataAccess, testUserDataAccess);
+        testUserDataAccess.setCurrentUser(user);
 
         // Setup Tutorial Room Entities
-        Interactable tutDoor = new CommonInteractable(
-                "tut_door", "Door", "Desc", "/img/door.png",
-                "Open Door", "Desc", "/img/opendoor.png",
-                false, false, false, "", "", "", "", ""
-        );
-        Item tutKey = new CommonItem("tut_key", "/img/key.png", "A key", true, "/img/key.png");
-
-        List<String> hintMsgs = new ArrayList<>();
-        hintMsgs.add("Look around");
-        Hint tutHint = new CommonHint("tut_hint", "/img/hint.png", hintMsgs);
-
-        Position pos1 = new Position(10.0, 10.0);
-        Position pos2 = new Position(20.0, 20.0);
-        Position pos3 = new Position(30.0, 30.0);
-
-        Map<String, Position> tutPositions = new HashMap<>();
-        tutPositions.put(tutDoor.getId(), pos1);
-        tutPositions.put(tutKey.getId(), pos2);
-        tutPositions.put(tutHint.getObjectID(), pos3);
-
-        List<Interactable> tutInteractables = new ArrayList<>();
-        tutInteractables.add(tutDoor);
-        List<Item> tutItems = new ArrayList<>();
-        tutItems.add(tutKey);
-        List<Hint> tutHints = new ArrayList<>();
-        tutHints.add(tutHint);
+        ObjectsSetUp objectsSetUp = new ObjectsSetUp();
+        List<Hint> hints = objectsSetUp.hintSetUp();
+        List<Item> items = objectsSetUp.itemSetUp();
+        List<Interactable> interactables = objectsSetUp.interactableSetUp();
+        Map<String, Position> positions = objectsSetUp.positionSetUp();
 
         tutorialRoom = new CommonRoom("tut_room", "Tutorial Room", "/img/room.png",
-                tutInteractables, tutItems, tutHints, tutPositions);
+                interactables, items, hints, positions);
 
         // Setup Story Room Entities
         Interactable storyChest = new CommonInteractable(
@@ -129,18 +131,18 @@ class TutorialAndStoryModeStartUpTest {
         assertNotNull(outputData);
         assertEquals(3, outputData.getObjectToDisplay().size());
 
-        ObjectsInfo doorInfo = outputData.getObjectToDisplay().get("tut_door");
+        ObjectsInfo doorInfo = outputData.getObjectToDisplay().get("door1");
         assertNotNull(doorInfo);
-        assertEquals("/img/door.png", doorInfo.imgPath());
-        assertEquals(new Position(10.0, 10.0), doorInfo.position());
+        assertEquals("/images/ui/buttons/QuickButton.png", doorInfo.imgPath());
+        assertEquals(new Position(10.0, 20.0), doorInfo.position());
 
-        ObjectsInfo keyInfo = outputData.getObjectToDisplay().get("tut_key");
+        ObjectsInfo keyInfo = outputData.getObjectToDisplay().get("key1");
         assertNotNull(keyInfo);
-        assertEquals("/img/key.png", keyInfo.imgPath());
+        assertEquals("/images/ui/buttons/QuickButton.png", keyInfo.imgPath());
 
-        ObjectsInfo hintInfo = outputData.getObjectToDisplay().get("tut_hint");
+        ObjectsInfo hintInfo = outputData.getObjectToDisplay().get("hint1");
         assertNotNull(hintInfo);
-        assertEquals("/img/hint.png", hintInfo.imgPath());
+        assertEquals("/images/ui/buttons/QuickButton.png", hintInfo.imgPath());
     }
 
     @Test
@@ -163,11 +165,12 @@ class TutorialAndStoryModeStartUpTest {
 
     @Test
     void testInvalidModeCallsPrepareFailView() {
-        TutorialAndStoryModeStartUpInputData inputData = new TutorialAndStoryModeStartUpInputData("INVALID_MODE");
+        String mode  = "INVALID_MODE";
+        TutorialAndStoryModeStartUpInputData inputData = new TutorialAndStoryModeStartUpInputData(mode);
 
         interactor.execute(inputData);
 
         assertNull(testPresenter.getSuccessData());
-        assertEquals("Invalid mode selected.", testPresenter.getErrorMessage());
+        assertEquals("Invalid mode selected: " + mode, testPresenter.getErrorMessage());
     }
 }

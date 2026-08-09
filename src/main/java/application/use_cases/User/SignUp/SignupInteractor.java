@@ -27,12 +27,18 @@ public class SignupInteractor implements SignUpInputBoundary{
 
         System.out.println("Signup called with: " + signupInputData.getUsername());
 
-        if (signupInputData.getUsername().isEmpty()) {
+        if (signupInputData.getUsername() == null ||
+                signupInputData.getUsername().isEmpty() ||
+                signupInputData.getUsername().isBlank()) {
+
             System.out.println("EMPTY USERNAME");
             userPresenter.prepareFailView("Username cannot be empty.");
         }
 
-        else if (signupInputData.getPassword().isEmpty()) {
+        else if (signupInputData.getPassword() == null ||
+                signupInputData.getPassword().isEmpty() ||
+                signupInputData.getPassword().isBlank()) {
+
             System.out.println("EMPTY PASSWORD");
             userPresenter.prepareFailView("Password cannot be empty.");
         }

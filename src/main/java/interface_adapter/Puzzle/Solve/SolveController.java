@@ -10,8 +10,8 @@ public class SolveController {
         this.solveInputBoundary = solveInputBoundary;
     }
 
-    public void solve(String puzzleId, String playerAnswer) {
-        final SolveInputData inputData = new SolveInputData(puzzleId, playerAnswer);
+    public void solve(String puzzleId, String playerAnswer, String interactableId) {
+        final SolveInputData inputData = new SolveInputData(puzzleId, playerAnswer, interactableId);
         solveInputBoundary.solve(inputData);
     }
 }

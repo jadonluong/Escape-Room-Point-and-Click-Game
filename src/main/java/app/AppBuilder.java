@@ -9,6 +9,7 @@ import application.use_cases.GamePlay.TutorialAndStoryModeStartUp.TutorialAndSto
 import application.use_cases.Hint.GetHint.GetHintInteractor;
 import application.use_cases.Interactable.Interact.InteractInteractor;
 import application.use_cases.Interactable.Zoom.ZoomInteractor;
+import application.use_cases.User.LiveUserSessionTracking;
 import application.use_cases.Puzzle.EnterExit.EnterExitInteractor;
 import application.use_cases.Puzzle.Solve.SolveInteractor;
 import application.use_cases.User.Login.LoginInteractor;
@@ -17,9 +18,11 @@ import application.use_cases.User.SaveAndLogout.SaveAndLogoutInteractor;
 import application.use_cases.User.SaveProgress.SaveProgressInteractor;
 import application.use_cases.User.SignUp.ProfanityCheck;
 import application.use_cases.User.SignUp.SignupInteractor;
-import application.use_cases.Item.PickUp.PickUpInteractor; // added
+import application.use_cases.Item.PickUp.PickUpInteractor;
+import application.use_cases.Item.SelectItem.SelectItemInteractor;
 import data_access.GameAssetManager;
 import data_access.JsonUserDataAccessObject;
+import data_access.PuzzleGenerator;
 import domain.entities.Hint.CommonHintFactory;
 import domain.entities.Hint.HintFactory;
 import domain.entities.Interactable.CommonInteractableFactory;
@@ -27,12 +30,12 @@ import domain.entities.Interactable.InteractableFactory;
 import domain.entities.Item.CommonItemFactory;
 import domain.entities.Item.ItemFactory;
 import domain.entities.Puzzle.CommonPuzzleFactory;
-import domain.entities.Puzzle.Puzzle;
 import domain.entities.Puzzle.PuzzleFactory;
 import domain.entities.Room.CommonRoomFactory;
 import domain.entities.Room.RoomFactory;
-import domain.entities.User.CommonUserFactory;
-import domain.entities.User.CommonUserFactoryClass;
+import domain.entities.User.*;
+import infrastructure.AnagramApiClient;
+import infrastructure.CryptogramApiClient;
 import interface_adapter.Audio.*;
 import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
 import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsController;
@@ -52,6 +55,8 @@ import interface_adapter.Interactable.Interact.InteractViewModel;
 import interface_adapter.Interactable.Zoom.ZoomController;
 import interface_adapter.Interactable.Zoom.ZoomPresenter;
 import interface_adapter.Interactable.Zoom.ZoomViewModel;
+import interface_adapter.inventory.SelectItemController;
+import interface_adapter.inventory.SelectItemPresenter;
 import interface_adapter.Puzzle.EnterExit.EnterExitController;
 import interface_adapter.Puzzle.EnterExit.EnterExitPresenter;
 import interface_adapter.Puzzle.EnterExit.EnterExitViewModel;
@@ -74,7 +79,6 @@ import interface_adapter.User.Signup.SignupViewModel;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.inventory.InventoryViewModel; // added
 import interface_adapter.inventory.InventoryPresenter; // added
-import interface_adapter.inventory.InventoryState; // added
 import javafx.application.Application;
 import javafx.stage.Stage;
 import view.Game.BrowseRoomsView;
@@ -84,7 +88,6 @@ import view.Hint.HintOverlay;
 import view.ViewManager;
 import view.common.AudioControlView;
 import view.common.OverlayFactory;
-import view.common.PlaceholderView;
 import view.common.SoundPlayer;
 import view.interactable.InteractOverlay;
 import view.interactable.ZoomView;
@@ -110,10 +113,20 @@ public class AppBuilder extends Application {
         HintFactory hintFactory = new CommonHintFactory();
         PuzzleFactory puzzleFactory = new CommonPuzzleFactory();
 
+        // --- Puzzle Generator chain ---
+        AnagramApiClient anagramApiClient = new AnagramApiClient("apv_7700ad64-d8be-4591-8f67-607ed21edcce");
+        CryptogramApiClient cryptogramApiClient = new CryptogramApiClient(
+                "apv_7700ad64-d8be-4591-8f67-607ed21edcce");
+        PuzzleGenerator puzzleGenerator = new PuzzleGenerator(anagramApiClient, cryptogramApiClient, puzzleFactory);
+
         GameAssetManager gameAssetManager = new GameAssetManager(itemFactory, interactableFactory, roomFactory, hintFactory, puzzleFactory);
 
         JsonUserDataAccessObject userDAO = new JsonUserDataAccessObject(gameAssetManager,gameAssetManager);
+        LiveUserSessionTracking userSessionTracking = new LiveUserSessionTracking();
         CommonUserFactory userFactory = new CommonUserFactoryClass();
+        GuestUserFactory guestUserFactory = new GuestUserFactoryClass();
+        User defaultGuestUser = guestUserFactory.createGuestUser();
+        userSessionTracking.setCurrentUser(defaultGuestUser);
 
         // --- Audio chain (built before ViewManager, which needs the sfx state) ---
         AudioViewModel audioViewModel = new AudioViewModel();
@@ -134,7 +147,7 @@ public class AppBuilder extends Application {
         LoginViewModel loginViewModel = new LoginViewModel();
         LoggedInViewModel  loggedInViewModel = new LoggedInViewModel();
         LoginPresenter loginPresenter = new LoginPresenter(loginViewModel, loggedInViewModel);
-        LoginInteractor loginInteractor = new LoginInteractor(userDAO, loginPresenter);
+        LoginInteractor loginInteractor = new LoginInteractor(userDAO, userSessionTracking, loginPresenter);
         LoginController loginController = new LoginController(loginInteractor);
 
 
@@ -145,13 +158,13 @@ public class AppBuilder extends Application {
 
             // --- Save progress chain ---
             SaveProgressPresenter saveProgressPresenter = new SaveProgressPresenter(saveProgressViewModel);
-            SaveProgressInteractor saveProgressInteractor = new SaveProgressInteractor(saveProgressPresenter, userDAO);
+            SaveProgressInteractor saveProgressInteractor = new SaveProgressInteractor(saveProgressPresenter, userDAO, userSessionTracking);
             SaveProgressController saveProgressController = new SaveProgressController(saveProgressInteractor);
 
         LogoutPresenter logoutPresenter = new LogoutPresenter(viewManagerModel, mainMenuViewModel, loggedInViewModel, saveProgressViewModel);
-        LogoutInteractor logoutInteractor = new LogoutInteractor(userDAO, logoutPresenter);
+        LogoutInteractor logoutInteractor = new LogoutInteractor(userSessionTracking, logoutPresenter);
 
-        SaveAndLogoutInteractor saveAndLogoutInteractor = new SaveAndLogoutInteractor(userDAO, userDAO, logoutPresenter); // Note: save & logout chain uses logout controller
+        SaveAndLogoutInteractor saveAndLogoutInteractor = new SaveAndLogoutInteractor(userDAO, userSessionTracking, logoutPresenter); // Note: save & logout chain uses logout controller
 
         LogoutController logoutController = new LogoutController(logoutInteractor, saveAndLogoutInteractor);
 
@@ -171,7 +184,7 @@ public class AppBuilder extends Application {
         // --- Get hint chain ---
         GetHintViewModel getHintViewModel = new GetHintViewModel();
         GetHintPresenter getHintPresenter = new GetHintPresenter(getHintViewModel, viewManager);
-        GetHintInteractor getHintInteractor = new GetHintInteractor(getHintPresenter, gameAssetManager, userDAO);
+        GetHintInteractor getHintInteractor = new GetHintInteractor(getHintPresenter, gameAssetManager, userSessionTracking);
         GetHintController getHintController = new GetHintController(getHintInteractor);
 
         // --- Get hint overlay ---
@@ -186,7 +199,7 @@ public class AppBuilder extends Application {
         TutorialAndStoryModeStartUpPresenter tutorialAndStoryModeStartUpPresenter
                 = new TutorialAndStoryModeStartUpPresenter(inGameViewModel, viewManagerModel);
         TutorialAndStoryModeStartUpInteractor tutorialAndStoryModeStartUpInteractor
-                = new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter, gameAssetManager);
+                = new TutorialAndStoryModeStartUpInteractor(tutorialAndStoryModeStartUpPresenter, gameAssetManager, userSessionTracking);
         TutorialAndStoryModeStartUpController tutorialAndStoryModeStartUpController
                 = new TutorialAndStoryModeStartUpController(tutorialAndStoryModeStartUpInteractor);
 
@@ -200,24 +213,34 @@ public class AppBuilder extends Application {
         QuickModeStartUpPresenter quickModeStartUpPresenter
                 = new QuickModeStartUpPresenter(inGameViewModel, viewManagerModel);
         QuickModeStartUpInteractor quickModeStartUpInteractor
-                = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager);
+                = new QuickModeStartUpInteractor(quickModeStartUpPresenter, gameAssetManager, userSessionTracking);
         QuickModeStartUpController quickModeStartUpController
                 = new QuickModeStartUpController(quickModeStartUpInteractor);
 
         // --- Items & Inventory Chain ---
         InventoryViewModel inventoryViewModel = new InventoryViewModel();
-        InventoryPresenter inventoryPresenter = new InventoryPresenter(inventoryViewModel);
-        PickUpInteractor pickUpInteractor = new PickUpInteractor(userDAO, inventoryPresenter);
-        OverlayFactory inventoryOverlayFactory = onClose -> new InventoryOverlay(
-                onClose,
-                inventoryViewModel
-        );
+        InventoryPresenter inventoryPresenter = new InventoryPresenter(inventoryViewModel, inGameViewModel);
+        PickUpInteractor pickUpInteractor = new PickUpInteractor(userSessionTracking, inventoryPresenter);
+
+        // --- Select Item Chain ---
+        SelectItemPresenter selectItemPresenter = new SelectItemPresenter();
+        SelectItemInteractor selectItemInteractor = new SelectItemInteractor(userSessionTracking, selectItemPresenter);
+        SelectItemController selectItemController = new SelectItemController(selectItemInteractor);
 
         // --- Main menu ---
         MainMenuView mainMenu = new MainMenuView(
                 viewManagerModel, mainMenuViewModel, loggedInViewModel,
                 loginOverlayFactory, signupOverlayFactory,
-                () -> logoutController.executeLogoutWithoutSave(loggedInViewModel.getState().getUsername()),
+                () -> {
+                    if (loggedInViewModel.getState().isLoggedIn()) {
+                        logoutController.executeLogoutWithoutSave(loggedInViewModel.getState().getUsername());
+                    }
+                    else {
+                        // Guest was never logged in — just navigate home, no logout flow, no message.
+                        viewManagerModel.setState("main menu");
+                        viewManagerModel.firePropertyChanged();
+                    }
+                },
                 audioControlView,
                 tutorialAndStoryModeStartUpController,
                 browseRoomsController);
@@ -228,42 +251,6 @@ public class AppBuilder extends Application {
         BrowseRoomsView browseRoomsView = new BrowseRoomsView(viewManager,
                 mainMenu, browseRoomsViewModel,  quickModeStartUpController);
 
-        // --- Game menu overlay ---
-        OverlayFactory gameMenuOverlayFactory = onClose -> new GameMenuView(
-                onClose,
-                loggedInViewModel,
-                sfxController,
-                musicController,
-                audioViewModel,
-
-                // --- On save ---
-                () -> {
-                    if (userDAO.getCurrentUser() != null) {
-                        String username = loggedInViewModel.getState().getUsername();
-                        saveProgressController.execute(username);
-                    }
-                },
-
-                // --- On save & quit ---
-                () -> {
-                    if (userDAO.getCurrentUser() != null) {
-                        String username = loggedInViewModel.getState().getUsername();
-                        logoutController.executeLogoutWithSave(username);
-                    }
-                },
-
-                // --- On quit ---
-                () -> {
-                    String username = loggedInViewModel.getState().getUsername();
-                    logoutController.executeLogoutWithoutSave(username);
-                }
-        );
-
-        // --- Placeholder screens ---
-        PlaceholderView storyPlaceholder = new PlaceholderView("Story Line", viewManagerModel);
-        PlaceholderView tutorialPlaceholder = new PlaceholderView("Tutorial", viewManagerModel);
-        PlaceholderView quickGamePlaceholder = new PlaceholderView("Quick Game", viewManagerModel);
-
         // --- Interactable Zoom Chain ---
         ZoomViewModel zoomViewModel = new ZoomViewModel();
         ZoomPresenter zoomPresenter = new ZoomPresenter(zoomViewModel, viewManagerModel);
@@ -272,8 +259,10 @@ public class AppBuilder extends Application {
 
         // --- Interactable Interact Chain ---
         InteractViewModel interactViewModel = new InteractViewModel();
-        InteractPresenter interactPresenter = new InteractPresenter(interactViewModel, viewManagerModel, viewManager);
-        InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter, userDAO);
+        InteractPresenter interactPresenter = new InteractPresenter(interactViewModel, inventoryViewModel,
+                zoomInteractor, viewManagerModel, viewManager);
+        InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter,
+                userSessionTracking);
         InteractController interactController = new InteractController(interactInteractor);
 
         // --- Puzzle EnterExit Chain ---
@@ -281,24 +270,61 @@ public class AppBuilder extends Application {
         EnterExitPresenter enterExitPresenter = new EnterExitPresenter(enterExitViewModel, interactViewModel,
                 viewManagerModel, viewManager);
         EnterExitInteractor enterExitInteractor = new EnterExitInteractor(gameAssetManager, enterExitPresenter,
-                userDAO);
+                userSessionTracking);
         EnterExitController enterExitController = new EnterExitController(enterExitInteractor);
 
         // --- Puzzle Solve Chain ---
-        SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, viewManagerModel, viewManager);
-        SolveInteractor solveInteractor = new SolveInteractor(gameAssetManager, solvePresenter, userDAO);
+        SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, inventoryViewModel, zoomInteractor,
+                viewManagerModel, viewManager);
+        SolveInteractor solveInteractor = new SolveInteractor(gameAssetManager, solvePresenter, userSessionTracking);
         SolveController solveController = new SolveController(solveInteractor);
 
         // --- Interactable and Puzzle Views ---
         ZoomView zoomView = new ZoomView(zoomController, zoomViewModel, interactController, enterExitController);
         InteractOverlay interactOverlay = new InteractOverlay(interactViewModel, viewManager);
-        PuzzleView puzzleView = new PuzzleView(enterExitViewModel);
+        PuzzleView puzzleView = new PuzzleView(enterExitViewModel, enterExitController, solveController);
 
         // --- Action triggering ---
-        ActionTriggerInteractor actionTriggerInteractor = new ActionTriggerInteractor(zoomInteractor, pickUpInteractor, getHintInteractor, userDAO);
+        ActionTriggerInteractor actionTriggerInteractor = new ActionTriggerInteractor(zoomInteractor, pickUpInteractor, getHintInteractor, userSessionTracking, gameAssetManager);
         ActionTriggerController actionTriggerController = new ActionTriggerController(actionTriggerInteractor);
+
         // --- In-game ---
-        InGameView inGameView = new InGameView(inGameViewModel, actionTriggerController);
+
+        // Create game menu view
+        GameMenuView gameMenuView =
+                new GameMenuView(viewManager,
+                loggedInViewModel,
+                sfxController,
+                musicController,
+                audioViewModel,
+                        () -> {
+                            if (userSessionTracking.getCurrentUser() != null) {
+                                String username = loggedInViewModel.getState().getUsername();
+                                saveProgressController.execute(username);
+                            }
+                        },
+
+                        // --- On save & quit ---
+                        () -> {
+                            if (userSessionTracking.getCurrentUser() != null) {
+                                String username = loggedInViewModel.getState().getUsername();
+                                logoutController.executeLogoutWithSave(username);
+                            }
+                        },
+
+                        // --- On quit ---
+                        () -> {
+                            if (loggedInViewModel.getState().isLoggedIn()) {
+                                logoutController.executeLogoutWithoutSave(loggedInViewModel.getState().getUsername());
+                            } else {
+                                viewManagerModel.setState("main menu");
+                                viewManagerModel.firePropertyChanged();
+                            }
+                        }
+                );
+        InventoryOverlay inventoryOverlay = new InventoryOverlay(viewManager, inventoryViewModel);
+        inventoryOverlay.setSelectItemController(selectItemController);
+        InGameView inGameView = new InGameView(inGameViewModel, gameMenuView, inventoryOverlay, actionTriggerController);
 
         // --- Register every top-level screen by name ---
         viewManager.registerView("main menu", mainMenu);
@@ -310,6 +336,11 @@ public class AppBuilder extends Application {
         viewManager.registerOverlay("Interact", interactOverlay);
         viewManager.registerView("Puzzle", puzzleView);
         viewManager.registerOverlay("get hint", hintOverlay, true);
+
+        // --- Register In-game menu ---
+        viewManager.registerOverlay("in-game menu" ,gameMenuView);
+
+        viewManager.registerOverlay("inventory", inventoryOverlay);
 
         // --- Trigger the first screen ---
         viewManagerModel.firePropertyChanged();

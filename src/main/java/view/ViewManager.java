@@ -1,5 +1,6 @@
 package view;
 
+import interface_adapter.ViewManagerInterface;
 import interface_adapter.ViewManagerModel;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class ViewManager implements PropertyChangeListener {
+public class ViewManager implements PropertyChangeListener, ViewManagerInterface{
     private static final double INITIAL_WIDTH = 1280;
     private static final double INITIAL_HEIGHT = 720;
 
@@ -78,7 +79,7 @@ public class ViewManager implements PropertyChangeListener {
             return;
         }
 
-        hideAllNonTopLayerOverlays();
+        hideAllOverlays(); // was hideAllNonTopLayerOverlays() — every overlay is orphaned by a root swap regardless of layer, so bookkeeping needs to match
         this.currentView = view;
         this.currentViewName = viewName;
 
@@ -185,6 +186,13 @@ public class ViewManager implements PropertyChangeListener {
                 continue;
             }
             hideOverlay(overlayName); // Removes the overlay from visibleOverlays, so iterate over a copy!
+        }
+    }
+
+    private void hideAllOverlays() {
+        Set<String> visibleCopy = new HashSet<>(visibleOverlays);
+        for (String overlayName : visibleCopy) {
+            hideOverlay(overlayName);
         }
     }
 

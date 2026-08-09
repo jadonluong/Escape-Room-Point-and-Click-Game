@@ -1,24 +1,38 @@
 package application.use_cases.GamePlay.QuickPlay.QuickModeStartUp;
 
 import application.use_cases.GamePlay.ObjectsInfo;
+import application.use_cases.GamePlay.UserDataAccessInterface;
 import domain.entities.Room.Room;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import application.game_registry.RoomRegistry;
+import domain.entities.User.User;
 
 public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary {
     private final QuickModeStartUpOutputBoundary presenter;
     private final RoomRegistry dataAccess;
+    private final UserDataAccessInterface quickModeStartUpDataAccess;
 
-    public QuickModeStartUpInteractor(QuickModeStartUpOutputBoundary presenter, RoomRegistry dataAccess) {
+    public QuickModeStartUpInteractor(QuickModeStartUpOutputBoundary presenter,
+                                      RoomRegistry dataAccess,
+                                      UserDataAccessInterface quickModeStartUpDataAccess ) {
         this.presenter = presenter;
         this.dataAccess = dataAccess;
+        this.quickModeStartUpDataAccess = quickModeStartUpDataAccess;
     }
 
     @Override
     public void execute(QuickModeStartUpInputData inputData) {
+            User currentUser = quickModeStartUpDataAccess.getCurrentUser();
+
+            if (currentUser == null) {
+                presenter.prepareFailView("No user selected");
+                return;
+            }
+
+            currentUser.setActiveGameMode("QuickMode");
 
             String roomId = inputData.getTargetRoom();
 
@@ -27,12 +41,17 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
                 return;
             }
 
+            currentUser.saveCurrentRoomID(roomId);
+
             Room targetRoom = dataAccess.getRoomById(roomId);
 
             if (targetRoom == null) {
                 presenter.prepareFailView("Could not load room with ID: " + roomId);
                 return;
             }
+
+            currentUser.unlockRoom(targetRoom);
+            currentUser.switchRoom(targetRoom);
 
             Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
 
@@ -48,10 +67,12 @@ public class QuickModeStartUpInteractor implements QuickModeStartUpInputBoundary
 
             // Put Items
             targetRoom.getItems().forEach(item -> {
-                objectsToDisplay.put(item.getId(),
-                        new ObjectsInfo(item.getImagePath(),
-                                targetRoom.getPosition(item.getId())
-                                ,"Item"));
+                if (!currentUser.hasItemID(item.getId())) {
+                    objectsToDisplay.put(item.getId(),
+                            new ObjectsInfo(item.getImagePath(),
+                                    targetRoom.getPosition(item.getId())
+                                    , "Item"));
+                }
             });
 
             // Put Hints

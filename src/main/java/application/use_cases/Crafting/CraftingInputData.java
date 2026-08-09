@@ -11,11 +11,6 @@ public class CraftingInputData {
         this.itemB = itemB;
     }
 
-    public Item getItemA() {
-        return this.itemA;
-    }
-
-    public Item getItemB() {
-        return this.itemB;
-    }
+    public Item getItemA() { return itemA; }
+    public Item getItemB() { return itemB; }
 }

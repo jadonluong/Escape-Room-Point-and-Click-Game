@@ -1,13 +1,13 @@
 package view.Game;
 
 import interface_adapter.GamePlay.ActionTrigger.ActionTriggerController;
-import interface_adapter.GamePlay.BrowseRooms.BrowseRoomsState;
 import interface_adapter.GamePlay.InGameState;
 import interface_adapter.GamePlay.InGameViewModel;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import view.inventory.InventoryOverlay;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -15,6 +15,8 @@ import java.beans.PropertyChangeListener;
 public class InGameView extends StackPane implements PropertyChangeListener {
 
     private final InGameViewModel viewModel;
+    private final GameMenuView gameMenuView;
+    private final InventoryOverlay inventoryOverlay;
 
     // Different layers
     private final Pane backgroundPane = new Pane();
@@ -27,9 +29,14 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
     private String imgPath;
 
-    public InGameView(InGameViewModel viewModel, ActionTriggerController actionTriggerController) {
+    public InGameView(InGameViewModel viewModel,
+                      GameMenuView gameMenuView,
+                      InventoryOverlay inventoryOverlay,
+                      ActionTriggerController actionTriggerController) {
 
         this.viewModel = viewModel;
+        this.gameMenuView = gameMenuView;
+        this.inventoryOverlay = inventoryOverlay;
         this.imgPath = "/images/items/prison/spider1.png";
 
         upDateBackgroundPane(imgPath);
@@ -48,11 +55,58 @@ public class InGameView extends StackPane implements PropertyChangeListener {
 
         viewModel.addPropertyChangeListener(this);
 
-        getChildren().add(backgroundPane);
         setAlignment(javafx.geometry.Pos.CENTER);
 
         widthProperty().addListener((o, ov, nv) -> rescale());
         heightProperty().addListener((o, ov, nv) -> rescale());
+
+        // Allow this view to receive keyboard input
+        setFocusTraversable(true);
+
+        // Request focus when this view is added to the scene
+        sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                requestFocus();
+            }
+        });
+
+        // Add the Menu, but set it invisible at start.
+
+
+
+        // Listen for ESC/ENTER
+        this.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                System.out.println("ESC pressed!");
+                if (gameMenuView.isVisible()) {
+                    gameMenuView.hide();
+                } else {
+                    gameMenuView.show();
+                }
+                event.consume();
+            } else if (event.getCode() == KeyCode.ENTER) {
+                System.out.println("'ENTER' key pressed! Toggling inventory...");
+                if (inventoryOverlay.isVisible()) {
+                    inventoryOverlay.hide();
+                } else {
+                    inventoryOverlay.show();
+                }
+                event.consume();
+            }
+        });
+        getChildren().addAll(backgroundPane);
+    }
+
+
+
+
+    public void upDateBackgroundPane(String imgPath) {
+        backgroundPane.getChildren().clear();
+        ImageView bg = new ImageView(imgPath);
+        bg.setFitWidth(DESIGN_WIDTH);
+        bg.setFitHeight(DESIGN_HEIGHT);
+        backgroundPane.getChildren().add(bg);
+        backgroundPane.getChildren().add(gamePane);
     }
 
     private void rescale() {
@@ -71,15 +125,6 @@ public class InGameView extends StackPane implements PropertyChangeListener {
         }
 
 
-    }
-
-    public void upDateBackgroundPane(String imgPath) {
-        backgroundPane.getChildren().clear();
-        ImageView bg = new ImageView(imgPath);
-        bg.setFitWidth(DESIGN_WIDTH);
-        bg.setFitHeight(DESIGN_HEIGHT);
-        backgroundPane.getChildren().add(bg);
-        backgroundPane.getChildren().add(gamePane);
     }
 
 

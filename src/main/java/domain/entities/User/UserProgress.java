@@ -33,6 +33,12 @@ public interface UserProgress {
     String getCurrentRoomID();
 
     /**
+     * Returns the ID of the room the user last entered in story mode.
+     * @return the ID of the room the user last entered in story mode.
+     */
+    String getStoryModeCurrentRoomID();
+
+    /**
      * Switches the user to another room. This is called after the user unlocks a room
      * @param room the room the user is entering
      */

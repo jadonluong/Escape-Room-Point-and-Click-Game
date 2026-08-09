@@ -106,8 +106,8 @@ public class MainMenuView extends StackPane implements PropertyChangeListener {
         loginButton = makeButton("/images/ui/buttons/LoginButton.png", 715, 272, 2093, 340, this::onLogin);
         logoutButton = makeButton("/images/ui/buttons/LogoutButton.png", 715, 235, 2093, 130, this.onLogout);
 
-        audioControlView.setLayoutX(2280);
-        audioControlView.setLayoutY(1850);
+        audioControlView.setLayoutX(1550);
+        audioControlView.setLayoutY(1800);
 
         fixedRoot.getChildren().addAll(
                 statusLabel, usernameLabel,
