@@ -78,19 +78,19 @@
   },
 
   "astrology_paper": {
-    "imagePath": "/images/items/astrology/paper.PNG",
+    "imagePath": "/images/items/astrology/paper_2.png",
     "hintMessages": ["Title: Beyond the Myth: Fate and Constellations",
       "Zodiac signs are widely believe to shape our core personality traits.",
       "Most common zodiac signs: Virgo: August 23–September 22; Cancer: June 21–July 22; Leo: July 23–August 22"]
   },
 
   "astrology_calender": {
-    "imagePath": "/images/items/astrology/calendar.PNG",
+    "imagePath": "/images/items/astrology/calendar_2.png",
     "hintMessages": ["Take a closer look at the date."]
   },
 
   "astrology_window": {
-    "imagePath": "/images/items/astrology/window.PNG",
+    "imagePath": "/images/items/astrology/window_2.png",
     "hintMessages": ["How boring the night will be without stars!"]
   }
 }
