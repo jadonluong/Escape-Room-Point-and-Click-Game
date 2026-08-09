@@ -3,20 +3,15 @@ package application.use_cases.crafting;
 /**
  * Output data containing the result of a crafting operation.
  */
-public class CraftingOutputData {
-    private final String craftedItemName;
-    private final boolean isSuccess;
-
+public record CraftingOutputData(String craftedItemName, boolean isSuccess) {
     /**
      * Creates crafting output data with the result of a crafting operation.
      *
      * @param craftedItemName the name of the crafted item
-     * @param isSuccess {@code true} if the crafting operation was successful;
-     *                  {@code false} otherwise
+     * @param isSuccess       {@code true} if the crafting operation was successful;
+     *                        {@code false} otherwise
      */
-    public CraftingOutputData(String craftedItemName, boolean isSuccess) {
-        this.craftedItemName = craftedItemName;
-        this.isSuccess = isSuccess;
+    public CraftingOutputData {
     }
 
     /**
@@ -24,7 +19,8 @@ public class CraftingOutputData {
      *
      * @return the crafted item name
      */
-    public String getCraftedItemName() {
+    @Override
+    public String craftedItemName() {
         return this.craftedItemName;
     }
 
@@ -33,6 +29,7 @@ public class CraftingOutputData {
      *
      * @return {@code true} if crafting was successful; {@code false} otherwise
      */
+    @Override
     public boolean isSuccess() {
         return this.isSuccess;
     }
