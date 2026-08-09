@@ -38,9 +38,8 @@ public class ZoomInteractor implements ZoomInputBoundary {
         Interactable interactable = dataAccess.getInteractableById(interactableId);
 
         String puzzleId = interactable.getLinkedPuzzleId();
-        Puzzle puzzle = dataAccess.getPuzzleById(puzzleId);
 
-        String interactLabel = getInteractLabel(interactable, puzzleId, puzzle);
+        String interactLabel = getInteractLabel(interactable, puzzleId);
 
         ZoomOutputData outputData = new ZoomOutputData(
                 interactable.getName(),
@@ -59,14 +58,11 @@ public class ZoomInteractor implements ZoomInputBoundary {
      *
      * @param interactable the interactable being displayed
      * @param puzzleId the ID of the puzzle linked to the interactable
-     * @param puzzle the puzzle linked to the interactable
      * @return the appropriate interaction label, or {@code null} if the
      *         interactable has no available interaction
      */
-    private String getInteractLabel(
-            Interactable interactable, String puzzleId, Puzzle puzzle) {
-
-        String value;
+    private String getInteractLabel(Interactable interactable, String puzzleId) {
+        final String value;
 
         if (hasNoInteraction(interactable)) {
             value = null;
@@ -77,18 +73,27 @@ public class ZoomInteractor implements ZoomInputBoundary {
         else if (interactable.getUnlockedRoomId() != null && interactable.isInteracted()) {
             value = "Go Through";
         }
-        else if (interactable.isInteracted() && puzzle.isSolved() && puzzle.getUnlockedRoomId() != null) {
+        else if (puzzleId != null && interactable.isInteracted()) {
+            final Puzzle puzzle = dataAccess.getPuzzleById(puzzleId);
+            value = getPuzzleInteractLabel(puzzle);
+        }
+        else {
+            value = "Interact";
+        }
+        return value;
+    }
+
+    private String getPuzzleInteractLabel(Puzzle puzzle) {
+        final String value;
+        if (puzzle.isSolved() && puzzle.getUnlockedRoomId() != null) {
             value = "Go Through";
         }
-        else if (puzzleId != null
-                && interactable.isInteracted()
-                && !puzzle.isSolved()) {
+        else if (!puzzle.isSolved()) {
             value = "Enter Puzzle";
         }
         else {
             value = "Interact";
         }
-
         return value;
     }
 
