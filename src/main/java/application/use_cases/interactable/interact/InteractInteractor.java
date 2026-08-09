@@ -114,8 +114,7 @@ public class InteractInteractor implements InteractInputBoundary {
         }
     }
 
-    private void handleLinkedPuzzle(
-            User player, Interactable interactable, String linkedPuzzleId) {
+    private void handleLinkedPuzzle(User player, Interactable interactable, String linkedPuzzleId) {
 
         Puzzle puzzle = dataAccess.getPuzzleById(linkedPuzzleId);
         String puzzleUnlockedRoomId = puzzle.getUnlockedRoomId();
@@ -147,7 +146,6 @@ public class InteractInteractor implements InteractInputBoundary {
     }
 
     private void moveToRoom(User player, String unlockedRoomId) {
-        player.unlockRoom(dataAccess.getRoomById(unlockedRoomId));
         final Room unlockedRoom = dataAccess.getRoomById(unlockedRoomId);
         player.unlockRoom(unlockedRoom);
         player.switchRoom(unlockedRoom);

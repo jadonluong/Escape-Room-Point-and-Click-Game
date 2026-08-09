@@ -74,8 +74,10 @@ public class ZoomInteractor implements ZoomInputBoundary {
         else if (interactable.needsItem() && !interactable.isInteracted()) {
             value = "Use Item";
         }
-        else if (interactable.getUnlockedRoomId() != null
-                && interactable.isInteracted()) {
+        else if (interactable.getUnlockedRoomId() != null && interactable.isInteracted()) {
+            value = "Go Through";
+        }
+        else if (interactable.isInteracted() && puzzle.isSolved() && puzzle.getUnlockedRoomId() != null) {
             value = "Go Through";
         }
         else if (puzzleId != null
