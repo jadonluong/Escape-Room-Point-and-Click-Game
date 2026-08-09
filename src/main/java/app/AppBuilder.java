@@ -267,7 +267,6 @@ public class AppBuilder extends Application {
         final CraftingInteractor craftingInteractor = new CraftingInteractor(
                 inventoryPresenter,                      // CraftingOutputBoundary
                 userSessionTracking.getCurrentUser(),    // Active User domain entity
-                // itemFactory,                             // ItemFactory
                 gameAssetManager,                        // ItemRegistry
                 gameAssetManager                         // CraftingDataAccessInterface
         );

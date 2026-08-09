@@ -2,7 +2,6 @@ package application.use_cases.crafting;
 
 import application.game_registry.ItemRegistry;
 import domain.entities.item.Item;
-// import domain.entities.item.ItemFactory;
 import domain.entities.user.User;
 
 import java.util.Map;
@@ -11,19 +10,16 @@ import java.util.Set;
 public class CraftingInteractor implements CraftingInputBoundary {
     private final CraftingOutputBoundary presenter;
     private final User user;
-    // private final ItemFactory itemFactory;
     private final ItemRegistry itemRegistry; // Injected to handle recipe domain lookups
     private final CraftingDataAccessInterface craftingDataAccess;
 
     public CraftingInteractor(CraftingOutputBoundary presenter,
                               User user,
-                              // ItemFactory itemFactory,
                               ItemRegistry itemRegistry,
                               CraftingDataAccessInterface craftingDataAccess)
     {
         this.presenter = presenter;
         this.user = user;
-        // this.itemFactory = itemFactory;
         this.itemRegistry = itemRegistry;
         this.craftingDataAccess = craftingDataAccess;
     }
