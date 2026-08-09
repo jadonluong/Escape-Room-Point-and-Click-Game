@@ -29,7 +29,7 @@ public class ToggleMusicInteractor implements ToggleMusicInputBoundary {
      */
     @Override
     public void toggleMusic() {
-        audioSettings.toggleSfx();
-        presenter.presentMusicState(new ToggleMusicOutputData(audioSettings.isSfxOn()));
+        audioSettings.toggleMusic();
+        presenter.presentMusicState(new ToggleMusicOutputData(audioSettings.isMusicOn()));
     }
 }
