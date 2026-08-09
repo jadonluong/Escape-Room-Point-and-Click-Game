@@ -37,7 +37,7 @@
   },
 
   "sac_window": {
-    "imagePath": "/images/items/storymode/room2/carpet.png",
+    "imagePath": "/images/items/storymode/room3/windows.png",
     "hintMessages": ["Solve a puzzle to go up the stairs!"]
   },
 
