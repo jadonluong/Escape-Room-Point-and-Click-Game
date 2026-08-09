@@ -100,23 +100,23 @@
     "imagePath": "/images/rooms/storymode/room2/Room2Background.png",
     "imageThumbnail": "/images/rooms/storymode/room2/Room2Complete.png",
     "positions": {
-      "cheese_back_door": [
+      "house_door": [
         131,
         762
       ],
-      "cheese_stairs": [
+      "house_bottle": [
         674,
         432
       ],
-      "cheese_table": [
+      "house_flower": [
         1015,
         1085
       ],
-      "cheese_dot": [
+      "house_cloud_1": [
         1200,
         1120
       ],
-      "cheese_carpet": [
+      "house_cloud_2": [
         612,
         1411
       ]
@@ -289,52 +289,52 @@
     "imageThumbnail": "/images/rooms/magic/magic_room_thumbnail.png",
     "positions": {
       "magic_carpet": [
-        720,
-        1336
+        918,
+        1683
       ],
       "magic_cauldron": [
-        1776,
-        1136
+        2213,
+        1442
       ],
       "magic_circle": [
-        712,
-        616
+        905,
+        795
       ],
       "magic_lectern": [
-        992,
-        960
+        1238,
+        1205
       ],
       "magic_letter": [
-        1664,
-        1224
+        2059,
+        1533
       ],
       "magic_painting": [
-        1160,
-        944
+        1453,
+        1280
       ],
       "magic_sticky_note": [
-        848,
-        1136
+        1059,
+        1406
       ],
       "magic_suitcase": [
-        416,
-        1392
+        521,
+        1742
       ],
       "magic_table": [
-        216,
-        1024
+        284,
+        1301
       ],
       "magic_wand_stand": [
-        1408,
-        1032
+        1754,
+        1300
       ],
       "magic_chair": [
-        768,
-        1064
+        960,
+        1345
       ],
       "magic_hat": [
-        1360,
-        832
+        1693,
+        1055
       ]
     }
   }
