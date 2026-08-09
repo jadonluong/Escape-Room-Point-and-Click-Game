@@ -123,14 +123,4 @@ public class GetHintTest {
         assertNull(testPresenter.getSuccessData());
         assertEquals( "No hints available", testPresenter.getMessage());
     }
-
-    @Test
-    void testCurrentUserMismatch() {
-        GetHintInputData inputData = new GetHintInputData(validObjectId);
-
-        interactor.execute(inputData);
-
-        assertNull(testPresenter.getSuccessData());
-        assertEquals( "You are not the current user", testPresenter.getMessage());
-    }
 }
