@@ -91,6 +91,7 @@ import interface_adapter.inventory.SelectItemPresenter;
 import interface_adapter.item.PickUpController;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import view.common.MusicPlayer;
 import view.game.BrowseRoomsView;
 import view.game.GameMenuView;
 import view.game.GameObjectActionDispatcher;
@@ -161,6 +162,14 @@ public class AppBuilder extends Application {
         final ViewManager viewManager = new ViewManager(
                 primaryStage, viewManagerModel, soundPlayer,
                 () -> audioViewModel.getState().isSfxOn());
+
+        final MusicPlayer musicPlayer = new MusicPlayer("/audio/music/background.wav");
+        musicPlayer.setMuted(!audioViewModel.getState().isMusicOn());
+        musicPlayer.play();
+
+        // Keep playback muted state in sync whenever the player toggles music on/off
+        audioViewModel.addPropertyChangeListener(
+                evt -> musicPlayer.setMuted(!audioViewModel.getState().isMusicOn()));
 
         // --- Login chain ---
         final LoginViewModel loginViewModel = new LoginViewModel();
