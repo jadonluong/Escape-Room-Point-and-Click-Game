@@ -241,28 +241,28 @@
     "imageThumbnail": "/images/rooms/astrology/astrology_office_complete.jpeg",
     "positions": {
       "astrology_box": [
-        154,
-        240
+        985,
+        1055
       ],
       "astrology_paper": [
-        469,
-        195
+        1435,
+        1065
       ],
       "astrology_calender": [
-        848,
-        0
+        2368,
+        196
       ],
       "astrology_door": [
-        1264,
-        422
+        2455,
+        700
       ],
       "astrology_window": [
-        154,
-        3
+        810,
+        159
       ],
       "astrology_star": [
-        600,
-        120
+        1200,
+        438
       ]
     }
   }
