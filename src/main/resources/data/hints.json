@@ -95,12 +95,12 @@
   },
 
   "magic_chair": {
-    "imagePath": "/images/items/magic/chair.png",
+    "imagePath": "/images/items/magic/chair_2.png",
     "hintMessages": ["The mage likes to leave notes on this chair."]
   },
 
   "magic_hat": {
-    "imagePath": "/images/items/magic/hat.png",
+    "imagePath": "/images/items/magic/hat_2.png",
     "hintMessages": ["It's the wand that's important; hats and robes are just for aura."]
   }
 }
