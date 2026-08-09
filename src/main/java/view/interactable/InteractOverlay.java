@@ -43,14 +43,14 @@ public class InteractOverlay extends AbstractModalOverlay implements ActionListe
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         InteractState state = interactViewModel.getState();
-        if (state.getSuccessMessage() != null) {
+        if (state.getSuccessMessage() != null && state.getErrorMessage() == null) {
             messageLabel.setText(state.getSuccessMessage());
             messageLabel.setTextFill(Color.web("#80EF80"));
-        } else if (state.getErrorMessage() != null) {
+        } else if (state.getSuccessMessage() == null && state.getErrorMessage() != null) {
             messageLabel.setText(state.getErrorMessage());
             messageLabel.setTextFill(Color.web("#E54C38"));
-        } else { // In case there's no successMessage or errorMessage.
-            this.onClose.run();
+        } else {
+            onClose.run();
         }
     }
 

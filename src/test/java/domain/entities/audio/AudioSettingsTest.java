@@ -1,4 +1,4 @@
-package domain.entities.Audio;
+package domain.entities.audio;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

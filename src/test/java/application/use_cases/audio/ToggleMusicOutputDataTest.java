@@ -1,4 +1,4 @@
-package application.use_cases.Audio.ToggleMusic;
+package application.use_cases.audio;
 
 import org.junit.jupiter.api.Test;
 

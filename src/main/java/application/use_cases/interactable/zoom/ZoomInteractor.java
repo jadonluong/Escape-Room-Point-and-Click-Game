@@ -98,7 +98,8 @@ public class ZoomInteractor implements ZoomInputBoundary {
      *         unlocked room, or linked puzzle; {@code false} otherwise
      */
     private boolean hasNoInteraction(Interactable interactable) {
-        return interactable.getRewardItemId() == null
+        return interactable.getRequiredItemId() == null
+                && interactable.getRewardItemId() == null
                 && interactable.getSuccessMessage() == null
                 && interactable.getUnlockedRoomId() == null
                 && interactable.getLinkedPuzzleId() == null;
