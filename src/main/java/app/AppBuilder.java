@@ -124,7 +124,8 @@ public class AppBuilder extends Application {
         final PuzzleFactory puzzleFactory = new CommonPuzzleFactory();
 
         // --- Puzzle Generator chain ---
-        final AnagramApiClient anagramApiClient = new AnagramApiClient("apv_7700ad64-d8be-4591-8f67-607ed21edcce");
+        final AnagramApiClient anagramApiClient = new AnagramApiClient(
+                "apv_7700ad64-d8be-4591-8f67-607ed21edcce");
         final CryptogramApiClient cryptogramApiClient = new CryptogramApiClient(
                 "apv_7700ad64-d8be-4591-8f67-607ed21edcce");
         final PuzzleGenerator puzzleGenerator = new PuzzleGenerator(anagramApiClient, cryptogramApiClient,

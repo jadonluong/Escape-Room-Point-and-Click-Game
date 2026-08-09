@@ -55,7 +55,9 @@ public class InteractPresenter implements InteractOutputBoundary {
 
         zoomInteractor.zoomIn(new ZoomInputData(outputData.getInteractableId()));
 
-        viewManager.showOverlay("Interact");
+        if (outputData.getSuccessMessage() != null) {
+            viewManager.showOverlay("Interact");
+        }
     }
 
     @Override
