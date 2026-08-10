@@ -26,7 +26,7 @@ public class CommonItemRegistryTest {
 
     @Test
     void testGetItemByIdSuccess() {
-        Item retrievedItem = registry.getItemById("iron_sword"); //[cite: 4]
+        Item retrievedItem = registry.getItemById("item_1"); //[cite: 4]
 
         assertNotNull(retrievedItem, "Registered item should be retrieved successfully.");
         assertEquals(sampleItem1, retrievedItem, "Retrieved item should match the registered instance.");

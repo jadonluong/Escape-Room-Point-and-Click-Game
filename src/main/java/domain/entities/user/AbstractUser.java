@@ -1,9 +1,6 @@
 package domain.entities.user;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import domain.entities.item.Item;
 import domain.entities.room.Room;
@@ -299,14 +296,17 @@ public abstract class AbstractUser implements User {
 
     @Override
     public void saveInteractable(String interactableId) {
-        if (activeGameMode.equalsIgnoreCase(storyModeString) && storyModeInteractables != null) {
+        if (storyModeInteractables == null) {
+            storyModeInteractables = new ArrayList<>();
+        }
+        if (storyModeString.equalsIgnoreCase(activeGameMode) && !storyModeInteractables.contains(interactableId)) {
             this.storyModeInteractables.add(interactableId);
         }
     }
 
     @Override
     public List<String> getStoryModeInteractables() {
-        return this.storyModeInteractables;
+        return Objects.requireNonNullElseGet(storyModeInteractables, ArrayList::new);
     }
 
     /**

@@ -107,7 +107,7 @@ public class CommonUser extends AbstractUser implements CommonUserFunction {
         private List<String> storyModeRoomsUnlocked = new ArrayList<>();
         private List<String> storyModeItemInventory = new ArrayList<>();
         private HashMap<String, Integer> storyModeHintsWatched;
-        private List<String> storyModeInteractables;
+        private List<String> storyModeInteractables = new ArrayList<>();
 
         public StoryModeData(CommonUser user) {
             this.user = user;
@@ -318,6 +318,9 @@ public class CommonUser extends AbstractUser implements CommonUserFunction {
         super.saveInteractable(interactableId);
 
         if (storyModeString.equalsIgnoreCase(this.activeGameMode)) {
+            if (this.getStoryModeInteractables() == null) {
+                this.setStoryModeInteractables(new ArrayList<>());
+            }
             if (!getStoryModeInteractables().contains(interactableId)) {
                 getStoryModeInteractables().add(interactableId);
             }
