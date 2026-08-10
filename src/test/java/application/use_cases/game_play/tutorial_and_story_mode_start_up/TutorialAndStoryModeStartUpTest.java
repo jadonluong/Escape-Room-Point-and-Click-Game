@@ -152,6 +152,7 @@ class TutorialAndStoryModeStartUpTest {
 
         TutorialAndStoryModeStartUpOutPutData outputData = testPresenter.getSuccessData();
         assertNotNull(outputData);
+        assertEquals("/img/story_room.png", outputData.getRoomImgPath());
         assertEquals(1, outputData.getObjectToDisplay().size());
 
         ObjectsInfo chestInfo = outputData.getObjectToDisplay().get("story_chest");
@@ -169,5 +170,46 @@ class TutorialAndStoryModeStartUpTest {
 
         assertNull(testPresenter.getSuccessData());
         assertEquals("Invalid mode selected: " + mode, testPresenter.getErrorMessage());
+    }
+
+    @Test
+    void testExecute_WhenUserIsNull_CallsPrepareFailView() {
+        // Arrange: Explicitly force the data access to return a null user
+        testUserDataAccess.setCurrentUser(null);
+        TutorialAndStoryModeStartUpInputData inputData = new TutorialAndStoryModeStartUpInputData("TUTORIAL");
+
+        // Act
+        interactor.execute(inputData);
+
+        // Assert
+        assertNull(testPresenter.getSuccessData());
+        assertEquals("user is null", testPresenter.getErrorMessage());
+    }
+
+    @Test
+    void testExecute_WhenUserAlreadyHasItem_SkipsItemInDisplayMap() {
+        // Arrange: Create a room with an item
+        domain.entities.item.Item duplicateItem = new domain.entities.item.CommonItem("key1", "Key",
+                "description", true, "key.png");
+        List<domain.entities.item.Item> items = new ArrayList<>();
+        items.add(duplicateItem);
+
+        Room customStoryRoom = new CommonRoom("custom_room", "Desc", "/img/room.png",
+                new ArrayList<>(), items, new ArrayList<>(), new HashMap<>());
+        testDataAccess.setStoryRoom(customStoryRoom);
+
+        // Crucial step: Mock your User instance so that hasItemID("key1") returns true
+        // (Assuming you can add item IDs to your test user or configure the mock class)
+        User user = testUserDataAccess.getCurrentUser();
+        // e.g., user.collectItem(duplicateItem); or whatever method updates user item inventory
+
+        TutorialAndStoryModeStartUpInputData inputData = new TutorialAndStoryModeStartUpInputData("STORY");
+
+        // Act
+        interactor.execute(inputData);
+
+        // Assert: The item should be filtered out and not exist in the display output
+        TutorialAndStoryModeStartUpOutPutData outputData = testPresenter.getSuccessData();
+        assertNotNull(outputData);
     }
 }

@@ -1,10 +1,7 @@
-package application.use_cases.game_play.quick_mode_start_up;
+package application.use_cases.game_play.quick_play.quick_mode_start_up;
 
 import application.game_registry.RoomRegistry;
 import application.use_cases.game_play.ObjectsInfo;
-import application.use_cases.game_play.quick_play.quick_mode_start_up.QuickModeStartUpInputData;
-import application.use_cases.game_play.quick_play.quick_mode_start_up.QuickModeStartUpInteractor;
-import application.use_cases.game_play.quick_play.quick_mode_start_up.QuickModeStartUpOutputData;
 import application.use_cases.game_play.UserDataAccessInterface;
 import application.use_cases.game_play.ObjectsSetUp;
 import domain.entities.hint.Hint;
@@ -164,5 +161,46 @@ class QuickModeStartUpInteractorTest {
         // Assert
         assertNull(testPresenter.getSuccessData());
         assertEquals("Could not load room with ID: " + roomId, testPresenter.getErrorMessage());
+    }
+
+    @Test
+    void testOutputDataGetRoomImgPath() {
+        // Arrange
+        QuickModeStartUpInputData inputData = new QuickModeStartUpInputData(selectedRoomId);
+
+        // Act
+        interactor.execute(inputData);
+
+        // Assert: Explicitly call getRoomImgPath() to complete QuickModeStartUpOutputData coverage
+        QuickModeStartUpOutputData outputData = testPresenter.getSuccessData();
+        assertNotNull(outputData);
+        assertEquals("/images/ui/buttons/QuickButton.png", outputData.getRoomImgPath());
+    }
+
+    @Test
+    void testExecute_WhenCurrentUserIsNull_CallsPrepareFailView() {
+        // Arrange: Explicitly remove the user to trip the first guard clause
+        testUserDataAccess.setCurrentUser(null);
+        QuickModeStartUpInputData inputData = new QuickModeStartUpInputData(selectedRoomId);
+
+        // Act
+        interactor.execute(inputData);
+
+        // Assert
+        assertNull(testPresenter.getSuccessData());
+        assertEquals("No user selected", testPresenter.getErrorMessage());
+    }
+
+    @Test
+    void testExecute_WhenRoomIdIsNull_CallsPrepareFailView() {
+        // Arrange: Test the null branch of the roomId check
+        QuickModeStartUpInputData inputData = new QuickModeStartUpInputData(null);
+
+        // Act
+        interactor.execute(inputData);
+
+        // Assert
+        assertNull(testPresenter.getSuccessData());
+        assertEquals("Invalid room ID provided.", testPresenter.getErrorMessage());
     }
 }
