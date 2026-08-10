@@ -100,7 +100,7 @@ class InteractTest {
     private TestUserDataAccess userDataAccess;
     private InteractInteractor interactor;
 
-    private CommonUser player;
+    private TestUser player;
     private CommonRoom room;
     private final String ROOM_ID = "room_1";
     private final String ROOM_IMAGE = "room_bg.png";
@@ -110,13 +110,50 @@ class InteractTest {
     private final String PUZZLE_ID = "puzzle_1";
     private final String SUCCESS_MSG = "You found a key!";
 
+    private static class TestUser extends CommonUser {
+        private List<String> storyModeInteractables = new ArrayList<>();
+
+        public TestUser(String username, String password) {
+            super(username, password);
+        }
+
+        public void initializeStoryModeInteractables() {
+            if (this.storyModeInteractables == null) {
+                this.storyModeInteractables = new ArrayList<>();
+            }
+        }
+
+        public List<String> getStoryModeInteractables() {
+            return storyModeInteractables;
+        }
+
+        public void setStoryModeInteractables(List<String> storyModeInteractables) {
+            this.storyModeInteractables = storyModeInteractables;
+        }
+
+        @Override
+        public void saveInteractable(String interactableId) {
+            if (storyModeInteractables == null) {
+                storyModeInteractables = new ArrayList<>();
+            }
+            if (!storyModeInteractables.contains(interactableId)) {
+                storyModeInteractables.add(interactableId);
+            }
+        }
+
+        @Override
+        public void setActiveGameMode(String mode) {
+            super.setActiveGameMode(mode);
+        }
+    }
+
     @BeforeEach
     void setUp() {
         dataAccess = new TestDataAccess();
         outputBoundary = new TestOutputBoundary();
         userDataAccess = new TestUserDataAccess();
 
-        player = new CommonUser("test_user", "password");
+        player = new TestUser("test_user", "password");
         player.setActiveGameMode("StoryMode");
         userDataAccess.setCurrentUser(player);
 
@@ -224,8 +261,10 @@ class InteractTest {
         interactor.interact(new InteractInputData(INTERACTABLE_ID));
 
         assertTrue(interactable.isInteracted());
-        assertTrue(player.hasItemID(ITEM_ID));
         assertEquals(SUCCESS_MSG, outputBoundary.successMessage);
+        assertNotNull(player.getItemInventory());
+        assertEquals(1, player.getItemInventory().size());
+        assertEquals(ITEM_ID, player.getItemInventory().get(0).getId());
     }
 
     @Test
@@ -301,6 +340,54 @@ class InteractTest {
         assertFalse(player.hasItemID(ITEM_ID));
         assertTrue(interactable.isInteracted());
         assertFalse(room.getInteractables().contains(interactable));
+    }
+
+    @Test
+    void testFirstInteraction_storyModeSavesInteractableWithoutPuzzle() {
+        player.setActiveGameMode("StoryMode");
+        player.initializeStoryModeInteractables();
+
+        Interactable interactable = createChest(INTERACTABLE_ID, false, false, false, null, null, SUCCESS_MSG);
+        dataAccess.addInteractable(interactable);
+        room.addInteractable(interactable);
+
+        interactor.interact(new InteractInputData(INTERACTABLE_ID));
+
+        assertTrue(player.getStoryModeInteractables().contains(INTERACTABLE_ID));
+        assertTrue(interactable.isInteracted());
+    }
+
+    @Test
+    void testFirstInteraction_storyModeDoesNotSaveInteractableWithPuzzle() {
+        player.setActiveGameMode("StoryMode");
+        player.initializeStoryModeInteractables();
+
+        AnagramPuzzle puzzle = new AnagramPuzzle(PUZZLE_ID, "PDAISRE", "DESPAIR", "A hint", "Success", null, null);
+        dataAccess.addPuzzle(puzzle);
+
+        Interactable interactable = createPuzzleInteractable(INTERACTABLE_ID, PUZZLE_ID);
+        dataAccess.addInteractable(interactable);
+        room.addInteractable(interactable);
+
+        interactor.interact(new InteractInputData(INTERACTABLE_ID));
+
+        assertFalse(player.getStoryModeInteractables().contains(INTERACTABLE_ID));
+        assertTrue(interactable.isInteracted());
+    }
+
+    @Test
+    void testFirstInteraction_storyModeWithNullInteractablesList_doesNotThrow() {
+        player.setActiveGameMode("StoryMode");
+        player.setStoryModeInteractables(null);
+
+        Interactable interactable = createChest(INTERACTABLE_ID, false, false, false, null, null, SUCCESS_MSG);
+        dataAccess.addInteractable(interactable);
+        room.addInteractable(interactable);
+
+        assertDoesNotThrow(() -> {
+            interactor.interact(new InteractInputData(INTERACTABLE_ID));
+        });
+        assertTrue(interactable.isInteracted());
     }
 
     @Test
@@ -513,6 +600,110 @@ class InteractTest {
         interactor.interact(new InteractInputData(INTERACTABLE_ID));
 
         assertEquals("You found a key already!", outputBoundary.successMessage);
+    }
+
+    @Test
+    void testMoveToRoom_storyModeRestoresInteractableStates() {
+        player.setActiveGameMode("StoryMode");
+        player.initializeStoryModeInteractables();
+        player.saveInteractable(INTERACTABLE_ID);
+
+        Room targetRoom = new CommonRoom(
+                "target_room",
+                "Target Room",
+                "target_bg.png",
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new HashMap<>()
+        );
+        dataAccess.addRoom(targetRoom);
+
+        Interactable interactable = createChest(INTERACTABLE_ID, false, false, false, null, null, SUCCESS_MSG);
+        interactable.setInteracted(false);
+        dataAccess.addInteractable(interactable);
+        targetRoom.addInteractable(interactable);
+
+        Interactable door = createDoor("door_1", "target_room");
+        door.setInteracted(true);
+        dataAccess.addInteractable(door);
+        room.addInteractable(door);
+
+        interactor.interact(new InteractInputData("door_1"));
+
+        assertTrue(interactable.isInteracted());
+        assertNotNull(outputBoundary.objectsToDisplay);
+        assertTrue(outputBoundary.objectsToDisplay.containsKey(INTERACTABLE_ID));
+    }
+
+    @Test
+    void testMoveToRoom_quickModeDoesNotRestoreInteractableStates() {
+        player.setActiveGameMode("QuickMode");
+
+        Room targetRoom = new CommonRoom(
+                "target_room",
+                "Target Room",
+                "target_bg.png",
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new HashMap<>()
+        );
+        dataAccess.addRoom(targetRoom);
+
+        Interactable interactable = createChest(INTERACTABLE_ID, false, false, false, null, null, SUCCESS_MSG);
+        interactable.setInteracted(false);
+        dataAccess.addInteractable(interactable);
+        targetRoom.addInteractable(interactable);
+
+        Interactable door = createDoor("door_1", "target_room");
+        door.setInteracted(true);
+        dataAccess.addInteractable(door);
+        room.addInteractable(door);
+
+        interactor.interact(new InteractInputData("door_1"));
+
+        assertFalse(interactable.isInteracted());
+        assertNotNull(outputBoundary.objectsToDisplay);
+        assertTrue(outputBoundary.objectsToDisplay.containsKey(INTERACTABLE_ID));
+    }
+
+    @Test
+    void testHandleLinkedPuzzle_solvedWithMainMenu_goesToMainMenu() {
+        AnagramPuzzle puzzle = new AnagramPuzzle(
+                PUZZLE_ID, "PDAISRE", "DESPAIR", "A hint",
+                "You solved it!", null, "main menu"
+        );
+        puzzle.setSolved(true);
+        dataAccess.addPuzzle(puzzle);
+
+        Interactable interactable = createPuzzleInteractable(INTERACTABLE_ID, PUZZLE_ID);
+        interactable.setInteracted(true);
+        dataAccess.addInteractable(interactable);
+        room.addInteractable(interactable);
+
+        interactor.interact(new InteractInputData(INTERACTABLE_ID));
+
+        assertTrue(outputBoundary.mainMenuCalled);
+    }
+
+    @Test
+    void testHandleLinkedPuzzle_solvedWithoutRoom_showsSuccessMessage() {
+        AnagramPuzzle puzzle = new AnagramPuzzle(
+                PUZZLE_ID, "PDAISRE", "DESPAIR", "A hint",
+                "You solved it!", null, null
+        );
+        puzzle.setSolved(true);
+        dataAccess.addPuzzle(puzzle);
+
+        Interactable interactable = createPuzzleInteractable(INTERACTABLE_ID, PUZZLE_ID);
+        interactable.setInteracted(true);
+        dataAccess.addInteractable(interactable);
+        room.addInteractable(interactable);
+
+        interactor.interact(new InteractInputData(INTERACTABLE_ID));
+
+        assertNotNull(outputBoundary.successMessage);
     }
 
     @Test
