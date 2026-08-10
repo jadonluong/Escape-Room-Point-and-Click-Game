@@ -22,6 +22,11 @@ public class SolveInteractor implements SolveInputBoundary {
             puzzle.setSolved(true); // Ik solve already does this but just in case...
 
             User player = userDataAccess.getCurrentUser();
+            if (player.getStoryModeInteractables() != null) {
+                player.saveInteractable(inputData.getInteractableId());
+                System.out.println("puzzle solved, interactable" + inputData.getInteractableId() + "is saved");
+            }
+
             String rewardItemId = puzzle.getRewardItemId();
             String rewardItemName = null;
             if (rewardItemId != null) {

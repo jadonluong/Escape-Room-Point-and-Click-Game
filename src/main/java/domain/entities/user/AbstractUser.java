@@ -2,6 +2,7 @@ package domain.entities.user;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import domain.entities.item.Item;
@@ -22,6 +23,7 @@ public abstract class AbstractUser implements User {
     protected transient ArrayList<Room> storyModeLiveRoomsUnlocked = new ArrayList<>();
     protected transient ArrayList<Item> storyModeLiveItemInventory = new ArrayList<>();
     protected transient HashMap<String, Integer> storyModeHintsWatched = new HashMap<>();
+    protected transient List<String> storyModeInteractables = new ArrayList<>();
 
     // The live game storage for tutorial mode
     protected transient ArrayList<Room> tutorialModeLiveRoomsUnlocked = new ArrayList<>();
@@ -295,6 +297,18 @@ public abstract class AbstractUser implements User {
         return this.quickModeHintsWatched;
     }
 
+    @Override
+    public void saveInteractable(String interactableId) {
+        if (storyModeInteractables != null) {
+            this.storyModeInteractables.add(interactableId);
+        }
+    }
+
+    @Override
+    public List<String> getStoryModeInteractables() {
+        return this.storyModeInteractables;
+    }
+
     /**
      * Handles switching rooms, maintaining per-room live item inventory and hints.
      * @param newRoom The ID of the room being entered.
@@ -343,6 +357,9 @@ public abstract class AbstractUser implements User {
         }
         if (this.storyModeLiveItemInventory == null) {
             this.storyModeLiveItemInventory = new ArrayList<>();
+        }
+        if (this.storyModeInteractables == null) {
+            this.storyModeInteractables = new ArrayList<>();
         }
     }
 }

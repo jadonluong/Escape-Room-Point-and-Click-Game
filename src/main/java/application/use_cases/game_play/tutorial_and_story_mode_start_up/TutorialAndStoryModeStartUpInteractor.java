@@ -5,6 +5,8 @@ import java.util.Map;
 
 import application.use_cases.game_play.ObjectsInfo;
 import application.use_cases.game_play.UserDataAccessInterface;
+import domain.entities.interactable.Interactable;
+import domain.entities.puzzle.Puzzle;
 import domain.entities.room.Room;
 import domain.entities.user.User;
 
@@ -70,6 +72,15 @@ public class TutorialAndStoryModeStartUpInteractor
             case "STORY" -> {
                 currentUser.setActiveGameMode("StoryMode");
                 startingRoom = dataAccess.findStartingRoomForStory();
+                for (Interactable interactable : startingRoom.getInteractables()) {
+                    if (currentUser.getStoryModeInteractables() != null
+                            && currentUser.getStoryModeInteractables().contains(interactable.getId())) {
+                        interactable.setInteracted(true);
+                        final Puzzle puzzle = dataAccess.getPuzzleById(interactable.getLinkedPuzzleId());
+                        puzzle.setSolved(true);
+                        System.out.println("set interacted to true on story mode startup");
+                    }
+                }
             }
             default -> {
                 presenter.prepareFailView("Invalid mode selected: " + inputData.getMode());
