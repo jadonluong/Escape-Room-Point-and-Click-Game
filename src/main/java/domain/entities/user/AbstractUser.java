@@ -359,7 +359,7 @@ public abstract class AbstractUser implements User {
             this.storyModeLiveItemInventory = new ArrayList<>();
         }
         if (this.storyModeInteractables == null) {
-            this.storyModeInteractables = new HashMap<>();
+            this.storyModeInteractables = new ArrayList<>();
         }
     }
 }

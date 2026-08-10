@@ -69,8 +69,11 @@ public class InteractInteractor implements InteractInputBoundary {
             currentRoom.removeInteractable(interactable.getId());
         }
 
-        if (player.getActiveGameMode().equals("StoryMode")) {
+        if (player.getActiveGameMode().equals("StoryMode")
+                && interactable.getLinkedPuzzleId() == null
+                && player.getStoryModeInteractables() != null) {
             player.saveInteractable(interactable.getId());
+            System.out.println("interactable without puzzle is saved");
         }
 
         outputBoundary.prepareSuccessView(new InteractOutputData(interactable.getSuccessMessage(), rewardItemId,
@@ -165,10 +168,15 @@ public class InteractInteractor implements InteractInputBoundary {
 
         final Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
         unlockedRoom.getInteractables().forEach(interactable -> {
+            if (player.getActiveGameMode().equalsIgnoreCase("StoryMode")
+                    && player.getStoryModeInteractables() != null
+                    && player.getStoryModeInteractables().contains(interactable.getId())) {
+                interactable.setInteracted(true);
+                System.out.println("set interacted to true when switching room");
+            }
             objectsToDisplay.put(interactable.getId(),
                     new ObjectsInfo(interactable.getSprite(),
-                            unlockedRoom.getPosition(interactable.getId()),
-                            "Interactable"));
+                            unlockedRoom.getPosition(interactable.getId()), "Interactable"));
         });
 
         unlockedRoom.getItems().forEach(item -> {
