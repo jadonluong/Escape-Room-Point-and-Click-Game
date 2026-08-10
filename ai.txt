@@ -1,0 +1,7 @@
+Jadon
+- I used AI to help me understand how the usecase, interface adapter, and view classes/interfaces work together. For
+    example, I used it to understand the purposes of the different classes in a usecase (inputBoundary, inputData, etc.)
+- I used AI to check my code to ensure Clean Architecture was being followed.
+- I used AI to ask it for advice when making design choices. For example, I asked AI for advice about how Interactables
+    should respond to repeated interactions after the first interaction.
+- I used AI to help write the code that calls the puzzle APIs.
