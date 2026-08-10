@@ -1,9 +1,13 @@
 package application.use_cases.interactable.interact;
 
+import application.use_cases.game_play.ObjectsInfo;
 import domain.entities.interactable.Interactable;
 import domain.entities.puzzle.Puzzle;
 import domain.entities.room.Room;
 import domain.entities.user.User;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class InteractInteractor implements InteractInputBoundary {
     private InteractDataAccessInterface dataAccess;
@@ -18,21 +22,28 @@ public class InteractInteractor implements InteractInputBoundary {
     }
 
     @Override
-    // Note: Write specific cases for more complex Interactable's by checking id!
     public void interact(InteractInputData inputData) {
-        User player = userDataAccess.getCurrentUser();
-        Interactable interactable = dataAccess.getInteractableById(inputData.getInteractableId());
+        final User player = userDataAccess.getCurrentUser();
+        final Interactable interactable = dataAccess.getInteractableById(inputData.getInteractableId());
 
-        if (interactable.isInteracted()) {
-            repeatedInteraction(player, interactable);
+        if (player == null) {
+            outputBoundary.prepareFailureView("Player not found.");
+        }
+        else if (interactable == null) {
+            outputBoundary.prepareFailureView("Interactable not found.");
         }
         else {
-
-            if (interactable.needsItem()) {
-                itemRequiredFirstInteraction(player, interactable);
+            if (interactable.isInteracted()) {
+                repeatedInteraction(player, interactable);
             }
             else {
-                successfulFirstInteraction(player, interactable, null);
+
+                if (interactable.needsItem()) {
+                    itemRequiredFirstInteraction(player, interactable);
+                }
+                else {
+                    successfulFirstInteraction(player, interactable, null);
+                }
             }
         }
     }
@@ -58,8 +69,15 @@ public class InteractInteractor implements InteractInputBoundary {
             currentRoom.removeInteractable(interactable.getId());
         }
 
+        if (player.getActiveGameMode().equals("StoryMode")
+                && interactable.getLinkedPuzzleId() == null
+                && player.getStoryModeInteractables() != null) {
+            player.saveInteractable(interactable.getId());
+            System.out.println("interactable without puzzle is saved");
+        }
+
         outputBoundary.prepareSuccessView(new InteractOutputData(interactable.getSuccessMessage(), rewardItemId,
-                rewardItemName, selectedItemId, selectedItemName, interactable.getId()));
+                rewardItemName, selectedItemId, selectedItemName, interactable.getId(), interactable.getSprite()));
     }
 
     private void itemRequiredFirstInteraction(User player, Interactable interactable) {
@@ -105,13 +123,13 @@ public class InteractInteractor implements InteractInputBoundary {
                                 null,
                                 null,
                                 null,
-                                interactable.getId()));
+                                interactable.getId(),
+                                interactable.getSprite()));
             }
         }
     }
 
-    private void handleLinkedPuzzle(
-            User player, Interactable interactable, String linkedPuzzleId) {
+    private void handleLinkedPuzzle(User player, Interactable interactable, String linkedPuzzleId) {
 
         Puzzle puzzle = dataAccess.getPuzzleById(linkedPuzzleId);
         String puzzleUnlockedRoomId = puzzle.getUnlockedRoomId();
@@ -137,14 +155,46 @@ public class InteractInteractor implements InteractInputBoundary {
                                 null,
                                 null,
                                 null,
-                                interactable.getId()));
+                                interactable.getId(),
+                                interactable.getSprite()));
             }
         }
     }
 
     private void moveToRoom(User player, String unlockedRoomId) {
-        player.switchRoom(dataAccess.getRoomById(unlockedRoomId));
-        outputBoundary.prepareRoomView();
+        final Room unlockedRoom = dataAccess.getRoomById(unlockedRoomId);
+        player.unlockRoom(unlockedRoom);
+        player.switchRoom(unlockedRoom);
+
+        final Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
+        unlockedRoom.getInteractables().forEach(interactable -> {
+            if (player.getActiveGameMode().equalsIgnoreCase("StoryMode")
+                    && player.getStoryModeInteractables() != null
+                    && player.getStoryModeInteractables().contains(interactable.getId())) {
+                interactable.setInteracted(true);
+                System.out.println("set interacted to true when switching room");
+            }
+            objectsToDisplay.put(interactable.getId(),
+                    new ObjectsInfo(interactable.getSprite(),
+                            unlockedRoom.getPosition(interactable.getId()), "Interactable"));
+        });
+
+        unlockedRoom.getItems().forEach(item -> {
+            if (!player.hasItemID(item.getId())) {
+                objectsToDisplay.put(item.getId(),
+                        new ObjectsInfo(item.getImagePath(),
+                                unlockedRoom.getPosition(item.getId()),
+                                "Item"));
+            }
+        });
+
+        unlockedRoom.getHints().forEach(hint -> {
+            objectsToDisplay.put(hint.getObjectID(),
+                    new ObjectsInfo(hint.getImagePath(),
+                            unlockedRoom.getPosition(hint.getObjectID()),
+                            "Hint"));
+        });
+        outputBoundary.prepareRoomView(unlockedRoom.getImagePath(), objectsToDisplay);
     }
 
     private String makeSuccessMessage(String rewardItemId, String successMessage) {

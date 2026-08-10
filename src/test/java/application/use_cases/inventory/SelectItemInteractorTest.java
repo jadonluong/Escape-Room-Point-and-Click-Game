@@ -86,7 +86,7 @@ public class SelectItemInteractorTest {
 
         assertEquals("prison_item_1:stick", testUser.getSavedItemId());
         assertNotNull(testPresenter.getSuccessData());
-        assertEquals("prison_item_1:stick", testPresenter.getSuccessData().getSelectedItemId());
+        assertEquals("prison_item_1:stick", testPresenter.getSuccessData().selectedItemId());
         assertNull(testPresenter.getErrorMessage());
     }
 

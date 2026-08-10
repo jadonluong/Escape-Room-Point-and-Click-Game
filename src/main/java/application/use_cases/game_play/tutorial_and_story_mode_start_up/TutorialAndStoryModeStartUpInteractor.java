@@ -5,6 +5,8 @@ import java.util.Map;
 
 import application.use_cases.game_play.ObjectsInfo;
 import application.use_cases.game_play.UserDataAccessInterface;
+import domain.entities.interactable.Interactable;
+import domain.entities.puzzle.Puzzle;
 import domain.entities.room.Room;
 import domain.entities.user.User;
 
@@ -54,8 +56,8 @@ public class TutorialAndStoryModeStartUpInteractor
     @Override
     public void execute(TutorialAndStoryModeStartUpInputData inputData) {
 
-        Room startingRoom;
-        User currentUser = userDataAccess.getCurrentUser();
+        final Room startingRoom;
+        final User currentUser = userDataAccess.getCurrentUser();
 
         if (currentUser == null) {
             presenter.prepareFailView("user is null");
@@ -70,6 +72,15 @@ public class TutorialAndStoryModeStartUpInteractor
             case "STORY" -> {
                 currentUser.setActiveGameMode("StoryMode");
                 startingRoom = dataAccess.findStartingRoomForStory();
+                for (Interactable interactable : startingRoom.getInteractables()) {
+                    if (currentUser.getStoryModeInteractables() != null
+                            && currentUser.getStoryModeInteractables().contains(interactable.getId())) {
+                        interactable.setInteracted(true);
+                        final Puzzle puzzle = dataAccess.getPuzzleById(interactable.getLinkedPuzzleId());
+                        puzzle.setSolved(true);
+                        System.out.println("set interacted to true on story mode startup");
+                    }
+                }
             }
             default -> {
                 presenter.prepareFailView("Invalid mode selected: " + inputData.getMode());
@@ -80,7 +91,7 @@ public class TutorialAndStoryModeStartUpInteractor
         currentUser.unlockRoom(startingRoom);
         currentUser.switchRoom(startingRoom);
 
-        Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
+        final Map<String, ObjectsInfo> objectsToDisplay = new HashMap<>();
 
         // fetch all data that is needed for rendering.
         // It contains ObjectId as key(for interactable/hint/item), and info (which is a record
@@ -110,7 +121,7 @@ public class TutorialAndStoryModeStartUpInteractor
         });
 
         // wrap the data
-        TutorialAndStoryModeStartUpOutPutData outPutData =
+        final TutorialAndStoryModeStartUpOutPutData outPutData =
                 new TutorialAndStoryModeStartUpOutPutData(
                         objectsToDisplay,
                         startingRoom.getImagePath());

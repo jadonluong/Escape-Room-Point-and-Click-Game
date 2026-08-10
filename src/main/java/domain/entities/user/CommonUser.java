@@ -107,6 +107,7 @@ public class CommonUser extends AbstractUser implements CommonUserFunction {
         private List<String> storyModeRoomsUnlocked = new ArrayList<>();
         private List<String> storyModeItemInventory = new ArrayList<>();
         private HashMap<String, Integer> storyModeHintsWatched;
+        private List<String> storyModeInteractables = new ArrayList<>();
 
         public StoryModeData(CommonUser user) {
             this.user = user;
@@ -152,6 +153,14 @@ public class CommonUser extends AbstractUser implements CommonUserFunction {
 
         public void setStoryModeCurrentRoomID(String roomID) {
             this.storyModeCurrentRoomID = roomID;
+        }
+
+        public void setStoryModeInteractables(List<String> storyModeInteractables) {
+            this.storyModeInteractables = storyModeInteractables;
+        }
+
+        public List<String> getStoryModeInteractables() {
+            return this.storyModeInteractables;
         }
     }
 
@@ -247,7 +256,7 @@ public class CommonUser extends AbstractUser implements CommonUserFunction {
 
     @Override
     public void setQuickModeRoomsUnlockedIds(List<String> roomIDs) {
-            modeProgress.getQuickMode().setQuickModeRoomsUnlocked(roomIDs);
+        modeProgress.getQuickMode().setQuickModeRoomsUnlocked(roomIDs);
     }
 
     @Override
@@ -305,6 +314,20 @@ public class CommonUser extends AbstractUser implements CommonUserFunction {
     }
 
     @Override
+    public void saveInteractable(String interactableId) {
+        super.saveInteractable(interactableId);
+
+        if (storyModeString.equalsIgnoreCase(this.activeGameMode)) {
+            if (this.getStoryModeInteractables() == null) {
+                this.setStoryModeInteractables(new ArrayList<>());
+            }
+            if (!getStoryModeInteractables().contains(interactableId)) {
+                getStoryModeInteractables().add(interactableId);
+            }
+        }
+    }
+
+    @Override
     public void saveCurrentRoomID(String roomID) {
         // Updates AbstractUser fields
         super.saveCurrentRoomID(roomID);
@@ -318,5 +341,15 @@ public class CommonUser extends AbstractUser implements CommonUserFunction {
     @Override
     public String getStoryModeCurrentRoomID() {
         return modeProgress.getStoryMode().getStoryModeCurrentRoomID();
+    }
+
+    @Override
+    public void setStoryModeInteractables(List<String> interactables) {
+        modeProgress.getStoryMode().setStoryModeInteractables(interactables);
+    }
+
+    @Override
+    public List<String> getStoryModeInteractables() {
+        return modeProgress.getStoryMode().getStoryModeInteractables();
     }
 }

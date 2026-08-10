@@ -1,8 +1,5 @@
-package application.use_cases.browse_rooms;
-import application.use_cases.game_play.quick_play.browse_rooms.BrowseRoomsDataAccessInterface;
+package application.use_cases.game_play.quick_play.browse_rooms;
 
-import application.use_cases.game_play.quick_play.browse_rooms.BrowseRoomsInteractor;
-import application.use_cases.game_play.quick_play.browse_rooms.BrowseRoomsOutputData;
 import domain.entities.room.CommonRoom;
 import domain.entities.room.Room;
 import org.junit.jupiter.api.BeforeEach;

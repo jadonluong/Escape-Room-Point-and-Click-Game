@@ -1,8 +1,6 @@
 package domain.entities.user;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import domain.entities.item.Item;
 import domain.entities.room.Room;
@@ -22,6 +20,7 @@ public abstract class AbstractUser implements User {
     protected transient ArrayList<Room> storyModeLiveRoomsUnlocked = new ArrayList<>();
     protected transient ArrayList<Item> storyModeLiveItemInventory = new ArrayList<>();
     protected transient HashMap<String, Integer> storyModeHintsWatched = new HashMap<>();
+    protected transient List<String> storyModeInteractables = new ArrayList<>();
 
     // The live game storage for tutorial mode
     protected transient ArrayList<Room> tutorialModeLiveRoomsUnlocked = new ArrayList<>();
@@ -33,9 +32,9 @@ public abstract class AbstractUser implements User {
     protected transient String storyModeCurrentRoomID;
     protected transient String selectedItemID;
 
-    private final String storyModeString = "StoryMode";
-    private final String quickModeString = "QuickMode";
-    private final String tutorialModeString = "TutorialMode";
+    private final transient String storyModeString = "StoryMode";
+    private final transient String quickModeString = "QuickMode";
+    private final transient String tutorialModeString = "TutorialMode";
 
     public AbstractUser() {
     }
@@ -295,6 +294,21 @@ public abstract class AbstractUser implements User {
         return this.quickModeHintsWatched;
     }
 
+    @Override
+    public void saveInteractable(String interactableId) {
+        if (storyModeInteractables == null) {
+            storyModeInteractables = new ArrayList<>();
+        }
+        if (storyModeString.equalsIgnoreCase(activeGameMode) && !storyModeInteractables.contains(interactableId)) {
+            this.storyModeInteractables.add(interactableId);
+        }
+    }
+
+    @Override
+    public List<String> getStoryModeInteractables() {
+        return Objects.requireNonNullElseGet(storyModeInteractables, ArrayList::new);
+    }
+
     /**
      * Handles switching rooms, maintaining per-room live item inventory and hints.
      * @param newRoom The ID of the room being entered.
@@ -343,6 +357,9 @@ public abstract class AbstractUser implements User {
         }
         if (this.storyModeLiveItemInventory == null) {
             this.storyModeLiveItemInventory = new ArrayList<>();
+        }
+        if (this.storyModeInteractables == null) {
+            this.storyModeInteractables = new ArrayList<>();
         }
     }
 }

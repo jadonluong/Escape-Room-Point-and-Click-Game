@@ -1,4 +1,4 @@
-package application.use_cases.browse_rooms;
+package application.use_cases.game_play.quick_play.browse_rooms;
 
 import application.use_cases.game_play.quick_play.browse_rooms.BrowseRoomsOutputBoundary;
 import application.use_cases.game_play.quick_play.browse_rooms.BrowseRoomsOutputData;

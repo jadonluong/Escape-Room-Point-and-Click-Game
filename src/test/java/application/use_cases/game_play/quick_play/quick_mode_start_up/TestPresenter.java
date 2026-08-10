@@ -1,4 +1,4 @@
-package application.use_cases.game_play.quick_mode_start_up;
+package application.use_cases.game_play.quick_play.quick_mode_start_up;
 
 import application.use_cases.game_play.quick_play.quick_mode_start_up.QuickModeStartUpOutputBoundary;
 import application.use_cases.game_play.quick_play.quick_mode_start_up.QuickModeStartUpOutputData;

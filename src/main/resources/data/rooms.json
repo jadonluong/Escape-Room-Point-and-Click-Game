@@ -100,23 +100,23 @@
     "imagePath": "/images/rooms/storymode/room2/Room2Background.png",
     "imageThumbnail": "/images/rooms/storymode/room2/Room2Complete.png",
     "positions": {
-      "house_door": [
+      "cheese_back_door": [
         131,
         762
       ],
-      "house_bottle": [
+      "cheese_stairs": [
         674,
         432
       ],
-      "house_flower": [
+      "cheese_table": [
         1015,
         1085
       ],
-      "house_cloud_1": [
+      "cheese_dot": [
         1200,
         1120
       ],
-      "house_cloud_2": [
+      "cheese_carpet": [
         612,
         1411
       ]
@@ -155,7 +155,7 @@
         795,
         1577
       ],
-      "sac_handle": [
+      "sac_candle": [
         337,
         1720
       ],

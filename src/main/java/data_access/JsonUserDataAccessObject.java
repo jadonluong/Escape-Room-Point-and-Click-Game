@@ -119,7 +119,7 @@ public class JsonUserDataAccessObject implements
             throw new IllegalArgumentException("No such user: " + username);
         }
 
-        CommonUser user = new CommonUser(userDTO.username, userDTO.password);
+        final CommonUser user = new CommonUser(userDTO.username, userDTO.password);
         // Safety check: ensure runtime memory fields are never null
         user.initializeRuntimeState();
         hydrateUserFromDataModel(user, userDTO);
@@ -128,7 +128,9 @@ public class JsonUserDataAccessObject implements
     }
     
     private void hydrateUserFromDataModel(CommonUser user, UserDataModel userDTO) {
-        if (userDTO.modeProgress == null) return;
+        if (userDTO.modeProgress == null) {
+            return;
+        }
 
         hydrateStoryModeFromDTO(user, userDTO);
 
@@ -140,19 +142,19 @@ public class JsonUserDataAccessObject implements
         UserDataModel.QuickModeDataDTO qmData = userDTO.modeProgress.quickMode;
         if (qmData != null) {
             for (String roomId : qmData.quickModeRoomsUnlocked) {
-                Room room = roomRegistry.getRoomById(roomId);
+                final Room room = roomRegistry.getRoomById(roomId);
                 if (room != null && !user.getRoomsUnlocked().contains(room)) {
                     user.unlockRoom(room);
                 }
             }
 
             for (Map.Entry<String, ArrayList<String>> entry : qmData.quickModeItemInventory.entrySet()) {
-                String roomID = entry.getKey();
+                final String roomID = entry.getKey();
                 user.saveCurrentRoomID(roomID);
 
                 // Instantiate every item collected in the room with roomID
                 for (String itemID : entry.getValue()) {
-                    Item item = itemRegistry.getItemById(itemID);
+                    final Item item = itemRegistry.getItemById(itemID);
                     if (item != null && !user.getItemInventory().contains(item)) {
                         user.saveItem(item);
                     }
@@ -168,21 +170,21 @@ public class JsonUserDataAccessObject implements
 
     private void hydrateStoryModeFromDTO(CommonUser user, UserDataModel userDTO) {
         user.setActiveGameMode("StoryMode");
-        UserDataModel.StoryModeDataDTO smData = userDTO.modeProgress.storyMode;
+        final UserDataModel.StoryModeDataDTO smData = userDTO.modeProgress.storyMode;
         if (smData != null) {
             if (smData.storyModeCurrentRoomID != null) {
                 user.setStoryModeCurrentRoomID(smData.storyModeCurrentRoomID);
             }
 
             for (String roomId : smData.storyModeRoomsUnlocked) {
-                Room room = roomRegistry.getRoomById(roomId);
+                final Room room = roomRegistry.getRoomById(roomId);
                 if (room != null && !user.getRoomsUnlocked().contains(room)) {
                     user.unlockRoom(room);
                 }
             }
 
             for (String itemId : smData.storyModeItemInventory) {
-                Item item = itemRegistry.getItemById(itemId);
+                final Item item = itemRegistry.getItemById(itemId);
                 if (item != null && !user.getItemInventory().contains(item)) {
                     user.saveItem(item);
                 }
@@ -190,6 +192,10 @@ public class JsonUserDataAccessObject implements
 
             if (smData.storyModeHintsWatched != null) {
                 user.setStoryModeHintsWatched(new HashMap<>(smData.storyModeHintsWatched));
+            }
+
+            if (smData.storyModeInteractables != null) {
+                user.setStoryModeInteractables(new ArrayList<>(smData.storyModeInteractables));
             }
         }
         user.setActiveGameMode(null);
@@ -200,13 +206,13 @@ public class JsonUserDataAccessObject implements
         if (user == null) {
             throw new IllegalArgumentException("Cannot save progress. No such user.");
         }
-        UserDataModel model = convertEntityToDataModel(user);
+        final UserDataModel model = convertEntityToDataModel(user);
         rawUsers.put(model.username, model);
         persist();
     }
 
     private UserDataModel convertEntityToDataModel(CommonUser user) {
-        UserDataModel model = new UserDataModel();
+        final UserDataModel model = new UserDataModel();
         model.username = user.getUsername();
         model.password = user.getPassword();
         model.modeProgress = new UserDataModel.ModeProgressDTO();
@@ -217,6 +223,7 @@ public class JsonUserDataAccessObject implements
         model.modeProgress.storyMode.storyModeRoomsUnlocked = user.getStoryModeRoomsUnlockedIds();
         model.modeProgress.storyMode.storyModeItemInventory = user.getStoryModeItemInventoryIds();
         model.modeProgress.storyMode.storyModeHintsWatched = user.getStoryModeHintsWatched();
+        model.modeProgress.storyMode.storyModeInteractables = user.getStoryModeInteractables();
 
         model.modeProgress.quickMode.quickModeRoomsUnlocked = user.getQuickModeRoomsUnlockedIds();
         model.modeProgress.quickMode.quickModeItemInventory = user.getQuickModeItemInventoryIds();
@@ -225,7 +232,7 @@ public class JsonUserDataAccessObject implements
         return model;
     }
 
-    private static class UserDataModel {
+    private static final class UserDataModel {
         public String username;
         public String password;
         public ModeProgressDTO modeProgress;
@@ -246,6 +253,7 @@ public class JsonUserDataAccessObject implements
             public List<String> storyModeRoomsUnlocked = new ArrayList<>();
             public List<String> storyModeItemInventory = new ArrayList<>();
             public HashMap<String, Integer> storyModeHintsWatched = new HashMap<>();
+            public List<String> storyModeInteractables = new ArrayList<>();
         }
     }
 }

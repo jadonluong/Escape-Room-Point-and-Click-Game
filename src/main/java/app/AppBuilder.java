@@ -267,7 +267,6 @@ public class AppBuilder extends Application {
         final CraftingInteractor craftingInteractor = new CraftingInteractor(
                 inventoryPresenter,                      // CraftingOutputBoundary
                 userSessionTracking.getCurrentUser(),    // Active User domain entity
-                itemFactory,                             // ItemFactory
                 gameAssetManager,                        // ItemRegistry
                 gameAssetManager                         // CraftingDataAccessInterface
         );
@@ -308,29 +307,30 @@ public class AppBuilder extends Application {
         final BrowseRoomsView browseRoomsView = new BrowseRoomsView(viewManager,
                 mainMenu, browseRoomsViewModel, quickModeStartUpController);
 
-        // --- Interactable Zoom Chain ---
+        // --- Interactable Zoom and Interact Chains ---
         final ZoomViewModel zoomViewModel = new ZoomViewModel();
-        final ZoomPresenter zoomPresenter = new ZoomPresenter(zoomViewModel, viewManagerModel);
+        final InteractViewModel interactViewModel = new InteractViewModel();
+
+        final ZoomPresenter zoomPresenter = new ZoomPresenter(zoomViewModel, interactViewModel, viewManagerModel,
+                viewManager);
         final ZoomInteractor zoomInteractor = new ZoomInteractor(gameAssetManager, zoomPresenter);
         final ZoomController zoomController = new ZoomController(zoomInteractor);
 
-        // --- Interactable Interact Chain ---
-        final InteractViewModel interactViewModel = new InteractViewModel();
         final InteractPresenter interactPresenter = new InteractPresenter(interactViewModel, inventoryViewModel,
-                zoomInteractor, viewManagerModel, viewManager);
+                zoomInteractor, inGameViewModel, viewManagerModel, viewManager);
         final InteractInteractor interactInteractor = new InteractInteractor(gameAssetManager, interactPresenter,
                 userSessionTracking);
         final InteractController interactController = new InteractController(interactInteractor);
 
-        // --- Puzzle EnterExit Chain ---
+        // --- Puzzle EnterExit and Solve Chains ---
         final EnterExitViewModel enterExitViewModel = new EnterExitViewModel();
+
         final EnterExitPresenter enterExitPresenter = new EnterExitPresenter(enterExitViewModel, interactViewModel,
                 viewManagerModel, viewManager);
         final EnterExitInteractor enterExitInteractor = new EnterExitInteractor(gameAssetManager, enterExitPresenter,
                 userSessionTracking);
         final EnterExitController enterExitController = new EnterExitController(enterExitInteractor);
 
-        // --- Puzzle Solve Chain ---
         final SolvePresenter solvePresenter = new SolvePresenter(interactViewModel, inventoryViewModel, zoomInteractor,
                 viewManagerModel, viewManager);
         final SolveInteractor solveInteractor = new SolveInteractor(gameAssetManager, solvePresenter,

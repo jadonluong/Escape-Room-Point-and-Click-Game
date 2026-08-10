@@ -1,16 +1,16 @@
 package domain.entities.room;
 
-import domain.entities.hint.Hint;
-import domain.entities.interactable.Interactable;
-import domain.entities.item.Item;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class CommonRoom implements Room{
+import domain.entities.hint.Hint;
+import domain.entities.interactable.Interactable;
+import domain.entities.item.Item;
 
-    private final String Id;
+public class CommonRoom implements Room {
+
+    private final String id;
     private final String description;
 
     private List<Interactable> interactables;
@@ -18,14 +18,11 @@ public class CommonRoom implements Room{
     private List<Hint> hints;
 
     private final String imagePath;
-    private final Map<String,Position> positions;
+    private final Map<String, Position> positions;
 
-
-
-
-    public CommonRoom(String Id, String description, String imagePath, List<Interactable> Interactable, List<Item> item
-    , List<Hint> hint, Map<String,Position> positions) {
-        this.Id = Id;
+    public CommonRoom(String id, String description, String imagePath, List<Interactable> Interactable,
+                      List<Item> item, List<Hint> hint, Map<String, Position> positions) {
+        this.id = id;
         this.description = description;
         this.interactables = Interactable;
         this.items = item;
@@ -34,20 +31,26 @@ public class CommonRoom implements Room{
         this.positions = positions;
     }
 
-    //Room Info
+    // Room Info
 
     @Override
-    public String getId() { return Id; }
+    public String getId() {
+        return id;
+    }
 
     @Override
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
-    //Interactable
+    // Interactable
 
     @Override
     public List<Interactable> getInteractables() {
+
         return interactables;
     }
+
     @Override
     public void addInteractable(Interactable interactable) {
         this.interactables.add(interactable);
@@ -55,7 +58,7 @@ public class CommonRoom implements Room{
 
     @Override
     public void removeInteractable(String interactable) {
-        List<Interactable> copy = new ArrayList<>(this.interactables);
+        final List<Interactable> copy = new ArrayList<>(this.interactables);
         for (Interactable interactable1 : copy) {
             if (interactable1.getId().equals(interactable)) {
                 this.interactables.remove(interactable1);
@@ -65,15 +68,15 @@ public class CommonRoom implements Room{
 
     @Override
     public Interactable getInteractableById(String id) {
-        for  (Interactable interactable : interactables) {
-            if(interactable.getId().equals(id)) {
+        for (Interactable interactable : interactables) {
+            if (interactable.getId().equals(id)) {
                 return interactable;
             }
         }
         return null;
     }
 
-    //Item
+    // Item
 
     public List<Item> getItems() {
         return new ArrayList<>(items);
@@ -86,12 +89,12 @@ public class CommonRoom implements Room{
 
     @Override
     public void removeItem(Item item) {
-        if(items.contains(item)) {
+        if (items.contains(item)) {
             items.remove(item);
         }
     }
 
-    //Hint
+    // Hint
 
     @Override
     public List<Hint> getHints() {
@@ -103,10 +106,12 @@ public class CommonRoom implements Room{
         hints.add(hint);
     }
 
-    //Image
+    // Image
 
     @Override
-    public String getImagePath() { return imagePath; }
+    public String getImagePath() {
+        return imagePath;
+    }
 
     @Override
     public void setPosition(String Id, Position position) {
@@ -114,7 +119,7 @@ public class CommonRoom implements Room{
     }
 
     @Override
-    public void setPositions(Map<String,Position> positions) {
+    public void setPositions(Map<String, Position> positions) {
         this.positions.putAll(positions);
     }
 

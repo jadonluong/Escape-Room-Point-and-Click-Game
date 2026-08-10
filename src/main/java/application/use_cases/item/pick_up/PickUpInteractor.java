@@ -19,7 +19,7 @@ public class PickUpInteractor implements PickUpInputBoundary {
 
     @Override
     public void execute(PickUpInputData inputData) {
-        String itemId = inputData.getItemId();
+        String itemId = inputData.itemId();
 
         // 1. Lookup item entity in ItemRegistry (not userSession)
         Item item = itemRegistry.getItemById(itemId);

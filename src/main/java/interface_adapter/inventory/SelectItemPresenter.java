@@ -6,7 +6,7 @@ import application.use_cases.item.select_item.SelectItemOutputData;
 public class SelectItemPresenter implements SelectItemOutputBoundary {
     @Override
     public void prepareSuccessView(SelectItemOutputData outputData) {
-        System.out.println("Active Item Selected: " + outputData.getSelectedItemId());
+        System.out.println("Active Item Selected: " + outputData.selectedItemId());
         // Update Inventory ViewModel state here if highlighting selected item slot
     }
 

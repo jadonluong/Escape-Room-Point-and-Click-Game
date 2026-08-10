@@ -2,7 +2,6 @@ package application.use_cases.crafting;
 
 import application.game_registry.ItemRegistry;
 import domain.entities.item.Item;
-import domain.entities.item.ItemFactory;
 import domain.entities.user.User;
 
 import java.util.Map;
@@ -11,19 +10,16 @@ import java.util.Set;
 public class CraftingInteractor implements CraftingInputBoundary {
     private final CraftingOutputBoundary presenter;
     private final User user;
-    private final ItemFactory itemFactory;
     private final ItemRegistry itemRegistry; // Injected to handle recipe domain lookups
     private final CraftingDataAccessInterface craftingDataAccess;
 
     public CraftingInteractor(CraftingOutputBoundary presenter,
                               User user,
-                              ItemFactory itemFactory,
                               ItemRegistry itemRegistry,
                               CraftingDataAccessInterface craftingDataAccess)
     {
         this.presenter = presenter;
         this.user = user;
-        this.itemFactory = itemFactory;
         this.itemRegistry = itemRegistry;
         this.craftingDataAccess = craftingDataAccess;
     }
@@ -45,17 +41,7 @@ public class CraftingInteractor implements CraftingInputBoundary {
         }
 
         // 2. Fetch active recipe map from data access
-        Map<Set<String>, String> recipes = craftingDataAccess.getCraftingRecipes();
-
-        // 3. Query recipe match using ingredient IDs
-        Set<String> ingredientIds = Set.of(itemA.getId(), itemB.getId());
-        String craftedItemId = recipes.get(ingredientIds);
-
-        // Fallback lookup using ingredient names
-        if (craftedItemId == null) {
-            Set<String> ingredientNames = Set.of(itemA.getName().toLowerCase(), itemB.getName().toLowerCase());
-            craftedItemId = recipes.get(ingredientNames);
-        }
+        String craftedItemId = getItemId(itemA, itemB);
 
         if (craftedItemId == null) {
             presenter.prepareFailView("These items cannot be combined.");
@@ -78,5 +64,20 @@ public class CraftingInteractor implements CraftingInputBoundary {
         String formattedNewItem = newItem.getId() + ":" + newItem.getName();
         CraftingOutputData outputData = new CraftingOutputData(formattedNewItem, true);
         presenter.prepareSuccessView(outputData);
+    }
+
+    private String getItemId(Item itemA, Item itemB) {
+        Map<Set<String>, String> recipes = craftingDataAccess.getCraftingRecipes();
+
+        // 3. Query recipe match using ingredient IDs
+        Set<String> ingredientIds = Set.of(itemA.getId(), itemB.getId());
+        String craftedItemId = recipes.get(ingredientIds);
+
+        // Fallback lookup using ingredient names
+        if (craftedItemId == null) {
+            Set<String> ingredientNames = Set.of(itemA.getName().toLowerCase(), itemB.getName().toLowerCase());
+            craftedItemId = recipes.get(ingredientNames);
+        }
+        return craftedItemId;
     }
 }

@@ -35,6 +35,7 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
     private EnterExitViewModel enterExitViewModel;
 
     private final Pane fixedRoot = new Pane();
+    private TextField answerField = new TextField();
     private ImageView lockImage =  new ImageView();
     private Label puzzleLabel = new Label();
     private ImageView passwordBarImage = new ImageView();
@@ -64,7 +65,6 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         double answerFieldHeight = (DESIGN_HEIGHT - (gap * 2)) / 11.0;
         double answerFieldWidth = DESIGN_WIDTH * (7.0 / 12.0) - ((gap * 2) * (1.0/3.0) + answerFieldHeight);
 
-        TextField answerField = new TextField();
         answerField.setPromptText("Type your answer here...");
         answerField.setPrefSize(answerFieldWidth, answerFieldHeight);
         answerField.setStyle(
@@ -277,6 +277,7 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
         switch (puzzleType) {
             case "Anagram":
                 hintLabel.setText(enterExitState.getHint());
+                answerField.clear();
 
                 puzzleLabel.setText(enterExitState.getScrambled());
                 puzzleLabel.setVisible(true);
@@ -315,6 +316,7 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
                     }
                     hintLabel.setText(hintText.toString());
                 }
+                answerField.clear();
 
                 puzzleLabel.setText(enterExitState.getEncrypted());
                 puzzleLabel.setVisible(true);
@@ -326,6 +328,7 @@ public class PuzzleView extends StackPane implements ActionListener, PropertyCha
                 break;
             case "CodeLock":
                 hintLabel.setText(enterExitState.getHint());
+                answerField.clear();
 
                 puzzleLabel.setVisible(false);
                 puzzleLabel.setManaged(false);

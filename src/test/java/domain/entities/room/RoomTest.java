@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -128,7 +129,7 @@ public class RoomTest {
     // Hint test
 
     @Test
-    void getHints_ReturnsAllHintsInRoom() {
+    void testGetHint() {
         room.setHint(hint);
         List<Hint> result = room.getHints();
         assertNotNull(result);
@@ -136,6 +137,36 @@ public class RoomTest {
         assertTrue(result.contains(hint));
     }
 
+    @Test
+    void testImgPath(){
+        assertEquals("path", room.getImagePath());
+    }
 
+    @Test
+    void testPosition(){
+        // 1. Setup room with an initial position map
+        Map<String, Position> initialMap = new HashMap<>();
+        Position pos1 = new Position(10.0, 20.0);
+        Position pos2 = new Position(30.0, 40.0);
+        Position pos3 = new Position(50.0, 60.0);
+        initialMap.put("door", pos1);
+
+        CommonRoom room = new CommonRoom("r1", "desc", "img.png",
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), initialMap);
+
+        // 2. Verify getPosition (Initial State)
+        assertEquals(pos1, room.getPosition("door"));
+
+        // 3. Verify setPosition (Single Add)
+        room.setPosition("window", pos2);
+        assertEquals(pos2, room.getPosition("window"));
+
+        // 4. Verify setPositions (Bulk Add)
+        Map<String, Position> bulkMap = new HashMap<>();
+        bulkMap.put("desk", pos3);
+        room.setPositions(bulkMap);
+
+        assertEquals(pos3, room.getPosition("desk"));
+    }
 
 }

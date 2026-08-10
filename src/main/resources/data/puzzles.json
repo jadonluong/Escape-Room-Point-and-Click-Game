@@ -11,6 +11,7 @@
   "house_puzzle_1": {
     "puzzleType": "Cryptogram",
     "id": "house_puzzle_1",
+    "answer": "BE THE CHANGE YOU WANT TO SEE IN THE WORLD",
     "cipherKeyId": null,
     "successMessage": "You now have permission to enter the house.",
     "rewardItemId": null,
@@ -29,6 +30,7 @@
   "sac_puzzle_1": {
     "puzzleType": "Cryptogram",
     "id": "sac_puzzle_1",
+    "answer": "THE SECRET TO IMMORTALITY IS TO AVOID DEATH",
     "cipherKeyId": null,
     "successMessage": "Hurray! You have survived!",
     "rewardItemId": null,
@@ -47,6 +49,7 @@
   "astrology_puzzle_1": {
     "puzzleType": "Cryptogram",
     "id": "astrology_puzzle_1",
+    "answer": "BY LOOKING INTO THE HEAVENS, WE LEARN ABOUT OURSELVES",
     "cipherKeyId": null,
     "successMessage": "Time to continue our journey.",
     "rewardItemId": "astrology_key",

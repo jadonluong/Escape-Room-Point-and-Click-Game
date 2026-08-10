@@ -34,23 +34,27 @@ public class ZoomInteractor implements ZoomInputBoundary {
      */
     @Override
     public void zoomIn(ZoomInputData inputData) {
-        String interactableId = inputData.getInteractableId();
-        Interactable interactable = dataAccess.getInteractableById(interactableId);
+        final String interactableId = inputData.getInteractableId();
+        final Interactable interactable = dataAccess.getInteractableById(interactableId);
 
-        String puzzleId = interactable.getLinkedPuzzleId();
-        Puzzle puzzle = dataAccess.getPuzzleById(puzzleId);
+        if (interactable == null) {
+            outputBoundary.prepareFailureView("Interactable not found.");
+        }
+        else {
+            final String puzzleId = interactable.getLinkedPuzzleId();
 
-        String interactLabel = getInteractLabel(interactable, puzzleId, puzzle);
+            final String interactLabel = getInteractLabel(interactable, puzzleId);
 
-        ZoomOutputData outputData = new ZoomOutputData(
-                interactable.getName(),
-                interactable.getDescription(),
-                interactable.getSprite(),
-                interactLabel,
-                interactableId,
-                puzzleId);
+            final ZoomOutputData outputData = new ZoomOutputData(
+                    interactable.getName(),
+                    interactable.getDescription(),
+                    interactable.getSprite(),
+                    interactLabel,
+                    interactableId,
+                    puzzleId);
 
-        outputBoundary.prepareZoomInView(outputData);
+            outputBoundary.prepareZoomInView(outputData);
+        }
     }
 
     /**
@@ -59,14 +63,11 @@ public class ZoomInteractor implements ZoomInputBoundary {
      *
      * @param interactable the interactable being displayed
      * @param puzzleId the ID of the puzzle linked to the interactable
-     * @param puzzle the puzzle linked to the interactable
      * @return the appropriate interaction label, or {@code null} if the
      *         interactable has no available interaction
      */
-    private String getInteractLabel(
-            Interactable interactable, String puzzleId, Puzzle puzzle) {
-
-        String value;
+    private String getInteractLabel(Interactable interactable, String puzzleId) {
+        final String value;
 
         if (hasNoInteraction(interactable)) {
             value = null;
@@ -74,19 +75,30 @@ public class ZoomInteractor implements ZoomInputBoundary {
         else if (interactable.needsItem() && !interactable.isInteracted()) {
             value = "Use Item";
         }
-        else if (interactable.getUnlockedRoomId() != null
-                && interactable.isInteracted()) {
+        else if (interactable.getUnlockedRoomId() != null && interactable.isInteracted()) {
             value = "Go Through";
         }
-        else if (puzzleId != null
-                && interactable.isInteracted()
-                && !puzzle.isSolved()) {
+        else if (puzzleId != null && interactable.isInteracted()) {
+            final Puzzle puzzle = dataAccess.getPuzzleById(puzzleId);
+            value = getPuzzleInteractLabel(puzzle);
+        }
+        else {
+            value = "Interact";
+        }
+        return value;
+    }
+
+    private String getPuzzleInteractLabel(Puzzle puzzle) {
+        final String value;
+        if (puzzle.isSolved() && puzzle.getUnlockedRoomId() != null) {
+            value = "Go Through";
+        }
+        else if (!puzzle.isSolved()) {
             value = "Enter Puzzle";
         }
         else {
             value = "Interact";
         }
-
         return value;
     }
 
