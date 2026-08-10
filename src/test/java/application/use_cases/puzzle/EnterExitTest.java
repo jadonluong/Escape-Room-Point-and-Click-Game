@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -174,6 +175,15 @@ class EnterExitTest {
 
         @Override
         public void switchRoom(Room room) {
+        }
+
+        @Override
+        public void saveInteractable(String interactableId) {
+        }
+
+        @Override
+        public List<String> getStoryModeInteractables() {
+            return List.of();
         }
     }
 
