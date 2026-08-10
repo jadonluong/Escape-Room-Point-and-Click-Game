@@ -148,7 +148,7 @@
     "requiredItemId": "sac_crafted_lit_candle",
     "rewardItemId": null,
     "linkedPuzzleId": "sac_puzzle_1",
-    "unlockedRoomId": null,
+    "unlockedRoomId": "main menu",
     "successMessage": null
   },
 

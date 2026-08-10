@@ -88,4 +88,11 @@ public interface CommonUserFunction {
      */
     String getStoryModeCurrentRoomID();
 
+
+    /**
+     * Sets the interactables the user has interacted with.
+     * @param interactables the interactables the user has interacted with
+     */
+    void setStoryModeInteractables(List<String> interactables);
+
 }
