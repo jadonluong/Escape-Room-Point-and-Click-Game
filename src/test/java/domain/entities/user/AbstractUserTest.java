@@ -1,5 +1,7 @@
 package domain.entities.user;
 
+import domain.entities.interactable.CommonInteractable;
+import domain.entities.interactable.Interactable;
 import domain.entities.item.CommonItem;
 import domain.entities.item.Item;
 import domain.entities.room.CommonRoom;
@@ -293,6 +295,31 @@ public abstract class AbstractUserTest<T extends AbstractUser> {
         quickModehints.put("room1", hintsPerRoom);
         assertEquals(quickModehints, user.getQuickModeHintsWatched());
 
+    }
+
+    @Test
+    void testSaveAndGetStoryModeInteractables() {
+        Interactable interactable = (Interactable) new CommonInteractable("1",
+                "book",
+                "A text book",
+                "fake_default_sprite",
+                "Open book",
+                "An open text book",
+                "fake_interacted_sprite",
+                false, true, false,
+                null, null, null, null,
+                "Congrats");
+
+        ArrayList<String> interactableList = new ArrayList<>();
+        assertEquals(interactableList, user.getStoryModeInteractables());
+
+        user.saveInteractable(interactable.getId());
+        assertEquals(interactableList, user.getStoryModeInteractables());
+
+        user.setActiveGameMode("StoryMode");
+        user.saveInteractable(interactable.getId());
+        interactableList.add(interactable.getId());
+        assertEquals(interactableList, user.getStoryModeInteractables());
     }
 
     @Test

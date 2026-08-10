@@ -151,6 +151,14 @@ public class CommonUserTest extends  AbstractUserTest<CommonUser> {
     }
 
     @Test
+    void testSetAndGetStoryModeInteractables() {
+        List<String> interactableList = new ArrayList<>();
+        interactableList.add("interactable1");
+        user.setStoryModeInteractables(interactableList);
+        assertEquals(interactableList, user.getStoryModeInteractables());
+    }
+
+    @Test
     void testSetAndGetStoryModeCurrentRoomID() {
         user.setStoryModeCurrentRoomID("room1");
         assertEquals("room1", user.getStoryModeCurrentRoomID());
@@ -234,6 +242,6 @@ public class CommonUserTest extends  AbstractUserTest<CommonUser> {
         assertEquals(storyInventory, deserializedUser.getStoryModeItemInventoryIds(),
                 "StoryMode item item lists changed sequence or dropped items.");
 
-        // AbstractUser's hints live field is populated in the JsonUserDataAccessObject
+        // AbstractUser's hints and story mode interactables live fields are populated in the JsonUserDataAccessObject
     }
 }
