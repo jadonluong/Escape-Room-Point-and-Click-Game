@@ -63,7 +63,7 @@ public class InteractInteractor implements InteractInputBoundary {
         }
 
         outputBoundary.prepareSuccessView(new InteractOutputData(interactable.getSuccessMessage(), rewardItemId,
-                rewardItemName, selectedItemId, selectedItemName, interactable.getId()));
+                rewardItemName, selectedItemId, selectedItemName, interactable.getId(), interactable.getSprite()));
     }
 
     private void itemRequiredFirstInteraction(User player, Interactable interactable) {
@@ -109,13 +109,13 @@ public class InteractInteractor implements InteractInputBoundary {
                                 null,
                                 null,
                                 null,
-                                interactable.getId()));
+                                interactable.getId(),
+                                interactable.getSprite()));
             }
         }
     }
 
-    private void handleLinkedPuzzle(
-            User player, Interactable interactable, String linkedPuzzleId) {
+    private void handleLinkedPuzzle(User player, Interactable interactable, String linkedPuzzleId) {
 
         Puzzle puzzle = dataAccess.getPuzzleById(linkedPuzzleId);
         String puzzleUnlockedRoomId = puzzle.getUnlockedRoomId();
@@ -141,13 +141,13 @@ public class InteractInteractor implements InteractInputBoundary {
                                 null,
                                 null,
                                 null,
-                                interactable.getId()));
+                                interactable.getId(),
+                                interactable.getSprite()));
             }
         }
     }
 
     private void moveToRoom(User player, String unlockedRoomId) {
-        player.unlockRoom(dataAccess.getRoomById(unlockedRoomId));
         final Room unlockedRoom = dataAccess.getRoomById(unlockedRoomId);
         player.unlockRoom(unlockedRoom);
         player.switchRoom(unlockedRoom);

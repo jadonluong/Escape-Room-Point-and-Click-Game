@@ -44,8 +44,8 @@ public class BrowseRoomsView extends StackPane implements PropertyChangeListener
     private static final double QUIT_POSITION_Y = 1680;
 
     // Room Card
-    private static final double ROOM_CARD_START_X = 145;
-    private static final double CARD_WIDTH = 2600;
+    private static final double ROOM_CARD_START_X = 250;
+    private static final double CARD_WIDTH = 2500;
     private static final double CARD_HEIGHT = 340;
     private static final double CARD_SPACING = 60;
     private static final double ARC_WIDTH = 30;

@@ -33,9 +33,9 @@ public abstract class AbstractUser implements User {
     protected transient String storyModeCurrentRoomID;
     protected transient String selectedItemID;
 
-    private final String storyModeString = "StoryMode";
-    private final String quickModeString = "QuickMode";
-    private final String tutorialModeString = "TutorialMode";
+    private final transient String storyModeString = "StoryMode";
+    private final transient String quickModeString = "QuickMode";
+    private final transient String tutorialModeString = "TutorialMode";
 
     public AbstractUser() {
     }

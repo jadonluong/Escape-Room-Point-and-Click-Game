@@ -60,6 +60,18 @@ public class InteractPresenter implements InteractOutputBoundary {
         inventoryViewModel.setState(inventoryState);
         inventoryViewModel.firePropertyChanged();
 
+        InGameState inGameState = inGameViewModel.getState();
+        String interactableId = outputData.getInteractableId();
+        Map<String, ObjectsInfo> objectsToDisplay = inGameState.getObjectsToDisplay();
+        ObjectsInfo interactableInfo = objectsToDisplay.get(interactableId);
+        ObjectsInfo newInteractableInfo = new ObjectsInfo(outputData.getInteractableSprite(),
+                interactableInfo.position(), interactableInfo.type());
+        objectsToDisplay.put(interactableId, newInteractableInfo);
+
+        inGameState.setObjectsToDisplay(objectsToDisplay);
+        inGameViewModel.setState(inGameState);
+        inGameViewModel.firePropertyChanged();
+
         zoomInteractor.zoomIn(new ZoomInputData(outputData.getInteractableId()));
 
         if (outputData.getSuccessMessage() != null) {
