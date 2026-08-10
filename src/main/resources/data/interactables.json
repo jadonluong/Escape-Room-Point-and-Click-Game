@@ -429,7 +429,7 @@
     "defaultDescription": "The mage's desk. He likes to read his newspapers here.",
     "defaultSprite": "/images/items/magic/default_table.png",
     "interactedName": "Table",
-    "interactedDescription": "The circled passage: 'A sudden surge of magic disrupted the easTern district. Officials reported a stRange disturbance and urged residents to stAy indoors and rePort anything unusual.'",
+    "interactedDescription": "The circled passage: 'Magic disrupted the easTern district. Officials reported a stRange disturbance and urged residents to stAy in and rePort it.'",
     "interactedSprite": "/images/items/magic/interacted_table.png",
     "isConsumed": false,
     "consumesItem": true,
