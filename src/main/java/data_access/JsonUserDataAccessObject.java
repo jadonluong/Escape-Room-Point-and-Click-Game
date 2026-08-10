@@ -195,7 +195,7 @@ public class JsonUserDataAccessObject implements
             }
 
             if (smData.storyModeInteractables != null) {
-                user.setStoryModeInteractables(smData.storyModeInteractables);
+                user.setStoryModeInteractables(new ArrayList<>(smData.storyModeInteractables));
             }
         }
         user.setActiveGameMode(null);
