@@ -109,7 +109,7 @@
     "interactedDescription": "interacted stairs",
     "interactedSprite": "/images/items/storymode/room2/stairs.png",
     "isConsumed": false,
-    "consumesItem": false,
+    "consumesItem": true,
     "needsItem": true,
     "requiredItemId": "cheese_matches",
     "rewardItemId": null,
@@ -148,7 +148,7 @@
     "requiredItemId": "sac_crafted_lit_candle",
     "rewardItemId": null,
     "linkedPuzzleId": "sac_puzzle_1",
-    "unlockedRoomId": "main menu",
+    "unlockedRoomId": null,
     "successMessage": null
   },
 
@@ -286,6 +286,176 @@
     "linkedPuzzleId": null,
     "unlockedRoomId": null,
     "successMessage": null
+  },
+
+  "magic_carpet": {
+    "defaultName": "Carpet",
+    "defaultDescription": "An ordinary carpet.",
+    "defaultSprite": "/images/items/magic/default_carpet.png",
+    "interactedName": "Rolled Back Carpet",
+    "interactedDescription": "A trapdoor is under the carpet. The mage may have left a note on how to open it.",
+    "interactedSprite": "/images/items/magic/interacted_carpet.png",
+    "isConsumed": false,
+    "consumesItem": false,
+    "needsItem": false,
+    "requiredItemId": null,
+    "rewardItemId": null,
+    "linkedPuzzleId": "magic_carpet_puzzle",
+    "unlockedRoomId": null,
+    "successMessage": "You roll back the carpet to reveal a trapdoor."
+  },
+
+  "magic_cauldron": {
+    "defaultName": "Cauldron",
+    "defaultDescription": "A cauldron with some sort of magenta liquid inside.",
+    "defaultSprite": "/images/items/magic/default_cauldron.png",
+    "interactedName": "Cauldron",
+    "interactedDescription": "A cauldron with some sort of orange liquid inside. Perhaps we can cast a spell on it.",
+    "interactedSprite": "/images/items/magic/interacted_cauldron.png",
+    "isConsumed": false,
+    "consumesItem": true,
+    "needsItem": true,
+    "requiredItemId": "magic_potion",
+    "rewardItemId": null,
+    "linkedPuzzleId": "magic_cauldron_puzzle",
+    "unlockedRoomId": null,
+    "successMessage": "You pour the potion in and mix it. Orange is the mage's favourite colour. This is a good sign."
+  },
+
+  "magic_circle": {
+    "defaultName": "Magic Circle",
+    "defaultDescription": "A magic circle. Perhaps the mage is still working on this one.",
+    "defaultSprite": "/images/items/magic/default_magic_circle.png",
+    "interactedName": "Magic Circle",
+    "interactedDescription": "A magic circle. It draws the eyes from the outer circle to the inner one.",
+    "interactedSprite": "/images/items/magic/interacted_magic_circle.png",
+    "isConsumed": false,
+    "consumesItem": false,
+    "needsItem": true,
+    "requiredItemId": "magic_wand",
+    "rewardItemId": null,
+    "linkedPuzzleId": null,
+    "unlockedRoomId": null,
+    "successMessage": "Your wand and the magic circle both glow. Some writing is revealed on the latter."
+  },
+
+  "magic_lectern": {
+    "defaultName": "Lectern",
+    "defaultDescription": "A lectern currently holding a spellbook. The opened page details spells used on beans.",
+    "defaultSprite": "/images/items/magic/default_lectern.png",
+    "interactedName": "Lectern",
+    "interactedDescription": "The circled passage: Portal Spells.\nPurple - Ianpurim.\nGreen - Ianvirim.\nOrange - Ianaurim.",
+    "interactedSprite": "/images/items/magic/interacted_lectern.png",
+    "isConsumed": false,
+    "consumesItem": false,
+    "needsItem": true,
+    "requiredItemId": "magic_wand",
+    "rewardItemId": null,
+    "linkedPuzzleId": null,
+    "unlockedRoomId": null,
+    "successMessage": "Your wand glows, flipping the spellbook to the bookmarked page."
+  },
+
+  "magic_letter": {
+    "defaultName": "Letter",
+    "defaultDescription": "Some random letter.",
+    "defaultSprite": "/images/items/magic/default_letter.png",
+    "interactedName": "Opened Letter",
+    "interactedDescription": "The letter seems to be about the purchase of a painting.",
+    "interactedSprite": "/images/items/magic/interacted_letter.png",
+    "isConsumed": false,
+    "consumesItem": false,
+    "needsItem": false,
+    "requiredItemId": null,
+    "rewardItemId": "magic_cipher_key",
+    "linkedPuzzleId": null,
+    "unlockedRoomId": null,
+    "successMessage": "You have obtained a cipher key."
+  },
+
+  "magic_painting": {
+    "defaultName": "Painting",
+    "defaultDescription": "A blank painting. Maybe this is one of those 'abstract art' things people are going on about these days.",
+    "defaultSprite": "/images/items/magic/default_painting.png",
+    "interactedName": "Painting",
+    "interactedDescription": "The canvas surface is swirling. It seems to be a portal, but it may be locked.",
+    "interactedSprite": "/images/items/magic/interacted_painting.png",
+    "isConsumed": false,
+    "consumesItem": false,
+    "needsItem": true,
+    "requiredItemId": "magic_wand",
+    "rewardItemId": null,
+    "linkedPuzzleId": "magic_painting_puzzle",
+    "unlockedRoomId": null,
+    "successMessage": "Your wand glows and the canvas distorts."
+  },
+
+  "magic_sticky_note": {
+    "defaultName": "Sticky Note",
+    "defaultDescription": "Zipper Merge Instructions: Two words. The alphabetically-first word goes second. Merge the words by alternating between the letters in the first and second words.",
+    "defaultSprite": "/images/items/magic/sticky_note.png",
+    "interactedName": "Sticky Note",
+    "interactedDescription": "Zipper Merge Instructions: Two words. The alphabetically-first word goes second. Merge the words by alternating between the letters in the first and second words.",
+    "interactedSprite": "/images/items/magic/sticky_note.png",
+    "isConsumed": false,
+    "consumesItem": false,
+    "needsItem": false,
+    "requiredItemId": null,
+    "rewardItemId": null,
+    "linkedPuzzleId": null,
+    "unlockedRoomId": null,
+    "successMessage": "You check the back of the note. It says: 'Example: BALL + COIN = CBOAILNL.'"
+  },
+
+  "magic_suitcase": {
+    "defaultName": "Suitcase",
+    "defaultDescription": "The mage's suitcase.",
+    "defaultSprite": "/images/items/magic/suitcase.png",
+    "interactedName": "Suitcase",
+    "interactedDescription": "The mage's locked suitcase.",
+    "interactedSprite": "/images/items/magic/suitcase.png",
+    "isConsumed": false,
+    "consumesItem": false,
+    "needsItem": false,
+    "requiredItemId": null,
+    "rewardItemId": null,
+    "linkedPuzzleId": "magic_suitcase_puzzle",
+    "unlockedRoomId": null,
+    "successMessage": "You inspect it. It is locked with a code."
+  },
+
+  "magic_table": {
+    "defaultName": "Table",
+    "defaultDescription": "The mage's desk. He likes to read his newspapers here.",
+    "defaultSprite": "/images/items/magic/default_table.png",
+    "interactedName": "Table",
+    "interactedDescription": "The circled passage: 'Magic disrupted the easTern district. Officials reported a stRange disturbance and urged residents to stAy in and rePort it.'",
+    "interactedSprite": "/images/items/magic/interacted_table.png",
+    "isConsumed": false,
+    "consumesItem": true,
+    "needsItem": true,
+    "requiredItemId": "magic_newspaper",
+    "rewardItemId": null,
+    "linkedPuzzleId": null,
+    "unlockedRoomId": null,
+    "successMessage": "You put the newspaper on the table to read it."
+  },
+
+  "magic_wand_stand": {
+    "defaultName": "Wand Stand",
+    "defaultDescription": "The mage's wand rests on the stand, waiting for a worthy user.",
+    "defaultSprite": "/images/items/magic/default_wand_stand.png",
+    "interactedName": "Empty Wand Stand",
+    "interactedDescription": "An empty wand stand.",
+    "interactedSprite": "/images/items/magic/interacted_wand_stand.png",
+    "isConsumed": false,
+    "consumesItem": false,
+    "needsItem": false,
+    "requiredItemId": null,
+    "rewardItemId": "magic_wand",
+    "linkedPuzzleId": null,
+    "unlockedRoomId": null,
+    "successMessage": "The wand glows as you reach out. It acknowledges you. You have obtained a wand."
   }
 }
 
