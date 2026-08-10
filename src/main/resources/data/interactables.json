@@ -109,7 +109,7 @@
     "interactedDescription": "interacted stairs",
     "interactedSprite": "/images/items/storymode/room2/stairs.png",
     "isConsumed": false,
-    "consumesItem": false,
+    "consumesItem": true,
     "needsItem": true,
     "requiredItemId": "cheese_matches",
     "rewardItemId": null,
@@ -148,7 +148,7 @@
     "requiredItemId": "sac_crafted_lit_candle",
     "rewardItemId": null,
     "linkedPuzzleId": "sac_puzzle_1",
-    "unlockedRoomId": "main menu",
+    "unlockedRoomId": null,
     "successMessage": null
   },
 
