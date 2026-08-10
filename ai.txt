@@ -5,6 +5,7 @@ Jadon
 - I used AI to ask it for advice when making design choices. For example, I asked AI for advice about how Interactables
     should respond to repeated interactions after the first interaction.
 - I used AI to help write the code that calls the puzzle APIs.
+- I used AI to help write the usecase tests.
 
 Tina
 - I used AI to help me write the interactor tests.
