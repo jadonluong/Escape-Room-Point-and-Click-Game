@@ -299,7 +299,7 @@ public abstract class AbstractUser implements User {
 
     @Override
     public void saveInteractable(String interactableId) {
-        if (storyModeInteractables != null) {
+        if (activeGameMode.equalsIgnoreCase(storyModeString) && storyModeInteractables != null) {
             this.storyModeInteractables.add(interactableId);
         }
     }
