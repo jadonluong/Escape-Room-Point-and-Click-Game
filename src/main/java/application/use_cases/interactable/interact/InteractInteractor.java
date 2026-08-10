@@ -62,6 +62,10 @@ public class InteractInteractor implements InteractInputBoundary {
             currentRoom.removeInteractable(interactable.getId());
         }
 
+        if (player.getActiveGameMode().equals("StoryMode")) {
+            player.saveInteractable(interactable.getId());
+        }
+
         outputBoundary.prepareSuccessView(new InteractOutputData(interactable.getSuccessMessage(), rewardItemId,
                 rewardItemName, selectedItemId, selectedItemName, interactable.getId(), interactable.getSprite()));
     }
