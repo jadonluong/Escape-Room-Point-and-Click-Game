@@ -22,21 +22,28 @@ public class InteractInteractor implements InteractInputBoundary {
     }
 
     @Override
-    // Note: Write specific cases for more complex Interactable's by checking id!
     public void interact(InteractInputData inputData) {
-        User player = userDataAccess.getCurrentUser();
-        Interactable interactable = dataAccess.getInteractableById(inputData.getInteractableId());
+        final User player = userDataAccess.getCurrentUser();
+        final Interactable interactable = dataAccess.getInteractableById(inputData.getInteractableId());
 
-        if (interactable.isInteracted()) {
-            repeatedInteraction(player, interactable);
+        if (player == null) {
+            outputBoundary.prepareFailureView("Player not found.");
+        }
+        else if (interactable == null) {
+            outputBoundary.prepareFailureView("Interactable not found.");
         }
         else {
-
-            if (interactable.needsItem()) {
-                itemRequiredFirstInteraction(player, interactable);
+            if (interactable.isInteracted()) {
+                repeatedInteraction(player, interactable);
             }
             else {
-                successfulFirstInteraction(player, interactable, null);
+
+                if (interactable.needsItem()) {
+                    itemRequiredFirstInteraction(player, interactable);
+                }
+                else {
+                    successfulFirstInteraction(player, interactable, null);
+                }
             }
         }
     }

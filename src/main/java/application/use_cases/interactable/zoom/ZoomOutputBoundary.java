@@ -16,4 +16,11 @@ public interface ZoomOutputBoundary {
      * Prepares the view for zooming out to the current room.
      */
     void prepareZoomOutView();
+
+    /**
+     * Prepares the failure view with an error message.
+     *
+     * @param errorMessage the message describing why the call failed.
+     */
+    void prepareFailureView(String errorMessage);
 }

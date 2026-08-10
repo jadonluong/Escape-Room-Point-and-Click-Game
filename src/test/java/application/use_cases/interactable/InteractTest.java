@@ -130,6 +130,8 @@ class InteractTest {
                 new HashMap<>()
         );
         dataAccess.addRoom(room);
+        player.unlockRoom(room);
+        player.switchRoom(room);
 
         Item item = new CommonItem(ITEM_ID, ITEM_NAME, "A rusty key", false, "key.png");
         dataAccess.addItem(item);
