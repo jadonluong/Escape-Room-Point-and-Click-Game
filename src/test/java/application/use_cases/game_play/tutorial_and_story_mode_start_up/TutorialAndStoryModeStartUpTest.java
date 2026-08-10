@@ -7,6 +7,7 @@ import domain.entities.hint.Hint;
 import domain.entities.interactable.CommonInteractable;
 import domain.entities.interactable.Interactable;
 import domain.entities.item.Item;
+import domain.entities.puzzle.Puzzle;
 import domain.entities.room.CommonRoom;
 import domain.entities.room.Position;
 import domain.entities.room.Room;
@@ -56,6 +57,11 @@ class TutorialAndStoryModeStartUpTest {
         @Override
         public Room findStartingRoomForStory() {
             return storyRoom;
+        }
+
+        @Override
+        public Puzzle getPuzzleById(String puzzleId) {
+            return null;
         }
     }
 
@@ -212,4 +218,6 @@ class TutorialAndStoryModeStartUpTest {
         TutorialAndStoryModeStartUpOutPutData outputData = testPresenter.getSuccessData();
         assertNotNull(outputData);
     }
+
+
 }
