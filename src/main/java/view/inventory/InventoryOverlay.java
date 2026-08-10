@@ -28,7 +28,6 @@ public class InventoryOverlay extends AbstractModalOverlay implements PropertyCh
     private final HBox hotbarContainer = new HBox(10);
     private final Label statusLabel = new Label();
     private final Button craftButton = new Button("Craft Selected");
-    private final Button dropButton = new Button("Drop Selected");
     private SelectItemController selectItemController;
     private CraftController craftController;
 
@@ -145,7 +144,7 @@ public class InventoryOverlay extends AbstractModalOverlay implements PropertyCh
 
         craftButton.setOnAction(e -> handleCraftClick());
 
-        HBox actionBox = new HBox(10, craftButton, dropButton);
+        HBox actionBox = new HBox(10, craftButton);
         actionBox.setAlignment(Pos.CENTER);
 
         mainLayout.getChildren().addAll(statusLabel, scrollPane, actionBox);
