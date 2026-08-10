@@ -5,3 +5,33 @@ Jadon
 - I used AI to ask it for advice when making design choices. For example, I asked AI for advice about how Interactables
     should respond to repeated interactions after the first interaction.
 - I used AI to help write the code that calls the puzzle APIs.
+
+Tina
+- I used AI to help me write the interactor tests.
+- I used AI to help me write code for profanity API code.
+- I used AI to help me write code for JSON serialization.
+- I used AI to help me understand the view code to write code for the hint overlay.
+- I used AI to fine tune the positions of the item pictures in some of the escape rooms.
+- I used AI to check if my code follows clean architecture and SOLID principles.
+
+Lucas K.
+- I used AI to help me debug and understand how each file contributed to the final result.
+- I also used it to help me fix more complex style conventions (by CSC207 checks file) - such as reducing return counts.
+- AI was also used to help me use the CAVE tool, because I struggled with installing Node.js.
+- I used AI to learn about SOLID, Clean Architecture and patterns used in our project.
+- AI was also used to keep track of everything that was going on, helping me to understand the sections my peers were
+working on.
+
+Baron M.
+- I used AI to create examples of tests.
+- To understand CA, solid, and design pattern
+- To understand Java FX
+- To do trivial setups for tests.
+
+Skylar
+- I used AI to help me understand what clean architecture and SOLID is, and how it incorporates into our project
+- I used AI for help for debugging my code.
+- I used AI for help write the code for the hotbar in InventoryOverlay
+- I used AI for help designing classes, for example for the crafting use case I asked for advice on how it should be designed.
+- I used AI for help getting feedback on my test cases
+- I used AI to help understand the other parts of the project I did not directly work on
