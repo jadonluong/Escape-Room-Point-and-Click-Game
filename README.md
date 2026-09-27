@@ -1,29 +1,58 @@
 # Escape If You Dare!
 
-A 2D point-and-click escape room game built in Java with JavaFX, developed as our CSC207 term project.
- 
+A 2D point-and-click escape room game built in Java with JavaFX, developed as our CSC207 term project. This README highlights my contributions to the project and provides an overview of its gameplay and technical implementation.
+
 ---
 
 ## Table of Contents
 
-- [Authors](#authors)
+- [Gameplay](#gameplay)
 - [About the Project](#about-the-project)
+- [My Contributions](#my-contributions)
+- [Technologies](#technologies)
 - [Features](#features)
+- [Authors](#authors)
 - [Installation](#installation)
 - [Usage Guide](#usage-guide)
 - [License](#license)
-- [Feedback](#feedback)
-- [Contributing](#contributing)
 ---
 
-## Authors
+## Gameplay
 
-This project was built by **Team Escapists**:
+In this section, we will take a look at some of the gameplay elements.
 
-- Baron, Jadon, Lucas, Skylar, Tina
+![Screenshot](screenshots/main_menu.png)
 
+Above is the main menu, which is what appears when you first run Main.java. You have the option to sign up or log in,
+but it isn't necessary to play the game. Without logging in, you will play as a guest user, and your
+progress will not be saved. 
 
-- Developed for CSC207: Software Design, Summer 2026, University of Toronto.
+There are three modes to choose from: Story Line, where you play through multiple connected
+rooms to escape; Tutorial, where you can learn how to play; and Quick Game, where you can choose different singular
+room games to play through.
+
+![Screenshot](screenshots/room_view.png)
+
+Above is one of the game rooms. This is what you will see when you first enter a room. You can use your mouse to click 
+on and interact with objects. Objects that can be interacted with will enlarge when the mouse passes over it.
+
+![Screenshot](screenshots/zoom_view.png)
+
+When clicking on an "Interactable" object, you will see the above view. This includes a zoomed in picture of the object,
+its name, description, a button for you to interact with it, and your inventory (this is a possible feature for future
+improvement).
+
+![Screenshot](screenshots/success_interact.png)
+
+Interactable objects may or may not require a specific item for interaction. If the player successfully interacts with
+the Interactable, then above is the view they will see. A successful interaction may give the player an item, hide a clue
+in the success message, allow the player to enter a puzzle, or allow the player to go to another room or escape.
+
+![Screenshot](screenshots/codelock_view.png)
+
+There may be a puzzle linked to an Interactable object. The player can access the puzzle once they successfully interact
+with such objects. One of the puzzle types is the Cryptogram puzzle, where a phrase is encrypted using ApiVerve's Cryptogram Generator API
+once per game start. The player must use the cipher, as seen above in the bottom right box, to decipher the phrase.
 
 ---
 
@@ -32,7 +61,50 @@ This project was built by **Team Escapists**:
 We developed a point-and-click escape room game where the player explores interconnected rooms, interacts with objects, collects and combines items, and solves puzzles to progress. We built this project to practice applying Clean Architecture and SOLID design principles to a genuinely interactive, stateful application — something more design-intensive than a typical CRUD (Create, Read, Update, Delete) app, while still being scoped realistically for a team of five over six weeks.
 
 The game is aimed at anyone who enjoys short logic puzzles and light narrative games! Whether you want to play through a connected multi-room story, or just drop into a standalone room for a quick 10–15 minute puzzle session.
- 
+
+---
+
+## My Contributions
+
+This project was developed collaboratively by Team Escapists for CSC207: Software Design at the University of Toronto. 
+My primary responsibilities focused on Interactable objects and Puzzle systems.
+
+### Gameplay Systems
+- Implemented the gameplay logic for Interactable objects:
+- Implemented three puzzle types:
+    - Anagram puzzles
+    - Cryptogram puzzles
+    - Code-lock puzzles
+- Integrated external APIs for anagram scrambling and cryptogram encryption.
+- Implemented the associated entities and use cases for these gameplay systems.
+
+### User Interface
+- Developed JavaFX views for Interactable objects, including the zoomed-in
+  interaction view displayed when players examine an object, and an overlay for
+  success and failure messages.
+- Developed the JavaFX puzzle interface used to interact with puzzle systems.
+
+### Architecture & Testing
+- Implemented the corresponding interface adapters following the project's
+  Clean Architecture structure.
+- Wrote JUnit tests for the entities and use cases associated with my features.
+
+### Game Design
+- Designed and drew the room shown above in the [gameplay section](#gameplay).
+- Designed and implemented a flexible Interactable object system capable of supporting different object behaviors and interaction requirements.
+- Designed and implemented the puzzle system supporting multiple puzzle types.
+
+---
+
+## Technologies
+
+- **Language:** Java 21
+- **UI:** JavaFX
+- **Build & Dependency Management:** Apache Maven
+- **Testing:** JUnit
+- **Version Control:** Git / GitHub
+- **Architecture:** Clean Architecture, SOLID principles
+
 ---
 
 ## Features
@@ -48,7 +120,7 @@ The game is aimed at anyone who enjoys short logic puzzles and light narrative g
 - **Inventory & item combination** — collect items into a persistent inventory, and combine compatible items to create new tools needed for progression.
 
 
-- **Multiple puzzle types** — including cipher puzzles, anagram puzzles, and combination locks.
+- **Multiple puzzle types** — including cryptogram puzzles, anagram puzzles, and combination locks.
 
 
 - **Tiered hint system** — stuck on a puzzle? Request a hint, delivered in increasing levels of specificity.
@@ -61,6 +133,17 @@ The game is aimed at anyone who enjoys short logic puzzles and light narrative g
 
 
 - **Resizable, scalable UI** — every screen is built to scale cleanly across different window sizes.
+
+---
+
+## Authors
+
+This project was built by **Team Escapists**:
+
+- Baron, Jadon, Lucas, Skylar, Tina
+
+
+- Developed for CSC207: Software Design, Summer 2026, University of Toronto.
 
 ---
 
@@ -124,23 +207,3 @@ Alternatively, if you're using IntelliJ IDEA, open the project, let Maven sync, 
 This project is licensed under the MIT License — see the `LICENSE` file for details.
 
 ---
-
-## Feedback
-
-We'd love to hear your feedback on Escapists! If you'd like to report a bug, suggest a feature, or share general thoughts:
-
-- Open an [issue](../../issues) on this repository.
-- Please include: what you expected to happen, what actually happened, and steps to reproduce the issue if applicable.
-  We'll do our best to respond to feedback, though as a term project, active maintenance isn't guaranteed after the course concludes.
-
----
-
-## Contributing
-
-This is a student project developed for a course, so external contributions aren't actively being accepted at this time. If you'd like to fork the project for your own experimentation:
-
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature/your-feature-name`).
-3. Make your changes and ensure `mvn clean compile` succeeds before committing.
-4. Open a pull request with a clear description of your changes.
-   For our own team's workflow: all changes go through a pull request into `development` rather than being pushed directly, and should compile cleanly (`mvn clean compile`) before being opened for review.
