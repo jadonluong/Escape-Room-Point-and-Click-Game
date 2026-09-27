@@ -34,7 +34,7 @@
     "cipherKeyId": null,
     "successMessage": "Hurray! You have survived!",
     "rewardItemId": null,
-    "unlockedRoomId": null
+    "unlockedRoomId": "main menu"
   },
 
   "living_puzzle_1": {
@@ -58,9 +58,9 @@
 
   "magic_carpet_puzzle": {
     "puzzleType": "CodeLock",
-    "description": "The lock on the trapdoor requires an eight letter code.",
-    "answer": "TDROAOPR",
-    "hint": "The wooden trapdoor was old when the mage got it. One day, he decided to Paint it. The News that day was certainly interesting.",
+    "description": "The lock on the trapdoor requires an ten letter code.",
+    "answer": "SPUOPWEERR",
+    "hint": "Half the trapdoor was broken when the mage got it. One day, he decided to fix it by Mirroring the finished side. The News that day was certainly interesting.",
     "successMessage": "You have obtained a potion.",
     "rewardItemId": "magic_potion",
     "unlockedRoomId": null
@@ -76,11 +76,11 @@
     "unlockedRoomId": "main menu"
   },
 
-  "magic_painting_puzzle": {
+  "magic_mirror_puzzle": {
     "puzzleType": "Cryptogram",
     "answer": "LIFE IS MAGIC",
     "cipherKeyId": "magic_cipher_key",
-    "successMessage": "Dimensional storage pocket. How neat. Remember: DOOR.",
+    "successMessage": "Your reflection mouths to you: 'With great POWER comes great responsibility.'",
     "rewardItemId": null,
     "unlockedRoomId": null
   },

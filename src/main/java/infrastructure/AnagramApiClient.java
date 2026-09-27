@@ -26,7 +26,7 @@ public class AnagramApiClient {
 
     public AnagramApiResponse generateAnagram(String answer) throws IOException {
         final String cleanAnswer = answer.trim();
-        final String apiUrl = API_BASE_URL + "word=" + cleanAnswer + "&difficulty=easy&count=1";
+        final String apiUrl = API_BASE_URL + "word=" + cleanAnswer + "&difficulty=easy";
 
         Request request = new Request.Builder()
                 .url(apiUrl)

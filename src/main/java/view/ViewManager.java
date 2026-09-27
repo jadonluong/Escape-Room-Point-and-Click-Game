@@ -248,6 +248,10 @@ public class ViewManager implements PropertyChangeListener, ViewManagerInterface
             overlay.setVisible(false);
             overlay.setManaged(false);
             visibleOverlays.remove(overlayName);
+
+            if (currentView != null) {
+                currentView.requestFocus();
+            }
         }
     }
 

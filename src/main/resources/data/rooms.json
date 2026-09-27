@@ -165,7 +165,7 @@
       ]
     }
   },
-  "living_room": {
+  "living room": {
     "description": "A living room.",
     "interactables": [
       "living_books",
@@ -274,7 +274,7 @@
       "magic_circle",
       "magic_lectern",
       "magic_letter",
-      "magic_painting",
+      "magic_mirror",
       "magic_sticky_note",
       "magic_suitcase",
       "magic_table",
@@ -308,7 +308,7 @@
         2059,
         1533
       ],
-      "magic_painting": [
+      "magic_mirror": [
         1453,
         1280
       ],

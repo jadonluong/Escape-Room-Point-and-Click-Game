@@ -109,12 +109,12 @@
     "interactedDescription": "interacted stairs",
     "interactedSprite": "/images/items/storymode/room2/stairs.png",
     "isConsumed": false,
-    "consumesItem": true,
-    "needsItem": true,
-    "requiredItemId": "cheese_matches",
+    "consumesItem": false,
+    "needsItem": false,
+    "requiredItemId": null,
     "rewardItemId": null,
     "linkedPuzzleId": "cheese_puzzle_1",
-    "unlockedRoomId": "sac",
+    "unlockedRoomId": null,
     "successMessage": "You have obtained the item already."
   },
 
@@ -284,7 +284,7 @@
     "requiredItemId": "astrology_key",
     "rewardItemId": null,
     "linkedPuzzleId": null,
-    "unlockedRoomId": null,
+    "unlockedRoomId": "main menu",
     "successMessage": null
   },
 
@@ -361,7 +361,7 @@
     "defaultDescription": "Some random letter.",
     "defaultSprite": "/images/items/magic/default_letter.png",
     "interactedName": "Opened Letter",
-    "interactedDescription": "The letter seems to be about the purchase of a painting.",
+    "interactedDescription": "The letter seems to be about the purchase of a mirror.",
     "interactedSprite": "/images/items/magic/interacted_letter.png",
     "isConsumed": false,
     "consumesItem": false,
@@ -373,21 +373,21 @@
     "successMessage": "You have obtained a cipher key."
   },
 
-  "magic_painting": {
-    "defaultName": "Painting",
-    "defaultDescription": "A blank painting. Maybe this is one of those 'abstract art' things people are going on about these days.",
-    "defaultSprite": "/images/items/magic/default_painting.png",
-    "interactedName": "Painting",
-    "interactedDescription": "The canvas surface is swirling. It seems to be a portal, but it may be locked.",
-    "interactedSprite": "/images/items/magic/interacted_painting.png",
+  "magic_mirror": {
+    "defaultName": "Mirror",
+    "defaultDescription": "A mirror. In case you were wondering, the mage is indeed the fairest of them all.",
+    "defaultSprite": "/images/items/magic/default_mirror.png",
+    "interactedName": "Distorted Mirror",
+    "interactedDescription": "The mirror is swirling. You want to touch it, but there may be a barrier.",
+    "interactedSprite": "/images/items/magic/interacted_mirror.png",
     "isConsumed": false,
     "consumesItem": false,
     "needsItem": true,
     "requiredItemId": "magic_wand",
     "rewardItemId": null,
-    "linkedPuzzleId": "magic_painting_puzzle",
+    "linkedPuzzleId": "magic_mirror_puzzle",
     "unlockedRoomId": null,
-    "successMessage": "Your wand glows and the canvas distorts."
+    "successMessage": "Your wand glows and the mirror distorts."
   },
 
   "magic_sticky_note": {
@@ -429,7 +429,7 @@
     "defaultDescription": "The mage's desk. He likes to read his newspapers here.",
     "defaultSprite": "/images/items/magic/default_table.png",
     "interactedName": "Table",
-    "interactedDescription": "The circled passage: 'Magic disrupted the easTern district. Officials reported a stRange disturbance and urged residents to stAy in and rePort it.'",
+    "interactedDescription": "The circled passage: 'Magic diSrupted the soUthern district. Officials rePorted a stange disturbance and urgEd residents to stay in and repoRt it.'",
     "interactedSprite": "/images/items/magic/interacted_table.png",
     "isConsumed": false,
     "consumesItem": true,

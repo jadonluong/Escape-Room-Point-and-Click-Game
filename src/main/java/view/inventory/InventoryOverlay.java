@@ -156,47 +156,62 @@ public class InventoryOverlay extends AbstractModalOverlay implements PropertyCh
         int idxA = state.getSelectedIndexA();
         int idxB = state.getSelectedIndexB();
 
-        // 1. Update selection index states
+        // 1. Validate and adjust indices
+        List<String> items = state.getItems();
+        if (items != null && !items.isEmpty()) {
+            Map<String, Integer> itemCounts = new LinkedHashMap<>();
+            for (String item : items) {
+                itemCounts.put(item, itemCounts.getOrDefault(item, 0) + 1);
+            }
+            List<String> uniqueItems = new ArrayList<>(itemCounts.keySet());
+            int maxIndex = uniqueItems.size() - 1;
+
+            if (idxA > maxIndex) {
+                state.setSelectedIndexA(maxIndex);
+                idxA = maxIndex;
+            }
+            if (idxB > maxIndex) {
+                state.setSelectedIndexB(-1);
+                idxB = -1;
+            }
+        }
+
+        // 2. Update selection logic...
         if (idxA == slotIndex) {
-            // Deselect Slot A; promote Slot B to Slot A if present
             state.setSelectedIndexA(idxB);
             state.setSelectedIndexB(-1);
         } else if (idxB == slotIndex) {
-            // Deselect Slot B
             state.setSelectedIndexB(-1);
         } else if (idxA == -1) {
-            // Select first item as Slot A
             state.setSelectedIndexA(slotIndex);
         } else if (idxB == -1) {
-            // Select second item as Slot B
             state.setSelectedIndexB(slotIndex);
         } else {
-            // Replace selection with newly clicked item
             state.setSelectedIndexA(slotIndex);
             state.setSelectedIndexB(-1);
         }
 
-        // 2. Resolve the active item ID corresponding to the NEW SelectedIndexA
+        // 3. Resolve the active item ID (with validation)
         String activeItemId = null;
         int newIdxA = state.getSelectedIndexA();
 
         if (newIdxA != -1) {
-            List<String> items = state.getItems();
-            if (items != null && !items.isEmpty()) {
-                Map<String, Integer> itemCounts = new LinkedHashMap<>();
-                for (String item : items) {
-                    itemCounts.put(item, itemCounts.getOrDefault(item, 0) + 1);
+            List<String> currentItems = state.getItems();
+            if (currentItems != null && !currentItems.isEmpty()) {
+                Map<String, Integer> counts = new LinkedHashMap<>();
+                for (String item : currentItems) {
+                    counts.put(item, counts.getOrDefault(item, 0) + 1);
                 }
-                List<String> uniqueItems = new ArrayList<>(itemCounts.keySet());
+                List<String> unique = new ArrayList<>(counts.keySet());
 
-                if (newIdxA < uniqueItems.size()) {
-                    String rawItem = uniqueItems.get(newIdxA);
+                if (newIdxA < unique.size()) {
+                    String rawItem = unique.get(newIdxA);
                     activeItemId = rawItem.contains(":") ? rawItem.split(":")[0] : rawItem;
                 }
             }
         }
 
-        // 3. Update active item in game world
+        // 4. Update active item
         if (selectItemController != null) {
             selectItemController.execute(activeItemId);
         }
